@@ -1,0 +1,189 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE IDMEF-Message PUBLIC "-//IETF//DTD RFC XXXX IDMEF v1.0//EN" "idmef-message.dtd">
+<IDMEF-Message xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.anl.gov/cfm/1.3/IDMEF-Message" xsi:schemaLocation="http://www.anl.gov/cfm/1.3/IDMEF-Message/../../../resources/schemas/CFMMessage13.xsd">
+  <Alert>
+    <Analyzer analyzerid="NREL-CS">
+      <Node>
+        <location>National Renewable Energy Laboratory - Cyber Security</location>
+        <name>Andrew Hoying, 303-275-3806, andrew.hoying@nrel.gov</name>
+      </Node>
+    </Analyzer>
+    <AnalyzerTime>2014-12-22T22:30:26+0000</AnalyzerTime>
+    <AdditionalData type="date-time" meaning="report start time">&amp;now()</AdditionalData>
+    <AdditionalData type="string" meaning="report type">alerts</AdditionalData>
+    <AdditionalData type="string" meaning="report schedule">5 minutes</AdditionalData>
+    <AdditionalData type="integer" meaning="number of alerts in this report">8</AdditionalData>
+  </Alert>
+  <Alert>
+    <CreateTime>2014-12-22T22:30:26+0000</CreateTime>
+    <Source>
+      <Node>
+        <Address category="ipv4-addr">
+          <address>193.108.160.213</address>
+        </Address>
+      </Node>
+    </Source>
+    <Classification text="IP involved in brute-force login attempts against many entities.">
+      <Reference meaning="Unspecified" origin="user-specific">
+        <name>unknown</name>
+        <url> </url>
+      </Reference>
+    </Classification>
+    <Assessment>
+      <Action category="block-installed"/>
+    </Assessment>
+    <AdditionalData type="integer" meaning="recon">0</AdditionalData>
+    <AdditionalData type="integer" meaning="OUO">0</AdditionalData>
+    <AdditionalData type="integer" meaning="duration">86400</AdditionalData>
+  </Alert>
+  <Alert>
+    <CreateTime>2014-12-22T22:30:26+0000</CreateTime>
+    <Source>
+      <Node>
+        <Address category="ipv4-addr">
+          <address>119.253.38.94</address>
+        </Address>
+      </Node>
+    </Source>
+    <Classification text="Malicious IP address involved in intrusion incident.">
+      <Reference meaning="Unspecified" origin="user-specific">
+        <name>unknown</name>
+        <url> </url>
+      </Reference>
+    </Classification>
+    <Assessment>
+      <Action category="block-installed"/>
+    </Assessment>
+    <AdditionalData type="integer" meaning="recon">0</AdditionalData>
+    <AdditionalData type="integer" meaning="OUO">0</AdditionalData>
+    <AdditionalData type="integer" meaning="duration">86400</AdditionalData>
+  </Alert>
+  <Alert>
+    <CreateTime>2014-12-22T22:30:26+0000</CreateTime>
+    <Source>
+      <Node>
+        <Address category="ipv4-addr">
+          <address>184.154.150.120</address>
+        </Address>
+      </Node>
+    </Source>
+    <Classification text="Malicious IP address involved in intrusion incident.">
+      <Reference meaning="Unspecified" origin="user-specific">
+        <name>unknown</name>
+        <url> </url>
+      </Reference>
+    </Classification>
+    <Assessment>
+      <Action category="block-installed"/>
+    </Assessment>
+    <AdditionalData type="integer" meaning="recon">0</AdditionalData>
+    <AdditionalData type="integer" meaning="OUO">0</AdditionalData>
+    <AdditionalData type="integer" meaning="duration">86400</AdditionalData>
+  </Alert>
+  <Alert>
+    <CreateTime>2014-12-22T22:30:26+0000</CreateTime>
+    <Source>
+      <Node>
+        <Address category="ipv4-addr">
+          <address>116.114.83.15</address>
+        </Address>
+      </Node>
+    </Source>
+    <Classification text="Malicious IP address involved in intrusion incident.">
+      <Reference meaning="Unspecified" origin="user-specific">
+        <name>unknown</name>
+        <url> </url>
+      </Reference>
+    </Classification>
+    <Assessment>
+      <Action category="block-installed"/>
+    </Assessment>
+    <AdditionalData type="integer" meaning="recon">0</AdditionalData>
+    <AdditionalData type="integer" meaning="OUO">0</AdditionalData>
+    <AdditionalData type="integer" meaning="duration">86400</AdditionalData>
+  </Alert>
+  <Alert>
+    <CreateTime>2014-12-22T22:30:26+0000</CreateTime>
+    <Source>
+      <Node>
+        <Address category="ipv4-addr">
+          <address>218.89.29.42</address>
+        </Address>
+      </Node>
+    </Source>
+    <Classification text="Malicious IP address involved in intrusion incident.">
+      <Reference meaning="Unspecified" origin="user-specific">
+        <name>unknown</name>
+        <url> </url>
+      </Reference>
+    </Classification>
+    <Assessment>
+      <Action category="block-installed"/>
+    </Assessment>
+    <AdditionalData type="integer" meaning="recon">0</AdditionalData>
+    <AdditionalData type="integer" meaning="OUO">0</AdditionalData>
+    <AdditionalData type="integer" meaning="duration">86400</AdditionalData>
+  </Alert>
+  <Alert>
+    <CreateTime>2014-12-22T22:30:26+0000</CreateTime>
+    <Source>
+      <Node>
+        <Address category="ipv4-addr">
+          <address>171.94.188.68</address>
+        </Address>
+      </Node>
+    </Source>
+    <Classification text="Malicious IP address involved in intrusion incident.">
+      <Reference meaning="Unspecified" origin="user-specific">
+        <name>unknown</name>
+        <url> </url>
+      </Reference>
+    </Classification>
+    <Assessment>
+      <Action category="block-installed"/>
+    </Assessment>
+    <AdditionalData type="integer" meaning="recon">0</AdditionalData>
+    <AdditionalData type="integer" meaning="OUO">0</AdditionalData>
+    <AdditionalData type="integer" meaning="duration">86400</AdditionalData>
+  </Alert>
+  <Alert>
+    <CreateTime>2014-12-22T22:30:26+0000</CreateTime>
+    <Source>
+      <Node category="dns">
+        <name>1481.anquye.mobi</name>
+      </Node>
+    </Source>
+    <Classification text="Domain Block: Malicious domain used in intrusion incident.">
+      <Reference meaning="Unspecified" origin="user-specific">
+        <name>unknown</name>
+        <url> </url>
+      </Reference>
+    </Classification>
+    <Assessment>
+      <Action category="block-installed"/>
+    </Assessment>
+    <AdditionalData type="integer" meaning="recon">0</AdditionalData>
+    <AdditionalData type="integer" meaning="OUO">0</AdditionalData>
+    <AdditionalData type="integer" meaning="duration">86400</AdditionalData>
+  </Alert>
+  <Alert>
+    <CreateTime>2014-12-22T22:30:26+0000</CreateTime>
+    <Source>
+      <Node category="dns">
+        <name>10711.anquye.mobi</name>
+      </Node>
+    </Source>
+    <Classification text="Domain Block: Malicious domain used in intrusion incident.">
+      <Reference meaning="Unspecified" origin="user-specific">
+        <name>unknown</name>
+        <url> </url>
+      </Reference>
+    </Classification>
+    <Assessment>
+      <Action category="block-installed"/>
+    </Assessment>
+    <AdditionalData type="integer" meaning="recon">0</AdditionalData>
+    <AdditionalData type="integer" meaning="OUO">0</AdditionalData>
+    <AdditionalData type="integer" meaning="duration">86400</AdditionalData>
+  </Alert>
+</IDMEF-Message>

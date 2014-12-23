@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE CFMRequest [
+    <!ENTITY cfm 'http://www.anl.gov/cfm/2.0/current/#' >
+    <!ENTITY tlp 'http://www.us-cert.gov/tlp/#'>
+]>
+<CFMRequest xmlns='http://www.anl.gov/cfm/2.0/current/CFMRequest' 
+xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' 
+xsi:schemaLocation=" http://www.anl.gov/cfm/2.0/current/CFMRequest ../../../resources/schemas/CFMDownloadRequest.xsd">
+	<Version>2.0</Version>
+	<RequestingSite>&cfm;Ames</RequestingSite>
+	<StartTime>1355616000</StartTime>
+	<EndTime>1355788799</EndTime>	
+	<DataSensitivity>&cfm;noSensitivity</DataSensitivity>
+</CFMRequest>

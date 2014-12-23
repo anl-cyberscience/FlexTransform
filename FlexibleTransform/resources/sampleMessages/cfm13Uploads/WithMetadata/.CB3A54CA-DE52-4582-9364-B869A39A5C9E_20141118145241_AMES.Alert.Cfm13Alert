@@ -1,0 +1,14 @@
+{
+    "DataSensitivity": "noSensitivity", 
+    "DownloadElementExtendedAttribute": {
+        "Field": "orig1.3Filename", 
+        "Value": "AMESalerts.201411180850.xml.gpg"
+    }, 
+    "FileName": "CB3A54CA-DE52-4582-9364-B869A39A5C9E_20141118145241_AMES.Alert.Cfm13Alert", 
+    "PayloadFormat": "Cfm13Alert", 
+    "PayloadType": "Alert", 
+    "ReconPolicy": "Touch", 
+    "SendingSite": "AMES", 
+    "SentTimestamp": "1416322361", 
+    "UploadID": "CB3A54CA-DE52-4582-9364-B869A39A5C9E"
+}

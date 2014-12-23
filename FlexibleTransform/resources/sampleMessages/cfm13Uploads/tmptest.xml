@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<IDMEF-Message xmlns="http://www.anl.gov/cfm/1.3/IDMEF-Message"
+xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' 
+xsi:schemaLocation='http://www.anl.gov/cfm/1.3/IDMEF-Message ../../../resources/schemas/CFMMessage13.xsd'>
+<Alert>
+<Analyzer analyzerid="JC3-EAST">
+<Node>
+<location>Location Unknown</location>
+<name>Name Unknown</name></Node>
+</Analyzer><AnalyzerTime>2014-08-04T22:40:14-0500</AnalyzerTime>
+<AdditionalData type="string" meaning="report type">alerts</AdditionalData>
+<AdditionalData type="string" meaning="report schedule">notification-sent</AdditionalData>
+<AdditionalData type="date-time" meaning="report start time">2014-08-04T22:40:14-0500</AdditionalData>
+<AdditionalData type="integer" meaning="number of alerts in this report">4</AdditionalData></Alert>
+<Alert><CreateTime>2014-08-04T22:40:14-0500</CreateTime><Source><Node>
+<Address category="ipv4-addr"><address>1.1.1.1</address></Address></Node></Source>
+<Classification text="ip for testing"/><Assessment><Action category="block-installed"/></Assessment><AdditionalData type="integer" meaning="prior offenses">0</AdditionalData>
+<AdditionalData type="integer" meaning="alert threshold">255</AdditionalData>
+<AdditionalData type="integer" meaning="duration">0</AdditionalData>
+<AdditionalData type="integer" meaning="recon">1</AdditionalData>
+<AdditionalData type="string" meaning="restriction">private</AdditionalData>
+<AdditionalData type="integer" meaning="OUO">1</AdditionalData></Alert>
+<Alert><CreateTime>2014-08-04T22:40:14-0500</CreateTime><Source>
+<Node category="dns"><name>badguy.com</name></Node></Source>
+<Classification text="Domain Block: reset the test"/><Assessment>
+<Action category="block-installed"/></Assessment><AdditionalData type="integer" meaning="prior offenses">0</AdditionalData>
+<AdditionalData type="integer" meaning="alert threshold">255</AdditionalData>
+<AdditionalData type="integer" meaning="duration">0</AdditionalData>
+<AdditionalData type="integer" meaning="recon">1</AdditionalData>
+<AdditionalData type="string" meaning="restriction">private</AdditionalData>
+<AdditionalData type="integer" meaning="OUO">1</AdditionalData></Alert>
+<Alert><CreateTime>2014-08-04T22:40:14-0500</CreateTime><Source><Node>
+<Address category="ipv4-addr"><address>1.1.1.1</address></Address></Node></Source>
+<Classification text="False Positive"><Reference origin="user-specific" meaning="Revocation">
+<name>Legitimate alert</name><url>./oldAlert.xml</url></Reference></Classification>
+<Assessment><Action category="other">Revocation</Action></Assessment>
+<AdditionalData type="integer" meaning="prior offenses">0</AdditionalData>
+<AdditionalData type="integer" meaning="alert threshold">255</AdditionalData>
+<AdditionalData type="integer" meaning="duration">0</AdditionalData>
+<AdditionalData type="integer" meaning="recon">1</AdditionalData>
+<AdditionalData type="string" meaning="restriction">private</AdditionalData>
+<AdditionalData type="integer" meaning="OUO">1</AdditionalData></Alert>
+<Alert><CreateTime>2014-08-04T22:40:14-0500</CreateTime><Source><Node category="dns">
+<name>badguy.com</name></Node></Source><Classification text="False Positive">
+<Reference origin="user-specific" meaning="Revocation"><name>Legitimate alert</name><url>./oldAlert.xml</url></Reference></Classification><Assessment><Action category="other">Revocation</Action></Assessment><AdditionalData type="integer" meaning="prior offenses">0</AdditionalData><AdditionalData type="integer" meaning="alert threshold">255</AdditionalData><AdditionalData type="integer" meaning="duration">0</AdditionalData><AdditionalData type="integer" meaning="recon">1</AdditionalData><AdditionalData type="string" meaning="restriction">private</AdditionalData><AdditionalData type="integer" meaning="OUO">1</AdditionalData></Alert></IDMEF-Message>

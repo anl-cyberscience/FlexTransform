@@ -1,0 +1,14 @@
+{
+    "DataSensitivity": "noSensitivity", 
+    "DownloadElementExtendedAttribute": {
+        "Field": "orig1.3Filename", 
+        "Value": "ANLalerts.Prod.201411180820.xml.gpg"
+    }, 
+    "FileName": "B6C9B2BF-5B98-447D-854A-FF17334C5E31_20141118142049_ANL.Alert.Cfm13Alert", 
+    "PayloadFormat": "Cfm13Alert", 
+    "PayloadType": "Alert", 
+    "ReconPolicy": "Touch", 
+    "SendingSite": "ANL", 
+    "SentTimestamp": "1416320449", 
+    "UploadID": "B6C9B2BF-5B98-447D-854A-FF17334C5E31"
+}

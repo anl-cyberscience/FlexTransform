@@ -1,0 +1,14 @@
+{
+    "DataSensitivity": "noSensitivity", 
+    "DownloadElementExtendedAttribute": {
+        "Field": "orig1.3Filename", 
+        "Value": "ORNLalerts.201411181019.xml.gpg"
+    }, 
+    "FileName": "16A6D27E-9B35-432A-A8E2-9203D5E2C34B_20141118151933_ORNL.Alert.Cfm13Alert", 
+    "PayloadFormat": "Cfm13Alert", 
+    "PayloadType": "Alert", 
+    "ReconPolicy": "Touch", 
+    "SendingSite": "ORNL", 
+    "SentTimestamp": "1416323973", 
+    "UploadID": "16A6D27E-9B35-432A-A8E2-9203D5E2C34B"
+}

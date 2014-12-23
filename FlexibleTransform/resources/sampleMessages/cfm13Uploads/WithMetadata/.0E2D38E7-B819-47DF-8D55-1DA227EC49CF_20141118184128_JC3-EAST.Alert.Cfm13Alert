@@ -1,0 +1,14 @@
+{
+    "DataSensitivity": "noSensitivity", 
+    "DownloadElementExtendedAttribute": {
+        "Field": "orig1.3Filename", 
+        "Value": "radar2fed2014111812390120141118124121.gpg"
+    }, 
+    "FileName": "0E2D38E7-B819-47DF-8D55-1DA227EC49CF_20141118184128_JC3-EAST.Alert.Cfm13Alert", 
+    "PayloadFormat": "Cfm13Alert", 
+    "PayloadType": "Alert", 
+    "ReconPolicy": "Touch", 
+    "SendingSite": "JC3-EAST", 
+    "SentTimestamp": "1416336088", 
+    "UploadID": "0E2D38E7-B819-47DF-8D55-1DA227EC49CF"
+}

@@ -1,0 +1,1124 @@
+{
+	"DocumentHeaderData": {
+		"fields": {
+			"description": {
+				"description": "Description of the data in the STIX document",
+				"valuemap": "description",
+				"datatype": "string",
+				"defaultValue": "NoValue",
+				"required": false,
+				"ontologyMappingType": "simple",
+				"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#ReportDescriptionSemanticComponent"
+			},
+			"title": {
+				"description": "Title of the STIX document",
+				"valuemap": "title",
+				"datatype": "string",
+				"defaultValue": "NoValue",
+				"required": false,
+				"ontologyMappingType": "simple",
+				"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#ReportTitleSemanticComponent"
+			},
+			"fileid": {
+				"description": "The STIX document ID",
+				"valuemap": "id",
+				"datatype": "string",
+				"defaultValue": "NoValue",
+				"required": false,
+				"ontologyMappingType": "simple",
+				"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#UUIDv4DocumentIdentifierSemanticConcept"
+			},
+			"produced_time": {
+				"description": "Time the report was generated",
+				"valuemap": "information_source;time;produced_time", 
+				"datatype": "datetime",
+				"dateTimeFormat": "%Y-%m-%dT%H:%M:%S%z",
+				"required": false,
+				"ontologyMappingType": "simple",
+				"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#ReportGeneratedTimeSemanticConcept"
+			},
+			"package_intents": {
+				"description": "Collection of one or more package intents for the document",
+				"valuemap": "package_intents",
+				"datatype": "group",
+				"required": true,
+				"multiple": true,
+				"ontologyMappingType": "none",
+				"subfields": [ "package_intent", "package_intent_vocab" ]
+			},
+			"package_intent": {
+				"description": "The type of indicator data in the document",
+				"valuemap": "package_intents;value", 
+				"datatype": "enum",
+				"required": false,
+				"ontologyMappingType": "enum",
+				"enumValues": { 
+					"Indicators - Network Activity": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#IndicatorCategoryNetworkActivitySemanticConcept"
+					},
+					"Indicators - Watchlist": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#IndicatorCategoryWatchlistSemanticConcept"
+					},
+					"Indicators - Phishing": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#IndicatorCategoryPhishingSemanticConcept"
+					},
+					"Indicators - Malware Artifacts": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#IndicatorCategoryMalwareArtifactsSemanticConcept"
+					},
+					"Indicators - Endpoint Characteristics": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#IndicatorCategoryEndpointCharacteristicsSemanticConcept"
+					},
+					"Indicators": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#IndicatorCategoryGeneralIndicatorSemanticConcept"
+					}
+				}
+			},
+			"package_intent_vocab": {
+				"description": "The vocabulary for the type of indicator data in the document",
+				"valuemap": "package_intents;xsi:type", 
+				"datatype": "enum",
+				"required": false,
+				"ontologyMappingType": "enum",
+				"enumValues": { 
+					"stixVocabs:PackageIntentVocab-1.0": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#PackageIntentSemanticConcept"
+					}
+				}
+			},
+			"version": {
+				"description": "The STIX version of the document",
+				"valuemap": "version", 
+				"datatype": "enum",
+				"required": false,
+				"ontologyMappingType": "enum",
+				"enumValues": {
+					"1.1.1": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#STIXVersionSemanticConcept"
+					}
+				}
+			},
+			"handling": {
+				"description": "Collection of one or more handling instructions for the document",
+				"valuemap": "handling",
+				"datatype": "group",
+				"required": true,
+				"multiple": true,
+				"ontologyMappingType": "none",
+				"subfields": [ "handling_controlledstructure", "handling_markingstructures" ]
+			},
+			"handling_controlledstructure": {
+				"description": "The control level for the TLP marking",
+				"valuemap": "handling;controlled_structure", 
+				"datatype": "enum",
+				"required": false,
+				"ontologyMappingType": "enum",
+				"enumValues": {
+					"//node()": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#XMLDocumentControlledStructureSemanticConcept"
+					}
+				}
+			},
+			"handling_markingstructures": {
+				"description": "Collection of one or more handling markings for the document",
+				"valuemap": "handling;marking_structures",
+				"datatype": "group",
+				"required": true,
+				"multiple": true,
+				"ontologyMappingType": "none",
+				"subfields": [ "handling_markingstructures_color", "handling_markingstructures_xsitype", "handling_markingstructures_statement" ]
+			},
+			"handling_markingstructures_color": {
+				"description": "The TLP color for the document",
+				"valuemap": "handling;marking_structures;color", 
+				"datatype": "enum",
+				"requiredIfReferenceField": "handling_markingstructures_xsitype",
+				"requiredIfReferenceValues": [ "tlpMarking:TLPMarkingStructureType" ], 
+				"ontologyMappingType": "enum",
+				"enumValues": {
+					"WHITE": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#TLPWhiteSemanticConcept"
+					},					
+					"GREEN": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#TLPGreenSemanticConcept"
+					},
+					"AMBER": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#TLPAmberSemanticConcept"
+					},
+					"RED": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#TLPRedSemanticConcept"
+					}
+				}
+			},
+			"handling_markingstructures_xsitype": {
+				"description": "The XSI type for the marking structure",
+				"valuemap": "handling;marking_structures;xsi:type", 
+				"datatype": "enum",
+				"required": false,
+				"ontologyMappingType": "enum",
+				"enumValues": {
+					"tlpMarking:TLPMarkingStructureType": {
+						"ontologyMapping": ""
+					},
+					"simpleMarking:SimpleMarkingStructureType": {
+						"ontologyMapping": ""
+					}
+				}
+			},
+			"handling_markingstructures_statement": {
+				"description": "The simple marking statement for the document",
+				"valuemap": "handling;marking_structures;statement",
+				"datatype": "string",
+				"requiredIfReferenceField": "handling_markingstructures_xsitype",
+				"requiredIfReferenceValues": [ "simpleMarking:SimpleMarkingStructureType" ], 
+				"ontologyMappingType": "simple",
+				"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#SimpleSharingRestrictionSemanticConcept"
+			}
+		}
+	},
+	"IndicatorData": {
+		"types": {
+			"DNS-Hostname-Block": [ 
+				{ "indicator_type": "Domain Watchlist", "observable_object_type": "Domain Name" },
+				{ "observable_object_type": "Domain Name" } 
+			],
+			"IPv4-Address-Block": [ 
+				{"indicator_type": "IP Watchlist" }, 
+				{ "indicator_type": "C2", "observable_object_xsitype": "AddressObjectType" } 
+			],
+			"URL-Block": [ 
+				{ "indicator_type": "URL Watchlist" }, 
+				{ "observable_object_type": "URL" }
+			],
+			"Malicious-Email-Block": [ { "observable_object_xsitype": "EmailMessageObjectType" } ],
+			"Malicious-File-IOC": [ 
+				{ "indicator_type": "File Hash Watchlist" }, 
+				{ "observable_object_xsitype": "FileObjectType" }  
+			],
+			"Registry-Key-IOC": [ { "observable_object_xsitype": "WindowsRegistryKeyObjectType" } ],
+			"Mutex-IOC": [ { "observable_object_xsitype": "MutexObjectType" } ]
+		},
+		"fields": {
+			"description": {
+				"description": "Description of indicator",
+				"valuemap": "description",
+				"datatype": "string",
+				"defaultValue": "CISCP STIX Indicator",
+				"required": true,
+				"ontologyMappingType": "simple",
+				"__ontologyMapping": "http://www.anl.gov/cfm/transform.owl#IPv4IndicatorTypeSemanticConcept",
+				"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#IndicatorDescriptionSemanticConcept"
+			},
+			"indicator_cybox_version": {
+				"description": "The cybox version for the indicator data in the row",
+				"valuemap": "version", 
+				"datatype": "enum",
+				"required": false,
+				"ontologyMappingType": "enum",
+				"enumValues": { 
+					"2.1.1": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#CyBOXVersionSemanticConcept"
+					}
+				}
+			},
+			"id": {
+				"description": "The indicator STIX ID",
+				"valuemap": "id",
+				"datatype": "string",
+				"required": false,
+				"ontologyMappingType": "simple",
+				"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#UUIDv4IndicatorIdentifierSemanticConcept"
+			},
+			"relatedid": {
+				"description": "The original STIX document ID that this indicator is related to",
+				"valuemap": "relatedid",
+				"datatype": "string",
+				"required": false,
+				"ontologyMappingType": "simple",
+				"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#UUIDv4RelatedUniqueIndicatorIdentifierSemanticConcept"
+			},
+			"indicator_types": {
+				"description": "Collection of one or more indicator types for the indicator set",
+				"valuemap": "indicator_types",
+				"datatype": "group",
+				"required": false,
+				"multiple": true,
+				"ontologyMappingType": "none",
+				"subfields": [ "indicator_type", "indicator_type_vocab" ]
+			},
+			"indicator_type": {
+				"description": "The type of indicator",
+				"valuemap": "indicator_types;value", 
+				"datatype": "enum",
+				"required": true,
+				"defaultValue": "Unknown",
+				"ontologyMappingType": "enum",
+				"enumValues": { 
+					"IP Watchlist": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#IndicatorCategoryIPWatchlistSemanticConcept"
+					},
+					"Domain Watchlist": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#IndicatorCategoryDomainWatchlistSemanticConcept"
+					},
+					"URL Watchlist": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#IndicatorCategoryURLWatchlistSemanticConcept"
+					},
+					"Malware Artifacts": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#IndicatorCategoryMalwareArtifactsSemanticConcept"
+					},
+					"File Hash Watchlist": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#IndicatorCategoryFileHashWatchlistSemanticConcept"
+					},
+					"Malicious E-mail": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#IndicatorCategoryMaliciousEmailSemanticConcept"
+					},
+					"Host Characteristics": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#IndicatorCategoryHostCharacteristicsSemanticConcept"
+					},
+					"C2": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#IndicatorCategoryC2SemanticConcept"
+					},
+					"Unknown": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#IndicatorCategoryUnknownSemanticConcept"
+					}
+				}
+			},
+			"indicator_type_vocab": {
+				"description": "The vocabulary for the type of indicator data in the row",
+				"valuemap": "indicator_types;xsi:type", 
+				"datatype": "enum",
+				"required": false,
+				"ontologyMappingType": "enum",
+				"enumValues": { 
+					"stixVocabs:IndicatorTypeVocab-1.1": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#IndicatorTypeVocabularly1-1SemanticConcept"
+					}
+				}
+			},
+			"observable_id": {
+				"description": "The observable STIX ID",
+				"valuemap": "observable;id",
+				"datatype": "string",
+				"defaultValue": "NoValue",
+				"required": false,
+				"ontologyMappingType": "simple",
+				"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#UUIDv4ObservableIdentifierSemanticConcept"
+			},
+			"observable_object_id": {
+				"description": "The observable object STIX ID",
+				"valuemap": "observable;object;id",
+				"datatype": "string",
+				"defaultValue": "NoValue",
+				"required": false,
+				"ontologyMappingType": "simple",
+				"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#UUIDv4ObservableObjectIdentifierSemanticConcept"
+			},
+			"observable_object_category": {
+				"description": "The category of the indicator object",
+				"valuemap": "observable;object;properties;category", 
+				"datatype": "enum",
+				"requiredIfReferenceField": "indicator_type",
+				"requiredIfReferenceValues": [ "IP Watchlist" ], 
+				"ontologyMappingType": "enum",
+				"enumValues": {
+					"ipv4-addr": {
+						"__ontologyMapping": "http://www.anl.gov/cfm/transform.owl#IPv4AddressIndicatorSemanticComponent",
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#IPv4IndicatorTypeSemanticConcept"
+					}
+				}
+			},
+			"observable_object_type": {
+				"description": "The type of the indicator object",
+				"valuemap": "observable;object;properties;type", 
+				"datatype": "enum",
+				"requiredIfReferenceField": "indicator_type",
+				"requiredIfReferenceValues": [ "Domain Watchlist" ], 
+				"ontologyMappingType": "enum",
+				"enumValues": {
+					"URL": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#URLIndicatorSemanticComponent"
+					},
+					"Domain Name": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#DomainNameIndicatorSemanticComponent"
+					}
+				}
+			},
+			"observable_object_xsitype": {
+				"description": "The schema type of the indicator object",
+				"valuemap": "observable;object;properties;xsi:type", 
+				"datatype": "enum",
+				"required": true,
+				"ontologyMappingType": "enum",
+				"enumValues": {
+					"AddressObjectType": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#AddressObjectSchemaTypeSpecification"
+					},
+					"URIObjectType": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#URIObjectSchemaTypeSpecification"
+					},
+					"FileObjectType": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#FileObjectSchemaTypeSpecification"
+					},
+					"EmailMessageObjectType": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#EmailMessageObjectSchemaTypeSpecification"
+					},
+					"LinkObjectType": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#LinkObjectSchemaTypeSpecification"
+					},
+					"WindowsRegistryKeyObjectType": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#WindowsRegistryKeyObjectSchemaTypeSpecification"
+					},
+					"MutexObjectType": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#MutexObjectSchemaTypeSpecification"
+					},
+					"HTTPSessionObjectType": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#HTTPSessionObjectSchemaTypeSpecification"
+					}
+				}
+			},
+			"observable_object_addressvalue_value": {
+				"description": "The value of the IP address object",
+				"valuemap": "observable;object;properties;address_value;value", 
+				"datatype": "ipv4",
+				"requiredIfReferenceField": "observable_object_category",
+				"requiredIfReferenceValues": [ "ipv4-addr" ], 
+				"ontologyMappingType": "referencedEnum",
+				"ontologyEnumField": "observable_object_category",
+				"ontologyMappingEnumValues": {
+					"ipv4-addr": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#IPv4AddressIndicatorValueSemanticComponent"
+					}
+				}
+			},
+			"observable_object_addressvalue_condition": {
+				"description": "The match condition for the IP address object",
+				"valuemap": "observable;object;properties;address_value;condition", 
+				"datatype": "enum",
+				"defaultValue": "Equals",
+				"requiredIfReferenceField": "observable_object_category",
+				"requiredIfReferenceValues": [ "ipv4-addr" ], 
+				"ontologyMappingType": "enum",
+				"enumValues": {
+					"Equals": {
+						"__ontologyMapping": "http://www.anl.gov/cfm/transform.owl#IPv4AddressIndicatorValueSemanticComponent",
+						"ontologyMapping": ""
+					}
+				}
+			},
+			"observable_object_filename_value": {
+				"description": "The file name to match",
+				"valuemap": "observable;object;properties;file_name;value", 
+				"datatype": "string",
+				"required": false,
+				"ontologyMappingType": "simple",
+				"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#FilenameIndicatorValueSemanticConcept"
+			},
+			"observable_object_filename_condition": {
+				"description": "The match condition for the filename object",
+				"valuemap": "observable;object;properties;file_name;condition", 
+				"datatype": "enum",
+				"defaultValue": "Equals",
+				"requiredIfReferenceField": "observable_object_filename_value",
+				"requiredIfReferenceValuesMatch": [ "*" ], 
+				"ontologyMappingType": "enum",
+				"enumValues": {
+					"Equals": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#FilenameMatchConstraintSemanticConcept"
+					}
+				}
+			},
+			"observable_object_filepath_value": {
+				"description": "The file path to match",
+				"valuemap": "observable;object;properties;file_path;value", 
+				"datatype": "string",
+				"required": false, 
+				"ontologyMappingType": "simple",
+				"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#FilepathIndicatorValueSemanticConcept"
+			},
+			"observable_object_filepath_condition": {
+				"description": "The match condition for the filepath object",
+				"valuemap": "observable;object;properties;file_path;condition", 
+				"datatype": "enum",
+				"defaultValue": "Equals",
+				"requiredIfReferenceField": "observable_object_filepath_value",
+				"requiredIfReferenceValuesMatch": [ "*" ], 
+				"ontologyMappingType": "enum",
+				"enumValues": {
+					"Equals": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#FilepathMatchConstraintSemanticConcept"
+					}
+				}
+			},
+			"observable_object_sizeinbytes_value": {
+				"description": "The file size in bytes to match",
+				"valuemap": "observable;object;properties;size_in_bytes;value", 
+				"datatype": "int",
+				"required": false,
+				"multiple": true,
+				"ontologyMappingType": "simple",
+				"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#FilesizeByteValueSemanticConcept"
+			},
+			"observable_object_sizeinbytes_condition": {
+				"description": "The match condition for the file size in bytes object",
+				"valuemap": "observable;object;properties;size_in_bytes;condition", 
+				"datatype": "enum",
+				"defaultValue": "Equals",
+				"requiredIfReferenceField": "observable_object_sizeinbytes_value",
+				"requiredIfReferenceValuesMatch": [ "*" ], 
+				"ontologyMappingType": "enum",
+				"enumValues": {
+					"Equals": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#FilesizeByteEqualityConstraintSemanticConcept"
+					}
+				}
+			},
+			"observable_object_sizeinbytes_applycondition": {
+				"description": "The match condition for the file size in bytes object if there are multiple values",
+				"valuemap": "observable;object;properties;size_in_bytes;apply_condition", 
+				"datatype": "enum",
+				"defaultValue": "Equals",
+				"required": false,
+				"ontologyMappingType": "enum",
+				"enumValues": {
+					"ANY": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#FilesizeByteMultiEqualityConstraintSemanticConcept"
+					}
+				}
+			},
+			"observable_object_value_value": {
+				"description": "The value of the DNS object",
+				"valuemap": "observable;object;properties;value;value", 
+				"datatype": "string",
+				"requiredIfReferenceField": "observable_object_type",
+				"requiredIfReferenceValues": [ "URL", "Domain Name" ], 
+				"ontologyMappingType": "referencedEnum",
+				"ontologyEnumField": "observable_object_type",
+				"ontologyMappingEnumValues": {
+					"URL": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#URLIndicatorMetadataSemanticComponent"
+					},
+					"Domain Name": {
+						"__ontologyMapping": "http://www.anl.gov/cfm/transform.owl#DNSHostNameIPv4IndicatorMetadataSemanticComponent",
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#DNSIndicatorValueSemanticComponent"
+					}
+				}
+			},
+			"observable_object_value_condition": {
+				"description": "The match condition for the DNS object",
+				"valuemap": "observable;object;properties;value;condition", 
+				"datatype": "enum",
+				"defaultValue": "Equals",
+				"requiredIfReferenceField": "observable_object_type",
+				"requiredIfReferenceValues": [ "URL", "Domain Name" ], 
+				"ontologyMappingType": "enum",
+				"enumValues": {
+					"Equals": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#DNSMatchConstraintSemanticConcept"
+					}
+				}
+			},
+			"observable_object_header_sender_xsitype": {
+				"description": "The schema type of the sender object",
+				"valuemap": "observable;object;properties;header;sender;xsi:type",
+				"additionalValuemaps": [ "observable;object;properties;header;from;xsi:type" ], 
+				"datatype": "enum",
+				"required": false,
+				"ontologyMappingType": "enum",
+				"enumValues": {
+					"AddressObjectType": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#ObservableObjectHeaderSenderSchemaTypeSpecification"
+					}
+				}
+			},
+			"observable_object_header_sender_category": {
+				"description": "The category of the sender object",
+				"valuemap": "observable;object;properties;header;sender;category",
+				"additionalValuemaps": [ "observable;object;properties;header;from;category" ],
+				"datatype": "enum",
+				"required": false,
+				"ontologyMappingType": "enum",
+				"enumValues": {
+					"e-mail": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#EmailSenderIndicatorSemanticConcept"
+					}
+				}
+			},
+			"observable_object_header_sender_addressvalue_value": {
+				"description": "The value of the sender address object",
+				"valuemap": "observable;object;properties;header;sender;address_value;value",
+				"additionalValuemaps": [ "observable;object;properties;header;from;address_value;value" ],
+				"datatype": "string",
+				"requiredIfReferenceField": "observable_object_header_sender_category",
+				"requiredIfReferenceValues": [ "e-mail" ], 
+				"ontologyMappingType": "referencedEnum",
+				"ontologyEnumField": "observable_object_header_sender_xsitype",
+				"ontologyMappingEnumValues": {
+					"AddressObjectType": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#EmailSenderAddressIndicatorValueSemanticComponent"
+					}
+				}
+			},
+			"observable_object_header_sender_addressvalue_condition": {
+				"description": "The match condition for the sender address object",
+				"valuemap": "observable;object;properties;header;sender;address_value;condition",
+				"additionalValuemaps": [ "observable;object;properties;header;from;address_value;condition" ],
+				"datatype": "enum",
+				"defaultValue": "Equals",
+				"requiredIfReferenceField": "observable_object_header_sender_addressvalue_value",
+				"requiredIfReferenceValuesMatch": [ "*" ], 
+				"ontologyMappingType": "enum",
+				"enumValues": {
+					"Equals": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#EmailAddressMatchConstraintSemanticConcept"
+					}
+				}
+			},
+			"observable_object_header_sender_customproperties": {
+				"description": "Collection of one or more indicators for the indicator set",
+				"valuemap": "observable;object;properties;header;from;custom_properties",
+				"additionalValuemaps": [ "observable;object;properties;header;sender;custom_properties" ],
+				"datatype": "group",
+				"required": false,
+				"multiple": true,
+				"ontologyMappingType": "none",
+				"subfields": [ "observable_object_header_sender_customproperties_name", "observable_object_header_sender_customproperties_value" ]
+			},
+			"observable_object_header_sender_customproperties_name": {
+				"description": "True if the sender address was spoofed",
+				"valuemap": "observable;object;properties;header;sender;custom_properties;name",
+				"additionalValuemaps": [ "observable;object;properties;header;from;custom_properties;name" ],
+				"datatype": "enum",
+				"required": false,
+				"ontologyMappingType": "enum",
+				"enumValues": {
+					"is_spoofed": {
+						"ontologyMapping": ""
+					}
+				}
+			},
+			"observable_object_header_sender_customproperties_value": {
+				"description": "True if the sender address was spoofed",
+				"valuemap": "observable;object;properties;header;sender;custom_properties;value",
+				"additionalValuemaps": [ "observable;object;properties;header;from;custom_properties;value" ],
+				"datatype": "string",
+				"required": false,
+				"ontologyMappingType": "referencedEnum",
+				"ontologyEnumField": "observable_object_header_sender_customproperties_name",
+				"ontologyMappingEnumValues": {
+					"is_spoofed": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#EmailHeaderSenderSpoofedIndicatorMetadataSemanticConcept"
+					}
+				}
+			},
+			"observable_object_header_subject_value": {
+				"description": "The value of the header subject object",
+				"valuemap": "observable;object;properties;header;subject;value", 
+				"datatype": "string",
+				"required": false,
+				"multiple": true,
+				"ontologyMappingType": "simple",
+				"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#EmailSubjectValueSemanticComponent"
+			},
+			"observable_object_header_subject_condition": {
+				"description": "The match condition for the header subject object",
+				"valuemap": "observable;object;properties;header;subject;condition", 
+				"datatype": "enum",
+				"defaultValue": "Equals",
+				"requiredIfReferenceField": "observable_object_header_subject_value",
+				"requiredIfReferenceValuesMatch": [ "*" ], 
+				"ontologyMappingType": "enum",
+				"enumValues": {
+					"Equals": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#EmailSubjectMatchConstraintSemanticConcept"
+					}
+				}
+			},
+			"observable_object_header_subject_applycondition": {
+				"description": "The match condition for the email subject object if there are multiple values",
+				"valuemap": "observable;object;properties;header;subject;apply_condition", 
+				"datatype": "enum",
+				"defaultValue": "Equals",
+				"required": false,
+				"ontologyMappingType": "enum",
+				"enumValues": {
+					"ANY": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#EmailSubjectMultiMatchConstraintSemanticConcept"
+					}
+				}
+			},
+			"observable_object_header_xmailer_value": {
+				"description": "The value of the header x-mailer object",
+				"valuemap": "observable;object;properties;header;x_mailer;value", 
+				"datatype": "string",
+				"required": false,
+				"ontologyMappingType": "simple",
+				"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#EmailHeaderXmailerIndicatorValueSemanticComponent"
+			},
+			"observable_object_header_xmailer_condition": {
+				"description": "The match condition for the header x-mailer object",
+				"valuemap": "observable;object;properties;header;x_mailer;condition",
+				"datatype": "enum",
+				"defaultValue": "Equals",
+				"requiredIfReferenceField": "observable_object_header_xmailer_value",
+				"requiredIfReferenceValuesMatch": [ "*" ], 
+				"ontologyMappingType": "enum",
+				"enumValues": {
+					"Equals": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#EmailHeaderXmailerMatchConstraintSemanticComponent"
+					}
+				}
+			},
+			"observable_object_header_messageid_value": {
+				"description": "The value of the header message-id object",
+				"valuemap": "observable;object;properties;header;message_id;value", 
+				"datatype": "string",
+				"required": false,
+				"ontologyMappingType": "simple",
+				"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#EmailHeaderMessageIDIndicatorValueSemanticComponent"
+			},
+			"observable_object_header_messageid_condition": {
+				"description": "The match condition for the header message-id object",
+				"valuemap": "observable;object;properties;header;message_id;condition",
+				"datatype": "enum",
+				"defaultValue": "Equals",
+				"requiredIfReferenceField": "observable_object_header_message_id_value",
+				"requiredIfReferenceValuesMatch": [ "*" ], 
+				"ontologyMappingType": "enum",
+				"enumValues": {
+					"Equals": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#EmailHeaderMessageIDIndicatorValueSemanticComponent"
+					}
+				}
+			},
+			"observable_object_hashes": {
+				"description": "Collection of one or more file hashes for the indicator set",
+				"valuemap": "observable;object;properties;hashes",
+				"datatype": "group",
+				"required": false,
+				"multiple": true,
+				"ontologyMappingType": "none",
+				"subfields": [ "observable_object_hashes_type_value", "observable_object_hashes_type_condition", "observable_object_hashes_simplehash_value", "observable_object_hashes_simplehash_condition", "observable_object_hashes_fuzzyhash_value", "observable_object_hashes_fuzzyhash_condition"  ]
+			},
+			"observable_object_hashes_type_value": {
+				"description": "The type of the hash of the file",
+				"valuemap": "observable;object;properties;hashes;type;value", 
+				"datatype": "enum",
+				"required": false,
+				"ontologyMappingType": "enum",
+				"enumValues": {
+					"MD5": {
+						"ontologyMapping": ""
+					},
+					"SHA1": {
+						"ontologyMapping": ""
+					},
+					"SHA256": {
+						"ontologyMapping": ""
+					},
+					"SSDEEP": {
+						"ontologyMapping": ""
+					}
+				}
+			},
+			"observable_object_hashes_type_condition": {
+				"description": "The match condition for the type of the hash of the file",
+				"valuemap": "observable;object;properties;hashes;type;condition", 
+				"datatype": "enum",
+				"required": false,
+				"ontologyMappingType": "none",
+				"enumValues": {
+					"Equals": {
+						"ontologyMapping": ""
+					}
+				}
+			},
+			"observable_object_hashes_simplehash_value": {
+				"description": "The type of the hash of the file",
+				"valuemap": "observable;object;properties;hashes;simple_hash_value;value", 
+				"datatype": "string",
+				"required": false,
+				"ontologyMappingType": "referencedEnum",
+				"ontologyEnumField": "observable_object_hashes_type_value",
+				"ontologyMappingEnumValues": {
+					"MD5": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#MD5FilehashIndicatorValueSemanticComponent"
+					},
+					"SHA1": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#SHA1FilehashIndicatorValueSemanticComponent"
+					},
+					"SHA256": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#SHA256FilehashIndicatorValueSemanticComponent"
+					}
+				}
+			},
+			"observable_object_hashes_simplehash_condition": {
+				"description": "The match condition for the type of the hash of the file",
+				"valuemap": "observable;object;properties;hashes;simple_hash_value;condition", 
+				"datatype": "enum",
+				"required": false,
+				"ontologyMappingType": "none",
+				"enumValues": {
+					"Equals": {
+						"ontologyMapping": ""
+					}
+				}
+			},
+			"observable_object_hashes_fuzzyhash_value": {
+				"description": "The type of the hash of the file",
+				"valuemap": "observable;object;properties;hashes;fuzzy_hash_value;value", 
+				"datatype": "string",
+				"required": false,
+				"ontologyMappingType": "referencedEnum",
+				"ontologyEnumField": "observable_object_hashes_type_value",
+				"ontologyMappingEnumValues": {
+					"SSDEEP": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#SSDeepFilehashIndicatorValueSemanticComponent"
+					}
+				}
+			},
+			"observable_object_hashes_fuzzyhash_condition": {
+				"description": "The match condition for the type of the hash of the file",
+				"valuemap": "observable;object;properties;hashes;fuzzy_hash_value;condition", 
+				"datatype": "enum",
+				"required": false,
+				"ontologyMappingType": "none",
+				"enumValues": {
+					"Equals": {
+						"ontologyMapping": ""
+					}
+				}
+			},
+			"observable_object_reghive_value": {
+				"description": "The value of the registry hive object",
+				"valuemap": "observable;object;properties;hive;value", 
+				"datatype": "string",
+				"required": false,
+				"ontologyMappingType": "simple",
+				"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#ReghiveIndicatorValueSemanticComponent"
+			},
+			"observable_object_reghive_condition": {
+				"description": "The match condition for the registry hive object",
+				"valuemap": "observable;object;properties;hive;condition", 
+				"datatype": "enum",
+				"defaultValue": "Equals",
+				"requiredIfReferenceField": "observable_object_reghive_value",
+				"requiredIfReferenceValuesMatch": [ "*" ], 
+				"ontologyMappingType": "enum",
+				"enumValues": {
+					"Equals": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#ReghiveEqualityConstraintSemanticComponent"
+					}
+				}
+			},
+			"observable_object_regkey_value": {
+				"description": "The registry key object value",
+				"valuemap": "observable;object;properties;key;value", 
+				"datatype": "string",
+				"required": false,
+				"ontologyMappingType": "simple",
+				"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#RegkeyValueIndicatorValueSemanticComponent"
+			},
+			"observable_object_regkey_condition": {
+				"description": "The match condition for the registry key object",
+				"valuemap": "observable;object;properties;key;condition", 
+				"datatype": "enum",
+				"defaultValue": "Equals",
+				"requiredIfReferenceField": "observable_object_regkey_value",
+				"requiredIfReferenceValuesMatch": [ "*" ], 
+				"ontologyMappingType": "enum",
+				"enumValues": {
+					"Equals": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#RegkeyValueEqualityConstraintSemanticComponent"
+					}
+				}
+			},
+			"observable_object_properties_values": {
+				"description": "Collection of one or more registry keys for the indicator set",
+				"valuemap": "observable;object;properties;values",
+				"datatype": "group",
+				"required": false,
+				"multiple": true,
+				"ontologyMappingType": "none",
+				"subfields": [ "observable_object_regkey_subkey_name_value", "observable_object_regkey_subkey_name_condition", "observable_object_regkey_subkey_data_value", "observable_object_regkey_subkey_data_condition" ]
+			},
+			"observable_object_regkey_subkey_name_value": {
+				"description": "The registry subkey object name",
+				"valuemap": "observable;object;properties;values;name;value", 
+				"datatype": "string",
+				"required": false,
+				"ontologyMappingType": "simple",
+				"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#RegkeySubkeyNameIndicatorValueSemanticComponent"
+			},
+			"observable_object_regkey_subkey_name_condition": {
+				"description": "The registry subkey object name match condition",
+				"valuemap": "observable;object;properties;values;name;condition", 
+				"datatype": "enum",
+				"required": false,
+				"ontologyMappingType": "enum",
+				"enumValues": {
+					"Equals": {
+						"ontologyMapping": ""
+					}
+				}
+			},
+			"observable_object_regkey_subkey_data_value": {
+				"description": "The registry subkey object value",
+				"valuemap": "observable;object;properties;values;data;value", 
+				"datatype": "string",
+				"required": false,
+				"ontologyMappingType": "simple",
+				"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#RegkeySubkeyValueIndicatorValueSemanticComponent"
+			},
+			"observable_object_regkey_subkey_data_condition": {
+				"description": "The registry subkey object data match condition",
+				"valuemap": "observable;object;properties;values;data;condition", 
+				"datatype": "enum",
+				"required": false,
+				"ontologyMappingType": "enum",
+				"enumValues": {
+					"Equals": {
+						"ontologyMapping": ""
+					}
+				}
+			},
+			"observable_object_mutexname_value": {
+				"description": "The value of the mutex name object",
+				"valuemap": "observable;object;properties;name;value", 
+				"datatype": "string",
+				"required": false,
+				"ontologyMappingType": "simple",
+				"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#MutexNameIndicatorValueSemanticComponent"
+			},
+			"observable_object_mutexname_condition": {
+				"description": "The match condition for the mutex name object",
+				"valuemap": "observable;object;properties;name;condition", 
+				"datatype": "enum",
+				"defaultValue": "Equals",
+				"requiredIfReferenceField": "observable_object_mutexname_value",
+				"requiredIfReferenceValuesMatch": [ "*" ], 
+				"ontologyMappingType": "enum",
+				"enumValues": {
+					"Equals": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#MutexNameEqualityConstraintSemanticComponent"
+					}
+				}
+			},
+			"observable_object_urllabel_value": {
+				"description": "The value of the url_label object",
+				"valuemap": "observable;object;properties;url_label;value", 
+				"datatype": "string",
+				"required": false,
+				"ontologyMappingType": "simple",
+				"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#URLLabelIndicatorValueSemanticComponent"
+			},
+			"observable_object_urllabel_condition": {
+				"description": "The match condition for the url_label object",
+				"valuemap": "observable;object;properties;url_label;condition", 
+				"datatype": "enum",
+				"defaultValue": "Equals",
+				"requiredIfReferenceField": "observable_object_urllabel_value",
+				"requiredIfReferenceValuesMatch": [ "*" ], 
+				"ontologyMappingType": "enum",
+				"enumValues": {
+					"Equals": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#URLLabelMatchConstraintSemanticComponent"
+					}
+				}
+			},
+			"observable_object_urllabel_is_obfuscated": {
+				"description": "Is the url_label object obfuscated",
+				"valuemap": "observable;object;properties;url_label;is_obfuscated", 
+				"datatype": "enum",
+				"defaultValue": "Equals",
+				"requiredIfReferenceField": "observable_object_urllabel_value",
+				"requiredIfReferenceValuesMatch": [ "*" ], 
+				"ontologyMappingType": "enum",
+				"enumValues": {
+					"True": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#URLLabelObfuscatedIndicatorMetadataSemanticConcept"
+					}
+				}
+			},
+			"observable_object_urllabel_pattern_type": {
+				"description": "The pattern type for the url_label object",
+				"valuemap": "observable;object;properties;url_label;pattern_type", 
+				"datatype": "enum",
+				"defaultValue": "Equals",
+				"requiredIfReferenceField": "observable_object_urllabel_value",
+				"requiredIfReferenceValuesMatch": [ "*" ], 
+				"ontologyMappingType": "enum",
+				"enumValues": {
+					"string": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#URLLabelStringPatternTypeSemanticComponent"
+					}
+				}
+			},
+			"observable_object_relationship": {
+				"description": "The value of the relationship object",
+				"valuemap": "observable;object;relationship", 
+				"datatype": "enum",
+				"requiredIfReferenceField": "relatedid",
+				"requiredIfReferenceValuesMatch": [ "*" ],
+				"ontologyMappingType": "enum",
+				"enumValues": {
+					"Contains": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#ObservableObjectContainsRelationshipValueSemanticComponent"
+					},
+					"Connected_To": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#ObservableObjectConnectedToRelationshipValueSemanticComponent"
+					}
+				}
+			},
+			"observable_object_http_request": {
+				"description": "Collection of one or more http request or response headers for the indicator set",
+				"valuemap": "observable;object;properties;http_request_response",
+				"datatype": "group",
+				"required": false,
+				"multiple": true,
+				"ontologyMappingType": "none",
+				"subfields": [ "observable_object_http_client_request_user_agent_header_value", "observable_object_http_client_request_user_agent_header_condition" ]
+			},
+			"observable_object_http_client_request_user_agent_header_value": {
+				"description": "The value of the user agent header object in the http client request",
+				"valuemap": "observable;object;properties;http_request_response;http_client_request;http_request_header;parsed_header;user_agent;value", 
+				"datatype": "string",
+				"required": false,
+				"ontologyMappingType": "simple",
+				"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#HTTPClientRequestHeaderUserAgentIndicatorValueSemanticComponent"
+			},
+			"observable_object_http_client_request_user_agent_header_condition": {
+				"description": "The match condition for the user agent header object in the http client request",
+				"valuemap": "observable;object;properties;http_request_response;http_client_request;http_request_header;parsed_header;user_agent;condition", 
+				"datatype": "enum",
+				"defaultValue": "Equals",
+				"requiredIfReferenceField": "observable_object_http_client_request_user_agent_header_value",
+				"requiredIfReferenceValuesMatch": [ "*" ], 
+				"ontologyMappingType": "enum",
+				"enumValues": {
+					"Equals": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#HTTPClientRequestHeaderUserAgentEqualityConstraintSemanticComponent"
+					}
+				}
+			},
+			"observable_object_links": {
+				"description": "Collection of one or more attachment references for the indicator set",
+				"valuemap": "observable;object;properties;links",
+				"datatype": "group",
+				"required": false,
+				"multiple": true,
+				"ontologyMappingType": "none",
+				"subfields": [ "observable_object_links_reference" ]
+			},
+			"observable_object_links_reference": {
+				"description": "Reference to another STIX object that contains URL information, currently not processed by Flexible Transform",
+				"datatype": "string",
+				"valuemap": "observable;object;properties;links;object_reference",
+				"ontologyMappingType": "none",
+				"ignore": true
+			},
+			"observable_object_attachments": {
+				"description": "Collection of one or more attachment references for the indicator set",
+				"valuemap": "observable;object;properties;attachments",
+				"datatype": "group",
+				"required": false,
+				"multiple": true,
+				"ontologyMappingType": "none",
+				"subfields": [ "observable_object_attachments_reference" ]
+			},
+			"observable_object_attachments_reference": {
+				"description": "Reference to another STIX object that contains URL information, currently not processed by Flexible Transform",
+				"datatype": "string",
+				"valuemap": "observable;object;properties;attachments;object_reference",
+				"ontologyMappingType": "none",
+				"ignore": true
+			},
+			"killchain_phases": {
+				"description": "Collection of one or more kill chains for the indicator set",
+				"valuemap": "kill_chain_phases;kill_chain_phases",
+				"datatype": "group",
+				"required": false,
+				"multiple": true,
+				"ontologyMappingType": "none",
+				"subfields": [ "killchain_phases_chain_id", "killchain_phases_chain_name", "killchain_phases_phase_id", "killchain_phases_phase_name", "killchain_phases_phase_ordinality" ]
+			},
+			"killchain_phases_chain_id": {
+				"description": "The kill chain id",
+				"valuemap": "kill_chain_phases;kill_chain_phases;kill_chain_id", 
+				"datatype": "string",
+				"required": false,
+				"ontologyMappingType": "simple",
+				"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#KillChainIDSemanticConcept"
+			},
+			"killchain_phases_chain_name": {
+				"description": "The kill chain name",
+				"valuemap": "kill_chain_phases;kill_chain_phases;kill_chain_name", 
+				"datatype": "string",
+				"required": false,
+				"ontologyMappingType": "simple",
+				"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#KillChainNameSemanticConcept"
+			},
+			"killchain_phases_phase_id": {
+				"description": "The kill chain phase id",
+				"valuemap": "kill_chain_phases;kill_chain_phases;phase_id", 
+				"datatype": "string",
+				"required": false,
+				"ontologyMappingType": "simple",
+				"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#KillChainPhaseIDSemanticConcept"
+			},
+			"killchain_phases_phase_name": {
+				"description": "The kill chain phase name",
+				"valuemap": "kill_chain_phases;kill_chain_phases;phase_name",
+				"additionalValuemaps": [ "kill_chain_phases;kill_chain_phases;name" ],
+				"datatype": "string",
+				"required": false,
+				"ontologyMappingType": "simple",
+				"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#KillChainPhaseNameSemanticConcept"
+			},
+			"killchain_phases_phase_ordinality": {
+				"description": "The kill chain phase ordinality",
+				"valuemap": "kill_chain_phases;kill_chain_phases;ordinality",
+				"datatype": "int",
+				"required": false,
+				"ontologyMappingType": "simple",
+				"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#KillChainPhaseOrdinalitySemanticConcept"
+			},
+			"sightings_count": {
+				"description": "The number of sightings",
+				"valuemap": "sightings;sightings_count", 
+				"datatype": "int",
+				"required": false,
+				"ontologyMappingType": "simple",
+				"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#PriorIndicatorReportsSemanticConcept"
+			},
+			"sightings_sightings": {
+				"description": "Collection of one or more sightings for the indicator set",
+				"valuemap": "sightings;sightings",
+				"datatype": "group",
+				"required": false,
+				"multiple": true,
+				"ontologyMappingType": "none",
+				"subfields": [ "sightings_timestamp", "sightings_timestamp_precision" ]
+			},
+			"sightings_timestamp": {
+				"description": "The time of the last sighting",
+				"valuemap": "sightings;sightings;timestamp", 
+				"datatype": "datetime",
+				"dateTimeFormat": "%Y-%m-%dT%H:%M:%S",
+				"required": false,
+				"ontologyMappingType": "simple",
+				"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#TimeOfMostRecentPriorIndicatorReportSemanticConcept"
+			},
+			"sightings_timestamp_precision": {
+				"description": "The precision of the timestamp of sighting",
+				"valuemap": "sightings;sightings;timestamp_precision", 
+				"datatype": "enum",
+				"required": false,
+				"ontologyMappingType": "enum",
+				"enumValues": {
+					"second": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#TimePrecisionOfMostRecentPriorIndicatorReportSemanticConcept"
+					}
+				}
+			}
+		}
+	}
+}

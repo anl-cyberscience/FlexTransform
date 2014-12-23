@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE CFMAlert[
+    <!ENTITY cfm 'http://www.anl.gov/cfm/2.0/current/#' >
+    <!ENTITY tlp 'http://www.us-cert.gov/tlp/#'>
+]>
+<CFMAlert xmlns='http://www.anl.gov/cfm/2.0/current/CFMAlert' 
+xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' 
+xsi:schemaLocation=" http://www.anl.gov/cfm/2.0/current/CFMAlert ../../../resources/schemas/CFMAlert.xsd">
+	<Version>2.0</Version>
+	<Alert>
+	  <AlertID>&cfm;Alert-f47ac10b-58cc-4372-a567-0e02b2c3d480SITE-1355938635-01</AlertID>
+	  <AlertTimestamp>1355616000</AlertTimestamp>
+	  <IndicatorSet>
+		<CompositeIndicator>
+			<And>
+				<Indicator>
+					<Type>&cfm;SourceIPAddress</Type>
+					<Constraint>&cfm;IPv4AddressMatch</Constraint>
+					<Value>192.168.10.10</Value>
+				</Indicator>
+				<Indicator>
+					<Type>&cfm;EMailSubject</Type>
+					<Constraint>&cfm;RegularExpression</Constraint>
+<Value>
+/.*Nigerian Lottery Winnings.*/
+</Value>
+				</Indicator>
+			</And>
+		</CompositeIndicator>
+	  </IndicatorSet>
+	  <ReasonList>
+<Reason>
+    <ReasonCategory>&cfm;Spam</ReasonCategory>
+</Reason>
+  </ReasonList>
+	  <ActionList>
+<Action>
+    <ActionCategory>&cfm;Block</ActionCategory>
+		    <ActionTimestamp>1355616000</ActionTimestamp>
+</Action>
+<Action>
+    <ActionCategory>&cfm;Notify</ActionCategory>
+		    <ActionTimestamp>1355616001</ActionTimestamp>
+</Action>
+  </ActionList>
+  <Comment>
+	Two indicators from a recent spam campaign against our users.
+  </Comment>
+</Alert>
+</CFMAlert>

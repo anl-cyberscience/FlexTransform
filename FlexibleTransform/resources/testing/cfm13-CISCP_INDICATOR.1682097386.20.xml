@@ -1,0 +1,515 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE IDMEF-Message PUBLIC "-//IETF//DTD RFC XXXX IDMEF v1.0//EN" "idmef-message.dtd">
+<IDMEF-Message xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.anl.gov/cfm/1.3/IDMEF-Message" xsi:schemaLocation="http://www.anl.gov/cfm/1.3/IDMEF-Message/../../../resources/schemas/CFMMessage13.xsd">
+  <Alert>
+    <Analyzer analyzerid="NREL-CS">
+      <Node>
+        <location>National Renewable Energy Laboratory - Cyber Security</location>
+        <name>Andrew Hoying, 303-275-3806, andrew.hoying@nrel.gov</name>
+      </Node>
+    </Analyzer>
+    <AnalyzerTime>2014-12-22T22:30:29+0000</AnalyzerTime>
+    <AdditionalData meaning="number of alerts in this report" type="integer">22</AdditionalData>
+    <AdditionalData meaning="report type" type="string">alerts</AdditionalData>
+    <AdditionalData meaning="report schedule" type="string">5 minutes</AdditionalData>
+    <AdditionalData meaning="report start time" type="date-time">2014-12-22T22:30:29+0000</AdditionalData>
+  </Alert>
+  <Alert>
+    <CreateTime>2014-12-22T22:30:29+0000</CreateTime>
+    <Source>
+      <Node category="dns">
+        <name>c.api.search.conduit.com</name>
+      </Node>
+    </Source>
+    <Classification text="Domain Block: Stage 1 Malcious DomainEverything after the CTID can change in the GET statement below.GET /UP/settings/?ctid=CT3297955&amp;UM=2&amp;c=US HTTP/1.1Malicious Domain observed usually occuring in a pairing with Stage 2 Domain &amp; POST">
+      <Reference meaning="Unspecified" origin="user-specific">
+        <name>unknown</name>
+        <url> </url>
+      </Reference>
+    </Classification>
+    <Assessment>
+      <Action category="block-installed"/>
+    </Assessment>
+    <AdditionalData meaning="prior offenses" type="integer">1</AdditionalData>
+    <AdditionalData meaning="recon" type="integer">0</AdditionalData>
+    <AdditionalData meaning="duration" type="integer">86400</AdditionalData>
+    <AdditionalData meaning="OUO" type="integer">0</AdditionalData>
+  </Alert>
+  <Alert>
+    <CreateTime>2014-12-22T22:30:29+0000</CreateTime>
+    <Source>
+      <Node category="dns">
+        <name>sp-ip2location.conduit-services.com</name>
+      </Node>
+    </Source>
+    <Classification text="Domain Block: Stage 1 Malcious DomainGET /ip/?client=sp HTTP/1.1Malicious Domain observed usually occuring in a pairing with Stage 2 Domain &amp; POST">
+      <Reference meaning="Unspecified" origin="user-specific">
+        <name>unknown</name>
+        <url> </url>
+      </Reference>
+    </Classification>
+    <Assessment>
+      <Action category="block-installed"/>
+    </Assessment>
+    <AdditionalData meaning="prior offenses" type="integer">1</AdditionalData>
+    <AdditionalData meaning="recon" type="integer">0</AdditionalData>
+    <AdditionalData meaning="duration" type="integer">86400</AdditionalData>
+    <AdditionalData meaning="OUO" type="integer">0</AdditionalData>
+  </Alert>
+  <Alert>
+    <CreateTime>2014-12-22T22:30:29+0000</CreateTime>
+    <Source>
+      <Node category="dns">
+        <name>sp-storage.spccinta.com</name>
+      </Node>
+    </Source>
+    <Classification text="Domain Block: Stage 1 Malcious DomainThe version number after AutoUpdate may be different in the GET statementGET /AutoUpdate/2.15.11.3/AutoUpdate.zip HTTP/1.1Malicious Domain observed usually occuring in a pairing with Stage 2 Domain &amp; POST">
+      <Reference meaning="Unspecified" origin="user-specific">
+        <name>unknown</name>
+        <url> </url>
+      </Reference>
+    </Classification>
+    <Assessment>
+      <Action category="block-installed"/>
+    </Assessment>
+    <AdditionalData meaning="prior offenses" type="integer">1</AdditionalData>
+    <AdditionalData meaning="recon" type="integer">0</AdditionalData>
+    <AdditionalData meaning="duration" type="integer">86400</AdditionalData>
+    <AdditionalData meaning="OUO" type="integer">0</AdditionalData>
+  </Alert>
+  <Alert>
+    <CreateTime>2014-12-22T22:30:29+0000</CreateTime>
+    <Source>
+      <Node category="dns">
+        <name>sp-alive-msg.conduit-data.com</name>
+      </Node>
+    </Source>
+    <Classification text="Domain Block: Stage 2 Malcious DomainPOST / HTTP/1.1Malicious Domain observed usually occuring in a pairing with one of the Stage 1 Domains &amp; GET URI listed above">
+      <Reference meaning="Unspecified" origin="user-specific">
+        <name>unknown</name>
+        <url> </url>
+      </Reference>
+    </Classification>
+    <Assessment>
+      <Action category="block-installed"/>
+    </Assessment>
+    <AdditionalData meaning="prior offenses" type="integer">1</AdditionalData>
+    <AdditionalData meaning="recon" type="integer">0</AdditionalData>
+    <AdditionalData meaning="duration" type="integer">86400</AdditionalData>
+    <AdditionalData meaning="OUO" type="integer">0</AdditionalData>
+  </Alert>
+  <Alert>
+    <CreateTime>2014-12-22T22:30:29+0000</CreateTime>
+    <Source>
+      <Node>
+        <Address category="ipv4-addr">
+          <address>184.28.64.243</address>
+        </Address>
+      </Node>
+    </Source>
+    <Classification text="Comcast Cable Comm - Cambridge, MA">
+      <Reference meaning="Unspecified" origin="user-specific">
+        <name>unknown</name>
+        <url> </url>
+      </Reference>
+    </Classification>
+    <Assessment>
+      <Action category="block-installed"/>
+    </Assessment>
+    <AdditionalData meaning="prior offenses" type="integer">1</AdditionalData>
+    <AdditionalData meaning="recon" type="integer">0</AdditionalData>
+    <AdditionalData meaning="duration" type="integer">86400</AdditionalData>
+    <AdditionalData meaning="OUO" type="integer">0</AdditionalData>
+  </Alert>
+  <Alert>
+    <CreateTime>2014-12-22T22:30:29+0000</CreateTime>
+    <Source>
+      <Node>
+        <Address category="ipv4-addr">
+          <address>23.23.100.240</address>
+        </Address>
+      </Node>
+    </Source>
+    <Classification text="Amazon - Ashburn, VA">
+      <Reference meaning="Unspecified" origin="user-specific">
+        <name>unknown</name>
+        <url> </url>
+      </Reference>
+    </Classification>
+    <Assessment>
+      <Action category="block-installed"/>
+    </Assessment>
+    <AdditionalData meaning="prior offenses" type="integer">1</AdditionalData>
+    <AdditionalData meaning="recon" type="integer">0</AdditionalData>
+    <AdditionalData meaning="duration" type="integer">86400</AdditionalData>
+    <AdditionalData meaning="OUO" type="integer">0</AdditionalData>
+  </Alert>
+  <Alert>
+    <CreateTime>2014-12-22T22:30:29+0000</CreateTime>
+    <Source>
+      <Node>
+        <Address category="ipv4-addr">
+          <address>54.235.66.89</address>
+        </Address>
+      </Node>
+    </Source>
+    <Classification text="Amazon - Ashburn, VA">
+      <Reference meaning="Unspecified" origin="user-specific">
+        <name>unknown</name>
+        <url> </url>
+      </Reference>
+    </Classification>
+    <Assessment>
+      <Action category="block-installed"/>
+    </Assessment>
+    <AdditionalData meaning="prior offenses" type="integer">1</AdditionalData>
+    <AdditionalData meaning="recon" type="integer">0</AdditionalData>
+    <AdditionalData meaning="duration" type="integer">86400</AdditionalData>
+    <AdditionalData meaning="OUO" type="integer">0</AdditionalData>
+  </Alert>
+  <Alert>
+    <CreateTime>2014-12-22T22:30:29+0000</CreateTime>
+    <Source>
+      <Node>
+        <Address category="ipv4-addr">
+          <address>54.243.244.209</address>
+        </Address>
+      </Node>
+    </Source>
+    <Classification text="Amazon - Ashburn, VA">
+      <Reference meaning="Unspecified" origin="user-specific">
+        <name>unknown</name>
+        <url> </url>
+      </Reference>
+    </Classification>
+    <Assessment>
+      <Action category="block-installed"/>
+    </Assessment>
+    <AdditionalData meaning="prior offenses" type="integer">1</AdditionalData>
+    <AdditionalData meaning="recon" type="integer">0</AdditionalData>
+    <AdditionalData meaning="duration" type="integer">86400</AdditionalData>
+    <AdditionalData meaning="OUO" type="integer">0</AdditionalData>
+  </Alert>
+  <Alert>
+    <CreateTime>2014-12-22T22:30:29+0000</CreateTime>
+    <Source>
+      <Node>
+        <Address category="ipv4-addr">
+          <address>184.72.217.85</address>
+        </Address>
+      </Node>
+    </Source>
+    <Classification text="Amazon - Ashburn, VA">
+      <Reference meaning="Unspecified" origin="user-specific">
+        <name>unknown</name>
+        <url> </url>
+      </Reference>
+    </Classification>
+    <Assessment>
+      <Action category="block-installed"/>
+    </Assessment>
+    <AdditionalData meaning="prior offenses" type="integer">1</AdditionalData>
+    <AdditionalData meaning="recon" type="integer">0</AdditionalData>
+    <AdditionalData meaning="duration" type="integer">86400</AdditionalData>
+    <AdditionalData meaning="OUO" type="integer">0</AdditionalData>
+  </Alert>
+  <Alert>
+    <CreateTime>2014-12-22T22:30:29+0000</CreateTime>
+    <Source>
+      <Node>
+        <Address category="ipv4-addr">
+          <address>54.83.197.43</address>
+        </Address>
+      </Node>
+    </Source>
+    <Classification text="Merck &amp; Co - Seattle, WA">
+      <Reference meaning="Unspecified" origin="user-specific">
+        <name>unknown</name>
+        <url> </url>
+      </Reference>
+    </Classification>
+    <Assessment>
+      <Action category="block-installed"/>
+    </Assessment>
+    <AdditionalData meaning="prior offenses" type="integer">1</AdditionalData>
+    <AdditionalData meaning="recon" type="integer">0</AdditionalData>
+    <AdditionalData meaning="duration" type="integer">86400</AdditionalData>
+    <AdditionalData meaning="OUO" type="integer">0</AdditionalData>
+  </Alert>
+  <Alert>
+    <CreateTime>2014-12-22T22:30:29+0000</CreateTime>
+    <Source>
+      <Node>
+        <Address category="ipv4-addr">
+          <address>222.222.222.222</address>
+        </Address>
+      </Node>
+    </Source>
+    <Classification text="ChinaNet - Hebei, China">
+      <Reference meaning="Unspecified" origin="user-specific">
+        <name>unknown</name>
+        <url> </url>
+      </Reference>
+    </Classification>
+    <Assessment>
+      <Action category="block-installed"/>
+    </Assessment>
+    <AdditionalData meaning="prior offenses" type="integer">1</AdditionalData>
+    <AdditionalData meaning="recon" type="integer">0</AdditionalData>
+    <AdditionalData meaning="duration" type="integer">86400</AdditionalData>
+    <AdditionalData meaning="OUO" type="integer">0</AdditionalData>
+  </Alert>
+  <Alert>
+    <CreateTime>2014-12-22T22:30:29+0000</CreateTime>
+    <Source>
+      <Node>
+        <Address category="ipv4-addr">
+          <address>199.101.114.209</address>
+        </Address>
+      </Node>
+    </Source>
+    <Classification text="Conduit Connect B.V. - San Mateo, CA">
+      <Reference meaning="Unspecified" origin="user-specific">
+        <name>unknown</name>
+        <url> </url>
+      </Reference>
+    </Classification>
+    <Assessment>
+      <Action category="block-installed"/>
+    </Assessment>
+    <AdditionalData meaning="prior offenses" type="integer">1</AdditionalData>
+    <AdditionalData meaning="recon" type="integer">0</AdditionalData>
+    <AdditionalData meaning="duration" type="integer">86400</AdditionalData>
+    <AdditionalData meaning="OUO" type="integer">0</AdditionalData>
+  </Alert>
+  <Alert>
+    <CreateTime>2014-12-22T22:30:29+0000</CreateTime>
+    <Source>
+      <Node>
+        <Address category="ipv4-addr">
+          <address>54.243.228.101</address>
+        </Address>
+      </Node>
+    </Source>
+    <Classification text="Amazon - Ashburn, VA">
+      <Reference meaning="Unspecified" origin="user-specific">
+        <name>unknown</name>
+        <url> </url>
+      </Reference>
+    </Classification>
+    <Assessment>
+      <Action category="block-installed"/>
+    </Assessment>
+    <AdditionalData meaning="prior offenses" type="integer">1</AdditionalData>
+    <AdditionalData meaning="recon" type="integer">0</AdditionalData>
+    <AdditionalData meaning="duration" type="integer">86400</AdditionalData>
+    <AdditionalData meaning="OUO" type="integer">0</AdditionalData>
+  </Alert>
+  <Alert>
+    <CreateTime>2014-12-22T22:30:29+0000</CreateTime>
+    <Source>
+      <Node>
+        <Address category="ipv4-addr">
+          <address>54.243.186.176</address>
+        </Address>
+      </Node>
+    </Source>
+    <Classification text="Amazon - Ashburn, VA">
+      <Reference meaning="Unspecified" origin="user-specific">
+        <name>unknown</name>
+        <url> </url>
+      </Reference>
+    </Classification>
+    <Assessment>
+      <Action category="block-installed"/>
+    </Assessment>
+    <AdditionalData meaning="prior offenses" type="integer">1</AdditionalData>
+    <AdditionalData meaning="recon" type="integer">0</AdditionalData>
+    <AdditionalData meaning="duration" type="integer">86400</AdditionalData>
+    <AdditionalData meaning="OUO" type="integer">0</AdditionalData>
+  </Alert>
+  <Alert>
+    <CreateTime>2014-12-22T22:30:29+0000</CreateTime>
+    <Source>
+      <Node>
+        <Address category="ipv4-addr">
+          <address>184.72.217.85</address>
+        </Address>
+      </Node>
+    </Source>
+    <Classification text="CISCP STIX Indicator">
+      <Reference meaning="Unspecified" origin="user-specific">
+        <name>unknown</name>
+        <url> </url>
+      </Reference>
+    </Classification>
+    <Assessment>
+      <Action category="block-installed"/>
+    </Assessment>
+    <AdditionalData meaning="prior offenses" type="integer">1</AdditionalData>
+    <AdditionalData meaning="recon" type="integer">0</AdditionalData>
+    <AdditionalData meaning="duration" type="integer">86400</AdditionalData>
+    <AdditionalData meaning="OUO" type="integer">0</AdditionalData>
+  </Alert>
+  <Alert>
+    <CreateTime>2014-12-22T22:30:29+0000</CreateTime>
+    <Source>
+      <Node>
+        <Address category="ipv4-addr">
+          <address>54.243.179.104</address>
+        </Address>
+      </Node>
+    </Source>
+    <Classification text="Amazon - Ashburn, VA">
+      <Reference meaning="Unspecified" origin="user-specific">
+        <name>unknown</name>
+        <url> </url>
+      </Reference>
+    </Classification>
+    <Assessment>
+      <Action category="block-installed"/>
+    </Assessment>
+    <AdditionalData meaning="prior offenses" type="integer">1</AdditionalData>
+    <AdditionalData meaning="recon" type="integer">0</AdditionalData>
+    <AdditionalData meaning="duration" type="integer">86400</AdditionalData>
+    <AdditionalData meaning="OUO" type="integer">0</AdditionalData>
+  </Alert>
+  <Alert>
+    <CreateTime>2014-12-22T22:30:29+0000</CreateTime>
+    <Source>
+      <Node>
+        <Address category="ipv4-addr">
+          <address>54.225.145.186</address>
+        </Address>
+      </Node>
+    </Source>
+    <Classification text="Amazon - Ashburn, VA">
+      <Reference meaning="Unspecified" origin="user-specific">
+        <name>unknown</name>
+        <url> </url>
+      </Reference>
+    </Classification>
+    <Assessment>
+      <Action category="block-installed"/>
+    </Assessment>
+    <AdditionalData meaning="prior offenses" type="integer">1</AdditionalData>
+    <AdditionalData meaning="recon" type="integer">0</AdditionalData>
+    <AdditionalData meaning="duration" type="integer">86400</AdditionalData>
+    <AdditionalData meaning="OUO" type="integer">0</AdditionalData>
+  </Alert>
+  <Alert>
+    <CreateTime>2014-12-22T22:30:29+0000</CreateTime>
+    <Source>
+      <Node>
+        <Address category="ipv4-addr">
+          <address>54.225.157.67</address>
+        </Address>
+      </Node>
+    </Source>
+    <Classification text="Amazon - Ashburn, VA">
+      <Reference meaning="Unspecified" origin="user-specific">
+        <name>unknown</name>
+        <url> </url>
+      </Reference>
+    </Classification>
+    <Assessment>
+      <Action category="block-installed"/>
+    </Assessment>
+    <AdditionalData meaning="prior offenses" type="integer">1</AdditionalData>
+    <AdditionalData meaning="recon" type="integer">0</AdditionalData>
+    <AdditionalData meaning="duration" type="integer">86400</AdditionalData>
+    <AdditionalData meaning="OUO" type="integer">0</AdditionalData>
+  </Alert>
+  <Alert>
+    <CreateTime>2014-12-22T22:30:29+0000</CreateTime>
+    <Source>
+      <Node>
+        <Address category="ipv4-addr">
+          <address>54.235.66.89</address>
+        </Address>
+      </Node>
+    </Source>
+    <Classification text="Amazon - Ashburn, VA">
+      <Reference meaning="Unspecified" origin="user-specific">
+        <name>unknown</name>
+        <url> </url>
+      </Reference>
+    </Classification>
+    <Assessment>
+      <Action category="block-installed"/>
+    </Assessment>
+    <AdditionalData meaning="prior offenses" type="integer">1</AdditionalData>
+    <AdditionalData meaning="recon" type="integer">0</AdditionalData>
+    <AdditionalData meaning="duration" type="integer">86400</AdditionalData>
+    <AdditionalData meaning="OUO" type="integer">0</AdditionalData>
+  </Alert>
+  <Alert>
+    <CreateTime>2014-12-22T22:30:29+0000</CreateTime>
+    <Source>
+      <Node>
+        <Address category="ipv4-addr">
+          <address>107.22.223.150</address>
+        </Address>
+      </Node>
+    </Source>
+    <Classification text="Amazon - Ashburn, VA">
+      <Reference meaning="Unspecified" origin="user-specific">
+        <name>unknown</name>
+        <url> </url>
+      </Reference>
+    </Classification>
+    <Assessment>
+      <Action category="block-installed"/>
+    </Assessment>
+    <AdditionalData meaning="prior offenses" type="integer">1</AdditionalData>
+    <AdditionalData meaning="recon" type="integer">0</AdditionalData>
+    <AdditionalData meaning="duration" type="integer">86400</AdditionalData>
+    <AdditionalData meaning="OUO" type="integer">0</AdditionalData>
+  </Alert>
+  <Alert>
+    <CreateTime>2014-12-22T22:30:29+0000</CreateTime>
+    <Source>
+      <Node>
+        <Address category="ipv4-addr">
+          <address>54.243.244.209</address>
+        </Address>
+      </Node>
+    </Source>
+    <Classification text="Amazon - Ashburn, VA">
+      <Reference meaning="Unspecified" origin="user-specific">
+        <name>unknown</name>
+        <url> </url>
+      </Reference>
+    </Classification>
+    <Assessment>
+      <Action category="block-installed"/>
+    </Assessment>
+    <AdditionalData meaning="prior offenses" type="integer">1</AdditionalData>
+    <AdditionalData meaning="recon" type="integer">0</AdditionalData>
+    <AdditionalData meaning="duration" type="integer">86400</AdditionalData>
+    <AdditionalData meaning="OUO" type="integer">0</AdditionalData>
+  </Alert>
+  <Alert>
+    <CreateTime>2014-12-22T22:30:29+0000</CreateTime>
+    <Source>
+      <Node>
+        <Address category="ipv4-addr">
+          <address>23.14.134.126</address>
+        </Address>
+      </Node>
+    </Source>
+    <Classification text="LG DACOM Corporation - Cambridge, MA">
+      <Reference meaning="Unspecified" origin="user-specific">
+        <name>unknown</name>
+        <url> </url>
+      </Reference>
+    </Classification>
+    <Assessment>
+      <Action category="block-installed"/>
+    </Assessment>
+    <AdditionalData meaning="prior offenses" type="integer">1</AdditionalData>
+    <AdditionalData meaning="recon" type="integer">0</AdditionalData>
+    <AdditionalData meaning="duration" type="integer">86400</AdditionalData>
+    <AdditionalData meaning="OUO" type="integer">0</AdditionalData>
+  </Alert>
+</IDMEF-Message>

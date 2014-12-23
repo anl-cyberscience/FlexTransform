@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema" 
+	    targetNamespace="http://www.anl.gov/cfm/1.3/IDMEF-Message" 
+	    xmlns:tns="http://www.anl.gov/cfm/1.3/IDMEF-Message" 
+	    elementFormDefault="qualified">
+	    <element name="IDMEF-Message">
+
+    <complexType>
+    	<sequence>
+    		<element name="Alert" type="tns:AlertType" maxOccurs="unbounded" minOccurs="1"></element>
+    	</sequence>
+    </complexType>
+	    </element>
+
+    <complexType name="AlertType">
+    	<choice>
+    	<sequence>
+    		<element name="Analyzer" type="tns:AnalyzerType" maxOccurs="1" minOccurs="1"></element>
+    		<element name="AnalyzerTime" type="string" maxOccurs="1" minOccurs="1"></element>
+    		<element name="AdditionalData" type="tns:AdditionalDataType" maxOccurs="unbounded" minOccurs="1"></element>
+    	</sequence>
+    	<sequence>
+    		<element name="CreateTime" type="string" maxOccurs="1"
+    			minOccurs="1">
+    		</element>
+    		<element name="Source" type="tns:SourceType" maxOccurs="1"
+    			minOccurs="1">
+    		</element>
+    		<element name="Target" type="tns:TargetType" maxOccurs="1" minOccurs="0"></element>
+    		<element name="Classification" type="tns:ClassificationType"
+    			maxOccurs="1" minOccurs="1">
+    		</element>
+    		<element name="Assessment" type="tns:AssessmentType" maxOccurs="1" minOccurs="1"></element>
+    		<element name="AdditionalData" type="tns:AdditionalDataType" maxOccurs="unbounded" minOccurs="1"></element>
+    	</sequence>
+    	</choice>
+    </complexType>
+    
+    <complexType name="AnalyzerType">
+    	<sequence>
+    		<element name="Node" type="tns:NodeType"></element>
+    	</sequence>
+    	<attribute name="analyzerid" type="string" use="required"></attribute>
+    </complexType>
+
+    <complexType name="NodeType">
+    	<sequence>
+    		<element name="location" type="string"></element>
+    		<element name="name" type="string"></element>
+    	</sequence>
+    </complexType>
+    
+    <complexType name="AdditionalDataType">
+    	<simpleContent>
+    		<extension base="string">
+    			<attribute name="type" use="required">
+    				<simpleType>
+    					<restriction base="string">
+    						<enumeration value="date-time"></enumeration>
+    						<enumeration value="integer"></enumeration>
+    						<enumeration value="string"></enumeration>
+    					</restriction>
+    				</simpleType>
+    			</attribute>
+    			<attribute name="meaning" use="required">
+    				<simpleType>
+    					<restriction base="string">
+    						<enumeration value="report type"></enumeration>
+    						<enumeration value="report schedule"></enumeration>
+    						<enumeration value="report start time"></enumeration>
+    						<enumeration
+    							value="number of alerts in this report">
+    						</enumeration>
+    						<enumeration
+    							value="top level domain owner">
+    						</enumeration>
+    						<enumeration value="prior offenses"></enumeration>
+    						<enumeration value="alert threshold"></enumeration>
+    						<enumeration value="duration"></enumeration>
+    						<enumeration value="recon"></enumeration>
+    						<enumeration value="email-pattern"></enumeration>
+    						<enumeration value="restriction"></enumeration>
+    						<enumeration value="OUO"></enumeration>
+    					</restriction>
+    				</simpleType>
+    			</attribute>
+    		</extension>
+    	</simpleContent>
+    </complexType>
+    
+    <complexType name="SourceType">
+    	<sequence>
+    		<element name="Node" type="tns:AlertSourceNodeType"></element>
+    	</sequence>
+    </complexType>
+
+    <complexType name="AlertSourceNodeType">
+    	<sequence>
+    		<group ref="tns:nodeElement" maxOccurs="1" minOccurs="1"></group>
+    		<element name="Address" type="tns:AlertAddressType" maxOccurs="unbounded" minOccurs="0"></element>
+    	</sequence>
+    	<attribute name="category">
+    		<simpleType>
+    			<restriction base="string">
+    				<enumeration value="dns"></enumeration>
+    			</restriction>
+    		</simpleType>
+    	</attribute>
+    </complexType>
+
+    <complexType name="AlertAddressType">
+    	<sequence>
+    		<element name="address" type="string"></element>
+    	</sequence>
+    	<attribute name="category">
+    		<simpleType>
+    			<restriction base="string">
+    				<enumeration value="e-mail"></enumeration>
+    				<enumeration value="mac"></enumeration>
+    				<enumeration value="ipv4-addr"></enumeration>
+    				<enumeration value="ipv4-addr-hex"></enumeration>
+    				<enumeration value="ipv4-net"></enumeration>
+    				<enumeration value="ipv4-net-mask"></enumeration>
+    			</restriction>
+    		</simpleType>
+    	</attribute>
+    </complexType>
+
+    <complexType name="TargetType">
+    	<sequence>
+    		<element name="Service" type="tns:ServiceType"></element>
+    	</sequence>
+    </complexType>
+
+    <complexType name="ServiceType">
+    	<sequence>
+    		<group ref="tns:portGroup" maxOccurs="1" minOccurs="0"></group>
+    		<element name="protocol" type="string" maxOccurs="1" minOccurs="0"></element>
+    	</sequence>
+    </complexType>
+
+    <complexType name="ClassificationType">
+    	<sequence>
+    		<element name="Reference" type="tns:ReferenceType" minOccurs="0"></element>
+    	</sequence>
+    	<attribute name="text" type="string"></attribute>
+    </complexType>
+
+    <complexType name="AssessmentType">
+    	<sequence>
+    		<element name="Action" type="tns:ActionType"></element>
+    	</sequence>
+    </complexType>
+
+    <complexType name="ActionType">
+    	<simpleContent>
+    		<extension base="string">
+    			<attribute name="category">
+    				<simpleType>
+    					<restriction base="string">
+    						<enumeration value="block-installed"></enumeration>
+    						<enumeration value="notification-sent"></enumeration>
+    						<enumeration value="taken-offline"></enumeration>
+    						<enumeration value="other"></enumeration>
+    					</restriction>
+    				</simpleType>
+    			</attribute>
+    		</extension>
+    	</simpleContent>
+    </complexType>
+
+    <group name="nodeElement">
+       	<choice>
+	   		<element name="name" type="string"></element>
+	   		<element name="Address" type="tns:AlertAddressType"></element>
+	   	</choice>
+    </group>
+
+
+    <group name="portGroup">
+    	<choice>
+    		<element name="port" type="int"></element>
+    		<element name="portlist" type="string"></element>
+    	</choice>
+    </group>
+
+
+    <complexType name="ReferenceType">
+    	<sequence>
+    		<element name="name" type="string" maxOccurs="1" minOccurs="1"></element>
+    		<element name="url" type="string" maxOccurs="1" minOccurs="1"></element>
+    	</sequence>
+    	<attribute name="origin">
+    		<simpleType>
+    			<restriction base="string">
+    				<enumeration value="unknown"></enumeration>
+    				<enumeration value="vendor-specific"></enumeration>
+    				<enumeration value="user-specific"></enumeration>
+    				<enumeration value="bugtraqid"></enumeration>
+    				<enumeration value="cve"></enumeration>
+    				<enumeration value="osvdb"></enumeration>
+    			</restriction>
+    		</simpleType>
+    	</attribute>
+    	<attribute name="meaning">
+    		<simpleType>
+    			<restriction base="string">
+    				<enumeration value="DoS"></enumeration>
+    				<enumeration value="Scanning"></enumeration>
+    				<enumeration value="Reconnaissance"></enumeration>
+    				<enumeration value="Botnet"></enumeration>
+    				<enumeration value="Malware Traffic"></enumeration>
+    				<enumeration value="Exploit"></enumeration>
+    				<enumeration value="Spam"></enumeration>
+    				<enumeration value="Phishing"></enumeration>
+    				<enumeration value="Unauthorized Use"></enumeration>
+    				<enumeration value="Known Bad Actor"></enumeration>
+    				<enumeration value="Revocation"></enumeration>
+    				<enumeration value="Unspecified"></enumeration>
+    			</restriction>
+    		</simpleType>
+    	</attribute>
+    </complexType>
+</schema>

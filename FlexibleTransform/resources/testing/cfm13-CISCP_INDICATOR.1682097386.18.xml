@@ -1,0 +1,61 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE IDMEF-Message PUBLIC "-//IETF//DTD RFC XXXX IDMEF v1.0//EN" "idmef-message.dtd">
+<IDMEF-Message xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.anl.gov/cfm/1.3/IDMEF-Message" xsi:schemaLocation="http://www.anl.gov/cfm/1.3/IDMEF-Message/../../../resources/schemas/CFMMessage13.xsd">
+  <Alert>
+    <Analyzer analyzerid="NREL-CS">
+      <Node>
+        <location>National Renewable Energy Laboratory - Cyber Security</location>
+        <name>Andrew Hoying, 303-275-3806, andrew.hoying@nrel.gov</name>
+      </Node>
+    </Analyzer>
+    <AnalyzerTime>2014-12-22T22:30:20+0000</AnalyzerTime>
+    <AdditionalData meaning="report start time" type="date-time">&amp;now()</AdditionalData>
+    <AdditionalData meaning="report type" type="string">alerts</AdditionalData>
+    <AdditionalData meaning="number of alerts in this report" type="integer">2</AdditionalData>
+    <AdditionalData meaning="report schedule" type="string">5 minutes</AdditionalData>
+  </Alert>
+  <Alert>
+    <CreateTime>2014-12-22T22:30:20+0000</CreateTime>
+    <Source>
+      <Node>
+        <Address category="ipv4-addr">
+          <address>209.226.36.35</address>
+        </Address>
+      </Node>
+    </Source>
+    <Classification text="Malware callback address.">
+      <Reference meaning="Unspecified" origin="user-specific">
+        <name>unknown</name>
+        <url> </url>
+      </Reference>
+    </Classification>
+    <Assessment>
+      <Action category="block-installed"/>
+    </Assessment>
+    <AdditionalData meaning="duration" type="integer">86400</AdditionalData>
+    <AdditionalData meaning="prior offenses" type="integer">1</AdditionalData>
+    <AdditionalData meaning="OUO" type="integer">0</AdditionalData>
+    <AdditionalData meaning="recon" type="integer">0</AdditionalData>
+  </Alert>
+  <Alert>
+    <CreateTime>2014-12-22T22:30:20+0000</CreateTime>
+    <Source>
+      <Node category="dns">
+        <name>pic.hotelicon.net</name>
+      </Node>
+    </Source>
+    <Classification text="Domain Block: NMSSvc.exe (MD5 016c60e49a441298008ddc68dd032fc2)calls back to this C2 over port 443.">
+      <Reference meaning="Unspecified" origin="user-specific">
+        <name>unknown</name>
+        <url> </url>
+      </Reference>
+    </Classification>
+    <Assessment>
+      <Action category="block-installed"/>
+    </Assessment>
+    <AdditionalData meaning="duration" type="integer">86400</AdditionalData>
+    <AdditionalData meaning="prior offenses" type="integer">1</AdditionalData>
+    <AdditionalData meaning="OUO" type="integer">0</AdditionalData>
+    <AdditionalData meaning="recon" type="integer">0</AdditionalData>
+  </Alert>
+</IDMEF-Message>

@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE IDMEF-Message PUBLIC "-//IETF//DTD RFC XXXX IDMEF v1.0//EN" "idmef-message.dtd">
+<IDMEF-Message>
+<Alert>
+<Analyzer analyzerid="ORNL">
+<Node>
+<location>Oak Ridge National Laboratory</location>
+<name>John Gerber, 865-574-9756, gerberjj@ornl.gov</name>
+</Node>
+</Analyzer>
+<AnalyzerTime>2014-11-18T10:19:32-0500</AnalyzerTime>
+<AdditionalData meaning="report start time" type="date-time">2014-11-18T10:04:32-0500</AdditionalData>
+<AdditionalData meaning="report type" type="string">alerts</AdditionalData>
+<AdditionalData meaning="report schedule" type="string">15 minutes</AdditionalData>
+<AdditionalData meaning="number of alerts in this report" type="integer">3</AdditionalData>
+</Alert>
+<Alert>
+<CreateTime>2014-11-18T10:19:03-0500</CreateTime>
+<Source>
+<Node category="dns">
+<Address category="ipv4-addr">
+<address>50.28.14.54</address>
+</Address>
+</Node>
+</Source>
+<Classification text="Miscellaneous request"/>
+<Assessment>
+<Action category="block-installed">block-installed for 72 hours</Action>
+</Assessment>
+<AdditionalData meaning="prior offenses" type="integer">0</AdditionalData>
+</Alert>
+<Alert>
+<CreateTime>2014-11-18T10:19:03-0500</CreateTime>
+<Source>
+<Node category="dns">
+<Address category="ipv4-addr">
+<address>71.68.104.209</address>
+</Address>
+</Node>
+</Source>
+<Classification text="multiple (destination) host port scan"/>
+<Assessment>
+<Action category="block-installed">block-installed for 72 hours</Action>
+</Assessment>
+<AdditionalData meaning="prior offenses" type="integer">0</AdditionalData>
+</Alert>
+<Alert>
+<CreateTime>2014-11-18T10:19:02-0500</CreateTime>
+<Source>
+<Node category="dns">
+<Address category="ipv4-addr">
+<address>60.10.132.70</address>
+</Address>
+</Node>
+</Source>
+<Classification text="Miscellaneous request"/>
+<Assessment>
+<Action category="block-installed">block-installed for 72 hours</Action>
+</Assessment>
+<AdditionalData meaning="prior offenses" type="integer">0</AdditionalData>
+</Alert>
+</IDMEF-Message>

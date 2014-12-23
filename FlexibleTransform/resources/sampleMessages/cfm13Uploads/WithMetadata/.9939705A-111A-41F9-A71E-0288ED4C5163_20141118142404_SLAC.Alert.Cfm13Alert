@@ -1,0 +1,14 @@
+{
+    "DataSensitivity": "noSensitivity", 
+    "DownloadElementExtendedAttribute": {
+        "Field": "orig1.3Filename", 
+        "Value": "SLAC.alerts.20141118142401.xml.gpg"
+    }, 
+    "FileName": "9939705A-111A-41F9-A71E-0288ED4C5163_20141118142404_SLAC.Alert.Cfm13Alert", 
+    "PayloadFormat": "Cfm13Alert", 
+    "PayloadType": "Alert", 
+    "ReconPolicy": "Touch", 
+    "SendingSite": "SLAC", 
+    "SentTimestamp": "1416320644", 
+    "UploadID": "9939705A-111A-41F9-A71E-0288ED4C5163"
+}

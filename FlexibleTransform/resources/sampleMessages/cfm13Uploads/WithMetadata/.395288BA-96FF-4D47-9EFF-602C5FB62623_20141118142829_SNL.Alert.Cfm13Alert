@@ -1,0 +1,14 @@
+{
+    "DataSensitivity": "noSensitivity", 
+    "DownloadElementExtendedAttribute": {
+        "Field": "orig1.3Filename", 
+        "Value": "upload.txt20141118062828.gpg"
+    }, 
+    "FileName": "395288BA-96FF-4D47-9EFF-602C5FB62623_20141118142829_SNL.Alert.Cfm13Alert", 
+    "PayloadFormat": "Cfm13Alert", 
+    "PayloadType": "Alert", 
+    "ReconPolicy": "Touch", 
+    "SendingSite": "SNL", 
+    "SentTimestamp": "1416320909", 
+    "UploadID": "395288BA-96FF-4D47-9EFF-602C5FB62623"
+}
