@@ -58,7 +58,9 @@
 				"ontologyMappingType": "multiple",
 				"ontologyMappings": [ 
 					"http://www.anl.gov/cfm/transform.owl#IPv4AddressIndicatorValueSemanticComponent", 
-					"http://www.anl.gov/cfm/transform.owl#DNSHostNameIPv4IndicatorMetadataSemanticComponent" 
+					"http://www.anl.gov/cfm/transform.owl#DNSIndicatorValueSemanticComponent",
+					"http://www.anl.gov/cfm/transform.owl#URLIndicatorMetadataSemanticComponent",
+					"http://www.anl.gov/cfm/transform.owl#IPv6AddressIndicatorValueSemanticComponent"
 				]
 			},
 			"indicatorType": {
@@ -237,6 +239,7 @@
 				"description": "An action to be performed when the indicator is seen (semi-enum)",
 				"datatype": "enum",
 				"required": true,
+				"defaultValue": "Block",
 				"ontologyMappingType": "enum",
 				"enumValues": { 
 					"Block": {

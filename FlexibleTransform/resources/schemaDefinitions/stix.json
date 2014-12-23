@@ -335,10 +335,10 @@
 				"ontologyMappingType": "enum",
 				"enumValues": {
 					"URL": {
-						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#URLIndicatorSemanticComponent"
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#URLIndicatorTypeSemanticComponent"
 					},
 					"Domain Name": {
-						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#DomainNameIndicatorSemanticComponent"
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#DNSDomainNameIndicatorTypeSemanticComponent"
 					}
 				}
 			},

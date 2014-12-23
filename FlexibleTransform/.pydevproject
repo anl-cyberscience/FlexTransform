@@ -2,14 +2,6 @@
 <?eclipse-pydev version="1.0"?><pydev_project>
 <pydev_pathproperty name="org.python.pydev.PROJECT_SOURCE_PATH">
 <path>/${PROJECT_DIR_NAME}</path>
-<path>/${PROJECT_DIR_NAME}/Configuration</path>
-<path>/${PROJECT_DIR_NAME}/SyntaxParser</path>
-<path>/${PROJECT_DIR_NAME}/SyntaxParser/XMLParsers</path>
-<path>/${PROJECT_DIR_NAME}/SchemaParser</path>
-<path>/${PROJECT_DIR_NAME}/OntologyOracle</path>
-<path>/FlexibleTransform/resources/cybox.zip</path>
-<path>/FlexibleTransform/resources/ramrod.zip</path>
-<path>/FlexibleTransform/resources/stix.zip</path>
 </pydev_pathproperty>
 <pydev_property name="org.python.pydev.PYTHON_PROJECT_VERSION">python 3.0</pydev_property>
 <pydev_property name="org.python.pydev.PYTHON_PROJECT_INTERPRETER">python</pydev_property>

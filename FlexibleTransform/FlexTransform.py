@@ -4,7 +4,7 @@ Created on Jul 27, 2014
 @author: ahoying
 '''
 
-from Configuration import Config  # @UnresolvedImport
+from Configuration import Config
 
 # TODO: Implement logging framework
 # TODO: Document in Sphinx compatible format

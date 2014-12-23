@@ -16,8 +16,8 @@ if __name__ == '__main__':
     TestDir = os.path.join(currentdir, 'resources/sampleMessages/stix')
     
     Transform = FlexTransform()
-    Cfm13AlertConfig = open(os.path.join(currentdir,'resources/sampleConfigurations/stix_ciscp.cfg'), 'r')
-    Transform.AddParser('STIX', Cfm13AlertConfig)
+    StixConfig = open(os.path.join(currentdir,'resources/sampleConfigurations/stix_ciscp.cfg'), 'r')
+    Transform.AddParser('STIX', StixConfig)
     
     LQMToolsConfig = open(os.path.join(currentdir,'resources/sampleConfigurations/lqmtools.cfg'), 'r')
     Transform.AddParser('LQMTools', LQMToolsConfig)
