@@ -294,7 +294,7 @@
 			},
 			"reference": {
 				"description": "Complex type for reference origin, name, url, and meaning array",
-				"datatype": "complex",
+				"datatype": "group",
 				"multiple": true,
 				"required": false,
 				"ontologyMappingType": "none",

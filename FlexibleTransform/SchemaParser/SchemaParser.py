@@ -11,6 +11,7 @@ import datetime
 import socket
 import pytz
 import logging
+import uuid
 
 class SchemaParser(object):
     '''
@@ -731,6 +732,10 @@ class SchemaParser(object):
                 elif ('outputFormat' in v) :
                     SourceDataRow[k] = v.copy()
                     OutputFormattedFields.append(k)
+                elif ('datatype' in v and v['datatype'] == 'group') :
+                    # Don't parse groups
+                    # TODO: Fix this code, the group should be built from subfields if they exist
+                    pass
                 else :
                     raise Exception('NoDefaultValue', 'Default Value or outputFormat not defined for required field %s' % k)
             elif ('outputFormat' in v) :
@@ -928,6 +933,60 @@ class SchemaParser(object):
                             else :
                                 v['Value'] = TransformedData['DocumentHeaderData']['analyzer_time']['Value']
                                 
+                                
+                        elif (function == 'CFM20_determineIndicatorConstraint') :
+                            # TODO: It would be great if somehow we could query the ontology to get this.
+                            
+                            v['Value'] = None
+                            
+                            if (args == 'indicator') :
+                                indicatorType = row['IndicatorType']
+                                
+                                if (indicatorType == 'IPv4-Address-Block') :
+                                    v['Value'] = 'http://www.anl.gov/cfm/2.0/current/#IPv4DottedDecimalEquality'
+                                elif (indicatorType == 'IPv6-Address-Block') :
+                                    v['Value'] = 'http://www.anl.gov/cfm/2.0/current/#IPv6ColonHexEquality'
+                                elif (indicatorType == 'DNS-Hostname-Block') :
+                                    v['Value'] = 'http://www.anl.gov/cfm/2.0/current/#DNSDomainNameMatch'
+                                elif (indicatorType == 'URL-Block') :
+                                    v['Value'] = 'http://www.anl.gov/cfm/2.0/current/#URLMatch'
+                                elif (indicatorType == 'Malicious-Email-Block') :
+                                    pass
+                                elif (indicatorType == 'Malicious-File-IOC') :
+                                    pass
+                                elif (indicatorType == 'Registry-Key-IOC') :
+                                    pass
+                                elif (indicatorType == 'Mutex-IOC') :
+                                    pass
+                                
+                        elif (function == 'CFM20_determineIndicatorType') :
+                            # TODO: It would be great if somehow we could query the ontology to get this.
+                            
+                            v['Value'] = None
+                            
+                            if (args == 'indicator') :
+                                indicatorType = row['IndicatorType']
+                                
+                                if (indicatorType == 'IPv4-Address-Block') :
+                                    v['Value'] = 'http://www.anl.gov/cfm/2.0/current/#IPv4Address'
+                                elif (indicatorType == 'IPv6-Address-Block') :
+                                    v['Value'] = 'http://www.anl.gov/cfm/2.0/current/#IPv6Address'
+                                elif (indicatorType == 'DNS-Hostname-Block') :
+                                    v['Value'] = 'http://www.anl.gov/cfm/2.0/current/#DNSDomainName'
+                                elif (indicatorType == 'URL-Block') :
+                                    v['Value'] = 'http://www.anl.gov/cfm/2.0/current/#URL'
+                                elif (indicatorType == 'Malicious-Email-Block') :
+                                    pass
+                                elif (indicatorType == 'Malicious-File-IOC') :
+                                    pass
+                                elif (indicatorType == 'Registry-Key-IOC') :
+                                    pass
+                                elif (indicatorType == 'Mutex-IOC') :
+                                    pass
+                                
+                        elif (function == 'generate_uuid') :
+                            v['Value'] = str(uuid.uuid4())
+                        
                         else :
                             raise Exception('undefinedFunction', 'The function %s is not defined in the code' % function)
     

@@ -12,7 +12,7 @@ import logging
 
 class FlexTransform(object):
     '''
-    Base class for the Schema Parser logic
+    API for accessing performing Flexible Transform of source documents to target documents based on syntax and schema mappings against the ontology
     '''
     
     def __init__(self):

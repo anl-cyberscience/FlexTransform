@@ -79,7 +79,7 @@
 				"description": "The general category of reason these indicators are considered malicious. ",
 				"valuemap": "ReasonList;Reason;ReasonCategory",
 				"datatype": "enum",
-				"defaultValue": "Unspecified",
+				"defaultValue": "http://www.anl.gov/cfm/2.0/current/#Unspecified",
 				"required": true,
 				"ontologyMappingType": "enum",
 				"enumValues": {
