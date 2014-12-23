@@ -6,9 +6,7 @@ Created on Jul 31, 2014
 
 from lxml import etree
 import SyntaxParser
-import sys
-
-# from pprint import pprint
+import logging
 
 class CFM13(object):
     '''
@@ -33,6 +31,8 @@ class CFM13(object):
                                         'OUO': 'integer',
                                         'top level domain owner': 'string'
                                     }
+        
+        self.logging = logging.getLogger('FlexTransform/XMLParser/CFM13')
     
     def Read(self, cfm13file, xmlparser = None):
         '''
@@ -66,7 +66,6 @@ class CFM13(object):
                 DocumentHeaderData = SyntaxParser.XMLParser.etree_to_dict(element)
                 if ('AdditionalData' in DocumentHeaderData['Alert']):
                     DocumentHeaderData['Alert']['AdditionalData'] = SyntaxParser.XMLParser.AttributeToKey('@meaning','#text',DocumentHeaderData['Alert']['AdditionalData'])
-                # pprint(DocumentHeaderData['Alert'])
                 
                 ParsedData['DocumentHeaderData'] = DocumentHeaderData['Alert']
             else :
@@ -74,7 +73,6 @@ class CFM13(object):
                 IndicatorData = SyntaxParser.XMLParser.etree_to_dict(element)
                 if ('AdditionalData' in IndicatorData['Alert']):
                     IndicatorData['Alert']['AdditionalData'] = SyntaxParser.XMLParser.AttributeToKey('@meaning','#text',IndicatorData['Alert']['AdditionalData'])
-                # pprint(IndicatorData['Alert'])
                 
                 # TODO: If it exists, expand portlist into a list object with all values as distinct entries
                 
@@ -213,6 +211,6 @@ class CFM13(object):
                 if (row['@meaning'] in self.AdditionalDataTypes) :
                     row['@type'] = self.AdditionalDataTypes[row['@meaning']]
                 else :
-                    print("Unknown AdditionalData Meaning, no type mapping exists: " + row['@meaning'], file=sys.stderr)
+                    self.logging.warning("Unknown AdditionalData Meaning, no type mapping exists: %s", row['@meaning'])
                     
         return rows

@@ -9,6 +9,7 @@ from SyntaxParser import Parser
 from SchemaParser import SchemaParser
 import json
 import os
+import logging
 
 # TODO: Load relative paths
 
@@ -28,6 +29,8 @@ class Config(object):
 
         self.config_file = config_file
         self._ReadConfig()
+        
+        self.logging = logging.getLogger('FlexTransform/Config')
 
     def _ReadConfig(self):
         '''

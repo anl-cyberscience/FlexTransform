@@ -9,10 +9,8 @@ import re
 import time
 import datetime
 import socket
-import sys
 import pytz
-# from pprint import pprint
-# from _collections_abc import Mapping
+import logging
 
 class SchemaParser(object):
     '''
@@ -34,6 +32,8 @@ class SchemaParser(object):
         self._outputFormatRE = re.compile(r"([^\[]+)?(?:\[([^\]]+)\])?")
         
         # TODO: Create a JSON schema document and validate the config against the schema. Worst case, define accepted tags and validate there are no unknown tags.
+        
+        self.logging = logging.getLogger('FlexTransform/SchemaParser')
    
     def MapDataToSchema(self, SourceData):
         '''
@@ -53,11 +53,10 @@ class SchemaParser(object):
                         if (isinstance(row,dict)) :
                             try :
                                 DataRow = self._MapRowToSchema(SchemaParser.FlattenDict(row),rowType)
-                                # pprint(DataRow)
                                 MappedData[rowType].append(self._GetDefaultValuesFromSchema(rowType, DataRow))
                             except Exception as inst :
-                                print(inst, file=sys.stderr)
-                                print(str(SchemaParser.FlattenDict(row)))
+                                self.logging.exception(inst)
+                                self.logging.debug(str(SchemaParser.FlattenDict(row)))
                         else :
                             raise Exception('NoParsableDataFound', "Data isn't in a parsable dictionary format")
                 elif (isinstance(SourceData[rowType],dict)) :
@@ -117,7 +116,7 @@ class SchemaParser(object):
                                 DataRow = self._TransformDataToNewSchema(rowType, row, DocumentHeaderData, DocumentMetaData)
                                 TransformedData[rowType].append(self._GetDefaultValuesFromSchema(rowType, DataRow))
                             except Exception as inst :
-                                print(inst, file=sys.stderr)
+                                self.logging.exception(inst)
                         else :
                             raise Exception('NoParsableDataFound', "Data isn't in a parsable dictionary format")
                         
@@ -219,7 +218,6 @@ class SchemaParser(object):
         for k,v in DataRow.items() :
             fieldName = None
             
-            
             if (k == 'IndicatorType') :
                 # Just copy the special field IndicatorType which maps this row to a specific indicator type
                 newDict[k] = DataRow[k]
@@ -230,7 +228,7 @@ class SchemaParser(object):
             elif (k in self.SchemaConfig[rowType]['fields']) :
                 fieldName = k
             else :
-                print('\t' + k + ' not found in ValueMap for row type ' + rowType + ' in schema config. Value: ' + str(v), file=sys.stderr)
+                self.logging.warning('%s not found in ValueMap for row type %s in schema config. Value: ', k, rowType, v)
                 continue
                 
             if (fieldName is not None) :
@@ -279,7 +277,7 @@ class SchemaParser(object):
                             newDict[fieldName]['AdditionalValues'] = []
                         for d in v :
                             if (isinstance(d,(list,dict))) :
-                                print('\t' + k + ' subvalue in the list is another list or dictionary, not currently supported: %s' % v, file=sys.stderr)
+                                self.logging.warning('%s subvalue in the list is another list or dictionary, not currently supported: %s', k, v)
                                 continue
                             
                             if ('Value' not in newDict[fieldName]) :
@@ -289,7 +287,7 @@ class SchemaParser(object):
                                 newDict[fieldName]['AdditionalValues'].append(str(d))
                         
                 elif (isinstance(v,(list,dict))) :
-                    print('\t' + k + ' value is a list or dictionary, not currently support: %s' % v, file=sys.stderr)
+                    self.logging.warning('%s value is a list or dictionary, not currently support: %s', k, v)
                     continue
                 elif (isinstance(v,str)) :
                     # The rstrip is to get rid of rogue tabs and white space at the end of a value, a frequent problem with STIX formated documents in testing
@@ -472,7 +470,7 @@ class SchemaParser(object):
                             value = match.group(1) + match.group(2) + match.group(3)
                         fieldDict['ParsedValue'] = datetime.datetime.strptime(value, fieldDict['dateTimeFormat'])
                 except Exception as inst :
-                    print(inst, file=sys.stderr)
+                    self.logging.exception(inst)
                     raise Exception('DataTypeInvalid', 'Value for field ' + fieldName + ' is not a valid date time value: ' + value)
             elif (dataType == 'enum') :
                 if (value not in fieldDict['enumValues']) :
@@ -500,7 +498,7 @@ class SchemaParser(object):
                 except :
                     raise Exception('DataTypeInvalid', 'Value for field ' + fieldName + ' is not a valid ipv6 address: ' + value)
             else :
-                print("No validation written for dataType:" + dataType)
+                self.logging.error("No validation written for dataType: %s", dataType)
             
         
         # Process the regexSplit directive
@@ -556,7 +554,7 @@ class SchemaParser(object):
         
         for field, fieldDict in DataRows.items() :            
             if ('Value' not in fieldDict) :
-                print("Field %s has no value" % field, file=sys.stderr)
+                self.logging.warning("Field %s has no value", field)
                 continue
             
             if (field == 'id') :
@@ -651,8 +649,7 @@ class SchemaParser(object):
                             Value = match[1]
                 else :
                     pass
-                    # Debugging information
-                    # print("Field %s does not map to target schema ontology" % field, file=sys.stderr)
+                    self.logging.debug("Field %s does not map to target schema ontology", field)
             
             if (fieldName is not None) :
                 if (self.SchemaConfig[rowType]['fields'][fieldName]['ontologyMappingType'] == 'multiple') :
@@ -697,7 +694,7 @@ class SchemaParser(object):
                         if (newDict[fieldName]['datatype'] == 'ipv4' and re.match(r'^([0-9]{1,3}\.){3}[0-9]{1,3}$', Value)) :
                             newDict[fieldName]['Value'] = Value
                         else :
-                            print ("Cannot convert between data types for field %s" % fieldName, file=sys.stderr)
+                            self.logging.warning("Cannot convert between data types for field %s", fieldName)
                     
                 else :
                     newDict[fieldName]['Value'] = Value

@@ -6,12 +6,13 @@ Created on Nov 18, 2014
 
 from FlexTransform import FlexTransform
 import os
-import sys
 import json
+import logging
 
 if __name__ == '__main__':
     
     currentdir = os.path.dirname(__file__)
+    logging.basicConfig(format='%(name)s (%(pathname)s:%(lineno)d) %(levelname)s:%(message)s', level=logging.DEBUG)
     
     TestDir = os.path.join(currentdir, 'resources/sampleMessages/stix')
     
@@ -28,12 +29,12 @@ if __name__ == '__main__':
         if (file.startswith('CISCP')) :        
             sourceFile = os.path.join(TestDir, file)
             
-            print(sourceFile, file=sys.stderr)
+            logging.info(sourceFile)
             
             try :
                 Data = Transform.TransformFile(sourceFileName=sourceFile, sourceParserName='STIX', targetParserName='LQMTools')
             except Exception as inst :
-                print(sourceFile + ': ' + str(inst), file=sys.stderr)
+                logging.exception(inst)
             else :
                 if (Data) :
                     TransformedData.extend(Data)

@@ -6,11 +6,8 @@ Created on Dec 5, 2014
 
 from lxml import etree
 import SyntaxParser
-# import sys
+import logging
 import copy
-
-# from pprint import pprint
-# from uuid import uuid4
 
 class CFM20Alert(object):
     '''
@@ -21,6 +18,8 @@ class CFM20Alert(object):
         '''
         Constructor
         '''
+        
+        self.logging = logging.getLogger('FlexTransform/XMLParser/CFM20Alert')
     
     def Read(self, cfm20file, xmlparser = None):
         '''

@@ -5,8 +5,8 @@ Created on Jul 27, 2014
 '''
 
 from Configuration import Config
+import logging
 
-# TODO: Implement logging framework
 # TODO: Document in Sphinx compatible format
 # TODO: Optimization - Too much pass by value for large dictionary objects currently, need to move to more pass by reference to minimize cpu and memory resource usage
 
@@ -20,6 +20,7 @@ class FlexTransform(object):
         Constructor
         '''
         self.Parsers = {}
+        self.logging = logging.getLogger('FlexTransform')
         
     def AddParser(self, parserName, configFile) :
         '''
@@ -27,6 +28,9 @@ class FlexTransform(object):
         '''
         
         parserConfig = Config(configFile)
+        
+        if (parserName in self.Parsers) :
+            self.logging.warn('Parser %s already configured, configuration will be overwritten', parserName)
         
         if (parserConfig) :
             self.Parsers[parserName] = parserConfig
@@ -79,9 +83,10 @@ class FlexTransform(object):
 
 if __name__ == '__main__':
     import argparse
-    import sys
     import os
     import json
+    
+    logging.basicConfig(format='%(name)s (%(pathname)s:%(lineno)d) %(levelname)s:%(message)s', level=logging.DEBUG)
     
     parser = argparse.ArgumentParser(description="Transform a source file's syntax and schema to the target file document type")
     parser.add_argument('--src-config',
@@ -122,10 +127,10 @@ if __name__ == '__main__':
         FinalizedData = Transform.TransformFile(sourceFileName=args.src, targetFileName=args.dst, sourceParserName='src', targetParserName='dst', sourceMetaData=metadata)
         
     except Exception as inst :
-        print(inst, file=sys.stderr)
+        logging.exception(inst)
         args.dst.close()
         os.remove(args.dst.name)
 
     else :
-        print ("Success")
+        logging.info("Success")
 

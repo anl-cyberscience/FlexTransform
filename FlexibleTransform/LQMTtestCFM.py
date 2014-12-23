@@ -6,12 +6,13 @@ Created on Nov 18, 2014
 
 from FlexTransform import FlexTransform
 import os
-import sys
 import json
+import logging
 
 if __name__ == '__main__':
     
     currentdir = os.path.dirname(__file__)
+    logging.basicConfig(format='%(name)s (%(pathname)s:%(lineno)d) %(levelname)s:%(message)s', level=logging.DEBUG)
     
     TestDir = os.path.join(currentdir, 'resources/sampleMessages/cfm13Uploads/WithMetadata')
     
@@ -31,11 +32,12 @@ if __name__ == '__main__':
             f.close()
             
             sourceFile = os.path.join(TestDir, metadata['FileName'])
+            logging.info(sourceFile)
             
             try :
                 Data = Transform.TransformFile(sourceFileName=sourceFile, sourceParserName=metadata['PayloadFormat'], targetParserName='LQMTools', sourceMetaData=metadata)
             except Exception as inst :
-                print(sourceFile + ': ' + str(inst), file=sys.stderr)
+                logging.exception(inst)
             else :
                 if (Data) :
                     TransformedData.extend(Data)

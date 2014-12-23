@@ -4,7 +4,7 @@ Created on Nov 17, 2014
 @author: ahoying
 '''
 
-import sys
+import logging
 
 class DictionaryParser(object):
     '''
@@ -17,6 +17,7 @@ class DictionaryParser(object):
         '''
         
         self.ParsedData = {}
+        self.logging = logging.getLogger('FlexTransform/DictionaryParser')
         
     def ValidateConfig(self, config):
         '''
@@ -80,7 +81,7 @@ class DictionaryParser(object):
                 else :
                     DataRow[k] = v['Value']
             else :
-                print("Field " + k + " does not contain a Value entry", file=sys.stderr)
+                self.logging.warning("Field %s does not contain a Value entry", k)
                 
         return DataRow
     

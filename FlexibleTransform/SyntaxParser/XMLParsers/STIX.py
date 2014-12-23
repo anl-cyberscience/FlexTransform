@@ -4,6 +4,7 @@ Created on Nov 3, 2014
 @author: ahoying
 '''
 
+import logging
 import sys
 import os
 import re
@@ -17,7 +18,6 @@ sys.path.insert(0,os.path.join(currentdir,"../../resources/cybox.zip"))
 sys.path.insert(1,os.path.join(currentdir,"../../resources/stix.zip"))
 sys.path.insert(2,os.path.join(currentdir,"../../resources/ramrod.zip"))
 
-# from pprint import pprint
 import ramrod  # @UnresolvedImport
 from stix.core import STIXPackage  # @UnresolvedImport
 from stix.utils.parser import UnsupportedVersionError  # @UnresolvedImport
@@ -34,11 +34,12 @@ class STIX(object):
         Constructor
         '''
         
+        self.logging = logging.getLogger('FlexTransform/XMLParser/STIX')
+        
     def Read(self, stixfile, xmlparser = None):
         '''
         Parse STIX XML document. Return a dictionary object with the data from the document.
         '''
-        
         
         # FIXME: Handle composite indicators and related indicators hierarchically
         
@@ -50,6 +51,7 @@ class STIX(object):
             stix_package = STIXPackage.from_xml(stixfile)
         except UnsupportedVersionError:
             updated = None
+            self.logging.warning("Updating stix document to version 1.1.1")
             if (not isinstance(stixfile, str)) :
                 stixfile.close()
                 updated  = ramrod.update(stixfile.name, force=True)
@@ -59,7 +61,6 @@ class STIX(object):
             stix_package  = STIXPackage.from_xml(document)
             
         stix_dict = stix_package.to_dict() # parse to dictionary
-        # pprint(stix_dict)
                         
         ParsedData = {};
         
@@ -80,6 +81,7 @@ class STIX(object):
             for row in stix_dict['indicators'] :
                 # Transform lists in indicators into usable data
                 if ('observable' not in row) :
+                    self.logging.info('Indicator has no observable, skipping: %s', row)
                     continue
                 
                 newrow = copy.deepcopy(row)
@@ -109,14 +111,12 @@ class STIX(object):
                     # very simple match to see if there are any /'s in the value. If not it is assumed to be a domain
                     # TODO: use a better regular express here to match a URL or a domain
                     if (re.match(r'.*/', urlvalue) is None) :
-                        # TODO: Throw a warning when value is changed
+                        self.logging.warning('Indicator type changed from URL to Domain Name for indicator %s', urlvalue)
                         row['observable']['object']['properties']['type'] = "Domain Name"
     
     def _ExtractRelatedObjects(self, row):
         '''
         Takes a collection of related objects and creates new top level indicators for each of them
-        
-        Adds the original object ID to a new field called related id and then sets the object id to originalid:<related indicator number>
         '''
         
         newrows = []
@@ -125,8 +125,7 @@ class STIX(object):
             
             # Remove the related_objects list from the original row
             related_objects = row['observable']['object'].pop('related_objects')
-            
-            # x = 1            
+                      
             for related in related_objects :
                 if ('relationship' in related and ( related['relationship'] == 'Contains' or related['relationship'] == 'Connected_To' ) ) :
                     
@@ -139,20 +138,13 @@ class STIX(object):
                     newrow = copy.deepcopy(row)
                     
                     # Get rid of the original object
-                    del newrow['observable']['object']
-                    
-                    # Rename id to relatedid
-                    # oldid = newrow.pop('id')
-                    # newrow['relatedid'] = oldid
-                    # newrow['id'] = oldid + ":" + str(x)
-                    # x+=1
-                    
+                    del newrow['observable']['object']                   
                     newrow['observable']['object'] = related
                     
                     newrows.append(newrow)
                     
                 else :
-                    print('Unknown relationship type: ' + str(related), file=sys.stderr)
+                    self.logging.warning('Unknown relationship type: %s', related)
                     
         return newrows
         

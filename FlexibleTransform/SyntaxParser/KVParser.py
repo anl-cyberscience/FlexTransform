@@ -5,13 +5,12 @@ Created on Oct 15, 2014
 '''
 
 import re
-import sys
+import logging
 
 class KVParser(object):
     '''
     Key/Value Syntax Parser
     '''
-
 
     def __init__(self):
         '''
@@ -22,6 +21,8 @@ class KVParser(object):
         self.KVSeparator = r"[=]"
         
         self.ParsedData = {}
+        
+        self.logging = logging.getLogger('FlexTransform/KVParser')
         
     def ValidateConfig(self,config):
         '''
@@ -60,6 +61,6 @@ class KVParser(object):
                         
                 self.ParsedData['IndicatorData'].append(DataRow)
             except : 
-                print("Line could not be parsed: " + line, file=sys.stderr)
+                self.logging.warning("Line could not be parsed: %s", line)
             
         return self.ParsedData

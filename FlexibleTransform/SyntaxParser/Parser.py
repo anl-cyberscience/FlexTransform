@@ -6,6 +6,7 @@ Created on Jul 28, 2014
 
 import inspect
 import SyntaxParser
+import logging
 
 class Parser(object):
     '''
@@ -21,8 +22,8 @@ class Parser(object):
         '''
         Constructor
         '''
-        pass
-
+        self.logging = logging.getLogger('FlexTransform/Parser')
+        
     @classmethod
     def UpdateKnownParsers(cls, ParserName, ParserClass):
         cls.__KnownParsers[ParserName] = ParserClass;

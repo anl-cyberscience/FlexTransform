@@ -6,12 +6,12 @@ Created on Jul 28, 2014
 
 from lxml import etree
 import re
-import sys
 from collections import defaultdict
 import inspect
+import logging
 
 from SyntaxParser.Parser import Parser
-import SyntaxParser.XMLParsers  # @UnresolvedImport
+import SyntaxParser.XMLParsers
 from SchemaParser import SchemaParser
 
 class XMLParser(Parser):
@@ -26,6 +26,7 @@ class XMLParser(Parser):
         self.XMLParser = None
         self.AdvancedParser = None
         self.ParsedData = None
+        self.logging = logging.getLogger('FlexTransform/XMLParser')
 
     def LoadAdvancedParser(self,CustomParser):
         '''
@@ -120,7 +121,6 @@ class XMLParser(Parser):
                 for row in MappedData[rowType] :
                     if (isinstance(row,dict)) :
                         DataRow = self._BuildXMLDictRow(row)
-                        # pprint(DataRow)
                         ParsedData[rowType].append(DataRow)
                     else :
                         raise Exception('NoParsableDataFound', "Data isn't in a parsable dictionary format")
@@ -146,7 +146,7 @@ class XMLParser(Parser):
                 if ('valuemap' in v) :
                     DataRow[v['valuemap']] = v['Value']
             else :
-                print("Field " + k + " does not contain a Value entry", file=sys.stderr)
+                self.logging.warning("Field %s does not contain a Value entry", k)
                 
         return SchemaParser.UnflattenDict(DataRow)
 
