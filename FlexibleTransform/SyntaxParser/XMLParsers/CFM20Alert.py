@@ -77,7 +77,7 @@ class CFM20Alert(object):
             except Exception as inst :
                 self.logging.exception(inst)
                 
-        # Name space mapping for CFM 1.3 XML documents
+        # Name space mapping for CFM 2.0 Alert XML documents
         CFM20_URI = "http://www.anl.gov/cfm/2.0/current/CFMAlert"
         CFM20_NS = '{%s}' % CFM20_URI
         
@@ -95,14 +95,15 @@ class CFM20Alert(object):
             CFM20Alert = SyntaxParser.XMLParser.dict_to_etree({'Alert': alert})
             CFM20Root.append(CFM20Alert)
             
-            
         # Replace entity namespaces with entity name after the XML is generated so the & doesn't get munged    
-        XMLOutput = re.sub('>http://www.anl.gov/cfm/2.0/current/#', '>&cfm;', etree.tostring(CFM20Root, 
+        XMLOutput = re.sub('>http://www.anl.gov/cfm/2.0/current/#', '>&cfm;', 
+                           etree.tostring(CFM20Root, 
                                        pretty_print=True, 
                                        xml_declaration=True, 
                                        encoding='UTF-8', 
                                        doctype="<!DOCTYPE CFMEnvelope [\n    <!ENTITY cfm 'http://www.anl.gov/cfm/2.0/current/#'>\n    <!ENTITY tlp 'http://www.us-cert.gov/tlp/#'>\n]>"
-                                       ).decode(encoding='UTF-8'))
+                                       ).decode(encoding='UTF-8')
+                           )
                 
         cfm20file.write(XMLOutput)
         cfm20file.close()
@@ -119,8 +120,6 @@ class CFM20Alert(object):
         for field in RequiredFields :
             if (field not in row) :
                 raise Exception("MissingRequiredField", "Required field %s is not present in row: %s", field, row)
-            
-
         
         OrderedList = [];
         OrderedList.append({'AlertID': row['AlertID']})
@@ -153,8 +152,8 @@ class CFM20Alert(object):
                 OrderedList.append({'IndicatorSet': SubLists[0]})
             else :
                 # Create complex indicator object
-                # FIXME: Current logic only permits ORs not ANDs for CFM 2.0 Alerts
-                OrderedList.append({'IndicatorSet': {'CompositeIndicator': {'Or': SubLists}}})
+                # FIXME: Current logic only permits ANDs not ORs for CFM 2.0 Alerts because related indicators are not recombined by the SchemaParser at this time
+                OrderedList.append({'IndicatorSet': {'CompositeIndicator': {'And': SubLists}}})
         else :
             raise Exception('UnexpectedPath', 'IndicatorSet is not a list: %s', row['IndicatorSet'])
         
