@@ -86,7 +86,7 @@ if __name__ == '__main__':
     import os
     import json
     
-    logging.basicConfig(format='%(name)s (%(pathname)s:%(lineno)d) %(levelname)s:%(message)s', level=logging.DEBUG)
+    logging.basicConfig(format='%(name)s (%(pathname)s:%(lineno)d) %(levelname)s:%(message)s', level=logging.INFO)
     
     parser = argparse.ArgumentParser(description="Transform a source file's syntax and schema to the target file document type")
     parser.add_argument('--src-config',

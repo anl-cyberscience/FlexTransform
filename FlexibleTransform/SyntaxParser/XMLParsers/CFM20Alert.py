@@ -8,7 +8,6 @@ from lxml import etree
 import SyntaxParser
 import logging
 import copy
-import re
 
 class CFM20Alert(object):
     '''
@@ -67,8 +66,10 @@ class CFM20Alert(object):
         Alerts = []
         
         self._NormalizeCFM20AlertData(ParsedData)
+        
+        compositeRows = self._BuildCompositeIndicators(ParsedData['IndicatorData'])
             
-        for row in ParsedData['IndicatorData'] :
+        for row in compositeRows :
             try :
                 Alert = self._BuildAlert(row)
                 if (Alert) :
@@ -95,17 +96,13 @@ class CFM20Alert(object):
             CFM20Alert = SyntaxParser.XMLParser.dict_to_etree({'Alert': alert})
             CFM20Root.append(CFM20Alert)
             
-        # Replace entity namespaces with entity name after the XML is generated so the & doesn't get munged    
-        XMLOutput = re.sub('>http://www.anl.gov/cfm/2.0/current/#', '>&cfm;', 
-                           etree.tostring(CFM20Root, 
+        # Replace entity namespaces with entity name after the XML is generated so the & doesn't get munged                   
+        cfm20file.write(etree.tostring(CFM20Root, 
                                        pretty_print=True, 
                                        xml_declaration=True, 
                                        encoding='UTF-8', 
                                        doctype="<!DOCTYPE CFMEnvelope [\n    <!ENTITY cfm 'http://www.anl.gov/cfm/2.0/current/#'>\n    <!ENTITY tlp 'http://www.us-cert.gov/tlp/#'>\n]>"
-                                       ).decode(encoding='UTF-8')
-                           )
-                
-        cfm20file.write(XMLOutput)
+                                       ).decode(encoding='UTF-8').replace('>http://www.anl.gov/cfm/2.0/current/#', '>&cfm;'))
         cfm20file.close()
             
             
@@ -139,23 +136,7 @@ class CFM20Alert(object):
                 raise Exception('UnexpectedPath', 'RelatedAlert is not a list: %s', row['RelatedList']['RelatedAlert'])
            
         
-        if (isinstance(row['IndicatorSet'], list)) :
-            SubLists = []
-            for indicator in row['IndicatorSet'] :
-                SubList = [];
-                SubList.append({'Type': indicator['Type']})
-                SubList.append({'Constraint': indicator['Constraint']})
-                SubList.append({'Value': indicator['Value']})
-                SubLists.append({'Indicator': SubList})
-                
-            if (SubLists.__len__() == 1) :
-                OrderedList.append({'IndicatorSet': SubLists[0]})
-            else :
-                # Create complex indicator object
-                # FIXME: Current logic only permits ANDs not ORs for CFM 2.0 Alerts because related indicators are not recombined by the SchemaParser at this time
-                OrderedList.append({'IndicatorSet': {'CompositeIndicator': {'And': SubLists}}})
-        else :
-            raise Exception('UnexpectedPath', 'IndicatorSet is not a list: %s', row['IndicatorSet'])
+        OrderedList.append({'IndicatorSet': row['IndicatorSet']})
         
         if ('ReasonList' in row and 'Reason' in row['ReasonList']) :
             if (isinstance(row['ReasonList']['Reason'], list)) :
@@ -188,15 +169,15 @@ class CFM20Alert(object):
         if ('Comment' in row) :
             OrderedList.append({'Comment': row['Comment']})
             
-        if ('AlertExtendedAttributeType' in row) :
-            if (isinstance(row['AlertExtendedAttributeType'], list)) :
-                for extendedattr in row['AlertExtendedAttributeType'] :
+        if ('AlertExtendedAttribute' in row) :
+            if (isinstance(row['AlertExtendedAttribute'], list)) :
+                for extendedattr in row['AlertExtendedAttribute'] :
                     SubList = [];
                     SubList.append({'Field': extendedattr['Field']})
                     SubList.append({'Value': extendedattr['Value']})
-                    OrderedList.append({'AlertExtendedAttributeType': SubList})
+                    OrderedList.append({'AlertExtendedAttribute': SubList})
             else :
-                raise Exception('UnexpectedPath', 'AlertExtendedAttributeType is not a list: %s', row['AlertExtendedAttributeType'])
+                raise Exception('UnexpectedPath', 'AlertExtendedAttribute is not a list: %s', row['AlertExtendedAttribute'])
             
         return OrderedList
 
@@ -220,7 +201,116 @@ class CFM20Alert(object):
         
         return indicators
     
-    def _BuildIndicatorList(self, indicatorset, operation=None):
+    def _BuildCompositeIndicators(self, indicatorData):
+        '''
+        Takes the list of indicators and combines related indicators into a single composite row where possible
+        '''
+        compositeRows = []
+        indicatorIDs = {}
+        
+        # Group alerts by AlertID
+        # TODO: there is other ways that groups of related indicators can be created, such as having the same data for reason and action and it may be worth auto-grouping those
+        for row in indicatorData :
+            alertID = row['AlertID']
+            if (alertID in indicatorIDs) :
+                indicatorIDs[alertID].append(row)
+            else :
+                indicatorIDs[alertID] = []
+                indicatorIDs[alertID].append(row)
+                
+        for rows in indicatorIDs.values() :
+            if (rows.__len__() == 1) :
+                row = rows[0]
+                indicators = self._BuildIndicators(row.pop('IndicatorSet'))
+                
+                if (indicators.__len__() == 1) :
+                    row['IndicatorSet'] = indicators[0]
+                else :
+                    row['IndicatorSet'] = {'CompositeIndicator': {'And': indicators}}
+                    
+                compositeRows.append(row)
+            else :
+                # Base the new indicator object on a copy of the first row. If all the indicators are related it should not matter which is the master row
+                newrow = copy.deepcopy(rows[0])
+                
+                # Get rid for the IndicatorSet in the new indicator object
+                newrow.pop('IndicatorSet')
+                
+                compositeIndicator = {'CompositeIndicator': {}}
+                
+                for row in rows :
+                    '''
+                    TODO: This isn't designed to create the most optimal Composite Indicator.
+                    
+                    For example, this set of indicators:
+                    a AND b AND c
+                    a AND d
+                    a AND e
+                    
+                    Will get turned into this
+                    
+                    OR
+                        AND
+                            a
+                            b
+                            c
+                        AND
+                            a
+                            d
+                        AND
+                            a
+                            e
+                            
+                    It should get turned into this
+                    
+                    AND
+                        a
+                        OR
+                            d
+                            e
+                            AND
+                                b
+                                c
+                                
+                    '''
+                    indicators = self._BuildIndicators(row.pop('IndicatorSet'))
+                    
+                    if (indicators.__len__() == 1) :
+                        if ('Or' in compositeIndicator['CompositeIndicator']) :
+                            compositeIndicator['CompositeIndicator']['Or'].append(indicators[0])
+                        else :
+                            compositeIndicator['CompositeIndicator']['Or'] = indicators
+                            
+                    else :
+                        if ('Or' in compositeIndicator['CompositeIndicator']) :
+                            compositeIndicator['CompositeIndicator']['Or'].append({'CompositeIndicator': {'And': indicators}})
+                        else :
+                            compositeIndicator['CompositeIndicator']['Or'] = [{'CompositeIndicator': {'And': indicators}}]
+                            
+                newrow['IndicatorSet'] = compositeIndicator
+                compositeRows.append(newrow)
+            
+        return compositeRows
+    
+    def _BuildIndicators(self, indicatorSet, operation=None):
+        '''
+        Turns an indicatorSet into a properly formatted dictionary for the CFM 2.0 Alert Schema
+        '''
+                
+        if (isinstance(indicatorSet, list)) :
+            SubLists = []
+            for indicator in indicatorSet :
+                SubList = [];
+                SubList.append({'Type': indicator['Type']})
+                SubList.append({'Constraint': indicator['Constraint']})
+                SubList.append({'Value': indicator['Value']})
+                SubLists.append({'Indicator': SubList})
+                
+            return SubLists
+        else :
+            raise Exception('UnexpectedPath', 'IndicatorSet is not a list: %s', indicatorSet)
+    
+    def _BuildIndicatorList(self, indicatorSet, operation=None):
         '''
         Process out the indicator set data, return one indicator for each combination of complex indicators
         '''
@@ -228,7 +318,7 @@ class CFM20Alert(object):
         indicatorList = []
         newIndicators = []
         
-        for k,v in indicatorset.items() :
+        for k,v in indicatorSet.items() :
             if (k == 'Indicator') :
                 if (isinstance(v,list)) :
                     indicatorList.extend(v)

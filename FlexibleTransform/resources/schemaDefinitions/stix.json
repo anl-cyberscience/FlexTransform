@@ -228,14 +228,6 @@
 				"ontologyMappingType": "simple",
 				"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#UUIDv4IndicatorIdentifierSemanticConcept"
 			},
-			"relatedid": {
-				"description": "The original STIX document ID that this indicator is related to",
-				"valuemap": "relatedid",
-				"datatype": "string",
-				"required": false,
-				"ontologyMappingType": "simple",
-				"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#UUIDv4RelatedUniqueIndicatorIdentifierSemanticConcept"
-			},
 			"indicator_types": {
 				"description": "Collection of one or more indicator types for the indicator set",
 				"valuemap": "indicator_types",

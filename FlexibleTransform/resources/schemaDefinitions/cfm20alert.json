@@ -31,7 +31,10 @@
 				{ "indicatorSet_Type": "http://www.anl.gov/cfm/2.0/current/#IPv6Address" },
 				{ "indicatorSet_Type": "http://www.anl.gov/cfm/2.0/current/#IPv6SourceAddress" },
 				{ "indicatorSet_Type": "http://www.anl.gov/cfm/2.0/current/#IPv6DestinationAddress" }
-			]
+			],
+			"URL-Block": [
+				{ "indicatorSet_Type": "http://www.anl.gov/cfm/2.0/current/#URL" }
+			] 
 		},
 		"fields": {
 			"alert_id": {
@@ -73,14 +76,18 @@
 				"required": true,
 				"multiple": true,
 				"ontologyMappingType": "none",
-				"subfields": [ "reasonList_reasonCategory", "reasonList_reasonDescription" ]
+				"subfields": { 
+								"reasonList_reasonCategory": {"required":true, "primaryKey":true}, 
+								"reasonList_reasonDescription": {"required":false}
+				}
 			},
 			"reasonList_reasonCategory": {
 				"description": "The general category of reason these indicators are considered malicious. ",
 				"valuemap": "ReasonList;Reason;ReasonCategory",
 				"datatype": "enum",
 				"defaultValue": "http://www.anl.gov/cfm/2.0/current/#Unspecified",
-				"required": true,
+				"required": false,
+				"memberof": "reasonList_reason",
 				"ontologyMappingType": "enum",
 				"enumValues": {
 					"http://www.anl.gov/cfm/2.0/current/#DoS": {
@@ -126,6 +133,7 @@
 				"valuemap": "ReasonList;Reason;ReasonDescription",
 				"datatype": "string",
 				"required": false,
+				"memberof": "reasonList_reason",
 				"ontologyMappingType": "simple",
 				"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#IndicatorDescriptionSemanticConcept"
 			},
@@ -136,14 +144,19 @@
 				"required": true,
 				"multiple": true,
 				"ontologyMappingType": "none",
-				"subfields": [ "actionList_actionCategory", "actionList_actionTimestamp", "actionList_actionDescription" ]
+				"subfields": { 
+								"actionList_actionCategory": {"required":true, "primaryKey":true},
+								"actionList_actionTimestamp": {"required":false},
+								"actionList_actionDescription": {"required":false}
+				}
 			},
 			"actionList_actionCategory": {
 				"description": "The general category of action believed to be appropriate by the sender",
 				"valuemap": "ActionList;Action;ActionCategory",
 				"datatype": "enum",
-				"required": true,
-				"defaultValue": "Block",
+				"required": false,
+				"memberof": "actionList_action",
+				"defaultValue": "http://www.anl.gov/cfm/2.0/current/#Block",
 				"ontologyMappingType": "enum",
 				"enumValues": {
 					"http://www.anl.gov/cfm/2.0/current/#Block": {
@@ -172,6 +185,7 @@
 				"datatype": "datetime",
 				"dateTimeFormat": "unixtime",
 				"required": false,
+				"memberof": "actionList_action",
 				"ontologyMappingType": "simple",
 				"ontologyMapping": ""
 			},
@@ -180,6 +194,7 @@
 				"valuemap": "ActionList;Action;ActionDescription",
 				"datatype": "string",
 				"required": false,
+				"memberof": "actionList_action",
 				"ontologyMappingType": "simple",
 				"ontologyMapping": ""
 			},
@@ -190,14 +205,19 @@
 				"required": true,
 				"multiple": true,
 				"ontologyMappingType": "none",
-				"subfields": [ "indicatorSet_Type", "IndicatorSet_constraint", "indicatorSet_Value" ]
+				"subfields": { 
+								"indicatorSet_Type": {"required":true}, 
+								"IndicatorSet_constraint": {"required":true}, 
+								"indicatorSet_Value": {"required":true, "primaryKey":true}
+				}
 			},
 			"indicatorSet_Type": {
 				"description": "The URI of the CFM indicator type; this indicates the context to which the indicator applies.",
 				"valuemap": "IndicatorSet;Type",
 				"datatype": "enum",
-				"required": true,
-				"defaultValue": "&CFM20_determineIndicatorType(indicator)",
+				"required": false,
+				"memberof": "indicatorSet",
+				"defaultValue": "&CFM20_determineIndicatorType(indicatorSet_Value)",
 				"ontologyMappingType": "enum",
 				"enumValues": {
 					"http://www.anl.gov/cfm/2.0/current/#IPv6Address": {
@@ -269,8 +289,9 @@
 				"description": "The URI of the CFM constraint type; this URI indicates both the representation of the indicator value and the method of comparison to be used.",
 				"valuemap": "IndicatorSet;Constraint",
 				"datatype": "enum",
-				"required": true,
-				"defaultValue": "&CFM20_determineIndicatorConstraint(indicator)",
+				"required": false,
+				"memberof": "indicatorSet",
+				"defaultValue": "&CFM20_determineIndicatorConstraint(indicatorSet_Value)",
 				"ontologyMappingType": "enum",
 				"enumValues": {
 					"http://www.anl.gov/cfm/2.0/current/#MD5Equality": {
@@ -336,7 +357,8 @@
 				"description": "The URI of the CFM indicator type; this indicates the context to which the indicator applies.",
 				"valuemap": "IndicatorSet;Value",
 				"datatype": "string",
-				"required": true,
+				"required": false,
+				"memberof": "indicatorSet",
 				"ontologyMappingType": "referencedEnum",
 				"ontologyEnumField": "indicatorSet_Type",
 				"ontologyMappingEnumValues": {
@@ -412,13 +434,17 @@
 				"required": false,
 				"multiple": true,
 				"ontologyMappingType": "none",
-				"subfields": [ "alertExtendedAttribute_Field", "alertExtendedAttribute_Value" ]
+				"subfields": { 
+								"alertExtendedAttribute_Field": {"required": true}, 
+								"alertExtendedAttribute_Value": {"required": true, "primaryKey": true}
+				}
 			},
 			"alertExtendedAttribute_Field": {
 				"description": "A defined extension field specification, indicating what type of extension is given.",
 				"valuemap": "AlertExtendedAttribute;Field",
 				"datatype": "enum",
 				"required": false,
+				"memberof": "alertExtendedAttribute",
 				"ontologyMappingType": "enum",
 				"enumValues": {
 					"http://www.anl.gov/cfm/2.0/current/#iSIGHT-asn": {
@@ -466,7 +492,8 @@
 				"description": "The value of the specified extended Field",
 				"valuemap": "AlertExtendedAttribute;Value",
 				"datatype": "string",
-				"required": true,
+				"required": false,
+				"memberof": "alertExtendedAttribute",
 				"ontologyMappingType": "referencedEnum",
 				"ontologyEnumField": "alertExtendedAttribute_Field",
 				"ontologyMappingEnumValues": {
@@ -492,7 +519,7 @@
 						"ontologyMapping": ""
 					},
 					"http://www.anl.gov/cfm/2.0/current/#iSIGHT-reportLink": {
-						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#AlertReferenceURLSemanticComponent"
+						"ontologyMapping": ""
 					},
 					"http://www.anl.gov/cfm/2.0/current/#iSIGHT-ThreatScape": {
 						"ontologyMapping": ""
@@ -501,7 +528,7 @@
 						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#AlertReferenceNameSemanticComponent"
 					},
 					"http://www.anl.gov/cfm/2.0/current/#iSIGHT-webLink": {
-						"ontologyMapping": ""
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#AlertReferenceURLSemanticComponent"
 					},
 					"http://www.anl.gov/cfm/2.0/current/#Confidence": {
 						"ontologyMapping": ""

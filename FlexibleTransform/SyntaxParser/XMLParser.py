@@ -92,8 +92,8 @@ class XMLParser(Parser):
             
         if (self.XMLParser) :
             # Validate the created file against the XML schema
-            cfm13file = open(file.name, mode='r')
-            etree.parse(cfm13file, self.XMLParser)
+            xmlfile = open(file.name, mode='r')
+            etree.parse(xmlfile, self.XMLParser)
             
     def Finalize(self, MappedData):
         '''
@@ -132,16 +132,26 @@ class XMLParser(Parser):
             
         return ParsedData
 
-    def _BuildXMLDictRow(self, row):
+    def _BuildXMLDictRow(self, row, parentValueMap=None):
         '''
         Take a row from the MappedData object and return an unflattened dictionary for passing to dict_to_etree
         '''
         DataRow = {}
         
+        # FIXME: This code needs to be updated to handle groupings (datatype=group)
+        
         for k, v in row.items() :
+            if (parentValueMap is not None and 'valuemap' in v) :
+                v['valuemap'] = v['valuemap'].replace(parentValueMap,'')
+            
             if (k == 'IndicatorType') :
                 # Keep passing the IndicatorType forward with the data. This is somewhat messy, but that way we can use it on write
                 DataRow[k] = v
+            elif ('groupedFields' in v) :
+                if ('valuemap' in v) :
+                    DataRow[v['valuemap']] = []
+                    for group in v['groupedFields'] :
+                        DataRow[v['valuemap']].append(self._BuildXMLDictRow(group, parentValueMap=v['valuemap']+';'))
             elif ('Value' in v) :
                 if ('valuemap' in v) :
                     DataRow[v['valuemap']] = v['Value']

@@ -345,11 +345,13 @@ class SchemaParser(object):
                     if (v in subfields) :
                         subDict[k] = "%s_%i" % (v, x)
                         
-            for k in subfields :
-                if (k in subDict) :
+        for k in subfields :
+            if (k in subDict) :
+                if (x) :
                     v = subDict.pop(k)
                     k = "%s_%i" % (k, x)
                     subDict[k] = v
+                subDict[k]['groupID'] = x
                 
         return subDict
 
@@ -532,6 +534,8 @@ class SchemaParser(object):
         
         DataRows = {}
         
+        GroupRows = {}
+        
         if (rowType == 'IndicatorData') :
             # Determine if the target schema accepts Indicators of type IndicatorType
             if ('IndicatorType' in DataRow) :
@@ -542,18 +546,29 @@ class SchemaParser(object):
                     newDict['IndicatorType'] = IndicatorType
                     
             if (DocumentHeaderData is not None) :
+                for k, v in DocumentHeaderData.items() :
+                    if (k in DataRows) :
+                        self.logging.warning('Key %s already exists in data row, value %s, overwritten by DocumentHeaderData key with value %s', k, DataRows[k], v)
+                        
                 DataRows.update(DocumentHeaderData)
 
             if (DocumentMetaData is not None) :
+                for k, v in DocumentMetaData.items() :
+                    if (k in DataRows) :
+                        self.logging.warning('Key %s already exists in data row, value %s, overwritten by DocumentMetaData key with value %s', k, DataRows[k], v)
+                        
                 DataRows.update(DocumentMetaData)
                 
                 
-        # TODO: Fields with the same name will be silently overridden by the last loaded dictionary. This should cause an error.
+        for k, v in DataRow.items() :
+            if (k in DataRows) :
+                self.logging.warning('Key %s already exists in data row, value %s, overwritten by DataRow key with value %s', k, DataRows[k], v)
+                
         DataRows.update(DataRow)
         
         # TODO: Handle fields with AdditionalValues
         
-        for field, fieldDict in DataRows.items() :            
+        for field, fieldDict in DataRows.items() :
             if ('Value' not in fieldDict) :
                 self.logging.warning("Field %s has no value", field)
                 continue
@@ -564,6 +579,9 @@ class SchemaParser(object):
             fieldName = None
             OntologyReference = None
             Value = fieldDict['Value']
+    
+            referencedField = None
+            referencedValue = None
                 
             if ('ontologyMappingType' in fieldDict) :
                 if (fieldDict['ontologyMappingType'] == 'none') :
@@ -607,7 +625,6 @@ class SchemaParser(object):
                     
                 elif (fieldDict['ontologyMappingType'] == 'referencedEnum') :
                     referencedField = fieldDict['ontologyEnumField']
-                    referencedValue = None
                     if (referencedField in DataRow and 'Value' in DataRow[referencedField]) :
                         # TODO: Will this ever need to use ParsedValue?
                         referencedValue = DataRow[referencedField]['Value']
@@ -649,58 +666,209 @@ class SchemaParser(object):
                         if (not match[1].endswith('*')) :
                             Value = match[1]
                 else :
-                    pass
                     self.logging.debug("Field %s does not map to target schema ontology", field)
+                    continue
+                
+            if (fieldName is None) :
+                self.logging.debug("Field %s does not have an Ontology reference value defined", field)
+                continue
             
-            if (fieldName is not None) :
-                if (self.SchemaConfig[rowType]['fields'][fieldName]['ontologyMappingType'] == 'multiple') :
-                    # Fields with multiple ontology mappings are listed in best first order
-                    # This finds the best possible match and uses that in the translation
-                    # TODO: Can this be done better with the ontology oracle?
-                    Ord = None
-                    
-                    for i, mapping in enumerate(self.SchemaConfig[rowType]['fields'][fieldName]['ontologyMappings']) :
-                        if (mapping == OntologyReference) :
-                            Ord = i
-                            
-                    if (fieldName in newDict and Ord < newDict[fieldName]['matchedOntologyOrd']) :
+            if ('memberof' in self.SchemaConfig[rowType]['fields'][fieldName]) :
+                # Field is part of a group, handle separately after the rest of the fields are processed
+                memberof = self.SchemaConfig[rowType]['fields'][fieldName]['memberof']
+                
+                if (memberof not in GroupRows) :
+                    GroupRows[memberof] = {'fields': {}}
+                if (fieldName not in GroupRows[memberof]['fields']) :
+                    GroupRows[memberof]['fields'][fieldName] = []
+                                    
+                fieldDict['matchedOntology'] = OntologyReference
+                fieldDict['ReferencedField'] = referencedField
+                fieldDict['ReferencedValue'] = referencedValue
+                fieldDict['Value'] = Value
+                
+                GroupRows[memberof]['fields'][fieldName].append(fieldDict)
+                continue
+                
+            if (fieldName in newDict) :
+                self.logging.error('Field %s already exists in target row mapping, the field will be overwritten with a new value', fieldName)
+            
+            if (self.SchemaConfig[rowType]['fields'][fieldName]['ontologyMappingType'] == 'multiple') :
+                # Fields with multiple ontology mappings are listed in best first order
+                # This finds the best possible match and uses that in the translation
+                # TODO: Can this be done better with the ontology oracle?
+                Ord = None
+                
+                for i, mapping in enumerate(self.SchemaConfig[rowType]['fields'][fieldName]['ontologyMappings']) :
+                    if (mapping == OntologyReference) :
+                        Ord = i
+                        break
+                        
+                if (fieldName in newDict) :
+                    if (Ord < newDict[fieldName]['matchedOntologyOrd']) :
                         # Better match found
                         del(newDict[fieldName])
                         
                         newDict[fieldName] = self.SchemaConfig[rowType]['fields'][fieldName].copy()
                         newDict[fieldName]['matchedOntology'] = OntologyReference
                         newDict[fieldName]['matchedOntologyOrd'] = Ord
-                        
-                    else :
-                        # No current match exists
-                        newDict[fieldName] = self.SchemaConfig[rowType]['fields'][fieldName].copy()
-                        newDict[fieldName]['matchedOntology'] = OntologyReference
-                        newDict[fieldName]['matchedOntologyOrd'] = Ord
                 else :
+                    # No current match exists
                     newDict[fieldName] = self.SchemaConfig[rowType]['fields'][fieldName].copy()
-                
-                
-                # TODO: ParsedValue should always exist, but I got errors when testing some CISCP STIX documents, need to test further
-                if (newDict[fieldName]['datatype'] == 'datetime' and 'ParsedValue' in fieldDict) :
+                    newDict[fieldName]['matchedOntology'] = OntologyReference
+                    newDict[fieldName]['matchedOntologyOrd'] = Ord
+            else :
+                newDict[fieldName] = self.SchemaConfig[rowType]['fields'][fieldName].copy()
+                newDict[fieldName]['matchedOntology'] = OntologyReference
+            
+            if (newDict[fieldName]['datatype'] == 'datetime') :
+                if ('ParsedValue' in fieldDict) :
                     if (newDict[fieldName]['dateTimeFormat'] == 'unixtime') :
                         newDict[fieldName]['Value'] = '%i' % time.mktime(fieldDict['ParsedValue'].timetuple())
                     else :
                         newDict[fieldName]['Value'] = fieldDict['ParsedValue'].strftime(newDict[fieldName]['dateTimeFormat'])
-                    
-                elif (fieldDict['datatype'] != newDict[fieldName]['datatype']) :
-                    if (fieldDict['datatype'] == 'complex' or newDict[fieldName]['datatype'] == 'complex' or newDict[fieldName]['datatype'] == 'string' or newDict[fieldName]['datatype'] == 'enum') :
+                else :
+                    # TODO: ParsedValue should always exist, but I got errors when testing some CISCP STIX documents, need to test further
+                    self.logging.error('DateTime data type did not have a ParsedValue defined for field %s (%s)', fieldName, fieldDict)
+                
+            elif (fieldDict['datatype'] != newDict[fieldName]['datatype']) :
+                if (fieldDict['datatype'] == 'complex' or newDict[fieldName]['datatype'] == 'complex' or newDict[fieldName]['datatype'] == 'string' or newDict[fieldName]['datatype'] == 'enum') :
+                    newDict[fieldName]['Value'] = Value
+                else :
+                    if (newDict[fieldName]['datatype'] == 'ipv4' and re.match(r'^([0-9]{1,3}\.){3}[0-9]{1,3}$', Value)) :
                         newDict[fieldName]['Value'] = Value
                     else :
                         # FIXME: Process value to appropriate type for target schema
-                        if (newDict[fieldName]['datatype'] == 'ipv4' and re.match(r'^([0-9]{1,3}\.){3}[0-9]{1,3}$', Value)) :
-                            newDict[fieldName]['Value'] = Value
-                        else :
-                            self.logging.warning("Cannot convert between data types for field %s", fieldName)
-                    
-                else :
-                    newDict[fieldName]['Value'] = Value
+                        self.logging.warning("Cannot convert between data types for fields %s, %s", field, fieldName)
                 
-                newDict.update(self._ValidateField(newDict[fieldName], fieldName, rowType))
+            else :
+                newDict[fieldName]['Value'] = Value
+                
+            newDict[fieldName]['ReferencedField'] = referencedField
+            newDict[fieldName]['ReferencedValue'] = referencedValue
+            
+            newDict.update(self._ValidateField(newDict[fieldName], fieldName, rowType))
+                
+        if (GroupRows.__len__()) :
+            for group in GroupRows :
+                if (group not in newDict) :
+                    newDict[group] = self.SchemaConfig[rowType]['fields'][group].copy()
+                    newDict[group]['Value'] = 'True'
+                    newDict[group]['ParsedValue'] = True
+                    newDict[group]['groupedFields'] = []
+                
+                subfields = self.SchemaConfig[rowType]['fields'][group]['subfields']
+                
+                # Build the list of required fields for this group
+                
+                '''
+                subfields should be a dictionary like the following:
+                
+                "subfields": { 
+                                "reasonList_reasonCategory": {"required":true, "primaryKey":true}, 
+                                "reasonList_reasonDescription": {"required":false}
+                }
+                '''
+                
+                requiredFields = []
+                otherFields = []
+                primaryKey = None
+                for k,v in subfields.items() :
+                    if ('primaryKey' in v and v['primaryKey'] == True) :
+                        if (primaryKey is None) :
+                            primaryKey = k
+                        else :
+                            raise Exception('MultiplePrimaryKeys', 'Group %s has multiple primaryKeys defined, that is not supported' % group)
+                        
+                    elif ('required' in v and v['required'] == True) :
+                        requiredFields.append(k)
+                        
+                    else :
+                        otherFields.append(k)
+                        
+                if (primaryKey is None) :
+                    raise Exception('primaryKeyNotDefined', 'primaryKey not defined for group %s' % group)
+                
+                if (primaryKey not in GroupRows[group]['fields']) :
+                    raise Exception('primaryKeyMissing', 'primaryKey field, %s, is missing from this row, can not process group %s' % (primaryKey, group))
+
+                
+                for fieldDict in GroupRows[group]['fields'][primaryKey] :
+                    # Create one group for each unique primary key
+                    fieldGroup = {}
+                    fieldGroup[primaryKey] = self.SchemaConfig[rowType]['fields'][primaryKey].copy()
+                    fieldGroup[primaryKey]['Value'] = fieldDict['Value']
+                    fieldGroup[primaryKey]['ReferencedField'] = fieldDict['ReferencedField']
+                    fieldGroup[primaryKey]['ReferencedValue'] = fieldDict['ReferencedValue']
+                    fieldGroup[primaryKey]['matchedOntology'] = fieldDict['matchedOntology']
+                    
+                    fieldGroup.update(self._ValidateField(fieldGroup[primaryKey], primaryKey, rowType))
+                    
+                    groupID = None
+                    if ('groupID' in fieldDict) :
+                        groupID = fieldDict['groupID']
+                    
+                    for requiredField in requiredFields :
+                        if (requiredField in GroupRows[group]['fields']) :
+                            if (groupID is not None) :
+                                for k in GroupRows[group]['fields'][requiredField] :
+                                    if ('groupID' in k and k['groupID'] == groupID) :
+                                        fieldGroup[requiredField] = self.SchemaConfig[rowType]['fields'][requiredField].copy()
+                                        fieldGroup[requiredField]['Value'] = k['Value']
+                                        fieldGroup[requiredField]['ReferencedField'] = k['ReferencedField']
+                                        fieldGroup[requiredField]['ReferencedValue'] = k['ReferencedValue']
+                                        fieldGroup[requiredField]['matchedOntology'] = k['matchedOntology']
+                            
+                            # Determine if any of the defined fields match this primary key
+                            elif (len(GroupRows[group]['fields'][primaryKey]) == 1 and len(GroupRows[group]['fields'][requiredField]) == 1) :
+                                # If there is only one group, assume required fields belong to the same group.
+                                k = GroupRows[group]['fields'][requiredField][0]
+                                fieldGroup[requiredField] = self.SchemaConfig[rowType]['fields'][requiredField].copy()
+                                fieldGroup[requiredField]['Value'] = k['Value']
+                                fieldGroup[requiredField]['ReferencedField'] = k['ReferencedField']
+                                fieldGroup[requiredField]['ReferencedValue'] = k['ReferencedValue']
+                                fieldGroup[requiredField]['matchedOntology'] = k['matchedOntology']
+                            else :
+                                self.logging.warning('Required field %s could not be matched to the appropriate group', requiredField)
+                        
+                        if (requiredField not in fieldGroup) :
+                            # Create a new entry for this field
+                            fieldGroup[requiredField] = self.SchemaConfig[rowType]['fields'][requiredField].copy()
+                            
+                            if (fieldGroup[primaryKey]['ontologyMappingType'] == 'referencedEnum' and requiredField == fieldGroup[primaryKey]['ontologyEnumField']) :
+                                fieldGroup[requiredField]['Value'] = fieldGroup[primaryKey]['ReferencedValue']
+                                
+                            elif ('defaultValue' in fieldGroup[requiredField]) :
+                                fieldGroup[requiredField]['Value'] = fieldGroup[requiredField]['defaultValue']
+                                
+                            # Don't validate fields that are set to function names until after the function is processed 
+                            if (not (isinstance(fieldGroup[requiredField]['Value'], str) and fieldGroup[requiredField]['Value'].startswith('&'))) :
+                                fieldGroup.update(self._ValidateField(fieldGroup[requiredField], requiredField, rowType))
+                                
+                    for otherField in otherFields :
+                        if (otherField in GroupRows[group]['fields']) :
+                            # Determine if any of the defined fields match this primary key
+                            if (groupID is not None) :
+                                for k in GroupRows[group]['fields'][otherField] :
+                                    if ('groupID' in k and k['groupID'] == groupID) :
+                                        fieldGroup[otherField] = self.SchemaConfig[rowType]['fields'][otherField].copy()
+                                        fieldGroup[otherField]['Value'] = k['Value']
+                                        fieldGroup[otherField]['ReferencedField'] = k['ReferencedField']
+                                        fieldGroup[otherField]['ReferencedValue'] = k['ReferencedValue']
+                                        fieldGroup[otherField]['matchedOntology'] = k['matchedOntology']
+                            
+                            elif (len(GroupRows[group]['fields'][primaryKey]) == 1 and len(GroupRows[group]['fields'][otherField]) == 1) :
+                                # If there is only one group, assume required fields belong to the same group.
+                                k = GroupRows[group]['fields'][otherField][0]
+                                fieldGroup[otherField] = self.SchemaConfig[rowType]['fields'][otherField].copy()
+                                fieldGroup[otherField]['Value'] = k['Value']
+                                fieldGroup[otherField]['ReferencedField'] = k['ReferencedField']
+                                fieldGroup[otherField]['ReferencedValue'] = k['ReferencedValue']
+                                fieldGroup[otherField]['matchedOntology'] = k['matchedOntology']
+                            else :
+                                self.logging.warning('Field %s could not be matched to the appropriate group', otherField)
+                                
+                    newDict[group]['groupedFields'].append(fieldGroup)
         
         return newDict
     
@@ -733,9 +901,7 @@ class SchemaParser(object):
                     SourceDataRow[k] = v.copy()
                     OutputFormattedFields.append(k)
                 elif ('datatype' in v and v['datatype'] == 'group') :
-                    # Don't parse groups
-                    # TODO: Fix this code, the group should be built from subfields if they exist
-                    pass
+                    raise Exception('GroupMissing', 'The group %s is required, but none of its fields exist' % k)
                 else :
                     raise Exception('NoDefaultValue', 'Default Value or outputFormat not defined for required field %s' % k)
             elif ('outputFormat' in v) :
@@ -824,12 +990,6 @@ class SchemaParser(object):
         Find any references to functions in the data and calculates the actual values.
         '''
         
-        '''
-        TODO: This assumes that the XML path to the function is known and predefined. 
-        It may be difficult to implement new function calls as FlexTransform gets more complicated. 
-        I would prefer a less hack way of implementing this concept.
-        '''
-        
         rowTypes = []
         if ('IndicatorData' in TransformedData) :
             rowTypes.append('IndicatorData')
@@ -851,6 +1011,10 @@ class SchemaParser(object):
     def _CalculateFunctionValue(self, row, TransformedData) :
         
         for k, v in row.items() :
+            if (isinstance(v,dict) and 'groupedFields' in v) :
+                for group in v['groupedFields'] :
+                    self._CalculateFunctionValue(group, TransformedData)
+            
             if (isinstance(v,dict) and 'Value' in v) :
                 value = v['Value']
                 if (value.startswith('&')) :
@@ -939,50 +1103,42 @@ class SchemaParser(object):
                             
                             v['Value'] = None
                             
-                            if (args == 'indicator') :
-                                indicatorType = row['IndicatorType']
+                            if (args in row and 'Value' in row[args]) :
+                                indicatorValue = row[args]['Value']
                                 
-                                if (indicatorType == 'IPv4-Address-Block') :
+                                if (re.match(r'^((\d){1,3}\.){3}(\d){1,3}$', indicatorValue)) :
                                     v['Value'] = 'http://www.anl.gov/cfm/2.0/current/#IPv4DottedDecimalEquality'
-                                elif (indicatorType == 'IPv6-Address-Block') :
+                                elif (re.match(r'^[a-fA-F0-9]+:+[a-fA-F0-9:]+$', indicatorValue)) :
                                     v['Value'] = 'http://www.anl.gov/cfm/2.0/current/#IPv6ColonHexEquality'
-                                elif (indicatorType == 'DNS-Hostname-Block') :
+                                elif (re.match(r'^([a-z0-9][^./]+\.)+[a-z]+$', indicatorValue)) :
                                     v['Value'] = 'http://www.anl.gov/cfm/2.0/current/#DNSDomainNameMatch'
-                                elif (indicatorType == 'URL-Block') :
+                                elif (re.match(r'^((ft|htt)ps?://)?([a-z][^./]+\.)+[a-z]+/.*$', indicatorValue)) :
                                     v['Value'] = 'http://www.anl.gov/cfm/2.0/current/#URLMatch'
-                                elif (indicatorType == 'Malicious-Email-Block') :
-                                    pass
-                                elif (indicatorType == 'Malicious-File-IOC') :
-                                    pass
-                                elif (indicatorType == 'Registry-Key-IOC') :
-                                    pass
-                                elif (indicatorType == 'Mutex-IOC') :
-                                    pass
+                                
+                            if (v['Value'] is None) :
+                                # Still didn't find an indicator type, throw exception
+                                raise Exception('unknownIndicatorConstraint', 'CFM 2.0 Indicator constraint could not be determined for data: %s' % row[args]['Value'])
                                 
                         elif (function == 'CFM20_determineIndicatorType') :
                             # TODO: It would be great if somehow we could query the ontology to get this.
                             
                             v['Value'] = None
                             
-                            if (args == 'indicator') :
-                                indicatorType = row['IndicatorType']
+                            if (args in row and 'Value' in row[args]) :
+                                indicatorValue = row[args]['Value']
                                 
-                                if (indicatorType == 'IPv4-Address-Block') :
+                                if (re.match(r'^((\d){1,3}\.){3}(\d){1,3}$', indicatorValue)) :
                                     v['Value'] = 'http://www.anl.gov/cfm/2.0/current/#IPv4Address'
-                                elif (indicatorType == 'IPv6-Address-Block') :
+                                elif (re.match(r'^[a-fA-F0-9]+:+[a-fA-F0-9:]+$', indicatorValue)) :
                                     v['Value'] = 'http://www.anl.gov/cfm/2.0/current/#IPv6Address'
-                                elif (indicatorType == 'DNS-Hostname-Block') :
+                                elif (re.match(r'^([a-z][^./]+\.)+[a-z]+$', indicatorValue)) :
                                     v['Value'] = 'http://www.anl.gov/cfm/2.0/current/#DNSDomainName'
-                                elif (indicatorType == 'URL-Block') :
+                                elif (re.match(r'^((ft|htt)ps?://)?([a-z][^./]+\.)+[a-z]+/.*$', indicatorValue)) :
                                     v['Value'] = 'http://www.anl.gov/cfm/2.0/current/#URL'
-                                elif (indicatorType == 'Malicious-Email-Block') :
-                                    pass
-                                elif (indicatorType == 'Malicious-File-IOC') :
-                                    pass
-                                elif (indicatorType == 'Registry-Key-IOC') :
-                                    pass
-                                elif (indicatorType == 'Mutex-IOC') :
-                                    pass
+                                
+                            if (v['Value'] is None) :
+                                # Still didn't find an indicator type, throw exception
+                                raise Exception('unknownIndicatorType', 'CFM 2.0 Indicator type could not be determined for data: %s' % row[args]['Value'])
                                 
                         elif (function == 'generate_uuid') :
                             v['Value'] = str(uuid.uuid4())
