@@ -8,19 +8,19 @@ xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
 xsi:schemaLocation=" http://www.anl.gov/cfm/2.0/current/CFMAlert ../../../resources/schemas/CFMAlert.xsd">
 	<Version>2.0</Version>
 	<Alert>
-	  <AlertID>&cfm;Alert-f47ac10b-58cc-4372-a567-0e02b2c3d480SITE-1355938635-01</AlertID>
+	  <AlertID>Alert-f47ac10b-58cc-4372-a567-0e02b2c3d480SITE-1355938635-01</AlertID>
 	  <AlertTimestamp>1355616000</AlertTimestamp>
 	  <IndicatorSet>
 		<CompositeIndicator>
 			<And>
 				<Indicator>
-					<Type>&cfm;SourceIPAddress</Type>
-					<Constraint>&cfm;IPv4AddressMatch</Constraint>
+					<Type>&cfm;IPv4Address</Type>
+					<Constraint>&cfm;IPv4DottedDecimalEquality</Constraint>
 					<Value>192.168.10.10</Value>
 				</Indicator>
 				<Indicator>
 					<Type>&cfm;EMailSubject</Type>
-					<Constraint>&cfm;RegularExpression</Constraint>
+					<Constraint>&cfm;RegularExpressionMatch</Constraint>
 <Value>
 /.*Nigerian Lottery Winnings.*/
 </Value>

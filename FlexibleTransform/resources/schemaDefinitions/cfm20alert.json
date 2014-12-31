@@ -34,7 +34,12 @@
 			],
 			"URL-Block": [
 				{ "indicatorSet_Type": "http://www.anl.gov/cfm/2.0/current/#URL" }
-			] 
+			],
+			"Malicious-File-IOC": [
+				{ "indicatorSet_Type": "http://www.anl.gov/cfm/2.0/current/#FileName" },
+				{ "indicatorSet_Type": "http://www.anl.gov/cfm/2.0/current/#FileMD5Hash" },
+				{ "indicatorSet_Type": "http://www.anl.gov/cfm/2.0/current/#FileSHA1Hash" }
+			]
 		},
 		"fields": {
 			"alert_id": {
@@ -51,6 +56,7 @@
 				"valuemap": "AlertTimestamp", 
 				"datatype": "datetime",
 				"dateTimeFormat": "unixtime",
+				"defaultValue": "&now()",
 				"required": true,
 				"ontologyMappingType": "simple",
 				"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#TimeOfDetectionSemanticConcept"
@@ -207,7 +213,7 @@
 				"ontologyMappingType": "none",
 				"subfields": { 
 								"indicatorSet_Type": {"required":true}, 
-								"IndicatorSet_constraint": {"required":true}, 
+								"indicatorSet_Constraint": {"required":true}, 
 								"indicatorSet_Value": {"required":true, "primaryKey":true}
 				}
 			},
@@ -263,19 +269,19 @@
 						"ontologyMapping": ""
 					},
 					"http://www.anl.gov/cfm/2.0/current/#FileMD5Hash": {
-						"ontologyMapping": ""
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#MD5FilehashIndicatorTypeSemanticComponent"
 					},
 					"http://www.anl.gov/cfm/2.0/current/#FileSHA1Hash": {
-						"ontologyMapping": ""
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#SHA1FilehashIndicatorTypeSemanticComponent"
 					},
 					"http://www.anl.gov/cfm/2.0/current/#FileSizeBytes": {
-						"ontologyMapping": ""
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#FilesizeByteEqualityConstraintSemanticConcept"
 					},
 					"http://www.anl.gov/cfm/2.0/current/#FileSizeMegabytes": {
 						"ontologyMapping": ""
 					},
 					"http://www.anl.gov/cfm/2.0/current/#FileName": {
-						"ontologyMapping": ""
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#FilenameMatchConstraintSemanticConcept"
 					},
 					"http://www.anl.gov/cfm/2.0/current/#UserName": {
 						"ontologyMapping": ""
@@ -285,7 +291,7 @@
 					}
 				}
 			},
-			"IndicatorSet_constraint": {
+			"indicatorSet_Constraint": {
 				"description": "The URI of the CFM constraint type; this URI indicates both the representation of the indicator value and the method of comparison to be used.",
 				"valuemap": "IndicatorSet;Constraint",
 				"datatype": "enum",
@@ -396,7 +402,7 @@
 						"ontologyMapping": ""
 					},
 					"http://www.anl.gov/cfm/2.0/current/#URL": {
-						"ontologyMapping": ""
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#URLIndicatorMetadataSemanticComponent"
 					},
 					"http://www.anl.gov/cfm/2.0/current/#DNSDomainName": {
 						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#DNSIndicatorValueSemanticComponent"
@@ -405,10 +411,10 @@
 						"ontologyMapping": ""
 					},
 					"http://www.anl.gov/cfm/2.0/current/#FileMD5Hash": {
-						"ontologyMapping": ""
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#MD5FilehashIndicatorValueSemanticComponent"
 					},
 					"http://www.anl.gov/cfm/2.0/current/#FileSHA1Hash": {
-						"ontologyMapping": ""
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#SHA1FilehashIndicatorValueSemanticComponent"
 					},
 					"http://www.anl.gov/cfm/2.0/current/#FileSizeBytes": {
 						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#FilesizeByteValueSemanticConcept"
@@ -537,6 +543,14 @@
 						"ontologyMapping": ""
 					}
 				}
+			},
+			"comment": {
+				"description": "A comment about the indicator data",
+				"valuemap": "Comment",
+				"datatype": "string",
+				"required": false,
+				"ontologyMappingType": "simple",
+				"ontologyMapping": ""
 			}
 		}
 	}

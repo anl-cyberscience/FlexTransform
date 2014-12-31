@@ -229,7 +229,7 @@ class SchemaParser(object):
             elif (k in self.SchemaConfig[rowType]['fields']) :
                 fieldName = k
             else :
-                self.logging.warning('%s not found in ValueMap for row type %s in schema config. Value: ', k, rowType, v)
+                self.logging.warning('%s not found in ValueMap for row type %s in schema config. Value: %s', k, rowType, v)
                 continue
                 
             if (fieldName is not None) :
@@ -271,8 +271,8 @@ class SchemaParser(object):
                             else :
                                 raise Exception('DataError', 'Data type of sub row for %s is not dict: %s' % (k, row))
                             
-                        # Value could be set to anything, it isn't used for field groups except to indicate that the group has been parsed
-                        newDict[fieldName]['Value'] = True
+                        # Value could be set to any string, it isn't used for field groups except to indicate that the group has been parsed
+                        newDict[fieldName]['Value'] = 'True'
                     else :
                         if (v.__len__() > 1) :
                             newDict[fieldName]['AdditionalValues'] = []
@@ -288,7 +288,7 @@ class SchemaParser(object):
                                 newDict[fieldName]['AdditionalValues'].append(str(d))
                         
                 elif (isinstance(v,(list,dict))) :
-                    self.logging.warning('%s value is a list or dictionary, not currently support: %s', k, v)
+                    self.logging.warning('%s value is a list or dictionary, not currently supported: %s', k, v)
                     continue
                 elif (isinstance(v,str)) :
                     # The rstrip is to get rid of rogue tabs and white space at the end of a value, a frequent problem with STIX formated documents in testing
@@ -348,6 +348,7 @@ class SchemaParser(object):
         for k in subfields :
             if (k in subDict) :
                 if (x) :
+                    # Only rename entries if x is > 0
                     v = subDict.pop(k)
                     k = "%s_%i" % (k, x)
                     subDict[k] = v
@@ -372,8 +373,6 @@ class SchemaParser(object):
                 Multiple fields can be required for a single match, and multiple possible matches can be tried for a single indicator type
         '''
        
-        # TODO: This only matches the first indicator object, if there are multiple sub-indicators then they won't get matched, it is a naive best match engine.
-       
         bestMatch = None
         bestWeight = 0
                
@@ -382,20 +381,35 @@ class SchemaParser(object):
                 match = False
                 Weight = 0
                 for k,v in indicatorMatch.items() :
-                    if (k in newDict and "Value" in newDict[k]) :
-                        if (v == "*" and newDict[k]['Value'] != "") :
-                            Weight += 1
-                            match = True
-                        elif (v.endswith("*") and newDict[k]["Value"].startswith(v.strip("*"))) :
-                            Weight += 5
-                            match = True
-                        elif (newDict[k]["Value"] == v) :
-                            Weight += 10
+                    matchKeys = []
+                    if (k in newDict) :
+                        matchKeys.append(k)
+                        prefix = "%s_" % k
+                        for key in newDict :
+                            if key.startswith(prefix) :
+                                matchKeys.append(key)
+                                
+                    if (matchKeys.__len__() > 0) :
+                        submatch = False
+                        for key in matchKeys :
+                            if (key in newDict and "Value" in newDict[key]) :
+                                if (v == "*" and newDict[key]['Value'] != "") :
+                                    Weight += 1
+                                    submatch = True
+                                elif (v.endswith("*") and newDict[k]["Value"].startswith(v.strip("*"))) :
+                                    Weight += 5
+                                    submatch = True
+                                elif (newDict[k]["Value"] == v) :
+                                    Weight += 10
+                                    submatch = True
+                                
+                        if (submatch) :
                             match = True
                         else :
                             match = False
                             Weight = 0
                             break
+                        
                     elif (v == "") :
                         Weight += 5
                         match = True
@@ -528,6 +542,9 @@ class SchemaParser(object):
         Transform the data row using the underlying ontology mappings to the new schema
         TODO: Update to query ontology directly
         '''
+        
+        # TODO: This function is far too large and complicated, it should be broken up into smaller functions
+        
         newDict = {}
         
         OntologyMap = self.OntologyMapping[rowType]
@@ -685,7 +702,7 @@ class SchemaParser(object):
                 fieldDict['matchedOntology'] = OntologyReference
                 fieldDict['ReferencedField'] = referencedField
                 fieldDict['ReferencedValue'] = referencedValue
-                fieldDict['Value'] = Value
+                fieldDict['NewValue'] = Value
                 
                 GroupRows[memberof]['fields'][fieldName].append(fieldDict)
                 continue
@@ -749,6 +766,13 @@ class SchemaParser(object):
             
             newDict.update(self._ValidateField(newDict[fieldName], fieldName, rowType))
                 
+        # Populate GroupRows with all required groups
+        for k, v in self.SchemaConfig[rowType]['fields'].items() :              
+            if ('required' in v and v['required'] == True) :
+                if ('datatype' in v and v['datatype'] == 'group') :
+                    if (k not in GroupRows) :
+                        GroupRows[k] = { 'fields': {} }
+                
         if (GroupRows.__len__()) :
             for group in GroupRows :
                 if (group not in newDict) :
@@ -790,14 +814,22 @@ class SchemaParser(object):
                     raise Exception('primaryKeyNotDefined', 'primaryKey not defined for group %s' % group)
                 
                 if (primaryKey not in GroupRows[group]['fields']) :
-                    raise Exception('primaryKeyMissing', 'primaryKey field, %s, is missing from this row, can not process group %s' % (primaryKey, group))
+                    self.logging.debug('primaryKey field, %s, is missing from group %s', primaryKey, group)
+                    if ('defaultValue' in self.SchemaConfig[rowType]['fields'][primaryKey]) :
+                        fieldDict = {}
+                        fieldDict['ReferencedField'] = None
+                        fieldDict['ReferencedValue'] = None
+                        fieldDict['matchedOntology'] = None
+                        fieldDict['NewValue'] = self.SchemaConfig[rowType]['fields'][primaryKey]['defaultValue']
+                        GroupRows[group]['fields'][primaryKey] = [ fieldDict ]
+                    else :
+                        raise Exception('primaryKeyNotFound', 'primaryKey not found for group %s and no defaultValue defined' % group)
 
-                
                 for fieldDict in GroupRows[group]['fields'][primaryKey] :
                     # Create one group for each unique primary key
                     fieldGroup = {}
                     fieldGroup[primaryKey] = self.SchemaConfig[rowType]['fields'][primaryKey].copy()
-                    fieldGroup[primaryKey]['Value'] = fieldDict['Value']
+                    fieldGroup[primaryKey]['Value'] = fieldDict['NewValue']
                     fieldGroup[primaryKey]['ReferencedField'] = fieldDict['ReferencedField']
                     fieldGroup[primaryKey]['ReferencedValue'] = fieldDict['ReferencedValue']
                     fieldGroup[primaryKey]['matchedOntology'] = fieldDict['matchedOntology']
@@ -814,7 +846,7 @@ class SchemaParser(object):
                                 for k in GroupRows[group]['fields'][requiredField] :
                                     if ('groupID' in k and k['groupID'] == groupID) :
                                         fieldGroup[requiredField] = self.SchemaConfig[rowType]['fields'][requiredField].copy()
-                                        fieldGroup[requiredField]['Value'] = k['Value']
+                                        fieldGroup[requiredField]['Value'] = k['NewValue']
                                         fieldGroup[requiredField]['ReferencedField'] = k['ReferencedField']
                                         fieldGroup[requiredField]['ReferencedValue'] = k['ReferencedValue']
                                         fieldGroup[requiredField]['matchedOntology'] = k['matchedOntology']
@@ -824,7 +856,7 @@ class SchemaParser(object):
                                 # If there is only one group, assume required fields belong to the same group.
                                 k = GroupRows[group]['fields'][requiredField][0]
                                 fieldGroup[requiredField] = self.SchemaConfig[rowType]['fields'][requiredField].copy()
-                                fieldGroup[requiredField]['Value'] = k['Value']
+                                fieldGroup[requiredField]['Value'] = k['NewValue']
                                 fieldGroup[requiredField]['ReferencedField'] = k['ReferencedField']
                                 fieldGroup[requiredField]['ReferencedValue'] = k['ReferencedValue']
                                 fieldGroup[requiredField]['matchedOntology'] = k['matchedOntology']
@@ -835,10 +867,7 @@ class SchemaParser(object):
                             # Create a new entry for this field
                             fieldGroup[requiredField] = self.SchemaConfig[rowType]['fields'][requiredField].copy()
                             
-                            if (fieldGroup[primaryKey]['ontologyMappingType'] == 'referencedEnum' and requiredField == fieldGroup[primaryKey]['ontologyEnumField']) :
-                                fieldGroup[requiredField]['Value'] = fieldGroup[primaryKey]['ReferencedValue']
-                                
-                            elif ('defaultValue' in fieldGroup[requiredField]) :
+                            if ('defaultValue' in fieldGroup[requiredField]) :
                                 fieldGroup[requiredField]['Value'] = fieldGroup[requiredField]['defaultValue']
                                 
                             # Don't validate fields that are set to function names until after the function is processed 
@@ -1074,7 +1103,7 @@ class SchemaParser(object):
                                         v['Value'] = 'IPv4Address'
                                     elif (re.match(r'^[a-fA-F0-9]+:+[a-fA-F0-9:]+$', indicatorValue)) :
                                         v['Value'] = 'IPv6Address'
-                                    elif (re.match(r'^([a-z][^./]+\.)+[a-z]+$', indicatorValue)) :
+                                    elif (re.match(r'^([a-z0-9][^./]+\.)+[a-z]+$', indicatorValue)) :
                                         v['Value'] = 'DNSDomainName'
                                     elif (re.match(r'^((ft|htt)ps?://)?([a-z][^./]+\.)+[a-z]+/.*$', indicatorValue)) :
                                         v['Value'] = 'URL'
@@ -1105,8 +1134,11 @@ class SchemaParser(object):
                             
                             if (args in row and 'Value' in row[args]) :
                                 indicatorValue = row[args]['Value']
+                                indicatorOntology = row[args]['matchedOntology']
                                 
-                                if (re.match(r'^((\d){1,3}\.){3}(\d){1,3}$', indicatorValue)) :
+                                if (indicatorOntology == 'http://www.anl.gov/cfm/transform.owl#FilenameIndicatorValueSemanticConcept') :
+                                    v['Value'] = 'http://www.anl.gov/cfm/2.0/current/#StringValueMatch'
+                                elif (re.match(r'^((\d){1,3}\.){3}(\d){1,3}$', indicatorValue)) :
                                     v['Value'] = 'http://www.anl.gov/cfm/2.0/current/#IPv4DottedDecimalEquality'
                                 elif (re.match(r'^[a-fA-F0-9]+:+[a-fA-F0-9:]+$', indicatorValue)) :
                                     v['Value'] = 'http://www.anl.gov/cfm/2.0/current/#IPv6ColonHexEquality'
@@ -1114,7 +1146,14 @@ class SchemaParser(object):
                                     v['Value'] = 'http://www.anl.gov/cfm/2.0/current/#DNSDomainNameMatch'
                                 elif (re.match(r'^((ft|htt)ps?://)?([a-z][^./]+\.)+[a-z]+/.*$', indicatorValue)) :
                                     v['Value'] = 'http://www.anl.gov/cfm/2.0/current/#URLMatch'
-                                
+                                elif (re.match(r'^[a-fA-F0-9]{32}$', indicatorValue)) :
+                                    v['Value'] = 'http://www.anl.gov/cfm/2.0/current/#MD5Equality'
+                                elif (re.match(r'^\d+$', indicatorValue)) :
+                                    v['Value'] = 'http://www.anl.gov/cfm/2.0/current/#IntegerEquality'
+
+                                    
+                                    
+                                    
                             if (v['Value'] is None) :
                                 # Still didn't find an indicator type, throw exception
                                 raise Exception('unknownIndicatorConstraint', 'CFM 2.0 Indicator constraint could not be determined for data: %s' % row[args]['Value'])
@@ -1126,15 +1165,22 @@ class SchemaParser(object):
                             
                             if (args in row and 'Value' in row[args]) :
                                 indicatorValue = row[args]['Value']
+                                indicatorOntology = row[args]['matchedOntology']
                                 
-                                if (re.match(r'^((\d){1,3}\.){3}(\d){1,3}$', indicatorValue)) :
+                                if (indicatorOntology == 'http://www.anl.gov/cfm/transform.owl#FilenameIndicatorValueSemanticConcept') :
+                                    v['Value'] = 'http://www.anl.gov/cfm/2.0/current/#FileName'
+                                elif (re.match(r'^((\d){1,3}\.){3}(\d){1,3}$', indicatorValue)) :
                                     v['Value'] = 'http://www.anl.gov/cfm/2.0/current/#IPv4Address'
                                 elif (re.match(r'^[a-fA-F0-9]+:+[a-fA-F0-9:]+$', indicatorValue)) :
                                     v['Value'] = 'http://www.anl.gov/cfm/2.0/current/#IPv6Address'
-                                elif (re.match(r'^([a-z][^./]+\.)+[a-z]+$', indicatorValue)) :
+                                elif (re.match(r'^([a-z0-9][^./]+\.)+[a-z]+$', indicatorValue)) :
                                     v['Value'] = 'http://www.anl.gov/cfm/2.0/current/#DNSDomainName'
                                 elif (re.match(r'^((ft|htt)ps?://)?([a-z][^./]+\.)+[a-z]+/.*$', indicatorValue)) :
                                     v['Value'] = 'http://www.anl.gov/cfm/2.0/current/#URL'
+                                elif (re.match(r'^[a-fA-F0-9]{32}$', indicatorValue)) :
+                                    v['Value'] = 'http://www.anl.gov/cfm/2.0/current/#FileMD5Hash'
+                                elif (re.match(r'^\d+$', indicatorValue)) :
+                                    v['Value'] = 'http://www.anl.gov/cfm/2.0/current/#FileSizeBytes'
                                 
                             if (v['Value'] is None) :
                                 # Still didn't find an indicator type, throw exception

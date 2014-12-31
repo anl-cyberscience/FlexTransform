@@ -1,7 +1,7 @@
 {
 	"DocumentHeaderData": {
 		"fields": {
-			"description": {
+			"document_Description": {
 				"description": "Description of the data in the STIX document",
 				"valuemap": "description",
 				"datatype": "string",
@@ -44,7 +44,10 @@
 				"required": true,
 				"multiple": true,
 				"ontologyMappingType": "none",
-				"subfields": [ "package_intent", "package_intent_vocab" ]
+				"subfields": { 
+								"package_intent": {"required": true, "primaryKey": true}, 
+								"package_intent_vocab": {"required": true}
+				}
 			},
 			"package_intent": {
 				"description": "The type of indicator data in the document",
@@ -77,6 +80,7 @@
 				"description": "The vocabulary for the type of indicator data in the document",
 				"valuemap": "package_intents;xsi:type", 
 				"datatype": "enum",
+				"defaultValue": "stixVocabs:PackageIntentVocab-1.0",
 				"required": false,
 				"ontologyMappingType": "enum",
 				"enumValues": { 
@@ -104,13 +108,17 @@
 				"required": true,
 				"multiple": true,
 				"ontologyMappingType": "none",
-				"subfields": [ "handling_controlledstructure", "handling_markingstructures" ]
+				"subfields": { 
+								"handling_controlledstructure": {"required": true, "primaryKey": true}, 
+								"handling_markingstructures" : {"required": true}
+				}
 			},
 			"handling_controlledstructure": {
 				"description": "The control level for the TLP marking",
 				"valuemap": "handling;controlled_structure", 
 				"datatype": "enum",
 				"required": false,
+				"defaultValue": "//node()",
 				"ontologyMappingType": "enum",
 				"enumValues": {
 					"//node()": {
@@ -122,10 +130,14 @@
 				"description": "Collection of one or more handling markings for the document",
 				"valuemap": "handling;marking_structures",
 				"datatype": "group",
-				"required": true,
+				"required": false,
 				"multiple": true,
 				"ontologyMappingType": "none",
-				"subfields": [ "handling_markingstructures_color", "handling_markingstructures_xsitype", "handling_markingstructures_statement" ]
+				"subfields": { 
+								"handling_markingstructures_color": {"required": false}, 
+								"handling_markingstructures_xsitype": {"required": true, "primaryKey": true}, 
+								"handling_markingstructures_statement": {"required": false}
+				}
 			},
 			"handling_markingstructures_color": {
 				"description": "The TLP color for the document",
@@ -235,13 +247,16 @@
 				"required": false,
 				"multiple": true,
 				"ontologyMappingType": "none",
-				"subfields": [ "indicator_type", "indicator_type_vocab" ]
+				"subfields": { 
+								"indicator_type": {"required": true, "primaryKey": true}, 
+								"indicator_type_vocab": {"required": true}
+				}
 			},
 			"indicator_type": {
 				"description": "The type of indicator",
 				"valuemap": "indicator_types;value", 
 				"datatype": "enum",
-				"required": true,
+				"required": false,
 				"defaultValue": "Unknown",
 				"ontologyMappingType": "enum",
 				"enumValues": { 
@@ -279,6 +294,7 @@
 				"valuemap": "indicator_types;xsi:type", 
 				"datatype": "enum",
 				"required": false,
+				"defaultValue": "stixVocabs:IndicatorTypeVocab-1.1",
 				"ontologyMappingType": "enum",
 				"enumValues": { 
 					"stixVocabs:IndicatorTypeVocab-1.1": {
@@ -572,7 +588,10 @@
 				"required": false,
 				"multiple": true,
 				"ontologyMappingType": "none",
-				"subfields": [ "observable_object_header_sender_customproperties_name", "observable_object_header_sender_customproperties_value" ]
+				"subfields": {
+								"observable_object_header_sender_customproperties_name": {"required": true}, 
+								"observable_object_header_sender_customproperties_value": {"required": true, "primaryKey": true}
+				}
 			},
 			"observable_object_header_sender_customproperties_name": {
 				"description": "True if the sender address was spoofed",
@@ -580,6 +599,7 @@
 				"additionalValuemaps": [ "observable;object;properties;header;from;custom_properties;name" ],
 				"datatype": "enum",
 				"required": false,
+				"defaultValue": "is_spoofed",
 				"ontologyMappingType": "enum",
 				"enumValues": {
 					"is_spoofed": {
@@ -688,7 +708,14 @@
 				"required": false,
 				"multiple": true,
 				"ontologyMappingType": "none",
-				"subfields": [ "observable_object_hashes_type_value", "observable_object_hashes_type_condition", "observable_object_hashes_simplehash_value", "observable_object_hashes_simplehash_condition", "observable_object_hashes_fuzzyhash_value", "observable_object_hashes_fuzzyhash_condition"  ]
+				"subfields": { 
+								"observable_object_hashes_type_value": {"required": true, "primaryKey": true}, 
+								"observable_object_hashes_type_condition": {"required": true}, 
+								"observable_object_hashes_simplehash_value": {"required": false}, 
+								"observable_object_hashes_simplehash_condition": {"required": false}, 
+								"observable_object_hashes_fuzzyhash_value": {"required": false}, 
+								"observable_object_hashes_fuzzyhash_condition": {"required": false}
+				}
 			},
 			"observable_object_hashes_type_value": {
 				"description": "The type of the hash of the file",
@@ -698,10 +725,10 @@
 				"ontologyMappingType": "enum",
 				"enumValues": {
 					"MD5": {
-						"ontologyMapping": ""
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#MD5FilehashIndicatorTypeSemanticComponent"
 					},
 					"SHA1": {
-						"ontologyMapping": ""
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#SHA1FilehashIndicatorTypeSemanticComponent"
 					},
 					"SHA256": {
 						"ontologyMapping": ""
@@ -715,6 +742,7 @@
 				"description": "The match condition for the type of the hash of the file",
 				"valuemap": "observable;object;properties;hashes;type;condition", 
 				"datatype": "enum",
+				"defaultValue": "Equals",
 				"required": false,
 				"ontologyMappingType": "none",
 				"enumValues": {
@@ -830,7 +858,12 @@
 				"required": false,
 				"multiple": true,
 				"ontologyMappingType": "none",
-				"subfields": [ "observable_object_regkey_subkey_name_value", "observable_object_regkey_subkey_name_condition", "observable_object_regkey_subkey_data_value", "observable_object_regkey_subkey_data_condition" ]
+				"subfields": {
+								"observable_object_regkey_subkey_name_value": {"required": true, "primaryKey": true}, 
+								"observable_object_regkey_subkey_name_condition": {"required": true}, 
+								"observable_object_regkey_subkey_data_value": {"required": true},
+								"observable_object_regkey_subkey_data_condition": {"required": true}
+				}
 			},
 			"observable_object_regkey_subkey_name_value": {
 				"description": "The registry subkey object name",
@@ -967,7 +1000,10 @@
 				"required": false,
 				"multiple": true,
 				"ontologyMappingType": "none",
-				"subfields": [ "observable_object_http_client_request_user_agent_header_value", "observable_object_http_client_request_user_agent_header_condition" ]
+				"subfields": {
+								"observable_object_http_client_request_user_agent_header_value": {"required": true, "primaryKey": true}, 
+								"observable_object_http_client_request_user_agent_header_condition": {"required": true}
+				}
 			},
 			"observable_object_http_client_request_user_agent_header_value": {
 				"description": "The value of the user agent header object in the http client request",
@@ -998,7 +1034,7 @@
 				"required": false,
 				"multiple": true,
 				"ontologyMappingType": "none",
-				"subfields": [ "observable_object_links_reference" ]
+				"subfields": { "observable_object_links_reference": {"required": true, "primaryKey": true} }
 			},
 			"observable_object_links_reference": {
 				"description": "Reference to another STIX object that contains URL information, currently not processed by Flexible Transform",
@@ -1014,7 +1050,7 @@
 				"required": false,
 				"multiple": true,
 				"ontologyMappingType": "none",
-				"subfields": [ "observable_object_attachments_reference" ]
+				"subfields": { "observable_object_attachments_reference": {"required": true, "primaryKey": true} }
 			},
 			"observable_object_attachments_reference": {
 				"description": "Reference to another STIX object that contains URL information, currently not processed by Flexible Transform",
@@ -1030,7 +1066,13 @@
 				"required": false,
 				"multiple": true,
 				"ontologyMappingType": "none",
-				"subfields": [ "killchain_phases_chain_id", "killchain_phases_chain_name", "killchain_phases_phase_id", "killchain_phases_phase_name", "killchain_phases_phase_ordinality" ]
+				"subfields": {
+								"killchain_phases_chain_id": {"required": true},
+								"killchain_phases_chain_name": {"required": true}, 
+								"killchain_phases_phase_id": {"required": true}, 
+								"killchain_phases_phase_name": {"required": true, "primaryKey": true}, 
+								"killchain_phases_phase_ordinality": {"required": true}
+				}
 			},
 			"killchain_phases_chain_id": {
 				"description": "The kill chain id",
@@ -1088,7 +1130,10 @@
 				"required": false,
 				"multiple": true,
 				"ontologyMappingType": "none",
-				"subfields": [ "sightings_timestamp", "sightings_timestamp_precision" ]
+				"subfields": {
+								"sightings_timestamp": {"required": true, "primaryKey": true},
+								"sightings_timestamp_precision": {"required": true}
+				}
 			},
 			"sightings_timestamp": {
 				"description": "The time of the last sighting",
@@ -1103,6 +1148,7 @@
 				"description": "The precision of the timestamp of sighting",
 				"valuemap": "sightings;sightings;timestamp_precision", 
 				"datatype": "enum",
+				"defaultValue": "second",
 				"required": false,
 				"ontologyMappingType": "enum",
 				"enumValues": {

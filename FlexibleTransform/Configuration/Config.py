@@ -11,8 +11,6 @@ import json
 import os
 import logging
 
-# TODO: Load relative paths
-
 class Config(object):
     '''
     Parser for configuration documents that describe the syntax and schema of
@@ -108,7 +106,7 @@ class Config(object):
         Deep recursive merge of values in SourceDataRow into originalDict
         '''
         
-        # FIXME: This will break if originalDict has a nested dict that is overwritten by a string object in SourceDataRow
+        # FIXME: This will break if originalDict has a nested dict that is overwritten by a string object in SourceDataRow. This should throw an error.
         for k, v in SourceDataRow.items():
             if (k in originalDict) :
                 if (isinstance(v,dict)) :

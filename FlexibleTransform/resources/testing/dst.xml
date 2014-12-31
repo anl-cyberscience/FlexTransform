@@ -6,122 +6,39 @@
 <CFMAlert xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.anl.gov/cfm/2.0/current/CFMAlert" xsi:schemaLocation="http://www.anl.gov/cfm/2.0/current/CFMAlert/../../../resources/schemas/CFMAlert.xsd">
   <Version>2.0</Version>
   <Alert>
-    <AlertID>ad72f72f-8335-4c56-9a4f-39137cff0ce6</AlertID>
-    <AlertTimestamp>1416968888</AlertTimestamp>
+    <AlertID>Alert-f47ac10b-58cc-4372-a567-0e02b2c3d480SITE-1355938635-01</AlertID>
+    <AlertTimestamp>1355641200</AlertTimestamp>
     <IndicatorSet>
       <CompositeIndicator>
-        <Or>
+        <And>
           <Indicator>
-            <Type>&cfm;DNSDomainName</Type>
-            <Constraint>&cfm;DNSDomainNameMatch</Constraint>
-            <Value>dvw5ha1fjui8eavueapu925pj.biz</Value>
-          </Indicator>
-          <Indicator>
-            <Type>&cfm;DNSDomainName</Type>
-            <Constraint>&cfm;DNSDomainNameMatch</Constraint>
-            <Value>pfjuud45sphf1oki9th1rp3c8t.biz</Value>
-          </Indicator>
-          <Indicator>
-            <Type>&cfm;DNSDomainName</Type>
-            <Constraint>&cfm;DNSDomainNameMatch</Constraint>
-            <Value>z583ff6um04h15ugwst1f4ofq7.com</Value>
-          </Indicator>
-          <Indicator>
-            <Type>&cfm;DNSDomainName</Type>
-            <Constraint>&cfm;DNSDomainNameMatch</Constraint>
-            <Value>zvrlyexoi51jcs9o11no9ea9.com</Value>
-          </Indicator>
-          <Indicator>
-            <Type>&cfm;DNSDomainName</Type>
-            <Constraint>&cfm;DNSDomainNameMatch</Constraint>
-            <Value>zfjkll1wnezclywybk14o0490.com</Value>
-          </Indicator>
-          <Indicator>
-            <Type>&cfm;DNSDomainName</Type>
-            <Constraint>&cfm;DNSDomainNameMatch</Constraint>
-            <Value>1heelgn1j9cl9g1e4iu9m8u7rot.com</Value>
-          </Indicator>
-          <Indicator>
-            <Type>&cfm;DNSDomainName</Type>
-            <Constraint>&cfm;DNSDomainNameMatch</Constraint>
-            <Value>1it3j5aa93h1omin17d11q1qwz.biz</Value>
-          </Indicator>
-          <Indicator>
-            <Type>&cfm;DNSDomainName</Type>
-            <Constraint>&cfm;DNSDomainNameMatch</Constraint>
-            <Value>ht66ghtu4nt01o2o35tclip1m.com</Value>
-          </Indicator>
-          <Indicator>
-            <Type>&cfm;DNSDomainName</Type>
-            <Constraint>&cfm;DNSDomainNameMatch</Constraint>
-            <Value>1i1q6hg1nxiws81hxytr61224wme.biz</Value>
-          </Indicator>
-          <Indicator>
-            <Type>&cfm;DNSDomainName</Type>
-            <Constraint>&cfm;DNSDomainNameMatch</Constraint>
-            <Value>suqmj7b0yvbgjah0scbx1yes.com</Value>
-          </Indicator>
-          <Indicator>
-            <Type>&cfm;DNSDomainName</Type>
-            <Constraint>&cfm;DNSDomainNameMatch</Constraint>
-            <Value>a4vopb1h5yeprid6fu91osms3x.biz</Value>
-          </Indicator>
-          <Indicator>
-            <Type>&cfm;DNSDomainName</Type>
-            <Constraint>&cfm;DNSDomainNameMatch</Constraint>
-            <Value>jnej83cc8spw19zu1ievt5l6h.com</Value>
-          </Indicator>
-          <Indicator>
-            <Type>&cfm;DNSDomainName</Type>
-            <Constraint>&cfm;DNSDomainNameMatch</Constraint>
-            <Value>6f5pkb1ke5hd21p9nog11xbutel.com</Value>
-          </Indicator>
-          <Indicator>
-            <Type>&cfm;DNSDomainName</Type>
-            <Constraint>&cfm;DNSDomainNameMatch</Constraint>
-            <Value>1fvbd8q1fad53op34zh41p06mnk.biz</Value>
-          </Indicator>
-          <Indicator>
-            <Type>&cfm;DNSDomainName</Type>
-            <Constraint>&cfm;DNSDomainNameMatch</Constraint>
-            <Value>1urfg8215sxhv4z3ehpaq01y77.biz</Value>
-          </Indicator>
-          <Indicator>
-            <Type>&cfm;DNSDomainName</Type>
-            <Constraint>&cfm;DNSDomainNameMatch</Constraint>
-            <Value>1pxsx0e1w5nqx51fnjccs295fiw.biz</Value>
+            <Type>&cfm;EmailSubject</Type>
+            <Constraint>&cfm;RegularExpressionMatch</Constraint>
+            <Value>/.*Nigerian Lottery Winnings.*/</Value>
           </Indicator>
           <Indicator>
             <Type>&cfm;IPv4Address</Type>
             <Constraint>&cfm;IPv4DottedDecimalEquality</Constraint>
-            <Value>69.195.129.70</Value>
+            <Value>192.168.10.10</Value>
           </Indicator>
-          <Indicator>
-            <Type>&cfm;IPv4Address</Type>
-            <Constraint>&cfm;IPv4DottedDecimalEquality</Constraint>
-            <Value>82.165.38.206</Value>
-          </Indicator>
-        </Or>
+        </And>
       </CompositeIndicator>
     </IndicatorSet>
     <ReasonList>
       <Reason>
-        <ReasonCategory>&cfm;Unspecified</ReasonCategory>
-        <ReasonDescription>iSIGHT</ReasonDescription>
+        <ReasonCategory>&cfm;Spam</ReasonCategory>
       </Reason>
     </ReasonList>
     <ActionList>
       <Action>
         <ActionCategory>&cfm;Block</ActionCategory>
+        <ActionTimestamp>1355616000</ActionTimestamp>
+      </Action>
+      <Action>
+        <ActionCategory>&cfm;Notify</ActionCategory>
+        <ActionTimestamp>1355616001</ActionTimestamp>
       </Action>
     </ActionList>
-    <AlertExtendedAttribute>
-      <Field>&cfm;iSIGHT-title</Field>
-      <Value>Indicator Report: Gameover Zeus Activity Report (Nov. 18 to 25, 2014)</Value>
-    </AlertExtendedAttribute>
-    <AlertExtendedAttribute>
-      <Field>&cfm;iSIGHT-webLink</Field>
-      <Value>https://mysight.isightpartners.com/report/full/14-33613</Value>
-    </AlertExtendedAttribute>
+    <Comment>Two indicators from a recent spam campaign against our users.</Comment>
   </Alert>
 </CFMAlert>

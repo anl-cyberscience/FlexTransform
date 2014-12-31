@@ -16,6 +16,8 @@ Test STIX:
 
 --src-config resources/sampleConfigurations/stix_ciscp.cfg --src resources/sampleMessages/stix/CISCP_INDICATOR.1682097386.1.xml --dst-config resources/sampleConfigurations/lqmtools.cfg --dst resources/testing/lqmtools-stix-test.json
 
+--src-config resources/sampleConfigurations/stix_ciscp.cfg --src resources/sampleMessages/stix/CISCP_INDICATOR.1682097386.1.xml --dst-config resources/sampleConfigurations/cfm20alert.cfg --dst resources/testing/cfm20-ciscp_stix-transform.xml
+
 Test CFM 2.0 Alert
 
 --src-config resources/sampleConfigurations/cfm20alert.cfg --src resources/sampleMessages/cfm20Alerts/1DC002C2-98F9-498F-A8DA-6820DC7D1F52_20141125193003_FedP.Alert.Cfm20Alert --dst-config resources/sampleConfigurations/cfm13_nrel.cfg --dst resources/testing/dst.xml
