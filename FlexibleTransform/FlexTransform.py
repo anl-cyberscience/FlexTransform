@@ -6,6 +6,7 @@ Created on Jul 27, 2014
 
 from Configuration import Config
 import logging
+from OntologyOracle import OntologyOracle
 
 # TODO: Document in Sphinx compatible format
 # TODO: Optimization - Too much pass by value for large dictionary objects currently, need to move to more pass by reference to minimize cpu and memory resource usage
@@ -35,10 +36,19 @@ class FlexTransform(object):
         if (parserConfig) :
             self.Parsers[parserName] = parserConfig
         
-    def TransformFile(self, sourceFileName, sourceParserName, targetParserName, targetFileName=None, sourceMetaData=None):
+    def TransformFile(self, sourceFileName, sourceParserName, targetParserName, targetFileName=None, sourceMetaData=None, oracle=None):
         '''
         Transform the data from fileName using sourceParserName as the source and 
         targetParserName as the destination. Returns transformed data to the caller.
+        
+        Params:
+        * sourceFileName
+        * sourceParserName
+        * targetParserName
+        * targetFileName
+        * sourceMetaData
+        * oracle - An instance of the OntologyOracle, initialized with the TBOX URI.  If NONE, the ontology
+          will not be used.
         '''
         
         if (sourceFileName is None or sourceParserName is None or targetParserName is None) :
@@ -64,7 +74,7 @@ class FlexTransform(object):
             raise Exception('NoSourceData', 'Source data file could not be parsed, no data')
         
         # Map source file data to source schema
-        MappedData = SourceConfig.SchemaParser.MapDataToSchema(SourceData)
+        MappedData = SourceConfig.SchemaParser.MapDataToSchema(SourceData, oracle)
         
         if (sourceMetaData is not None) :
             SourceConfig.SchemaParser.MapMetadataToSchema(MappedData, sourceMetaData)
@@ -112,6 +122,12 @@ if __name__ == '__main__':
                         help='Destination file',
                         required=True)
 
+    parser.add_argument('--tbox-uri',
+                        type=argparse.FileType('r'),
+                        help='The uri location of the tbox file to load',
+                        required=False)
+
+
     args = parser.parse_args()
 
     try:       
@@ -124,7 +140,12 @@ if __name__ == '__main__':
         if (args.src_metadata) :
             metadata = json.load(args.src_metadata)
         
-        FinalizedData = Transform.TransformFile(sourceFileName=args.src, targetFileName=args.dst, sourceParserName='src', targetParserName='dst', sourceMetaData=metadata)
+        kb = None
+
+        if (args.tbox_uri) :
+            kb = OntologyOracle.Oracle(args.tbox_uri)
+
+        FinalizedData = Transform.TransformFile(sourceFileName=args.src, targetFileName=args.dst, sourceParserName='src', targetParserName='dst', sourceMetaData=metadata, oracle=kb)
         
     except Exception as inst :
         logging.exception(inst)

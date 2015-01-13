@@ -12,33 +12,52 @@ import socket
 import pytz
 import logging
 import uuid
+import dumper
+from builtins import str
 
 class SchemaParser(object):
     '''
-    Base class for the Schema Parser logic
+    Base class for the Schema Parser logic.  The following fields are defined for this class:
+
+    * self.SchemaConfig - The schema configuration for the target format
+    * self.ValueMap - Mapping from the valuemap specification to the JSON config item that defines
+                      it (or items)
+    * self.OntologyMapping - Mapping from ontology URIs to JSON schema elements in the config file
+    * self._outputFormatRE -  Regex used to parse the outputFormat field
+                              Example outputFormat: "[comment], direction:[direction], 
+                                                     confidence:[confidence], severity:[severity]"
+    * self.logging - The logging object
     '''
+    SchemaConfig = None
+    ValueMap = None
+    OntologyMapping = None
+    _outputFormatRE = None
+    logging = None
     
     def __init__(self, config):
         '''
         Constructor
         '''
-        self.SchemaConfig = config
+        self.SchemaConfig = config 
         
         # TODO: ValueMap is only need for source configs, OntologyMapping is only needed for target configs
         self.ValueMap = self._ValuemapToField(config)
         self.OntologyMapping = self._OntologyMappingToField(config)
         
-        # Regex used to parse the outputFormat field
-        # Example outputFormat: "[comment], direction:[direction], confidence:[confidence], severity:[severity]"
         self._outputFormatRE = re.compile(r"([^\[]+)?(?:\[([^\]]+)\])?")
         
         # TODO: Create a JSON schema document and validate the config against the schema. Worst case, define accepted tags and validate there are no unknown tags.
         
         self.logging = logging.getLogger('FlexTransform/SchemaParser')
    
-    def MapDataToSchema(self, SourceData):
+    def MapDataToSchema(self, SourceData, oracle):
         '''
         Maps the values in SourceData to the underlying schema from the config
+        Parameters:
+        * SourceData -
+        * oracle - An instance of the OntologyOracle to build an ABOX for the source data
+                   Assumes the oracle has been initialized with a FlexTransform TBOX
+
         TODO: Create an ABOX (using the Ontology Oracle) to represent the source file; this will also inform the
               target production, as data will be requested from the ABOX.
               
@@ -67,7 +86,35 @@ class SchemaParser(object):
                     raise Exception('NoParsableDataFound', "Data isn't in a parsable dictionary format")
             else :
                 raise Exception('SchemaConfigNotFound', 'Data Type: ' + rowType)
-    
+            
+        ## Let's start here.  Build an ABOX:
+        if not oracle is None:
+            for dataType in MappedData:
+                for concept in MappedData[dataType]:
+                    if isinstance(concept,dict):
+                        toProcess = concept
+                        keylist = concept.keys()
+                    elif isinstance(concept,str):
+                        toProcess = MappedData[dataType]
+                        keylist = [concept]
+                    for key in keylist:
+                        if not isinstance(toProcess[key], dict):
+                            logging.warning("Found a MappingData element which is not a dict: {0} :: {1}".format(key, dumper.dump(toProcess[key])))
+                            continue
+                        if toProcess[key]["ontologyMappingType"] == "enum":
+                            ''' TODO: Deal w/ enum types '''
+                            logging.warning("Found enum ontology mapping: {0}".format(
+                                            key))
+                            continue
+                        if not toProcess[key]["ontologyMappingType"] == "simple":
+                            logging.warning("Found non-simple ontology mapping: {0} :: {1}".format(
+                                            key, 
+                                            dumper.dump(toProcess[key])))
+                            continue
+                        oracle.addSemanticComponentIndividual(
+                                        toProcess[key]["ontologyMapping"],
+                                        toProcess[key]["Value"])
+            logging.debug(oracle.dumpGraph())
         return MappedData
     
     def MapMetadataToSchema(self, MappedData, sourceMetaData):
@@ -84,9 +131,13 @@ class SchemaParser(object):
         else :
             raise Exception('SchemaConfigNotFound', 'Data Type: DocumentMetaData')
     
-    def TransformData(self, MappedData):
+    def TransformData(self, MappedData, oracle = None):
         '''
         Takes the data that was mapped to the source schema and transform it using the target schema
+        Parameters:
+        * MappedData -
+        * oracle - An instance of the OntologyOracle class which encapsulates the target schema ontology
+                   If 'None', will not be used.
         '''
         TransformedData = {}
                
@@ -114,7 +165,7 @@ class SchemaParser(object):
                     for row in MappedData[rowType] :
                         if (isinstance(row,dict)) :
                             try :
-                                DataRow = self._TransformDataToNewSchema(rowType, row, DocumentHeaderData, DocumentMetaData)
+                                DataRow = self._TransformDataToNewSchema(rowType, row, DocumentHeaderData, DocumentMetaData, oracle)
                                 TransformedData[rowType].append(self._GetDefaultValuesFromSchema(rowType, DataRow))
                             except Exception as inst :
                                 self.logging.exception(inst)
@@ -122,7 +173,7 @@ class SchemaParser(object):
                             raise Exception('NoParsableDataFound', "Data isn't in a parsable dictionary format")
                         
                 elif (isinstance(MappedData[rowType],dict)) :
-                    DataRow = self._TransformDataToNewSchema(rowType, MappedData[rowType], DocumentHeaderData, DocumentMetaData)
+                    DataRow = self._TransformDataToNewSchema(rowType, MappedData[rowType], DocumentHeaderData, DocumentMetaData, oracle)
                     TransformedData[rowType] = self._GetDefaultValuesFromSchema(rowType, DataRow)
                 else :
                     raise Exception('NoParsableDataFound', "Data isn't in a parsable dictionary format")
@@ -208,6 +259,13 @@ class SchemaParser(object):
     def _MapRowToSchema(self, DataRow, rowType, skipTypeCheck=False):
         '''
         Create a new dictionary with the mapping between the data row and the schema field definition
+        Parameters:
+          * DataRow - The specification of data which will be the source for this mapping
+          * rowType - The type of row we are processing -- where is this sourced from?
+          * skipTypeCheck - Whether to avoid checking the types of values.  Currently, only certain value types are checked:
+            * E-mail addresses
+            * IPv4 Addresses
+            * Others?
         '''
         
         newDict = {}
@@ -239,6 +297,7 @@ class SchemaParser(object):
                 if ('ignore' in self.SchemaConfig[rowType]['fields'][fieldName] ) :
                     continue    
                               
+                ## TODO: This is where we could potentially make a reference rather than a copy
                 newDict[fieldName] = self.SchemaConfig[rowType]['fields'][fieldName].copy()
                 
                 if (isinstance(v,list) and 
@@ -252,7 +311,7 @@ class SchemaParser(object):
                         newDataRow = {}
                         
                         subfields = self.SchemaConfig[rowType]['fields'][fieldName]['subfields']
-                        x = 0
+                        x = 0  # What is this?  Just for debugging?
                         
                         for row in v :
                             if (isinstance(row,dict)) :
@@ -537,13 +596,21 @@ class SchemaParser(object):
         
         return newDict
     
-    def _TransformDataToNewSchema(self, rowType, DataRow, DocumentHeaderData, DocumentMetaData):
+    def _TransformDataToNewSchema(self, rowType, DataRow, DocumentHeaderData, DocumentMetaData, oracle = None):
         '''
         Transform the data row using the underlying ontology mappings to the new schema
+        Parameters:
+        * rowType
+        * DataRow
+        * DocumentHeader
+        * DocumentMetadata
+        * oracle - An instance of the OntologyOracle class which encapsulates the target schema ontology
+                   If 'None', will not be used.
+
         TODO: Update to query ontology directly
+        TODO: This function is far too large and complicated, it should be broken up into smaller functions
         '''
         
-        # TODO: This function is far too large and complicated, it should be broken up into smaller functions
         
         newDict = {}
         
@@ -557,11 +624,23 @@ class SchemaParser(object):
             # Determine if the target schema accepts Indicators of type IndicatorType
             if ('IndicatorType' in DataRow) :
                 IndicatorType = DataRow.pop('IndicatorType')
+                # TODO: Update to query the ontology for supported indicator types
                 if (IndicatorType not in self.SchemaConfig["IndicatorData"]["types"]) :
-                    raise Exception("UnknownIndicatorType", "The Indicator Type %s is not known by the target schema" % IndicatorType)
-                else :
-                    newDict['IndicatorType'] = IndicatorType
+                    # Determine if the ontology contains a supported concept which is a parent or child of this type.
+                    newIndicatorType = None
+                    if oracle is not None:
+                        altResult = oracle.getIndicatorTypeAlternative(IndicatorType)
+                        if altResult is not None:
+                            newIndicatorType = altResult.getAlternative()
+                            logging.warn("No direct mapping from source concept {0} to target schema.  Found a {1} of the concept ({2}).".format(IndicatorType, altResult.getLossType(), newIndicatorType))
+                    if newIndicatorType is None:
+                        raise Exception("UnknownIndicatorType", "The Indicator Type %s is not known by the target schema" % IndicatorType)
+                    else:
+                        IndicatorType = newIndicatorType
+                newDict['IndicatorType'] = IndicatorType
                     
+            ''' Check to see if any of the default document header data is overridden by the data row. '''
+            ''' TODO: Is this the correct logic?  Shouldn't more specific (ie. data row) values override document level defaults? '''
             if (DocumentHeaderData is not None) :
                 for k, v in DocumentHeaderData.items() :
                     if (k in DataRows) :
@@ -569,6 +648,8 @@ class SchemaParser(object):
                         
                 DataRows.update(DocumentHeaderData)
 
+            ''' Check to see if any of the default data row metadata is overridden by the document metadata. '''
+            ''' TODO: Is this the correct logic?  Shouldn't more specific (ie. data row) values override document level defaults? '''
             if (DocumentMetaData is not None) :
                 for k, v in DocumentMetaData.items() :
                     if (k in DataRows) :
@@ -577,12 +658,14 @@ class SchemaParser(object):
                 DataRows.update(DocumentMetaData)
                 
                 
+        ''' TODO: Is this the correct logic?  Shouldn't more specific (ie. data row) values override document level defaults? '''
         for k, v in DataRow.items() :
             if (k in DataRows) :
                 self.logging.warning('Key %s already exists in data row, value %s, overwritten by DataRow key with value %s', k, DataRows[k], v)
                 
         DataRows.update(DataRow)
         
+        # TODO: Split out to another function call (or calls?)
         # TODO: Handle fields with AdditionalValues
         
         for field, fieldDict in DataRows.items() :
@@ -904,6 +987,17 @@ class SchemaParser(object):
     def _GetDefaultValuesFromSchema(self, rowType, SourceDataRow):
         '''
         Find all required fields in the target schema that do not exists in the source data row and add them with their default value
+        This method will only updated row elements not already defined by the source data; existing data will be untouched.
+
+        Parameters:
+          * rowType - The type of row we are processing
+          * SourceDataRow - The already populated source data
+          
+        Modifies: 
+          * SourceDataRow - Adds data elements not present in source data, but required in target schema, according to the 
+            defaults defined for the target schema.
+
+        Returns: Nothing
         '''    
         
         # Note: This function has been updated to use pass by reference instead of pass by value to improve performance
@@ -1148,15 +1242,14 @@ class SchemaParser(object):
                                     v['Value'] = 'http://www.anl.gov/cfm/2.0/current/#URLMatch'
                                 elif (re.match(r'^[a-fA-F0-9]{32}$', indicatorValue)) :
                                     v['Value'] = 'http://www.anl.gov/cfm/2.0/current/#MD5Equality'
+                                elif (re.match(r'^[a-fA-F0-9]{40}$', indicatorValue)) :
+                                    v['Value'] = 'http://www.anl.gov/cfm/2.0/current/#SHA1Equality'
                                 elif (re.match(r'^\d+$', indicatorValue)) :
                                     v['Value'] = 'http://www.anl.gov/cfm/2.0/current/#IntegerEquality'
 
-                                    
-                                    
-                                    
                             if (v['Value'] is None) :
                                 # Still didn't find an indicator type, throw exception
-                                raise Exception('unknownIndicatorConstraint', 'CFM 2.0 Indicator constraint could not be determined for data: %s' % row[args]['Value'])
+                                raise Exception('unknownIndicatorConstraint', 'CFM 2.0 Indicator constraint could not be determined for data: %s :: field %s' % (row[args]['Value'], indicatorOntology))
                                 
                         elif (function == 'CFM20_determineIndicatorType') :
                             # TODO: It would be great if somehow we could query the ontology to get this.
