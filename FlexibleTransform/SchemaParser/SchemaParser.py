@@ -1039,6 +1039,8 @@ class SchemaParser(object):
                     
     def _CalculateFunctionValue(self, row, TransformedData) :
         
+        # TODO: Break out the functions into class methods, move into a new set of class files under /SchameParsers/TransformFunctions, possibly dynamically load the functions from the class files
+        
         for k, v in row.items() :
             if (isinstance(v,dict) and 'groupedFields' in v) :
                 for group in v['groupedFields'] :
@@ -1128,7 +1130,7 @@ class SchemaParser(object):
                                 
                                 
                         elif (function == 'CFM20_determineIndicatorConstraint') :
-                            # TODO: It would be great if somehow we could query the ontology to get this.
+                            # TODO: It would be great if somehow we could query the ontology to get this. Complete for all indicator constraints.
                             
                             v['Value'] = None
                             
@@ -1159,7 +1161,7 @@ class SchemaParser(object):
                                 raise Exception('unknownIndicatorConstraint', 'CFM 2.0 Indicator constraint could not be determined for data: %s' % row[args]['Value'])
                                 
                         elif (function == 'CFM20_determineIndicatorType') :
-                            # TODO: It would be great if somehow we could query the ontology to get this.
+                            # TODO: It would be great if somehow we could query the ontology to get this. Complete for all indicator types.
                             
                             v['Value'] = None
                             

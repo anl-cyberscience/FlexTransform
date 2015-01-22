@@ -381,7 +381,7 @@
 						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#IPv4AddressIndicatorValueSemanticComponent"
 					},
 					"http://www.anl.gov/cfm/2.0/current/#IPv4SourceAddress": {
-						"ontologyMapping": ""
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#IPv4AddressIndicatorValueSemanticComponent"
 					},
 					"http://www.anl.gov/cfm/2.0/current/#IPv4DestinationAddress": {
 						"ontologyMapping": ""
@@ -550,7 +550,7 @@
 				"datatype": "string",
 				"required": false,
 				"ontologyMappingType": "simple",
-				"ontologyMapping": ""
+				"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#ReportDescriptionSemanticComponent"
 			}
 		}
 	}

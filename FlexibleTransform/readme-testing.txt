@@ -25,3 +25,5 @@ Test CFM 2.0 Alert
 --src-config resources/sampleConfigurations/cfm13.cfg --src resources/sampleMessages/cfm13Uploads/WithMetadata/1433D342-EC43-4E81-B596-843A03C6B21A_20141118151046_ANL.Alert.Cfm13Alert --src-metadata resources/sampleMessages/cfm13Uploads/WithMetadata/.1433D342-EC43-4E81-B596-843A03C6B21A_20141118151046_ANL.Alert.Cfm13Alert --dst-config resources/sampleConfigurations/cfm20alert.cfg --dst resources/testing/dst.xml
 
 --src-config resources/sampleConfigurations/cfm20alert.cfg --src resources/sampleMessages/cfm20Alerts/1DC002C2-98F9-498F-A8DA-6820DC7D1F52_20141125193003_FedP.Alert.Cfm20Alert --dst-config resources/sampleConfigurations/cfm20alert.cfg --dst resources/testing/dst.xml
+
+--src-config resources/sampleConfigurations/cfm20alert.cfg --src resources/sampleMessages/cfm20Alerts/FFF237B1-2F46-4F2F-9C31-FFF5D24000AF_20140824134002_NREL-CS.Alert.Cfm20Alert --src-metadata=resources/sampleMessages/cfm20Alerts/.FFF237B1-2F46-4F2F-9C31-FFF5D24000AF_20140824134002_NREL-CS.Alert.Cfm20Alert --dst-config resources/sampleConfigurations/lqmtools.cfg --dst resources/testing/dst.json

@@ -42,5 +42,5 @@ if __name__ == '__main__':
                 if (Data) :
                     TransformedData.extend(Data)
                   
-    out = open(os.path.join(currentdir,'resources/testing/lqmtools-test.json'), 'w')  
+    out = open(os.path.join(currentdir,'resources/testing/lqmtools-test.json'), 'w')
     json.dump(TransformedData, out, sort_keys=True, indent=4)
