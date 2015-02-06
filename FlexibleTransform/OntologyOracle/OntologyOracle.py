@@ -6,6 +6,7 @@ Created on Aug 27, 2014
 
 from rdflib import Graph, Literal, BNode, Namespace, RDF, URIRef
 import uuid
+import logging
 
 class Oracle(object):
     '''
@@ -21,15 +22,16 @@ class Oracle(object):
     HASSEMANTICCONCEPT = XFORMNS.hasSemanticConcept
     HASSEMANTICVALUE = XFORMNS.hasSemanticValue
 
-    def __init__(self, tboxIRI):
+    def __init__(self, tboxLoc):
         '''
         Constructor
         '''
         self.bmap = {"xform": self.XFORMNS}
         self.g = Graph()
-        self.g.load(tboxIRI)
+        self.g.load(tboxLoc)
         for k in self.bmap:
             self.g.bind(k, self.bmap[k])
+        logging.getLogger("FlexibleTransform")
         
     def addSemanticComponent(self, semanticConceptClassIRI, semanticValueClassIRI ):
         '''
@@ -79,8 +81,40 @@ class Oracle(object):
     def addSemanticComponentIndividual(self, classIRI, individualValue, individualName=None):
         '''
         Add the given individual value to the classIRI, which must be a subclass of SemanticComponent.
+<<<<<<< HEAD
         '''
         pass
     
+=======
+        Parameters:
+          * classIRI - The direct parent class to place the individual in
+          * individualValue - The value of the individual
+          * individualName - The name of the individual, if desired (if not set, one will be generated)
+        Returns:
+          * The Individual name URI
+        '''
+        
+        if individualName == None:
+            ''' Generate a name - use ClassName-UUIDv4 '''
+            individualName = "{0}-{1}".format(classIRI, str(uuid.uuid4()))
+            
+        ''' TODO: Check to ensure a provided individualName is absolute, and is
+            prefixed with the correct IRI; if not, warn / error.
+        '''
+        v = Literal(individualValue)
+        n = URIRef(individualName)
+        c = URIRef(classIRI)
+        
+        ''' First, insert the individual as an element of the parent class. '''
+        #triple = "{0} {1} {2} .".format(n, RDF.type, c)
+        #sq = " INSERT DATA { %s } "%(triple)
+        self.g.add((n, RDF.type, c))
+
+        ''' Second, add the value to the individual.'''
+        self.g.add((n, self.XFORMNS.hasValue, v))
+        
+        return individualName
+       
+>>>>>>> branch 'master' of https://github.com/anl-cyberscience/Flexible-Transform.git
     def dumpGraph(self):
         print (self.g.serialize(format="n3"))

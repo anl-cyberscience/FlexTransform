@@ -26,7 +26,7 @@ if __name__ == '__main__':
     TransformedData = []
     
     for file in os.listdir(TestDir) :
-        if (file.startswith('CISCP')) :        
+        if (file.startswith('CISCP_INDICATOR.1682097386.1.')) :        
             sourceFile = os.path.join(TestDir, file)
             
             logging.info(sourceFile)
