@@ -14,8 +14,8 @@ currentdir = os.path.dirname(__file__)
             
 # Import custom versions of the cybox, stix and ramrod python modules for use with FlexTransform
 # These versions have been updated to work with Python 3 and have a bug fixes for specific issues that were uncovered during testing
-# sys.path.insert(0,os.path.join(currentdir,"../../resources/cybox.zip"))
-# sys.path.insert(1,os.path.join(currentdir,"../../resources/stix.zip"))
+sys.path.insert(0,os.path.join(currentdir,"../../resources/cybox.zip"))
+sys.path.insert(1,os.path.join(currentdir,"../../resources/stix.zip"))
 sys.path.insert(2,os.path.join(currentdir,"../../resources/ramrod.zip"))
 
 import ramrod  # @UnresolvedImport
