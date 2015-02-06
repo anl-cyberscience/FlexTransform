@@ -5,6 +5,7 @@ Created on Jul 27, 2014
 '''
 
 from Configuration import Config
+# from OntologyOracle import Oracle
 import logging
 
 # TODO: Document in Sphinx compatible format

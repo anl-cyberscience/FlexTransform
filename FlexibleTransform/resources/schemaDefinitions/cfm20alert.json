@@ -94,6 +94,7 @@
 				"defaultValue": "http://www.anl.gov/cfm/2.0/current/#Unspecified",
 				"required": false,
 				"memberof": "reasonList_reason",
+				"stripNamespace": "http://www.anl.gov/cfm/2.0/current/#",
 				"ontologyMappingType": "enum",
 				"enumValues": {
 					"http://www.anl.gov/cfm/2.0/current/#DoS": {
@@ -227,22 +228,22 @@
 				"ontologyMappingType": "enum",
 				"enumValues": {
 					"http://www.anl.gov/cfm/2.0/current/#IPv6Address": {
-						"ontologyMapping": ""
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#IPv6IndicatorTypeSemanticConcept"
 					},
 					"http://www.anl.gov/cfm/2.0/current/#IPv6SourceAddress": {
-						"ontologyMapping": ""
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#IPv6IndicatorTypeSemanticConcept"
 					},
 					"http://www.anl.gov/cfm/2.0/current/#IPv6DestinationAddress": {
-						"ontologyMapping": ""
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#IPv6IndicatorTypeSemanticConcept"
 					},
 					"http://www.anl.gov/cfm/2.0/current/#IPv4Address": {
 						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#IPv4IndicatorTypeSemanticConcept"
 					},
 					"http://www.anl.gov/cfm/2.0/current/#IPv4SourceAddress": {
-						"ontologyMapping": ""
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#IPv4IndicatorTypeSemanticConcep"
 					},
 					"http://www.anl.gov/cfm/2.0/current/#IPv4DestinationAddress": {
-						"ontologyMapping": ""
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#IPv4IndicatorTypeSemanticConcep"
 					},
 					"http://www.anl.gov/cfm/2.0/current/#IPProtocol": {
 						"ontologyMapping": ""
@@ -372,10 +373,10 @@
 						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#IPv6AddressIndicatorValueSemanticComponent"
 					},
 					"http://www.anl.gov/cfm/2.0/current/#IPv6SourceAddress": {
-						"ontologyMapping": ""
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#IPv6AddressIndicatorValueSemanticComponent"
 					},
 					"http://www.anl.gov/cfm/2.0/current/#IPv6DestinationAddress": {
-						"ontologyMapping": ""
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#IPv6AddressIndicatorValueSemanticComponent"
 					},
 					"http://www.anl.gov/cfm/2.0/current/#IPv4Address": {
 						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#IPv4AddressIndicatorValueSemanticComponent"
@@ -384,7 +385,7 @@
 						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#IPv4AddressIndicatorValueSemanticComponent"
 					},
 					"http://www.anl.gov/cfm/2.0/current/#IPv4DestinationAddress": {
-						"ontologyMapping": ""
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#IPv4AddressIndicatorValueSemanticComponent"
 					},
 					"http://www.anl.gov/cfm/2.0/current/#IPProtocol": {
 						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#ProtocolIndicatorValueSemanticComponent"
@@ -454,6 +455,9 @@
 				"ontologyMappingType": "enum",
 				"enumValues": {
 					"http://www.anl.gov/cfm/2.0/current/#iSIGHT-asn": {
+						"ontologyMapping": ""
+					},
+					"http://www.anl.gov/cfm/2.0/current/#iSIGHT-DomainRegistrantEmail": {
 						"ontologyMapping": ""
 					},
 					"http://www.anl.gov/cfm/2.0/current/#iSIGHT-domainTimeOfLookup": {

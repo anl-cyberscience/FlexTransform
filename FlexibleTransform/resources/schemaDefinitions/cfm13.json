@@ -455,10 +455,19 @@
 				"defaultValue": "dns",
 				"requiredIfReferenceField": "classification_text",
 				"requiredIfReferenceValuesMatch": [ "Domain Block:*" ],
-				"ontologyMappingType": "none",
 				"enumValues": {
 					"dns": {
 						"ontologyMapping": "none"
+					}
+				},
+				"ontologyMappingType": "referencedEnum",
+				"ontologyEnumField": "classification_text",
+				"ontologyMappingEnumValues": {
+					"Domain Block:*": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#DomainNameObjectSchemaTypeSpecification"
+					},
+					"*": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#RelatedDomainNameObjectSchemaTypeSpecification"
 					}
 				}
 			},
@@ -511,6 +520,7 @@
 				"datatype": "int",
 				"dataRange": "0-65535",
 				"required": false,
+				"multiple": true,
 				"ontologyMappingType": "simple",
 				"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#DestinationPortNumberIndicatorValueSemanticComponent"
 			},
@@ -521,6 +531,17 @@
 				"required": false,
 				"ontologyMappingType": "simple",
 				"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#DestinationPortListIndicatorValueSemanticComponent"
+			},
+			"target_portobject": {
+				"description": "Set to true if a port object exists",
+				"datatype": "complex",
+				"requiredIfReferenceField": "target_service_port",
+				"requiredIfReferenceValues": [ "*" ],
+				"fields": [ "target_service_port" ],
+				"outputFormat": "true",
+				"defaultValue": "true",
+				"ontologyMappingType": "simple",
+				"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#RelatedPortObjectSchemaTypeSpecification"
 			},
 			"target_service_protocol": {
 				"description": "The target protocol for the alert",

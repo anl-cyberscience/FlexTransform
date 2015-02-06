@@ -73,8 +73,10 @@ class CFM13(object):
                 IndicatorData = SyntaxParser.XMLParser.etree_to_dict(element)
                 if ('AdditionalData' in IndicatorData['Alert']):
                     IndicatorData['Alert']['AdditionalData'] = SyntaxParser.XMLParser.AttributeToKey('@meaning','#text',IndicatorData['Alert']['AdditionalData'])
-                
-                # TODO: If it exists, expand portlist into a list object with all values as distinct entries
+                    
+                if ('Target' in IndicatorData['Alert'] and 'Service' in IndicatorData['Alert']['Target'] and 'portlist' in IndicatorData['Alert']['Target']['Service']) :
+                    portlist = IndicatorData['Alert']['Target']['Service'].pop('portlist')
+                    IndicatorData['Alert']['Target']['Service']['port'] = portlist.split(',')
                 
                 ParsedData['IndicatorData'].append(IndicatorData['Alert'])
                 

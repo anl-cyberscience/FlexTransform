@@ -79,6 +79,8 @@ class Oracle(object):
     def addSemanticComponentIndividual(self, classIRI, individualValue, individualName=None):
         '''
         Add the given individual value to the classIRI, which must be a subclass of SemanticComponent.
-        
+        '''
+        pass
+    
     def dumpGraph(self):
         print (self.g.serialize(format="n3"))

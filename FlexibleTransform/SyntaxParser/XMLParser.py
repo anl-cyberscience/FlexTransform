@@ -9,6 +9,7 @@ import re
 from collections import defaultdict
 import inspect
 import logging
+import os
 
 from SyntaxParser.Parser import Parser
 import SyntaxParser.XMLParsers
@@ -44,6 +45,10 @@ class XMLParser(Parser):
             if (config.getboolean('XML', 'ValidateSchema', fallback=False)) :
                 if (config.has_option('XML', 'SchemaFile')) :
                     SchemaFile = config['XML']['SchemaFile']
+                    if (not SchemaFile.startswith('/')) :
+                        # Find path to schema file
+                        currentdir = os.path.dirname(__file__)
+                        SchemaFile = os.path.join(currentdir, '../', SchemaFile)
                     try :
                         schema_root = etree.parse(SchemaFile)
                         XMLSchema = etree.XMLSchema(schema_root)
@@ -61,6 +66,9 @@ class XMLParser(Parser):
                 self.AdvancedParser = self.LoadAdvancedParser(CustomParser)
                 if (self.AdvancedParser == None) :
                     raise Exception('CustomParserNotDefined', 'XML: ' + CustomParser)
+                
+                if (config.has_section(CustomParser)) :
+                    self.AdvancedParser.ValidateConfig(config)
                 
     def Read(self, file):
         '''
@@ -138,11 +146,11 @@ class XMLParser(Parser):
         '''
         DataRow = {}
         
-        # FIXME: This code needs to be updated to handle groupings (datatype=group)
-        
         for k, v in row.items() :
             if (parentValueMap is not None and 'valuemap' in v) :
                 v['valuemap'] = v['valuemap'].replace(parentValueMap,'')
+            else :
+                parentValueMap = ''
             
             if (k == 'IndicatorType') :
                 # Keep passing the IndicatorType forward with the data. This is somewhat messy, but that way we can use it on write
@@ -151,10 +159,13 @@ class XMLParser(Parser):
                 if ('valuemap' in v) :
                     DataRow[v['valuemap']] = []
                     for group in v['groupedFields'] :
-                        DataRow[v['valuemap']].append(self._BuildXMLDictRow(group, parentValueMap=v['valuemap']+';'))
+                        DataRow[v['valuemap']].append(self._BuildXMLDictRow(group, parentValueMap=parentValueMap+v['valuemap']+';'))
             elif ('Value' in v) :
                 if ('valuemap' in v) :
-                    DataRow[v['valuemap']] = v['Value']
+                    if (v['valuemap'] != '') :
+                        DataRow[v['valuemap']] = v['Value']
+                    else :
+                        return v['Value']
             else :
                 self.logging.warning("Field %s does not contain a Value entry", k)
                 

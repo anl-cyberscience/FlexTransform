@@ -14,13 +14,15 @@ currentdir = os.path.dirname(__file__)
             
 # Import custom versions of the cybox, stix and ramrod python modules for use with FlexTransform
 # These versions have been updated to work with Python 3 and have a bug fixes for specific issues that were uncovered during testing
-sys.path.insert(0,os.path.join(currentdir,"../../resources/cybox.zip"))
-sys.path.insert(1,os.path.join(currentdir,"../../resources/stix.zip"))
+# sys.path.insert(0,os.path.join(currentdir,"../../resources/cybox.zip"))
+# sys.path.insert(1,os.path.join(currentdir,"../../resources/stix.zip"))
 sys.path.insert(2,os.path.join(currentdir,"../../resources/ramrod.zip"))
 
 import ramrod  # @UnresolvedImport
 from stix.core import STIXPackage  # @UnresolvedImport
+from stix.utils import set_id_namespace # @UnresolvedImport
 from stix.utils.parser import UnsupportedVersionError  # @UnresolvedImport
+from stix.utils.idgen import IDGenerator # @UnresolvedImport
 
 class STIX(object):
     '''
@@ -35,6 +37,22 @@ class STIX(object):
         '''
         
         self.logging = logging.getLogger('FlexTransform/XMLParser/STIX')
+        self.STIXNamespace = "http://www.example.com"
+        self.STIXAlias = "example"
+        self.STIXReplaceNamespace = False
+        
+    def ValidateConfig(self,config):
+        '''
+        Load custom configuration
+        '''
+        
+        if (config.has_section('STIX')) :
+            if (config.has_option('STIX', 'STIXNamespace')) :
+                self.STIXNamespace = config['STIX']['STIXNamespace']
+            if (config.has_option('STIX', 'STIXAlias')) :
+                self.STIXAlias = config['STIX']['STIXAlias']
+            if (config.has_option('STIX', 'STIXReplaceNamespace')) :
+                self.STIXReplaceNamespace = config.getboolean('STIX', 'STIXReplaceNamespace', fallback=False)
         
     def Read(self, stixfile, xmlparser = None):
         '''
@@ -95,6 +113,26 @@ class STIX(object):
                     stix_dict['indicators'].extend(newrows)
 
         return ParsedData
+    
+    def Write(self, stixfile, ParsedData):
+        '''
+        Take the transformed data and write it out to a new STIX XML file
+        '''
+        
+        NAMESPACE = {self.STIXNamespace : self.STIXAlias}
+        set_id_namespace(NAMESPACE) # new ids will be prefixed by STIXAlias + ":"
+        
+        self._AddObjectIDs(ParsedData)
+        
+        stix_package = STIXPackage.from_dict({'id': ParsedData['DocumentHeaderData'].pop('id'),
+                                              'version': ParsedData['DocumentHeaderData'].pop('version'),
+                                              'timestamp': ParsedData['DocumentHeaderData'].pop('timestamp'),
+                                              'stix_header': ParsedData['DocumentHeaderData'],
+                                              'indicators': ParsedData['IndicatorData']})
+        
+        
+        stixfile.write(stix_package.to_xml())
+        stixfile.close()
 
     def _ValidateURIType(self, row):
         '''
@@ -147,4 +185,67 @@ class STIX(object):
                     self.logging.warning('Unknown relationship type: %s', related)
                     
         return newrows
+    
+    
+    def _AddObjectIDs(self, ParsedData):
+        '''
+        Add STIX unique identifiers to objects in ParsedData
+        '''
         
+        if ('DocumentHeaderData' in ParsedData) :
+            objid = None
+            if ('id' in ParsedData['DocumentHeaderData']) :
+                objid = ParsedData['DocumentHeaderData'].pop('id')
+
+            ParsedData['DocumentHeaderData']['id'] = self._AddObjectID(objid, 'package')
+                        
+        if ('IndicatorData' in ParsedData) :
+            for indicator in ParsedData['IndicatorData'] :
+                objid = None
+                if ('id' in indicator) :
+                    objid = indicator.pop('id')
+    
+                indicator['id'] = self._AddObjectID(objid, 'indicator')
+                
+                if ('observable' in indicator) :
+                    objid = None
+                    if ('id' in indicator['observable']) :
+                        objid = indicator['observable'].pop('id')
+        
+                    indicator['observable']['id'] = self._AddObjectID(objid, 'observable')
+                    
+                    if ('object' in indicator['observable']) :
+                        objid = None
+                        if ('id' in indicator['observable']['object']) :
+                            objid = indicator['observable']['object'].pop('id')
+            
+                        indicator['observable']['object']['id'] = self._AddObjectID(objid, 'object')
+                        
+                        if ('related_objects' in indicator['observable']['object']) :
+                            for related_object in indicator['observable']['object']['related_objects'] :
+                                objid = None
+                                if ('id' in related_object) :
+                                    objid = related_object.pop('id')
+                    
+                                related_object['id'] = self._AddObjectID(objid, 'object')
+            
+    def _AddObjectID(self, data = None, prefix = 'guid'):
+        '''
+        Generate a new object ID or modify an existing one
+        '''
+        
+        idgen = IDGenerator(namespace={self.STIXNamespace: self.STIXAlias})
+        objid = data
+        
+        if (data) :
+            match = re.match(r'^([^:]+):(.*)', data)
+            if (match) :
+                if (match.group(1) != self.STIXAlias) :
+                    objid = "%s:%s" % (self.STIXAlias, match.group(2))
+            else :
+                objid = "%s:%s" % (self.STIXAlias, data)
+        else :
+            objid = idgen.create_id(prefix)
+            
+        return objid
+                
