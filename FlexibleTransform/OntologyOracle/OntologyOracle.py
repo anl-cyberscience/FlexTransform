@@ -81,11 +81,6 @@ class Oracle(object):
     def addSemanticComponentIndividual(self, classIRI, individualValue, individualName=None):
         '''
         Add the given individual value to the classIRI, which must be a subclass of SemanticComponent.
-<<<<<<< HEAD
-        '''
-        pass
-    
-=======
         Parameters:
           * classIRI - The direct parent class to place the individual in
           * individualValue - The value of the individual
@@ -115,6 +110,5 @@ class Oracle(object):
         
         return individualName
        
->>>>>>> branch 'master' of https://github.com/anl-cyberscience/Flexible-Transform.git
     def dumpGraph(self):
         print (self.g.serialize(format="n3"))
