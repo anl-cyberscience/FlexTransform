@@ -536,9 +536,8 @@
 				"description": "Set to true if a port object exists",
 				"datatype": "complex",
 				"requiredIfReferenceField": "target_service_port",
-				"requiredIfReferenceValues": [ "*" ],
+				"requiredIfReferenceValuesMatch": [ "*" ],
 				"fields": [ "target_service_port" ],
-				"outputFormat": "true",
 				"defaultValue": "true",
 				"ontologyMappingType": "simple",
 				"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#RelatedPortObjectSchemaTypeSpecification"
