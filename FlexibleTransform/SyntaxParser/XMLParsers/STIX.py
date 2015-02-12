@@ -197,7 +197,7 @@ class STIX(object):
             if ('id' in ParsedData['DocumentHeaderData']) :
                 objid = ParsedData['DocumentHeaderData'].pop('id')
 
-            ParsedData['DocumentHeaderData']['id'] = self._AddObjectID(objid, 'package')
+            ParsedData['DocumentHeaderData']['id'] = self._AddObjectID(objid, 'STIXPackage')
                         
         if ('IndicatorData' in ParsedData) :
             for indicator in ParsedData['IndicatorData'] :
@@ -243,7 +243,7 @@ class STIX(object):
                 if (match.group(1) != self.STIXAlias) :
                     objid = "%s:%s" % (self.STIXAlias, match.group(2))
             else :
-                objid = "%s:%s" % (self.STIXAlias, data)
+                objid = "%s:%s-%s" % (self.STIXAlias, prefix, data)
         else :
             objid = idgen.create_id(prefix)
             
