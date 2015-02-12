@@ -471,6 +471,24 @@
 					}
 				}
 			},
+			"source_dns_matchtype": {
+				"description": "The match for the source dns",
+				"datatype": "complex",
+				"requiredIfReferenceField": "source_dns_name",
+				"requiredIfReferenceValuesMatch": [ "*" ],
+				"fields": [ "source_dns_name" ],
+				"defaultValue": "true",
+				"ontologyMappingType": "referencedEnum",
+				"ontologyEnumField": "classification_text",
+				"ontologyMappingEnumValues": {
+					"Domain Block:*": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#DNSMatchConstraintSemanticConcept"
+					},
+					"*": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#RelatedDomainNameMatchConstraintSemanticConcept"
+					}
+				}
+			},
 			"source_dns_name": {
 				"description": "The DNS name for the source address",
 				"valuemap": "Source;Node;name",

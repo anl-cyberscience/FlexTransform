@@ -1015,7 +1015,7 @@ class SchemaParser(object):
                             for k in groupRow['fields'][otherField] :
                                 if ('groupID' in k and k['groupID'] == groupID) :
                                     fieldGroup[otherField] = self.SchemaConfig[rowType]['fields'][otherField].copy()
-                                    fieldGroup[otherField]['Value'] = k['Value']
+                                    fieldGroup[otherField]['Value'] = k['NewValue']
                                     fieldGroup[otherField]['ReferencedField'] = k['ReferencedField']
                                     fieldGroup[otherField]['ReferencedValue'] = k['ReferencedValue']
                                     fieldGroup[otherField]['matchedOntology'] = k['matchedOntology']
@@ -1024,7 +1024,7 @@ class SchemaParser(object):
                             # If there is only one group, assume required fields belong to the same group.
                             k = groupRow['fields'][otherField][0]
                             fieldGroup[otherField] = self.SchemaConfig[rowType]['fields'][otherField].copy()
-                            fieldGroup[otherField]['Value'] = k['Value']
+                            fieldGroup[otherField]['Value'] = k['NewValue']
                             fieldGroup[otherField]['ReferencedField'] = k['ReferencedField']
                             fieldGroup[otherField]['ReferencedValue'] = k['ReferencedValue']
                             fieldGroup[otherField]['matchedOntology'] = k['matchedOntology']

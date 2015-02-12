@@ -1273,7 +1273,8 @@
 								"observable_relatedobject_value": {"required": false},
 								"observable_relatedobject_relationship": {"required": true},
 								"observable_relatedobject_port_value": {"required": false, "addAdditionalValues": true},
-								"observable_relatedobject_layer4_protocol": {"required": false}
+								"observable_relatedobject_layer4_protocol": {"required": false},
+								"observable_relatedobject_condition": {"required": false}
 				}
 			},
 			"observable_relatedobject_xsitype": {
@@ -1338,7 +1339,7 @@
 			},
 			"observable_relatedobject_value": {
 				"description": "The value of the DNS object",
-				"valuemap": "observable;object;related_objects;properties;value", 
+				"valuemap": "observable;object;related_objects;properties;value;value", 
 				"datatype": "string",
 				"required": false,
 				"ontologyMappingType": "referencedEnum",
@@ -1350,6 +1351,20 @@
 					},
 					"DomainNameObjectType": {
 						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#DNSHostNameIPv4IndicatorMetadataSemanticComponent"
+					}
+				}
+			},
+			"observable_relatedobject_condition": {
+				"description": "The match condition for the related object",
+				"valuemap": "observable;object;related_objects;properties;value;condition", 
+				"datatype": "enum",
+				"defaultValue": "Equals",
+				"required": false,
+				"memberof": "related_objects", 
+				"ontologyMappingType": "enum",
+				"enumValues": {
+					"Equals": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#RelatedDomainNameMatchConstraintSemanticConcept"
 					}
 				}
 			},
