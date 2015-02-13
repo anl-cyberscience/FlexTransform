@@ -9,6 +9,8 @@ import sys
 import os
 import re
 import copy
+import uuid
+import json
 
 currentdir = os.path.dirname(__file__)
             
@@ -40,6 +42,8 @@ class STIX(object):
         self.STIXNamespace = "http://www.example.com"
         self.STIXAlias = "example"
         self.STIXReplaceNamespace = False
+        
+        self.UUIDNamespace = uuid.UUID('{1087daa0-d52a-4a86-a673-065da63f0bbd}')
         
     def ValidateConfig(self,config):
         '''
@@ -176,7 +180,7 @@ class STIX(object):
                     newrow = copy.deepcopy(row)
                     
                     # Get rid of the original object
-                    del newrow['observable']['object']                   
+                    del newrow['observable']['object']
                     newrow['observable']['object'] = related
                     
                     newrows.append(newrow)
@@ -192,12 +196,19 @@ class STIX(object):
         Add STIX unique identifiers to objects in ParsedData
         '''
         
+        docid = None
+        
         if ('DocumentHeaderData' in ParsedData) :
             objid = None
             if ('id' in ParsedData['DocumentHeaderData']) :
                 objid = ParsedData['DocumentHeaderData'].pop('id')
 
-            ParsedData['DocumentHeaderData']['id'] = self._AddObjectID(objid, 'STIXPackage')
+            # Don't include timestamp in the hashdata since it is set every time Flexible Transform runs
+            ts = ParsedData['DocumentHeaderData'].pop('timestamp')
+            hashdata = json.dumps(ParsedData['DocumentHeaderData'], ensure_ascii = True, sort_keys = True)
+            docid = self._AddObjectID(objid, 'STIXPackage', hashdata)
+            ParsedData['DocumentHeaderData']['id'] = docid
+            ParsedData['DocumentHeaderData']['timestamp'] = ts
                         
         if ('IndicatorData' in ParsedData) :
             for indicator in ParsedData['IndicatorData'] :
@@ -205,21 +216,26 @@ class STIX(object):
                 if ('id' in indicator) :
                     objid = indicator.pop('id')
     
-                indicator['id'] = self._AddObjectID(objid, 'indicator')
+                ts = indicator.pop('timestamp')
+                hashdata = json.dumps(indicator, ensure_ascii = True, sort_keys = True)
+                indicator['id'] = self._AddObjectID(objid, 'indicator', hashdata + docid)
+                indicator['timestamp'] = ts
                 
                 if ('observable' in indicator) :
                     objid = None
                     if ('id' in indicator['observable']) :
                         objid = indicator['observable'].pop('id')
         
-                    indicator['observable']['id'] = self._AddObjectID(objid, 'observable')
+                    hashdata = json.dumps(indicator['observable'], ensure_ascii = True, sort_keys = True)
+                    indicator['observable']['id'] = self._AddObjectID(objid, 'observable', hashdata + docid)
                     
                     if ('object' in indicator['observable']) :
                         objid = None
                         if ('id' in indicator['observable']['object']) :
                             objid = indicator['observable']['object'].pop('id')
             
-                        indicator['observable']['object']['id'] = self._AddObjectID(objid, 'object')
+                        hashdata = json.dumps(indicator['observable']['object'], ensure_ascii = True, sort_keys = True)
+                        indicator['observable']['object']['id'] = self._AddObjectID(objid, 'object', hashdata + docid)
                         
                         if ('related_objects' in indicator['observable']['object']) :
                             for related_object in indicator['observable']['object']['related_objects'] :
@@ -227,9 +243,10 @@ class STIX(object):
                                 if ('id' in related_object) :
                                     objid = related_object.pop('id')
                     
-                                related_object['id'] = self._AddObjectID(objid, 'object')
+                                hashdata = json.dumps(related_object, ensure_ascii = True, sort_keys = True)
+                                related_object['id'] = self._AddObjectID(objid, 'object', hashdata + docid)
             
-    def _AddObjectID(self, data = None, prefix = 'guid'):
+    def _AddObjectID(self, data = None, prefix = 'guid', hashdata = None):
         '''
         Generate a new object ID or modify an existing one
         '''
@@ -245,7 +262,11 @@ class STIX(object):
             else :
                 objid = "%s:%s-%s" % (self.STIXAlias, prefix, data)
         else :
-            objid = idgen.create_id(prefix)
+            if (hashdata) :
+                objuuid = uuid.uuid5(self.UUIDNamespace, hashdata)
+                objid = "%s:%s-%s" % (self.STIXAlias, prefix, objuuid)
+            else :
+                objid = idgen.create_id(prefix)
             
         return objid
                 

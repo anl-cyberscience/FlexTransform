@@ -1032,7 +1032,7 @@ class SchemaParser(object):
                             fieldGroup[otherField]['ReferencedField'] = k['ReferencedField']
                             fieldGroup[otherField]['ReferencedValue'] = k['ReferencedValue']
                             fieldGroup[otherField]['matchedOntology'] = k['matchedOntology']
-                        elif ('addAdditionalValues' in subfields[otherField] and subfields[otherField]['addAdditionalValues'] == True) :
+                        elif ('addAdditionalValues' in subfields[otherField] and subfields[otherField]['addAdditionalValues'] == True and 'AdditionalValues' in groupRow['fields'][otherField] ) :
                             for k in groupRow['fields'][otherField] :
                                 newFieldGroup = copy.deepcopy(fieldGroup)
                                 newFieldGroup[otherField] = self.SchemaConfig[rowType]['fields'][otherField].copy()
