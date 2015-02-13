@@ -1220,7 +1220,7 @@
 				"datatype": "int",
 				"required": false,
 				"ontologyMappingType": "simple",
-				"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#PriorIndicatorReportsSemanticConcept"
+				"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#IndicatorSightingsSemanticConcept"
 			},
 			"sightings_sightings": {
 				"description": "Collection of one or more sightings for the indicator set",
@@ -1270,11 +1270,11 @@
 				"ontologyMappingType": "none",
 				"subfields": { 
 								"observable_relatedobject_xsitype": {"required": true, "primaryKey": true}, 
-								"observable_relatedobject_value": {"required": false},
+								"observable_relatedobject_value": {"required": false, "primaryKeyMatch": "DomainNameObjectType"},
 								"observable_relatedobject_relationship": {"required": true},
-								"observable_relatedobject_port_value": {"required": false, "addAdditionalValues": true},
-								"observable_relatedobject_layer4_protocol": {"required": false},
-								"observable_relatedobject_condition": {"required": false}
+								"observable_relatedobject_port_value": {"required": false, "addAdditionalValues": true, "primaryKeyMatch": "PortObjectType"},
+								"observable_relatedobject_layer4_protocol": {"required": false, "primaryKeyMatch": "PortObjectType"},
+								"observable_relatedobject_condition": {"required": false, "primaryKeyMatch": "DomainNameObjectType"}
 				}
 			},
 			"observable_relatedobject_xsitype": {

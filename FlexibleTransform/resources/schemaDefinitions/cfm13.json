@@ -348,6 +348,14 @@
 				"ontologyMappingType": "simple",
 				"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#PriorIndicatorReportsSemanticConcept"
 			},
+			"sightings": {
+				"description": "Number of times an indicator has been seen",
+				"datatype": "int",
+				"defaultValue": "&CFM13_SightingsCount(prior_offenses)",
+				"required": true,
+				"ontologyMappingType": "simple",
+				"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#IndicatorSightingsSemanticConcept"
+			},
 			"alert_threshold": {
 				"description": "Number of times seen before action was taken",
 				"valuemap": "AdditionalData;alert threshold",

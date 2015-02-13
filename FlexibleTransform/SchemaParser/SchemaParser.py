@@ -74,7 +74,9 @@ class SchemaParser(object):
                         if (isinstance(row,dict)) :
                             try :
                                 DataRow = self._MapRowToSchema(SchemaParser.FlattenDict(row),rowType)
-                                MappedData[rowType].append(self._GetDefaultValuesFromSchema(rowType, DataRow))
+                                DataRow = self._GetDefaultValuesFromSchema(rowType, DataRow)
+                                self._CalculateFunctionValue(DataRow, None, None)
+                                MappedData[rowType].append(DataRow)
                             except Exception as inst :
                                 self.logging.exception(inst)
                                 self.logging.debug(str(SchemaParser.FlattenDict(row)))
@@ -82,7 +84,9 @@ class SchemaParser(object):
                             raise Exception('NoParsableDataFound', "Data isn't in a parsable dictionary format")
                 elif (isinstance(SourceData[rowType],dict)) :
                     DataRow = self._MapRowToSchema(SchemaParser.FlattenDict(SourceData[rowType]),rowType)
-                    MappedData[rowType] = self._GetDefaultValuesFromSchema(rowType, DataRow)
+                    DataRow = self._GetDefaultValuesFromSchema(rowType, DataRow)
+                    self._CalculateFunctionValue(DataRow, None, None)
+                    MappedData[rowType] = DataRow
                 else :
                     raise Exception('NoParsableDataFound', "Data isn't in a parsable dictionary format")
             else :
@@ -1040,7 +1044,15 @@ class SchemaParser(object):
                                 
                             fieldGroup = None
                             continue
-                        
+                        elif (fieldGroup and 'primaryKeyMatch' in subfields[otherField]) :
+                            for k in groupRow['fields'][otherField] :
+                                if (subfields[otherField]['primaryKeyMatch'] == fieldGroup[primaryKey]['Value']) :
+                                    fieldGroup[otherField] = self.SchemaConfig[rowType]['fields'][otherField].copy()
+                                    fieldGroup[otherField]['Value'] = k['NewValue']
+                                    fieldGroup[otherField]['ReferencedField'] = k['ReferencedField']
+                                    fieldGroup[otherField]['ReferencedValue'] = k['ReferencedValue']
+                                    fieldGroup[otherField]['matchedOntology'] = k['matchedOntology']
+                                    break
                         else :
                             self.logging.warning('Field %s could not be matched to the appropriate group', otherField)
                             
@@ -1288,6 +1300,12 @@ class SchemaParser(object):
                             else :
                                 v['Value'] = TransformedData['DocumentHeaderData']['analyzer_time']['Value']
                                 
+                        elif (function == 'CFM13_SightingsCount') :
+                            sightings = 1
+                            if (args in row and 'Value' in row[args]) :
+                                sightings += int(row[args]['Value'])
+                                
+                            v['Value'] = str(sightings)
                                 
                         elif (function == 'CFM20_determineIndicatorConstraint') :
                             # TODO: It would be great if somehow we could query the ontology to get this. Complete for all indicator constraints.
