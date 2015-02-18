@@ -216,6 +216,7 @@ class STIX(object):
                 if ('id' in indicator) :
                     objid = indicator.pop('id')
     
+                # Don't include timestamp in the hashdata since it is set every time Flexible Transform runs
                 ts = indicator.pop('timestamp')
                 hashdata = json.dumps(indicator, ensure_ascii = True, sort_keys = True)
                 indicator['id'] = self._AddObjectID(objid, 'indicator', hashdata + docid)
@@ -261,12 +262,11 @@ class STIX(object):
                     objid = "%s:%s" % (self.STIXAlias, match.group(2))
             else :
                 objid = "%s:%s-%s" % (self.STIXAlias, prefix, data)
+        elif (hashdata) :
+            objuuid = uuid.uuid5(self.UUIDNamespace, hashdata)
+            objid = "%s:%s-%s" % (self.STIXAlias, prefix, objuuid)
         else :
-            if (hashdata) :
-                objuuid = uuid.uuid5(self.UUIDNamespace, hashdata)
-                objid = "%s:%s-%s" % (self.STIXAlias, prefix, objuuid)
-            else :
-                objid = idgen.create_id(prefix)
+            objid = idgen.create_id(prefix)
             
         return objid
                 
