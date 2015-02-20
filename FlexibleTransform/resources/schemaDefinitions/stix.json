@@ -92,6 +92,7 @@
 				"required": false,
 				"defaultValue": "Indicators",
 				"ontologyMappingType": "enum",
+				"memberof": "package_intents",
 				"enumValues": { 
 					"Indicators - Network Activity": {
 						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#IndicatorCategoryNetworkActivitySemanticConcept"
@@ -120,6 +121,7 @@
 				"defaultValue": "stixVocabs:PackageIntentVocab-1.0",
 				"required": false,
 				"ontologyMappingType": "enum",
+				"memberof": "package_intents",
 				"enumValues": { 
 					"stixVocabs:PackageIntentVocab-1.0": {
 						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#PackageIntentSemanticConcept"
@@ -158,6 +160,7 @@
 				"required": false,
 				"defaultValue": "//node()",
 				"ontologyMappingType": "enum",
+				"memberof": "handling",
 				"enumValues": {
 					"//node()": {
 						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#XMLDocumentControlledStructureSemanticConcept"
@@ -170,6 +173,7 @@
 				"datatype": "group",
 				"required": false,
 				"multiple": true,
+				"memberof": "handling",
 				"ontologyMappingType": "none",
 				"subfields": { 
 								"handling_markingstructures_color": {"required": false}, 
@@ -181,8 +185,8 @@
 				"description": "The TLP color for the document",
 				"valuemap": "handling;marking_structures;color", 
 				"datatype": "enum",
-				"requiredIfReferenceField": "handling_markingstructures_xsitype",
-				"requiredIfReferenceValues": [ "tlpMarking:TLPMarkingStructureType" ], 
+				"required": false,
+				"memberof": "handling_markingstructures",
 				"ontologyMappingType": "enum",
 				"enumValues": {
 					"WHITE": {
@@ -205,6 +209,7 @@
 				"datatype": "enum",
 				"required": false,
 				"ontologyMappingType": "enum",
+				"memberof": "handling_markingstructures",
 				"enumValues": {
 					"tlpMarking:TLPMarkingStructureType": {
 						"ontologyMapping": ""
@@ -218,10 +223,29 @@
 				"description": "The simple marking statement for the document",
 				"valuemap": "handling;marking_structures;statement",
 				"datatype": "string",
-				"requiredIfReferenceField": "handling_markingstructures_xsitype",
-				"requiredIfReferenceValues": [ "simpleMarking:SimpleMarkingStructureType" ], 
+				"required": false,
+				"memberof": "handling_markingstructures",
 				"ontologyMappingType": "simple",
 				"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#SimpleSharingRestrictionSemanticConcept"
+			},
+			"profiles": {
+				"description": "Collection of one or more profiles for the document",
+				"valuemap": "profiles",
+				"datatype": "group",
+				"required": false,
+				"ontologyMappingType": "none",
+				"subfields": { 
+								"profiles_profile": {"required": true, "primaryKey": true}
+				}
+			},
+			"profiles_profile": {
+				"description": "profile for the document",
+				"valuemap": "",
+				"datatype": "string",
+				"required": false,
+				"memberof": "profiles",
+				"ontologyMappingType": "simple",
+				"ontologyMapping": ""
 			}
 		}
 	},

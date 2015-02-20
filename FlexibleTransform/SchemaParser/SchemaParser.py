@@ -887,6 +887,10 @@ class SchemaParser(object):
         for group in GroupRows :
             groupRow = GroupRows[group]
             
+            if ('memberof' in self.SchemaConfig[rowType]['fields'][group] and
+                self.SchemaConfig[rowType]['fields'][group]['memberof'] in GroupRows):
+                continue
+            
             if (group not in groupDict) :
                 groupDict[group] = self.SchemaConfig[rowType]['fields'][group].copy()
                 groupDict[group]['Value'] = 'True'
@@ -905,6 +909,31 @@ class SchemaParser(object):
                             "reasonList_reasonDescription": {"required":false}
             }
             '''
+            
+            # Add default values for fields to group if defined
+            
+            if ('defaultFields' in self.SchemaConfig[rowType]['fields'][group]) :
+                defaultFields = self.SchemaConfig[rowType]['fields'][group]['defaultFields']
+                for k,v in defaultFields.items() :
+                    if (k not in groupRow['fields']) :
+                        groupRow['fields'][k] = []
+                    
+                    if (isinstance(v,list)) :
+                        for v2 in v :
+                            fieldDict = {}
+                            fieldDict['ReferencedField'] = None
+                            fieldDict['ReferencedValue'] = None
+                            fieldDict['matchedOntology'] = None
+                            fieldDict['NewValue'] = v2
+                            groupRow['fields'][k].append(fieldDict)
+                    else :
+                        fieldDict = {}
+                        fieldDict['ReferencedField'] = None
+                        fieldDict['ReferencedValue'] = None
+                        fieldDict['matchedOntology'] = None
+                        fieldDict['NewValue'] = v
+                        groupRow['fields'][k].append(fieldDict)
+                        
             
             requiredFields = []
             otherFields = []
@@ -998,8 +1027,8 @@ class SchemaParser(object):
                             fieldGroup[requiredField]['ParsedValue'] = True
                             fieldGroup[requiredField]['groupedFields'] = []
                             newGroupRows = {}
-                            if (requiredField in GroupRows) :
-                                newGroupRows[requiredField] = GroupRows.pop(requiredField)
+                            if (requiredField in groupRow) :
+                                newGroupRows[requiredField] = groupRow.pop(requiredField)
                             else :
                                 newGroupRows[requiredField] = { 'fields': {} }
                             self._BuildFieldGroups(fieldGroup, rowType, newGroupRows)

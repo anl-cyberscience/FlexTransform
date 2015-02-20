@@ -168,8 +168,12 @@ class XMLParser(Parser):
                         return v['Value']
             else :
                 self.logging.warning("Field %s does not contain a Value entry", k)
-                
-        return SchemaParser.UnflattenDict(DataRow)
+        
+        try :
+            return SchemaParser.UnflattenDict(DataRow)
+        except Exception as e:
+            self.logging.error('Could not processes %s', DataRow)
+            raise e 
 
     @classmethod
     def etree_to_dict(cls, t):

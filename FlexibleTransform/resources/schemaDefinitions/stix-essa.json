@@ -1,0 +1,164 @@
+{
+	"DocumentHeaderData": {
+		"fields": {
+			"handling_markingstructures": {
+				"required": false,
+				"multiple": true,
+				"ontologyMappingType": "none",
+				"subfields": { 
+								"handling_markingstructures_xsitype": {"required": true, "primaryKey": true},
+								"handling_markingstructures_identifier": {"required": false, "primaryKeyMatch": "edh2cyberMarking:ISAMarkingsType"}, 
+								"handling_markingstructures_createdatetime": {"required": false, "primaryKeyMatch": "edh2cyberMarking:ISAMarkingsType"},
+								"handling_markingstructures_responsibleentity": {"required": false, "primaryKeyMatch": "edh2cyberMarking:ISAMarkingsType"},
+								"handling_markingstructures_isamversion": {"required": false, "primaryKeyMatch": "edh2cyberMarking:ISAMarkingsType"},
+								"handling_markingstructures_isamversion2": {"required": false, "primaryKeyMatch": "edh2cyberMarkingAssert:ISAMarkingsAssertionType"},
+								"handling_markingstructures_mostrestrictive": {"required": false, "primaryKeyMatch": "edh2cyberMarkingAssert:ISAMarkingsAssertionType"},
+								"handling_markingstructures_policyref": {"required": false, "primaryKeyMatch": "edh2cyberMarkingAssert:ISAMarkingsAssertionType"},
+								"handling_markingstructures_controlset": {"required": false, "primaryKeyMatch": "edh2cyberMarkingAssert:ISAMarkingsAssertionType"}
+				},
+				"defaultFields": {
+					"handling_markingstructures_xsitype": [ "edh2cyberMarking:ISAMarkingsType", "edh2cyberMarkingAssert:ISAMarkingsAssertionType" ],
+					"handling_markingstructures_identifier": "",
+					"handling_markingstructures_createdatetime": "&now()",
+					"handling_markingstructures_responsibleentity": "CUST:USA.DOE",
+					"handling_markingstructures_isamversion": "1.0",
+					"handling_markingstructures_isamversion2": "1.0",
+					"handling_markingstructures_mostrestrictive": "true",
+					"handling_markingstructures_policyref": "urn:isa:policy:acs:ns:v2.0?privdefault=permit",
+					"handling_markingstructures_controlset": "CLS:U CUI:FOUO"
+				}
+			},
+			"handling_markingstructures_identifier": {
+				"description": "Single unique identifier associated with the resource.",
+				"valuemap": "handling;marking_structures;identifier", 
+				"datatype": "string",
+				"defaultValue": "",
+				"required": "false",
+				"memberof": "handling_markingstructures",
+				"ontologyMappingType": "simple",
+				"ontologyMapping": ""
+			},
+			"handling_markingstructures_createdatetime": {
+				"description": "The creation date and time of the associated resource.",
+				"valuemap": "handling;marking_structures;createdatetime", 
+				"datatype": "datetime",
+				"dateTimeFormat": "%Y-%m-%dT%H:%M:%SZ",
+				"defaultValue": "&now()",
+				"required": "false",
+				"memberof": "handling_markingstructures",
+				"ontologyMappingType": "simple",
+				"ontologyMapping": ""
+			},
+			"handling_markingstructures_responsibleentity": {
+				"description": "Contains a single mandatory CUST: token with an optional single ORIG: token",
+				"valuemap": "handling;marking_structures;responsibleentity", 
+				"datatype": "string",
+				"defaultValue": "",
+				"required": "false",
+				"memberof": "handling_markingstructures",
+				"ontologyMappingType": "simple",
+				"ontologyMapping": ""
+			},
+			"handling_markingstructures_isamversion": {
+				"description": "ISA Marking Version",
+				"valuemap": "handling;marking_structures;isam_version", 
+				"datatype": "enum",
+				"defaultValue": "1.0",
+				"required": "false",
+				"memberof": "handling_markingstructures",
+				"ontologyMappingType": "enum",
+				"enumValues": {
+					"1.0": {
+						"ontologyMapping": ""
+					}
+				}
+			},
+			"handling_markingstructures_isamversion2": {
+				"description": "ISA Marking Version",
+				"valuemap": "handling;marking_structures;isam_version", 
+				"datatype": "enum",
+				"defaultValue": "1.0",
+				"required": "false",
+				"memberof": "handling_markingstructures",
+				"ontologyMappingType": "enum",
+				"enumValues": {
+					"1.0": {
+						"ontologyMapping": ""
+					}
+				}
+			},
+			"handling_markingstructures_policyref": {
+				"description": "If multiple policy refs apply, they are provided as space delimited URNs.",
+				"valuemap": "handling;marking_structures;policyref", 
+				"datatype": "string",
+				"defaultValue": "",
+				"required": "false",
+				"memberof": "handling_markingstructures",
+				"ontologyMappingType": "simple",
+				"ontologyMapping": ""
+			},
+			"handling_markingstructures_controlset": {
+				"description": "Group of data tags that are used to inform automated access control decisions.",
+				"valuemap": "handling;marking_structures;controlset", 
+				"datatype": "string",
+				"defaultValue": "",
+				"required": "false",
+				"memberof": "handling_markingstructures",
+				"ontologyMappingType": "simple",
+				"ontologyMapping": ""
+			},
+			"handling_markingstructures_mostrestrictive": {
+				"description": "Indicates whether or not this marking structure denotes the most restrictive applied to this structure.  Only used in STIX header. Can only be used if the Controlled_Structure is set to //node()",
+				"valuemap": "handling;marking_structures;most_restrictive", 
+				"datatype": "string",
+				"defaultValue": "true",
+				"required": "false",
+				"memberof": "handling_markingstructures",
+				"ontologyMappingType": "simple",
+				"ontologyMapping": ""
+			},
+			"handling_markingstructures_xsitype": {
+				"defaultValue": "edh2cyberMarkingAssert:ISAMarkingsAssertionType",
+				"enumValues": {
+					"edh2cyberMarking:ISAMarkingsType": {
+						"ontologyMapping": ""
+					},
+					"edh2cyberMarkingAssert:ISAMarkingsAssertionType": {
+						"ontologyMapping": ""
+					}
+				}
+			},
+			"information_source_name": {
+				"description": "The source of the report",
+				"valuemap": "information_source;identity;name", 
+				"datatype": "string",
+				"required": true,
+				"defaultValue": "DOE",
+				"ontologyMappingType": "none",
+				"ontologyMapping": ""
+			},
+			"information_source_description": {
+				"description": "The description of the source of the report",
+				"valuemap": "information_source;description", 
+				"datatype": "string",
+				"required": true,
+				"defaultValue": "U.S. Department of Energy",
+				"ontologyMappingType": "none",
+				"ontologyMapping": ""
+			},
+			"profiles": {
+				"required": true
+			},
+			"profiles_profile": {
+				"defaultValue": "ISA Parent Threat Sharing Profile version 9"
+			}
+		}
+	},
+	"IndicatorData": {
+		"fields": {
+			"indicator_types": {
+				"required": true
+			}
+		}
+	}
+}

@@ -26,6 +26,8 @@ from stix.utils import set_id_namespace # @UnresolvedImport
 from stix.utils.parser import UnsupportedVersionError  # @UnresolvedImport
 from stix.utils.idgen import IDGenerator # @UnresolvedImport
 
+from ISAMarkingExtension.isamarkings import ISAMarkingStructure  # @UnusedImport
+
 class STIX(object):
     '''
     Parser for STIX XML documents
@@ -43,6 +45,8 @@ class STIX(object):
         self.STIXAlias = "example"
         self.STIXReplaceNamespace = False
         
+        self.STIXIDPrefix = None
+        
         self.UUIDNamespace = uuid.UUID('{1087daa0-d52a-4a86-a673-065da63f0bbd}')
         
     def ValidateConfig(self,config):
@@ -55,6 +59,8 @@ class STIX(object):
                 self.STIXNamespace = config['STIX']['STIXNamespace']
             if (config.has_option('STIX', 'STIXAlias')) :
                 self.STIXAlias = config['STIX']['STIXAlias']
+            if (config.has_option('STIX', 'STIXIDPrefix')) :
+                self.STIXIDPrefix = config['STIX']['STIXIDPrefix']
             if (config.has_option('STIX', 'STIXReplaceNamespace')) :
                 self.STIXReplaceNamespace = config.getboolean('STIX', 'STIXReplaceNamespace', fallback=False)
         
@@ -205,10 +211,35 @@ class STIX(object):
 
             # Don't include timestamp in the hashdata since it is set every time Flexible Transform runs
             ts = ParsedData['DocumentHeaderData'].pop('timestamp')
+            handling = ParsedData['DocumentHeaderData'].pop('handling')
             hashdata = json.dumps(ParsedData['DocumentHeaderData'], ensure_ascii = True, sort_keys = True)
+            
+            # Add all the indicators to the document hash as well
+            if ('IndicatorData' in ParsedData) :
+                for indicator in ParsedData['IndicatorData'] :      
+                    # Don't include timestamp in the hashdata since it is set every time Flexible Transform runs
+                    ts = indicator.pop('timestamp')
+                    hashdata = hashdata + json.dumps(indicator, ensure_ascii = True, sort_keys = True)
+                    indicator['timestamp'] = ts
+                    
             docid = self._AddObjectID(objid, 'STIXPackage', hashdata)
             ParsedData['DocumentHeaderData']['id'] = docid
             ParsedData['DocumentHeaderData']['timestamp'] = ts
+            ParsedData['DocumentHeaderData']['handling'] = handling
+            
+            if ('handling' in ParsedData['DocumentHeaderData']) :
+                for handling in ParsedData['DocumentHeaderData']['handling']:
+                    if ('marking_structures' in handling):
+                        for marking in handling['marking_structures']:
+                            if ('identifier' in marking and 'xsi:type' in marking 
+                                and marking['xsi:type'] == 'edh2cyberMarking:ISAMarkingsType'):
+                                
+                                ts = marking.pop('createdatetime')
+                                identifier = marking.pop('identifier')
+                                hashdata = json.dumps(marking, ensure_ascii = True, sort_keys = True)
+                                identifier = self._AddObjectID(identifier, None, hashdata + docid)
+                                marking['identifier'] = identifier
+                                marking['createdatetime'] = ts
                         
         if ('IndicatorData' in ParsedData) :
             for indicator in ParsedData['IndicatorData'] :
@@ -219,7 +250,7 @@ class STIX(object):
                 # Don't include timestamp in the hashdata since it is set every time Flexible Transform runs
                 ts = indicator.pop('timestamp')
                 hashdata = json.dumps(indicator, ensure_ascii = True, sort_keys = True)
-                indicator['id'] = self._AddObjectID(objid, 'indicator', hashdata + docid)
+                indicator['id'] = self._AddObjectID(objid, 'Indicator', hashdata + docid)
                 indicator['timestamp'] = ts
                 
                 if ('observable' in indicator) :
@@ -228,7 +259,7 @@ class STIX(object):
                         objid = indicator['observable'].pop('id')
         
                     hashdata = json.dumps(indicator['observable'], ensure_ascii = True, sort_keys = True)
-                    indicator['observable']['id'] = self._AddObjectID(objid, 'observable', hashdata + docid)
+                    indicator['observable']['id'] = self._AddObjectID(objid, 'Observable', hashdata + docid)
                     
                     if ('object' in indicator['observable']) :
                         objid = None
@@ -236,7 +267,7 @@ class STIX(object):
                             objid = indicator['observable']['object'].pop('id')
             
                         hashdata = json.dumps(indicator['observable']['object'], ensure_ascii = True, sort_keys = True)
-                        indicator['observable']['object']['id'] = self._AddObjectID(objid, 'object', hashdata + docid)
+                        indicator['observable']['object']['id'] = self._AddObjectID(objid, 'Object', hashdata + docid)
                         
                         if ('related_objects' in indicator['observable']['object']) :
                             for related_object in indicator['observable']['object']['related_objects'] :
@@ -245,7 +276,7 @@ class STIX(object):
                                     objid = related_object.pop('id')
                     
                                 hashdata = json.dumps(related_object, ensure_ascii = True, sort_keys = True)
-                                related_object['id'] = self._AddObjectID(objid, 'object', hashdata + docid)
+                                related_object['id'] = self._AddObjectID(objid, 'Object', hashdata + docid)
             
     def _AddObjectID(self, data = None, prefix = 'guid', hashdata = None):
         '''
@@ -255,18 +286,26 @@ class STIX(object):
         idgen = IDGenerator(namespace={self.STIXNamespace: self.STIXAlias})
         objid = data
         
+        if (self.STIXIDPrefix is not None) :
+            if (prefix is not None) :
+                prefix = "%s%s-" % (self.STIXIDPrefix, prefix)
+            else :
+                prefix = self.STIXIDPrefix
+        else :
+            prefix = prefix + "-"
+        
         if (data) :
             match = re.match(r'^([^:]+):(.*)', data)
             if (match) :
                 if (match.group(1) != self.STIXAlias) :
                     objid = "%s:%s" % (self.STIXAlias, match.group(2))
             else :
-                objid = "%s:%s-%s" % (self.STIXAlias, prefix, data)
+                objid = "%s:%s%s" % (self.STIXAlias, prefix, data)
         elif (hashdata) :
             objuuid = uuid.uuid5(self.UUIDNamespace, hashdata)
-            objid = "%s:%s-%s" % (self.STIXAlias, prefix, objuuid)
+            objid = "%s:%s%s" % (self.STIXAlias, prefix, objuuid)
         else :
-            objid = idgen.create_id(prefix)
+            objid = idgen.create_id(prefix.strip("-"))
             
         return objid
                 
