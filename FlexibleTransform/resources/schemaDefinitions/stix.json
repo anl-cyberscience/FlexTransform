@@ -591,7 +591,8 @@
 				"ontologyEnumField": "observable_object_type",
 				"ontologyMappingEnumValues": {
 					"URL": {
-						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#URLIndicatorMetadataSemanticComponent"
+						"__ontologyMapping": "http://www.anl.gov/cfm/transform.owl#URLIndicatorMetadataSemanticComponent",
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#URLIndicatorValueSemanticComponent"
 					},
 					"Domain Name": {
 						"__ontologyMapping": "http://www.anl.gov/cfm/transform.owl#DNSHostNameIPv4IndicatorMetadataSemanticComponent",

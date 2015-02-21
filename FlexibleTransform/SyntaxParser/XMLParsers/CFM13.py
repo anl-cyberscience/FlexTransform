@@ -29,7 +29,8 @@ class CFM13(object):
                                         'recon': 'integer',
                                         'restriction': 'string',
                                         'OUO': 'integer',
-                                        'top level domain owner': 'string'
+                                        'top level domain owner': 'string',
+                                        'alert provenance': 'string'
                                     }
         
         self.logging = logging.getLogger('FlexTransform/XMLParser/CFM13')
@@ -123,6 +124,11 @@ class CFM13(object):
                         row['Classification']['@text'] = "Domain Block: %s" % row['Classification']['@text']
                     elif ('@text' not in row['Classification']) :
                         row['Classification']['@text'] = "Domain Block: blocked"
+                elif (row['IndicatorType'] == 'URL-Block') :
+                    if ('@text' in row['Classification'] and not row['Classification']['@text'].startswith('URL Block:')) :
+                        row['Classification']['@text'] = "URL Block: %s" % row['Classification']['@text']
+                    elif ('@text' not in row['Classification']) :
+                        row['Classification']['@text'] = "URL Block: blocked"
 
             if ('AdditionalData' in row):
                 row['AdditionalData'] = SyntaxParser.XMLParser.KeyToAttribute('@meaning','#text',row['AdditionalData'])

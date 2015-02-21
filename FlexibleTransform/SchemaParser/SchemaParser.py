@@ -1406,6 +1406,8 @@ class SchemaParser(object):
                                 v['Value'] = 'IP Watchlist'
                             elif (IndicatorType == 'DNS-Hostname-Block') :
                                 v['Value'] = 'Domain Watchlist'
+                            elif (IndicatorType == 'URL-Block') :
+                                v['Value'] = 'URL Watchlist'
                             else :
                                 raise Exception('UnknownIndicatorType', 'STIX Indicator Type could not be determined')
                                 
@@ -1418,6 +1420,8 @@ class SchemaParser(object):
                                 v['Value'] = 'AddressObjectType'
                             elif (IndicatorType == 'DNS-Hostname-Block') :
                                 v['Value'] = 'DomainNameObjectType'
+                            elif (IndicatorType == 'URL-Block') :
+                                v['Value'] = 'URIObjectType'
                             else :
                                 raise Exception('UnknownIndicatorXSIType', 'STIX Indicator XSI Type could not be determined')
                         

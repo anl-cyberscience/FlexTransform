@@ -130,6 +130,7 @@
 	"IndicatorData": {
 		"types": {
 			"DNS-Hostname-Block": [ { "classification_text": "Domain Block:*" } ],
+			"URL-Block": [ { "classification_text": "URL Block:*" } ],
 			"IPv4-Subnet-Block": [ { "source_address_type": "ipv4-net" } ],
 			"IPv4-Address-Block": [ { "source_address_value": "*" } ],
 			"DNS-Hostname-Revoke": [ { "classification_text": "Domain Block:*", "assessment_description": "Revocation" } ],
@@ -374,6 +375,14 @@
 				"ontologyMappingType": "simple",
 				"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#ActionDurationSemanticConcept"
 			},
+			"alert_provenance": {
+				"description": "",
+				"valuemap": "AdditionalData;alert provenance",
+				"datatype": "string",
+				"required": false,
+				"ontologyMappingType": "simple",
+				"ontologyMapping": ""
+			},
 			"recon": {
 				"description": "Is recon allowed (0 means yes, 1 means no)",
 				"valuemap": "AdditionalData;recon",
@@ -497,6 +506,36 @@
 					}
 				}
 			},
+			"source_url_matchtype": {
+				"description": "The match for the source url",
+				"datatype": "complex",
+				"requiredIfReferenceField": "classification_text",
+				"requiredIfReferenceValuesMatch": [ "URL Block:*" ],
+				"fields": [ "source_address_value" ],
+				"defaultValue": "true",
+				"ontologyMappingType": "referencedEnum",
+				"ontologyEnumField": "classification_text",
+				"ontologyMappingEnumValues": {
+					"URL Block:*": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#DNSMatchConstraintSemanticConcept"
+					}
+				}
+			},
+			"source_url_indicator_type": {
+				"description": "The match for the source url",
+				"datatype": "complex",
+				"requiredIfReferenceField": "classification_text",
+				"requiredIfReferenceValuesMatch": [ "URL Block:*" ],
+				"fields": [ "source_address_value" ],
+				"defaultValue": "true",
+				"ontologyMappingType": "referencedEnum",
+				"ontologyEnumField": "classification_text",
+				"ontologyMappingEnumValues": {
+					"URL Block:*": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#URLIndicatorTypeSemanticComponent"
+					}
+				}
+			},
 			"source_dns_name": {
 				"description": "The DNS name for the source address",
 				"valuemap": "Source;Node;name",
@@ -520,7 +559,7 @@
 				"datatype": "enum",
 				"defaultValue": "ipv4-addr",
 				"requiredIfReferenceField": "source_address_value",
-				"requiredIfReferenceValuesMatch": [ "*" ],
+				"requiredIfReferenceValuesMatch": [ "[0-9]*" ],
 				"ontologyMappingType": "enum",
 				"enumValues": {
 					"ipv4-addr": {
@@ -534,11 +573,19 @@
 			"source_address_value": {
 				"description": "The value for the alert source",
 				"valuemap": "Source;Node;Address;address",
-				"datatype": "ipv4",
+				"datatype": "string",
 				"requiredIfReferenceField": "source_dns_name",
 				"requiredIfReferenceValues": [ "" ],
-				"ontologyMappingType": "simple",
-				"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#IPv4AddressIndicatorValueSemanticComponent"
+				"ontologyMappingType": "referencedEnum",
+				"ontologyEnumField": "classification_text",
+				"ontologyMappingEnumValues": {
+					"URL Block:*": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#URLIndicatorValueSemanticComponent"
+					},
+					"*": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#IPv4AddressIndicatorValueSemanticComponent"
+					}
+				}
 			},
 			"target_service_port": {
 				"description": "The target port for the alert",
