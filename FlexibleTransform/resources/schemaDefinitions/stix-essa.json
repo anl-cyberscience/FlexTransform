@@ -19,8 +19,8 @@
 				"defaultFields": {
 					"handling_markingstructures_xsitype": [ "edh2cyberMarking:ISAMarkingsType", "edh2cyberMarkingAssert:ISAMarkingsAssertionType" ],
 					"handling_markingstructures_identifier": "",
-					"handling_markingstructures_createdatetime": "&now()",
 					"handling_markingstructures_responsibleentity": "CUST:USA.DOE",
+					"handling_markingstructures_createdatetime": "&now()",
 					"handling_markingstructures_isamversion": "1.0",
 					"handling_markingstructures_isamversion2": "1.0",
 					"handling_markingstructures_mostrestrictive": "true",
@@ -46,8 +46,7 @@
 				"defaultValue": "&now()",
 				"required": "false",
 				"memberof": "handling_markingstructures",
-				"ontologyMappingType": "simple",
-				"ontologyMapping": ""
+				"ontologyMappingType": "none"
 			},
 			"handling_markingstructures_responsibleentity": {
 				"description": "Contains a single mandatory CUST: token with an optional single ORIG: token",
@@ -127,6 +126,11 @@
 						"ontologyMapping": ""
 					}
 				}
+			},
+			"produced_time": {
+				"dateTimeFormat": "%Y-%m-%dT%H:%M:%SZ",
+				"required": true,
+				"defaultValue": "&now()"
 			},
 			"information_source_name": {
 				"description": "The source of the report",

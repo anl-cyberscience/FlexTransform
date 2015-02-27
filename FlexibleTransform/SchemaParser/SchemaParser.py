@@ -918,21 +918,21 @@ class SchemaParser(object):
                     if (k not in groupRow['fields']) :
                         groupRow['fields'][k] = []
                     
-                    if (isinstance(v,list)) :
-                        for v2 in v :
+                        if (isinstance(v,list)) :
+                            for v2 in v :
+                                fieldDict = {}
+                                fieldDict['ReferencedField'] = None
+                                fieldDict['ReferencedValue'] = None
+                                fieldDict['matchedOntology'] = None
+                                fieldDict['NewValue'] = v2
+                                groupRow['fields'][k].append(fieldDict)
+                        else :
                             fieldDict = {}
                             fieldDict['ReferencedField'] = None
                             fieldDict['ReferencedValue'] = None
                             fieldDict['matchedOntology'] = None
-                            fieldDict['NewValue'] = v2
+                            fieldDict['NewValue'] = v
                             groupRow['fields'][k].append(fieldDict)
-                    else :
-                        fieldDict = {}
-                        fieldDict['ReferencedField'] = None
-                        fieldDict['ReferencedValue'] = None
-                        fieldDict['matchedOntology'] = None
-                        fieldDict['NewValue'] = v
-                        groupRow['fields'][k].append(fieldDict)
                         
             
             requiredFields = []
@@ -1262,7 +1262,7 @@ class SchemaParser(object):
                                 v['Value'] = '%i' % time.mktime(datetime.datetime.now(tz=pytz.utc).timetuple())
                             else :
                                 v['Value'] = datetime.datetime.now(tz=pytz.utc).strftime(row[k]['dateTimeFormat'])
-                                
+
                         elif (function == 'countOfIndicators') :
                             v['Value'] = str(TransformedData['IndicatorData'].__len__())
                             

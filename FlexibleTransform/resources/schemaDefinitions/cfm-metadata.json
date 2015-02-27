@@ -53,7 +53,7 @@
 				}
 			},
 			"ReconPolicy": {
-				"description": "Is additional recon allowed on the inidicator",
+				"description": "Is additional recon allowed on the indicator",
 				"datatype": "enum",
 				"required": true,
 				"defaultValue": "Touch",

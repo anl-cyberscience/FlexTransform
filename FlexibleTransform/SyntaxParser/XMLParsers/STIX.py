@@ -233,13 +233,7 @@ class STIX(object):
                         for marking in handling['marking_structures']:
                             if ('identifier' in marking and 'xsi:type' in marking 
                                 and marking['xsi:type'] == 'edh2cyberMarking:ISAMarkingsType'):
-                                
-                                ts = marking.pop('createdatetime')
-                                identifier = marking.pop('identifier')
-                                hashdata = json.dumps(marking, ensure_ascii = True, sort_keys = True)
-                                identifier = self._AddObjectID(identifier, None, hashdata + docid)
-                                marking['identifier'] = identifier
-                                marking['createdatetime'] = ts
+                                marking['identifier'] = docid
                         
         if ('IndicatorData' in ParsedData) :
             for indicator in ParsedData['IndicatorData'] :
@@ -300,7 +294,7 @@ class STIX(object):
                 if (match.group(1) != self.STIXAlias) :
                     objid = "%s:%s" % (self.STIXAlias, match.group(2))
             else :
-                objid = "%s:%s%s" % (self.STIXAlias, prefix, data)
+                objid = "%s:%s%s" % (self.STIXAlias, prefix, data.lower())
         elif (hashdata) :
             objuuid = uuid.uuid5(self.UUIDNamespace, hashdata)
             objid = "%s:%s%s" % (self.STIXAlias, prefix, objuuid)
