@@ -123,6 +123,27 @@
 				"required": true,
 				"ontologyMappingType": "simple",
 				"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#ReportAlertCountSemanticConcept"
+			},
+			"report_tlp": {
+				"description": "The TLP restriction for this document",
+				"datatype": "string",
+				"defaultValue": "&CFM13_determineTLP()",
+				"required": true,
+				"ontologyMappingType": "enum",
+				"enumValues": {
+					"WHITE": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#TLPWhiteSemanticConcept"
+					},					
+					"GREEN": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#TLPGreenSemanticConcept"
+					},
+					"AMBER": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#TLPAmberSemanticConcept"
+					},
+					"RED": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#TLPRedSemanticConcept"
+					}
+				}
 			}
 		}
 	},
@@ -327,9 +348,7 @@
 				"description": "Site description of action taken on this alert",
 				"valuemap": "Assessment;Action;#text",
 				"datatype": "string",
-				"defaultValue": "block-installed",
-				"requiredIfReferenceField": "assessment_action",
-				"requiredIfReferenceValues": [ "other" ],
+				"required": false,
 				"ontologyMappingType": "enum",
 				"enumValues": {
 					"Revocation": {
@@ -338,7 +357,9 @@
 					"*": {
 						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#ActionDescriptionSemanticConcept"
 					}
-				}
+				},
+				"outputFormatCondition": "[action_duration] > 0",
+				"outputFormat": "[assessment_action] for [action_duration] seconds"
 			},
 			"prior_offenses": {
 				"description": "Number of prior times an indicator has been alerted on",
@@ -361,7 +382,8 @@
 				"description": "Number of times seen before action was taken",
 				"valuemap": "AdditionalData;alert threshold",
 				"datatype": "int",
-				"defaultValue": "0",
+				"dataRange": "0-2147483648",
+				"defaultValue": "1",
 				"required": false,
 				"ontologyMappingType": "simple",
 				"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#ActionThresholdSemanticConcept"
@@ -370,6 +392,7 @@
 				"description": "Length of time in seconds the assessment_action should stay in effect",
 				"valuemap": "AdditionalData;duration",
 				"datatype": "int",
+				"dataRange": "0-32140800",
 				"defaultValue": "0",
 				"required": true,
 				"ontologyMappingType": "simple",
@@ -419,7 +442,8 @@
 				"description": "Restriction for use of data",
 				"valuemap": "AdditionalData;restriction",
 				"datatype": "enum",
-				"required": false,
+				"required": true,
+				"defaultValue": "public",
 				"ontologyMappingType": "enum",
 				"enumValues": {
 					"public": {
@@ -432,6 +456,14 @@
 						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#PrivateCFM13SharingRestrictionSemanticConcept"
 					}
 				}
+			},
+			"restriction_description": {
+				"description": "A human readable description of the restrictions for this indicator",
+				"datatype": "string",
+				"required": true,
+				"defaultValue": "&CFM13_GenerateRestrictionsDescription()",
+				"ontologyMappingType": "simple",
+				"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#IndicatorSimpleSharingRestrictionSemanticConcept"
 			},
 			"top_level_domain_owner": {
 				"description": "The country code and country that owns the DNS domain or IPv4 address",
@@ -509,7 +541,7 @@
 			},
 			"source_url_matchtype": {
 				"description": "The match for the source url",
-				"datatype": "complex",
+				"datatype": "string",
 				"requiredIfReferenceField": "classification_text",
 				"requiredIfReferenceValuesMatch": [ "URL Block:*" ],
 				"fields": [ "source_address_value" ],
@@ -524,7 +556,7 @@
 			},
 			"source_url_indicator_type": {
 				"description": "The match for the source url",
-				"datatype": "complex",
+				"datatype": "string",
 				"requiredIfReferenceField": "classification_text",
 				"requiredIfReferenceValuesMatch": [ "URL Block:*" ],
 				"fields": [ "source_address_value" ],

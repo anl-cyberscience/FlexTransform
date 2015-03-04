@@ -176,9 +176,9 @@
 				"memberof": "handling",
 				"ontologyMappingType": "none",
 				"subfields": { 
-								"handling_markingstructures_color": {"required": false}, 
+								"handling_markingstructures_color": {"required": false,  "primaryKeyMatch": "tlpMarking:TLPMarkingStructureType"}, 
 								"handling_markingstructures_xsitype": {"required": true, "primaryKey": true}, 
-								"handling_markingstructures_statement": {"required": false}
+								"handling_markingstructures_statement": {"required": false, "primaryKeyMatch": "simpleMarking:SimpleMarkingStructureType"}
 				}
 			},
 			"handling_markingstructures_color": {
@@ -388,6 +388,15 @@
 				"required": false,
 				"ontologyMappingType": "simple",
 				"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#UUIDv4ObservableIdentifierSemanticConcept"
+			},
+			"observable_sighting_count": {
+				"description": "The observable sighting_count field specifies how many different identical instances of the Observable may have been seen/sighted.",
+				"valuemap": "observable;sighting_count",
+				"datatype": "int",
+				"dataRange": "1-65535",
+				"required": false,
+				"ontologyMappingType": "simple",
+				"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#ActionThresholdSemanticConcept"
 			},
 			"observable_object_id": {
 				"description": "The observable object STIX ID",

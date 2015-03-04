@@ -65,8 +65,15 @@ class SchemaParser(object):
               Essentially this will consist of creating instances of the appropriate subclasses in an ABOX.
         '''
         MappedData = {}
+        
+        rowTypes = []
+        
+        if ('IndicatorData' in SourceData) :
+            rowTypes.append('IndicatorData')
+        if ('DocumentHeaderData' in SourceData) :
+            rowTypes.append('DocumentHeaderData')
                 
-        for rowType in SourceData :
+        for rowType in rowTypes :
             if (rowType in self.SchemaConfig) :
                 if (isinstance(SourceData[rowType],list)) :
                     MappedData[rowType] = []
@@ -85,7 +92,7 @@ class SchemaParser(object):
                 elif (isinstance(SourceData[rowType],dict)) :
                     DataRow = self._MapRowToSchema(SchemaParser.FlattenDict(SourceData[rowType]),rowType)
                     DataRow = self._GetDefaultValuesFromSchema(rowType, DataRow)
-                    self._CalculateFunctionValue(DataRow, None, None)
+                    self._CalculateFunctionValue(DataRow, MappedData, None)
                     MappedData[rowType] = DataRow
                 else :
                     raise Exception('NoParsableDataFound', "Data isn't in a parsable dictionary format")
@@ -882,7 +889,11 @@ class SchemaParser(object):
             newDict[fieldName]['ReferencedField'] = referencedField
             newDict[fieldName]['ReferencedValue'] = referencedValue
             
-            newDict.update(self._ValidateField(newDict[fieldName], fieldName, rowType))
+            try :
+                newDict.update(self._ValidateField(newDict[fieldName], fieldName, rowType))
+            except Exception as inst:
+                self.logging.warning("Validation failed for %s, %s", fieldName, inst)
+                newDict.pop(fieldName)
                 
         # Populate GroupRows with all required groups
         for k, v in self.SchemaConfig[rowType]['fields'].items() :              
@@ -1043,8 +1054,8 @@ class SchemaParser(object):
                             fieldGroup[requiredField]['ParsedValue'] = True
                             fieldGroup[requiredField]['groupedFields'] = []
                             newGroupRows = {}
-                            if (requiredField in groupRow) :
-                                newGroupRows[requiredField] = groupRow.pop(requiredField)
+                            if (requiredField in GroupRows) :
+                                newGroupRows[requiredField] = GroupRows[requiredField].copy()
                             else :
                                 newGroupRows[requiredField] = { 'fields': {} }
                             self._BuildFieldGroups(fieldGroup, rowType, newGroupRows)
@@ -1207,6 +1218,30 @@ class SchemaParser(object):
             # Build a new value based on the output format, if it exists
             # Regex match returns two values into a set. [0] is anything that isn't a field name and [1] is a field name
             # New value replaces [field] with the value of that field and outputs everything else out directly
+            if ( 'outputFormatCondition' in v ) :
+                condition = self._outputFormatRE.findall(v['outputFormatCondition'])
+                conditionMet = True
+                evalString = ''
+                if (condition) :
+                    for m in condition :
+                        if (m[0] != '') :
+                            evalString += m[0]
+                        if (m[1] != '') :
+                            if (m[1] in SourceDataRow and 'Value' in SourceDataRow[m[1]]) :
+                                evalString += SourceDataRow[m[1]]['Value']
+                            else :
+                                conditionMet = False
+                                break
+                    
+                    if (conditionMet and evalString) :
+                        if (not eval(evalString)) :
+                            # Condition is not met, do not generate output format
+                            del SourceDataRow[k]
+                            continue
+                else :
+                    # Condition is not met, do not generate output format
+                    del SourceDataRow[k]
+                    continue
             match = self._outputFormatRE.findall(v['outputFormat'])
             if (match) :
                 Value = ''
@@ -1221,6 +1256,7 @@ class SchemaParser(object):
                             raise Exception('NoDefaultValue', 'Default Value not defined for required field %s' % m[1])
                         else :
                             AllFields = False
+                            break
                         
                 # Check that all fields required for the output formated text exist, or delete the field from the results
                 if (AllFields) :
@@ -1330,6 +1366,39 @@ class SchemaParser(object):
                             if (v['Value'] is None) :
                                 # Still didn't find an indicator type, throw exception
                                 raise Exception('unknownIndicatorType', 'Indicator type could not be determined for data: %s' % row[args]['Value'])
+                            
+                        elif (function == 'CFM13_GenerateRestrictionsDescription') :
+                            Value = 'Requested Data Restrictions:\n'
+                            if ('ouo' in row and 'Value' in row['ouo']) :
+                                Value += "\tIndicator data is OUO: "
+                                if (row['ouo']['Value'] == '1') :
+                                    Value += "True\n"
+                                else :
+                                    Value += "False\r\n"
+                            if ('recon' in row and 'Value' in row['recon']) :
+                                Value += "\tReconnaissance Allowed: "
+                                if (row['recon']['Value'] == '0') :
+                                    Value += "True\n"
+                                else :
+                                    Value += "False\n"
+                            if ('restriction' in row and 'Value' in row['restriction']) :
+                                Value += "\tData Sharing Restrictions: %s\n" % row['restriction']['Value']
+                                
+                            v['Value'] = Value
+                            
+                        elif (function == 'CFM13_determineTLP') :
+                            tlp = 'GREEN'
+                            for subrow in TransformedData['IndicatorData'] :
+                                if ('ouo' in subrow) :
+                                    if (subrow['ouo']['Value'] == 1) :
+                                        tlp = 'AMBER'
+                                        break
+                                if ('restriction' in subrow) :
+                                    if (subrow['restriction']['Value'] == 'private') :
+                                        tlp = 'AMBER'
+                                        break
+                                    
+                            v['Value'] = tlp
                             
                         elif (function == 'CFM13_earliestIndicatorTime') :
                             # For now this function is specific to CFM13, it could be made generic if needed in other Schemas

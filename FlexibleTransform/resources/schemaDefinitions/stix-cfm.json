@@ -3,16 +3,16 @@
 		"fields": {
 			"handling_markingstructures": {
 				"subfields": { 
-								"handling_markingstructures_color": {"required": true}, 
+								"handling_markingstructures_color": {"required": true, "primaryKeyMatch": "tlpMarking:TLPMarkingStructureType"}, 
 								"handling_markingstructures_xsitype": {"required": true, "primaryKey": true}, 
-								"handling_markingstructures_statement": {"required": false}
+								"handling_markingstructures_statement": {"required": false, "primaryKeyMatch": "simpleMarking:SimpleMarkingStructureType"}
+				},
+				"defaultFields": {
+					"handling_markingstructures_xsitype": "tlpMarking:TLPMarkingStructureType"
 				}
 			},
 			"handling_markingstructures_color": {
 				"defaultValue": "GREEN"
-			},
-			"handling_markingstructures_xsitype": {
-				"defaultValue": "tlpMarking:TLPMarkingStructureType"
 			}
 		}
 	},
@@ -20,6 +20,68 @@
 		"fields": {
 			"indicator_types": {
 				"required": true
+			},
+			"indicator_handling": {
+				"description": "Collection of one or more handling instructions for the document",
+				"valuemap": "handling",
+				"datatype": "group",
+				"required": true,
+				"multiple": true,
+				"ontologyMappingType": "none",
+				"subfields": { 
+								"indicator_handling_controlledstructure": {"required": true, "primaryKey": true}, 
+								"indicator_handling_markingstructures" : {"required": true}
+				}
+			},
+			"indicator_handling_controlledstructure": {
+				"description": "The control level for the TLP marking",
+				"valuemap": "handling;controlled_structure", 
+				"datatype": "enum",
+				"required": false,
+				"defaultValue": "ancestor-or-self::stix:Indicator//node()",
+				"ontologyMappingType": "enum",
+				"memberof": "indicator_handling",
+				"enumValues": {
+					"ancestor-or-self::stix:Indicator//node()": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#XMLNodeControlledStructureSemanticConcept"
+					}
+				}
+			},
+			"indicator_handling_markingstructures": {
+				"description": "Collection of one or more handling markings for the document",
+				"valuemap": "handling;marking_structures",
+				"datatype": "group",
+				"required": false,
+				"multiple": true,
+				"memberof": "indicator_handling",
+				"ontologyMappingType": "none",
+				"subfields": { 
+								"indicator_handling_markingstructures_xsitype": {"required": true, "primaryKey": true}, 
+								"indicator_handling_markingstructures_statement": {"required": true, "primaryKeyMatch": "simpleMarking:SimpleMarkingStructureType"}
+				}
+			},
+			"indicator_handling_markingstructures_xsitype": {
+				"description": "The XSI type for the marking structure",
+				"valuemap": "handling;marking_structures;xsi:type", 
+				"datatype": "enum",
+				"required": false,
+				"defaultValue": "simpleMarking:SimpleMarkingStructureType",
+				"ontologyMappingType": "enum",
+				"memberof": "indicator_handling_markingstructures",
+				"enumValues": {
+					"simpleMarking:SimpleMarkingStructureType": {
+						"ontologyMapping": ""
+					}
+				}
+			},
+			"indicator_handling_markingstructures_statement": {
+				"description": "The simple marking statement for the document",
+				"valuemap": "handling;marking_structures;statement",
+				"datatype": "string",
+				"required": false,
+				"memberof": "indicator_handling_markingstructures",
+				"ontologyMappingType": "simple",
+				"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#IndicatorSimpleSharingRestrictionSemanticConcept"
 			}
 		}
 	}
