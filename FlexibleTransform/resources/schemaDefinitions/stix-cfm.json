@@ -25,7 +25,7 @@
 				"description": "Collection of one or more handling instructions for the document",
 				"valuemap": "handling",
 				"datatype": "group",
-				"required": true,
+				"required": false,
 				"multiple": true,
 				"ontologyMappingType": "none",
 				"subfields": { 

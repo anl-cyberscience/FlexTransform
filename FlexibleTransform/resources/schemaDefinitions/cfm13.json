@@ -465,6 +465,14 @@
 				"ontologyMappingType": "simple",
 				"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#IndicatorSimpleSharingRestrictionSemanticConcept"
 			},
+			"indicator_handling": {
+				"description": "Indicator has specific handling instructions",
+				"datatype": "string",
+				"required": true,
+				"defaultValue": "ancestor-or-self::stix:Indicator//node()",
+				"ontologyMappingType": "simple",
+				"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#XMLNodeControlledStructureSemanticConcept"
+			},
 			"top_level_domain_owner": {
 				"description": "The country code and country that owns the DNS domain or IPv4 address",
 				"valuemap": "AdditionalData;top level domain owner",

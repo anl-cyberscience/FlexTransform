@@ -797,7 +797,7 @@ class SchemaParser(object):
                         match = re.split("::", fieldName)
                         fieldName = match[0]
                         if (not match[1].endswith('*')) :
-                            Value = match[1]
+                            Value = "::".join(match[1:])
                 else :
                     self.logging.debug("Field %s does not map to target schema ontology", field)
                     continue
