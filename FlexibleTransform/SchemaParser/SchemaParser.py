@@ -277,6 +277,8 @@ class SchemaParser(object):
         
         newDict = {}
         
+        recheckFields = {}
+        
         ValueMap = self.ValueMap[rowType]
         
         # FIXME: It is wasteful to copy the whole schema field definition into each newly mapped field, it would be better to have a pointer back to the schema definition for the field
@@ -302,7 +304,14 @@ class SchemaParser(object):
                     raise Exception("InvalidSchemaMapping", self.SchemaConfig[rowType]['fields'][fieldName]['error'])
 
                 if ('ignore' in self.SchemaConfig[rowType]['fields'][fieldName] ) :
-                    continue    
+                    continue
+                
+                if (not skipTypeCheck and 'dependsOn' in self.SchemaConfig[rowType]['fields'][fieldName] ) :
+                    # Don't process fields that depend on other fields until the end, unless the dependency has already been processed
+                    dependsOn = self.SchemaConfig[rowType]['fields'][fieldName]['dependsOn']
+                    if (dependsOn not in newDict or 'Value' not in newDict[dependsOn]) :
+                        recheckFields[fieldName] = v
+                        continue
                               
                 ## TODO: This is where we could potentially make a reference rather than a copy
                 newDict[fieldName] = self.SchemaConfig[rowType]['fields'][fieldName].copy()
@@ -364,6 +373,13 @@ class SchemaParser(object):
                 
                 newDict.update(self._ValidateField(newDict[fieldName], fieldName, rowType))
                 
+        if (recheckFields) :
+            for k,v in recheckFields.items() :
+                dependsOn = self.SchemaConfig[rowType]['fields'][k]['dependsOn']
+                if (dependsOn in newDict and 'Value' in newDict[dependsOn]) :
+                    subDict = self._MapRowToSchema({k: v}, rowType, skipTypeCheck=True)
+                    newDict.update(subDict)
+
         for fieldName,v in self.SchemaConfig[rowType]['fields'].items() :
             if (v['datatype'] == 'complex') :
                 fields = v['fields']

@@ -472,6 +472,7 @@
 				"defaultValue": "dns",
 				"requiredIfReferenceField": "classification_text",
 				"requiredIfReferenceValuesMatch": [ "Domain Block:*" ],
+				"dependsOn": "source_dns_name",
 				"enumValues": {
 					"dns": {
 						"ontologyMapping": "none"
