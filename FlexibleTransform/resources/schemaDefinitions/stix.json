@@ -822,6 +822,7 @@
 				"datatype": "enum",
 				"required": false,
 				"ontologyMappingType": "enum",
+				"memberof": "observable_object_hashes",
 				"enumValues": {
 					"MD5": {
 						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#MD5FilehashIndicatorTypeSemanticComponent"
@@ -844,6 +845,7 @@
 				"defaultValue": "Equals",
 				"required": false,
 				"ontologyMappingType": "none",
+				"memberof": "observable_object_hashes",
 				"enumValues": {
 					"Equals": {
 						"ontologyMapping": ""
@@ -857,6 +859,7 @@
 				"required": false,
 				"ontologyMappingType": "referencedEnum",
 				"ontologyEnumField": "observable_object_hashes_type_value",
+				"memberof": "observable_object_hashes",
 				"ontologyMappingEnumValues": {
 					"MD5": {
 						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#MD5FilehashIndicatorValueSemanticComponent"
@@ -875,6 +878,7 @@
 				"datatype": "enum",
 				"required": false,
 				"ontologyMappingType": "none",
+				"memberof": "observable_object_hashes",
 				"enumValues": {
 					"Equals": {
 						"ontologyMapping": ""
@@ -888,6 +892,7 @@
 				"required": false,
 				"ontologyMappingType": "referencedEnum",
 				"ontologyEnumField": "observable_object_hashes_type_value",
+				"memberof": "observable_object_hashes",
 				"ontologyMappingEnumValues": {
 					"SSDEEP": {
 						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#SSDeepFilehashIndicatorValueSemanticComponent"
@@ -900,6 +905,7 @@
 				"datatype": "enum",
 				"required": false,
 				"ontologyMappingType": "none",
+				"memberof": "observable_object_hashes",
 				"enumValues": {
 					"Equals": {
 						"ontologyMapping": ""
@@ -970,6 +976,7 @@
 				"datatype": "string",
 				"required": false,
 				"ontologyMappingType": "simple",
+				"memberof": "observable_object_properties_values",
 				"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#RegkeySubkeyNameIndicatorValueSemanticComponent"
 			},
 			"observable_object_regkey_subkey_name_condition": {
@@ -978,6 +985,7 @@
 				"datatype": "enum",
 				"required": false,
 				"ontologyMappingType": "enum",
+				"memberof": "observable_object_properties_values",
 				"enumValues": {
 					"Equals": {
 						"ontologyMapping": ""
@@ -990,6 +998,7 @@
 				"datatype": "string",
 				"required": false,
 				"ontologyMappingType": "simple",
+				"memberof": "observable_object_properties_values",
 				"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#RegkeySubkeyValueIndicatorValueSemanticComponent"
 			},
 			"observable_object_regkey_subkey_data_condition": {
@@ -998,6 +1007,7 @@
 				"datatype": "enum",
 				"required": false,
 				"ontologyMappingType": "enum",
+				"memberof": "observable_object_properties_values",
 				"enumValues": {
 					"Equals": {
 						"ontologyMapping": ""
@@ -1109,6 +1119,7 @@
 				"valuemap": "observable;object;properties;http_request_response;http_client_request;http_request_header;parsed_header;user_agent;value", 
 				"datatype": "string",
 				"required": false,
+				"memberof": "observable_object_http_request",
 				"ontologyMappingType": "simple",
 				"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#HTTPClientRequestHeaderUserAgentIndicatorValueSemanticComponent"
 			},
@@ -1118,7 +1129,8 @@
 				"datatype": "enum",
 				"defaultValue": "Equals",
 				"requiredIfReferenceField": "observable_object_http_client_request_user_agent_header_value",
-				"requiredIfReferenceValuesMatch": [ "*" ], 
+				"requiredIfReferenceValuesMatch": [ "*" ],
+				"memberof": "observable_object_http_request",
 				"ontologyMappingType": "enum",
 				"enumValues": {
 					"Equals": {
@@ -1139,6 +1151,7 @@
 				"description": "Reference to another STIX object that contains URL information, currently not processed by Flexible Transform",
 				"datatype": "string",
 				"valuemap": "observable;object;properties;links;object_reference",
+				"memberof": "observable_object_links",
 				"ontologyMappingType": "none",
 				"ignore": true
 			},
@@ -1155,6 +1168,7 @@
 				"description": "Reference to another STIX object that contains URL information, currently not processed by Flexible Transform",
 				"datatype": "string",
 				"valuemap": "observable;object;properties;attachments;object_reference",
+				"memberof": "observable_object_attachments_reference",
 				"ontologyMappingType": "none",
 				"ignore": true
 			},
