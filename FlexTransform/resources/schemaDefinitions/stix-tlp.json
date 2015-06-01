@@ -1,0 +1,19 @@
+{
+	"DocumentHeaderData": {
+		"fields": {
+			"handling_markingstructures": {
+				"subfields": { 
+								"handling_markingstructures_color": {"required": true, "primaryKeyMatch": "tlpMarking:TLPMarkingStructureType"}, 
+								"handling_markingstructures_xsitype": {"required": true, "primaryKey": true}, 
+								"handling_markingstructures_statement": {"required": false, "primaryKeyMatch": "simpleMarking:SimpleMarkingStructureType"}
+				},
+				"defaultFields": {
+					"handling_markingstructures_xsitype": "tlpMarking:TLPMarkingStructureType"
+				}
+			},
+			"handling_markingstructures_color": {
+				"defaultValue": "GREEN"
+			}
+		}
+	}
+}
