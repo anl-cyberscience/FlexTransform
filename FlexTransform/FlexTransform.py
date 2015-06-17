@@ -4,10 +4,10 @@ Created on Jul 27, 2014
 @author: ahoying
 '''
 
-from FlexTransform.Configuration import Config
-# from OntologyOracle import Oracle
 import logging
-from FlexTransform.OntologyOracle import OntologyOracle
+
+from .Configuration import Config
+from .OntologyOracle import OntologyOracle
 
 # TODO: Document in Sphinx compatible format
 # TODO: Optimization - Too much pass by value for large dictionary objects currently, need to move to more pass by reference to minimize cpu and memory resource usage

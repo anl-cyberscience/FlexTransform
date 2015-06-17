@@ -5,6 +5,7 @@ Created on Nov 17, 2014
 '''
 
 import logging
+import json
 
 class DictionaryParser(object):
     '''
@@ -19,11 +20,56 @@ class DictionaryParser(object):
         self.ParsedData = {}
         self.logging = logging.getLogger('FlexTransform.DictionaryParser')
         
+        self.indicatorsKey = ""
+        
     def ValidateConfig(self, config):
         '''
-        Validate Dictionary Parser specific configuration options, no options required
+        Validate Dictionary Parser specific configuration options
+        
+        The indicatorsKey sets the key in the json document that contains the indicators, or "" if the root of the document contains the indicators
         '''
-        pass
+        if (config.has_section('DICT')) :
+            if (config.has_option('DICT', 'IndicatorsKey')) :
+                self.indicatorsKey = config['DICT']['IndicatorsKey']
+    
+    def Read(self,file):
+        '''
+        Read file and parse into Transform object
+        '''
+        
+        self.ParsedData = {}
+        
+        jsondoc = json.load(file)
+        
+        if (self.indicatorsKey != "") :
+            if (self.indicatorsKey in jsondoc) :
+                indicators = jsondoc.pop(self.indicatorsKey)
+                self.ParsedData['IndicatorData'] = []
+                
+                if (isinstance(indicators,list)) :
+                    for indicator in indicators :
+                        if (isinstance(indicator,dict)) :
+                            self.ParsedData['IndicatorData'].append(indicator)
+                        else :
+                            raise Exception('WrongType','Indicator type is not a dictionary: ' + indicator)
+                        
+                elif (isinstance(indicators,dict)) :
+                    self.ParsedData['IndicatorData'].append(indicators)
+                
+                else :
+                    raise Exception('WrongType','Indicator type is not a list or dictionary: ' + indicators)
+                
+                # Everything else in the document is considered to be header data
+                if (len(jsondoc)) :
+                    self.ParsedData['DocumentHeaderData'] = jsondoc
+                
+            else :
+                raise Exception('NoIndicatorData', 'Defined indicator key, ' + self.indicatorsKey + ', does not exist in source file')
+                
+        else :
+            raise Exception('NotYetImplemented', 'Paring json dictionaries without an indicatorsKey is not currently supported')
+        
+        return self.ParsedData
                 
     def Finalize(self, MappedData):
         '''
@@ -39,7 +85,6 @@ class DictionaryParser(object):
         '''
         Write the data as json to the file.
         '''
-        import json
         
         json.dump(FinalizedData, file, sort_keys=True, indent=4)
     

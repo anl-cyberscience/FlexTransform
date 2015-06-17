@@ -67,6 +67,7 @@
 				"valuemap": "AnalyzerTime;@ntpstamp", 
 				"datatype": "string",
 				"ontologyMappingType": "none",
+				"nonStandard": true
 				"ignore": true
 			},
 			"create_time": {
@@ -74,6 +75,7 @@
 				"valuemap": "CreateTime;#text", 
 				"datatype": "string",
 				"ontologyMappingType": "none",
+				"nonStandard": true
 				"ignore": true
 			},
 			"create_time_ntptime": {
@@ -81,6 +83,7 @@
 				"valuemap": "CreateTime;@ntpstamp", 
 				"datatype": "string",
 				"ontologyMappingType": "none",
+				"nonStandard": true
 				"ignore": true
 			},
 			"report_type": {
@@ -93,6 +96,10 @@
 				"enumValues": { 
 					"alerts": {
 						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#ReportTypeSemanticConcept"
+					},
+					"Alert": {
+						"ontologyMapping": "",
+						"nonStandard": true
 					}
 				}
 			},

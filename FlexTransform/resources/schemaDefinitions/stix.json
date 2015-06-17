@@ -273,15 +273,16 @@
 	"IndicatorData": {
 		"types": {
 			"DNS-Hostname-Block": [ 
-				{ "observable_object_type": "Domain Name" } 
+				{ "observable_object_type": "Domain Name" },
+				{ "observable_object_type": "FQDN" }
 			],
-			"IPv4-Address-Block": [ 
+			"IPv4-Address-Block": [
 				{ "observable_object_category": "ipv4-addr", "observable_object_xsitype": "AddressObjectType" }
 			],
 			"IPv6-Address-Block": [
 				{ "observable_object_category": "ipv6-addr", "observable_object_xsitype": "AddressObjectType" }
 			],
-			"URL-Block": [ 
+			"URL-Block": [
 				{ "observable_object_type": "URL" }
 			],
 			"Malicious-Email-Block": [ { "observable_object_xsitype": "EmailMessageObjectType" } ],
@@ -290,7 +291,8 @@
 				{ "observable_object_xsitype": "FileObjectType" }  
 			],
 			"Registry-Key-IOC": [ { "observable_object_xsitype": "WindowsRegistryKeyObjectType" } ],
-			"Mutex-IOC": [ { "observable_object_xsitype": "MutexObjectType" } ]
+			"Mutex-IOC": [ { "observable_object_xsitype": "MutexObjectType" } ],
+			"Artifact": [ { "observable_object_xsitype": "ArtifactObjectType" } ]
 		},
 		"fields": {
 			"description": {
@@ -302,6 +304,14 @@
 				"ontologyMappingType": "simple",
 				"__ontologyMapping": "http://www.anl.gov/cfm/transform.owl#IPv4IndicatorTypeSemanticConcept",
 				"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#IndicatorDescriptionSemanticConcept"
+			},
+			"indicator_title": {
+				"description": "Title of indicator",
+				"valuemap": "title",
+				"datatype": "string",
+				"required": false,
+				"ontologyMappingType": "simple",
+				"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#IndicatorTitleSemanticConcept"
 			},
 			"indicator_cybox_version": {
 				"description": "The cybox version for the indicator data in the row",
@@ -338,7 +348,7 @@
 				"description": "Collection of one or more indicator types for the indicator set",
 				"valuemap": "indicator_types",
 				"datatype": "group",
-				"required": true,
+				"required": false,
 				"multiple": true,
 				"ontologyMappingType": "none",
 				"subfields": {
@@ -377,7 +387,10 @@
 						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#IndicatorCategoryMalwareArtifactsSemanticConcept"
 					},
 					"File Hash Watchlist": {
-						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#IndicatorCategoryFileHashWatchlistSemanticConcept"
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#IndicatorCategoryFileHashWatchlistSemanticConcept",
+						"reverseOntologyMappings": [
+							"http://www.anl.gov/cfm/transform.owl#MD5FilehashIndicatorValueSemanticComponent"
+						]
 					},
 					"Malicious E-mail": {
 						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#IndicatorCategoryMaliciousEmailSemanticConcept"
@@ -445,10 +458,16 @@
 				"enumValues": {
 					"ipv4-addr": {
 						"__ontologyMapping": "http://www.anl.gov/cfm/transform.owl#IPv4AddressIndicatorSemanticComponent",
-						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#IPv4IndicatorTypeSemanticConcept"
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#IPv4IndicatorTypeSemanticConcept",
+						"reverseOntologyMappings": [
+							"http://www.anl.gov/cfm/transform.owl#IPv4AddressIndicatorValueSemanticComponent"
+						]
 					},
 					"ipv6-addr": {
-						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#IPv6IndicatorTypeSemanticConcept"
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#IPv6IndicatorTypeSemanticConcept",
+						"reverseOntologyMappings": [
+							"http://www.anl.gov/cfm/transform.owl#IPv6AddressIndicatorValueSemanticComponent"
+						]
 					}
 				}
 			},
@@ -456,9 +475,9 @@
 				"description": "The type of the indicator object",
 				"valuemap": "observable;object;properties;type", 
 				"datatype": "enum",
-				"defaultValue": "Domain Name",
+				"defaultValue": "URL",
 				"requiredIfReferenceField": "observable_object_xsitype",
-				"requiredIfReferenceValues": [ "URIObjectType", "DomainNameObjectType" ], 
+				"requiredIfReferenceValues": [ "URIObjectType" ], 
 				"ontologyMappingType": "enum",
 				"enumValues": {
 					"URL": {
@@ -468,9 +487,18 @@
 						]
 					},
 					"Domain Name": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#DNSDomainNameIndicatorTypeSemanticComponent"
+					},
+					"FQDN": {
 						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#DNSDomainNameIndicatorTypeSemanticComponent",
 						"reverseOntologyMappings": [
 							"http://www.anl.gov/cfm/transform.owl#DNSIndicatorValueSemanticComponent"
+						]
+					},
+					"File": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#ArtifactFileIndicatorTypeSemanticComponent",
+						"reverseOntologyMappings": [
+							"http://www.anl.gov/cfm/transform.owl#ArtifactRawObjectIndicatorValueSemanticComponent"
 						]
 					}
 				}
@@ -502,7 +530,10 @@
 						]
 					},
 					"FileObjectType": {
-						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#FileObjectSchemaTypeSpecification"
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#FileObjectSchemaTypeSpecification",
+						"reverseOntologyMappings": [
+							"http://www.anl.gov/cfm/transform.owl#MD5FilehashIndicatorValueSemanticComponent"
+						]
 					},
 					"EmailMessageObjectType": {
 						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#EmailMessageObjectSchemaTypeSpecification"
@@ -518,6 +549,12 @@
 					},
 					"HTTPSessionObjectType": {
 						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#HTTPSessionObjectSchemaTypeSpecification"
+					},
+					"ArtifactObjectType": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#ArtifactObjectSchemaTypeSpecification",
+						"reverseOntologyMappings": [
+							"http://www.anl.gov/cfm/transform.owl#ArtifactRawObjectIndicatorValueSemanticComponent"
+						]
 					}
 				}
 			},
@@ -638,7 +675,7 @@
 				"valuemap": "observable;object;properties;value;value", 
 				"datatype": "string",
 				"requiredIfReferenceField": "observable_object_type",
-				"requiredIfReferenceValues": [ "URL", "Domain Name" ], 
+				"requiredIfReferenceValues": [ "URL", "Domain Name", "FQDN" ], 
 				"ontologyMappingType": "referencedEnum",
 				"ontologyEnumField": "observable_object_type",
 				"ontologyMappingEnumValues": {
@@ -649,6 +686,9 @@
 					"Domain Name": {
 						"__ontologyMapping": "http://www.anl.gov/cfm/transform.owl#DNSHostNameIPv4IndicatorMetadataSemanticComponent",
 						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#DNSIndicatorValueSemanticComponent"
+					},
+					"FQDN": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#DNSIndicatorValueSemanticComponent"
 					}
 				}
 			},
@@ -658,7 +698,7 @@
 				"datatype": "enum",
 				"defaultValue": "Equals",
 				"requiredIfReferenceField": "observable_object_type",
-				"requiredIfReferenceValues": [ "URL", "Domain Name" ], 
+				"requiredIfReferenceValues": [ "URL", "Domain Name", "FQDN" ], 
 				"ontologyMappingType": "enum",
 				"enumValues": {
 					"Equals": {
@@ -873,7 +913,10 @@
 				"memberof": "observable_object_hashes",
 				"enumValues": {
 					"MD5": {
-						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#MD5FilehashIndicatorTypeSemanticComponent"
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#MD5FilehashIndicatorTypeSemanticComponent",
+						"reverseOntologyMappings": [
+							"http://www.anl.gov/cfm/transform.owl#MD5FilehashIndicatorValueSemanticComponent"
+						]
 					},
 					"SHA1": {
 						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#SHA1FilehashIndicatorTypeSemanticComponent"
@@ -1110,7 +1153,7 @@
 				"description": "Is the url_label object obfuscated",
 				"valuemap": "observable;object;properties;url_label;is_obfuscated", 
 				"datatype": "enum",
-				"defaultValue": "Equals",
+				"defaultValue": "True",
 				"requiredIfReferenceField": "observable_object_urllabel_value",
 				"requiredIfReferenceValuesMatch": [ "*" ], 
 				"ontologyMappingType": "enum",
@@ -1217,6 +1260,80 @@
 				"memberof": "observable_object_attachments_reference",
 				"ontologyMappingType": "none",
 				"ignore": true
+			},
+			"observable_object_rawartifact": {
+				"description": "Reference to another STIX object that contains URL information, currently not processed by Flexible Transform",
+				"datatype": "string",
+				"valuemap": "observable;object;properties;raw_artifact",
+				"requiredIfReferenceField": "observable_object_xsitype",
+				"requiredIfReferenceValuesMatch": [ "ArtifactObjectType" ],
+				"ontologyMappingType": "simple",
+				"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#ArtifactRawObjectIndicatorValueSemanticComponent"
+			},
+			"observable_object_contenttype": {
+				"description": "The content type of the indicator object",
+				"valuemap": "observable;object;properties;content_type", 
+				"datatype": "string",
+				"required": false, 
+				"ontologyMappingType": "simple",
+				"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#ArtifactContentTypeSemanticComponent"
+			},
+			"observable_object_suspectedmalicious": {
+				"description": "True if artifact is suspected malicious",
+				"valuemap": "observable;object;properties;suspected_malicious", 
+				"datatype": "enum",
+				"required": false, 
+				"ontologyMappingType": "enum",
+				"enumValues": {
+					"True": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#SuspectedMaliciousIndicatorMetadataSemanticConcept"
+					},
+					"False": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#NotSuspectedMaliciousIndicatorMetadataSemanticConcept"
+					}
+				}
+			},
+			"observable_object_packaging": {
+				"description": "Collection of one or more artifact packaging details",
+				"valuemap": "observable;object;properties;packaging",
+				"datatype": "group",
+				"required": false,
+				"multiple": true,
+				"ontologyMappingType": "none",
+				"subfields": {
+								"observable_object_packaging_packagingtype": {"required": true, "primaryKey": true}, 
+								"observable_object_packaging_algorithm": {"required": true}
+				}
+			},
+			"observable_object_packaging_algorithm": {
+				"description": "The algorithm used to encode the artifact",
+				"valuemap": "observable;object;properties;packaging;algorithm", 
+				"datatype": "enum",
+				"required": false,
+				"memberof": "observable_object_packaging",
+				"ontologyMappingType": "enum",
+				"enumValues": {
+					"Base64": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#ArtifactRawObjectBase64EncodingAlgorithmSemanticComponent"
+					}
+				}
+			},
+			"observable_object_packaging_packagingtype": {
+				"description": "The match condition for the user agent header object in the http client request",
+				"valuemap": "observable;object;properties;packaging;packaging_type", 
+				"datatype": "enum",
+				"defaultValue": "encoding",
+				"required": false,
+				"memberof": "observable_object_packaging",
+				"ontologyMappingType": "enum",
+				"enumValues": {
+					"encoding": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#ArtifactRawObjectPackageEncodingSemanticComponent",
+						"reverseMapping": [
+							"http://www.anl.gov/cfm/transform.owl#ArtifactRawObjectBase64EncodingAlgorithmSemanticComponent"
+						]
+					}
+				}
 			},
 			"observable_keywords": {
 				"description": "Key words related to this observable",

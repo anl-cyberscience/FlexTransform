@@ -85,7 +85,7 @@ class SchemaParser(object) :
                                 self.MappedData[rowType].append(DataRow)
                             except Exception as inst :
                                 self.logging.exception(inst)
-                                self.logging.debug(str(SchemaParser.FlattenDict(row)))
+                                # self.logging.debug(str(SchemaParser.FlattenDict(row)))
                         else :
                             raise Exception('NoParsableDataFound', "Data isn't in a parsable dictionary format")
                 elif (isinstance(SourceData[rowType],dict)) :
@@ -261,7 +261,7 @@ class SchemaParser(object) :
                         args = match.group(2)
                         if (args and args in self.SchemaConfig[rowType]['fields']) :
                             if (field in FieldOrder and ( args not in FieldOrder or FieldOrder[args] >= FieldOrder[field] ) ) :
-                                FieldOrder[args] = FieldOrder[field] - 1
+                                FieldOrder[field] = FieldOrder[args] + 1
                                 
                 elif ('outputFormat' in fieldDict) :
                     match = self._outputFormatRE.findall(fieldDict['outputFormat'])

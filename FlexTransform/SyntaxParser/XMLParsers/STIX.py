@@ -12,7 +12,7 @@ import copy
 import uuid
 import json
 
-from FlexTransform.SchemaParser.TransformFunctions import STIXFunctions
+from FlexTransform.SchemaParser.TransformFunctions import STIXFunctions  
 
 currentdir = os.path.dirname(__file__)
             
@@ -27,6 +27,12 @@ from stix.core import STIXPackage  # @UnresolvedImport
 from stix.utils import set_id_namespace # @UnresolvedImport
 from stix.utils.parser import UnsupportedVersionError  # @UnresolvedImport
 from stix.utils.idgen import IDGenerator # @UnresolvedImport
+
+# Load special STIX extensions if module is present
+try :
+    from ISAMarkingExtension.isamarkings import ISAMarkingStructure  # @UnusedImport
+except ImportError :
+    pass
 
 class STIX(object):
     '''
