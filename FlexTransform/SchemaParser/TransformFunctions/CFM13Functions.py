@@ -70,21 +70,25 @@ class CFM13Functions(object):
             raise Exception('FunctionNotDefined','Function %s is not defined in CFM13Functions for document scope %s' % (FunctionName, Scope))
                    
         if (FunctionName == 'CFM13_GenerateRestrictionsDescription') :
-            Value = 'Requested Data Restrictions:\n'
+            Value = ''
             if ('ouo' in args['currentRow'] and 'Value' in args['currentRow'] ['ouo']) :
-                Value += "\tIndicator data is OUO: "
+                Value += "OUO="
                 if (args['currentRow'] ['ouo']['Value'] == '1') :
-                    Value += "True\n"
+                    Value += "True"
                 else :
-                    Value += "False\n"
+                    Value += "False"
             if ('recon' in args['currentRow'] and 'Value' in args['currentRow']['recon']) :
-                Value += "\tReconnaissance Allowed: "
+                if (Value != '') :
+                    Value += ", "
+                Value += "ReconAllowed="
                 if (args['currentRow']['recon']['Value'] == '0') :
-                    Value += "True\n"
+                    Value += "True"
                 else :
-                    Value += "False\n"
+                    Value += "False"
             if ('restriction' in args['currentRow'] and 'Value' in args['currentRow']['restriction']) :
-                Value += "\tData Sharing Restrictions: %s\n" % args['currentRow']['restriction']['Value']
+                if (Value != '') :
+                    Value += ", "
+                Value += "SharingRestrictions=%s" % args['currentRow']['restriction']['Value']
 
         elif (FunctionName == 'CFM13_determineTLP') :
             Value = 'GREEN'

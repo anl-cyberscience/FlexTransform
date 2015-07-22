@@ -67,7 +67,7 @@
 				"valuemap": "AnalyzerTime;@ntpstamp", 
 				"datatype": "string",
 				"ontologyMappingType": "none",
-				"nonStandard": true
+				"nonStandard": true,
 				"ignore": true
 			},
 			"create_time": {
@@ -75,7 +75,7 @@
 				"valuemap": "CreateTime;#text", 
 				"datatype": "string",
 				"ontologyMappingType": "none",
-				"nonStandard": true
+				"nonStandard": true,
 				"ignore": true
 			},
 			"create_time_ntptime": {
@@ -83,7 +83,7 @@
 				"valuemap": "CreateTime;@ntpstamp", 
 				"datatype": "string",
 				"ontologyMappingType": "none",
-				"nonStandard": true
+				"nonStandard": true,
 				"ignore": true
 			},
 			"report_type": {

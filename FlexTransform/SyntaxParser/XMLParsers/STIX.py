@@ -55,6 +55,8 @@ class STIX(object):
         
         self.UUIDNamespace = uuid.UUID('{1087daa0-d52a-4a86-a673-065da63f0bbd}')
         
+        self.OutputSyntax = "XML"
+        
         STIXFunctions.RegisterFunctions()
         
     def ValidateConfig(self,config):
@@ -71,6 +73,10 @@ class STIX(object):
                 self.STIXIDPrefix = config['STIX']['STIXIDPrefix']
             if (config.has_option('STIX', 'STIXReplaceNamespace')) :
                 self.STIXReplaceNamespace = config.getboolean('STIX', 'STIXReplaceNamespace', fallback=False)
+            if (config.has_option('STIX', 'OutputSyntax')) :
+                self.OutputSyntax = config['STIX']['OutputSyntax']
+                if (self.OutputSyntax != "XML" and self.OutputSyntax != "JSON") :
+                    raise Exception('InvalidConfigurationValue', 'OutputSyntax must be JSON or XML, not ' + self.OutputSyntax)
         
     def Read(self, stixfile, xmlparser = None):
         '''
@@ -176,7 +182,11 @@ class STIX(object):
                                               'indicators': ParsedData['IndicatorData']})
         
         
-        stixfile.write(stix_package.to_xml())
+        if (self.OutputSyntax == "XML") :
+            stixfile.write(stix_package.to_xml())
+        elif (self.OutputSyntax == "JSON") :
+            json.dump(stix_package.to_dict(), stixfile, sort_keys=True, indent=4)
+            
         # stixfile.close()
 
     def _ValidateURIType(self, row):

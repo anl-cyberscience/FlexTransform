@@ -1329,7 +1329,7 @@
 				"enumValues": {
 					"encoding": {
 						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#ArtifactRawObjectPackageEncodingSemanticComponent",
-						"reverseMapping": [
+						"reverseOntologyMappings": [
 							"http://www.anl.gov/cfm/transform.owl#ArtifactRawObjectBase64EncodingAlgorithmSemanticComponent"
 						]
 					}
