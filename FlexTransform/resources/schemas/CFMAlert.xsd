@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema targetNamespace="http://www.anl.gov/cfm/2.0/current/CFMAlert"
+		xmlns="http://www.w3.org/2001/XMLSchema" 
+		xmlns:tns="http://www.anl.gov/cfm/2.0/current/CFMAlert" 
+		elementFormDefault="qualified">
+    <element name="CFMAlert">
+    	<complexType>
+    		<sequence>
+    			<element name="Version" type="string" minOccurs="1"
+    				maxOccurs="1">
+    				<annotation>
+    					<documentation>
+    						The version of the CFMAlert schema being
+    						used.
+    					</documentation>
+    				</annotation>
+    			</element>
+    			<element name="Alert" type="tns:AlertType" maxOccurs="unbounded" minOccurs="1"></element>
+    		</sequence>
+    	</complexType>
+    </element>
+
+    <complexType name="IndicatorType">
+    	<sequence>
+    		<element name="Type" type="anyURI" maxOccurs="1"
+    			minOccurs="1">
+                <annotation>
+                	<documentation>Should be set to the IRI of the SignalDomain referenced from the KIDS ontology.</documentation>
+                </annotation>
+    		</element>
+    		<element name="Constraint" type="anyURI"
+    			maxOccurs="1" minOccurs="1">
+                <annotation>
+                	<documentation>Should be set to the IRI of the SignalCanonicalRepresentation referenced from the KIDS ontology.</documentation>
+                </annotation>
+    		</element>
+    		<element name="Value" type="string" maxOccurs="1"
+    			minOccurs="1">
+                <annotation>
+                	<documentation>The value of the signal</documentation>
+                </annotation>
+    		</element>
+    	</sequence>
+    </complexType>
+
+    <complexType name="RelatedListType">
+    	<sequence>
+    		<element name="RelatedAlert" type="tns:RelatedAlertType" maxOccurs="unbounded" minOccurs="1"></element>
+    	</sequence>
+    </complexType>
+
+    <complexType name="RelatedAlertType">
+    	<sequence>
+    		<element name="RelatedID" type="anyURI" maxOccurs="1" minOccurs="1"></element>
+    		<element name="RelatedDescription" type="string" maxOccurs="1" minOccurs="0"></element>
+    	</sequence>
+    </complexType>
+
+    <complexType name="IndicatorSetType">
+  	    <group minOccurs="1" maxOccurs="1" ref="tns:IndicatorComponent" />
+    </complexType>
+
+    <complexType name="CompositeIndicatorType">
+    	<choice>
+    		<element name="And"
+    			type="tns:BooleanIndicatorCombinationType">
+    		</element>
+    		<element name="Or" type="tns:BooleanIndicatorCombinationType"></element>
+    	</choice>
+    </complexType>
+
+    <complexType name="BooleanIndicatorCombinationType">
+    	<sequence>
+    	    <group minOccurs="1" maxOccurs="unbounded" ref="tns:IndicatorComponent" />
+    	</sequence>
+    </complexType>
+    
+	<group name="IndicatorComponent">
+		<choice>
+	    	<element name="Indicator" type="tns:IndicatorType"></element>
+	    	<element name="CompositeIndicator" type="tns:CompositeIndicatorType"></element>
+	    </choice>
+	</group>
+
+	<complexType name="AlertType">
+		<sequence>
+			<element name="AlertID" type="anyURI" maxOccurs="1"
+				minOccurs="1">
+			</element>
+			<element name="AlertTimestamp" type="int" maxOccurs="1" minOccurs="1"></element>
+			<element name="RelatedList" type="tns:RelatedListType"
+				maxOccurs="1" minOccurs="0">
+			</element>
+			<element name="IndicatorSet" type="tns:IndicatorSetType"
+				maxOccurs="1" minOccurs="1">
+			</element>
+			<element name="ReasonList" type="tns:ReasonListType"
+				maxOccurs="1" minOccurs="1">
+			</element>
+			<element name="ActionList" type="tns:ActionListType"
+				maxOccurs="1" minOccurs="1">
+			</element>
+			<element name="Comment" minOccurs="0" maxOccurs="1"
+				type="string" />
+			<element name="AlertExtendedAttribute"
+				type="tns:AlertExtendedAttributeType" maxOccurs="unbounded" minOccurs="0">
+			</element>
+		</sequence>
+	</complexType>
+
+	<complexType name="AlertExtendedAttributeType">
+		<sequence>
+			<element name="Field" type="anyURI" maxOccurs="1" minOccurs="1"></element>
+			<element name="Value" type="string" maxOccurs="1" minOccurs="0"></element>
+		</sequence>
+	</complexType>
+
+	<complexType name="ActionListType">
+		<sequence>
+			<element name="Action" maxOccurs="unbounded" minOccurs="1">
+				<complexType>
+					<sequence>
+						<element name="ActionCategory" maxOccurs="1"
+							minOccurs="1" type="string">
+							<annotation>
+								<documentation>
+									The category of action which was
+									taken, e.g. "block-installed".
+								</documentation>
+							</annotation>
+						</element>
+						<element name="ActionDescription" maxOccurs="1"
+							minOccurs="0" type="string">
+							<annotation>
+								<documentation>
+									A description of the action which was taken - intended to be human readable.
+								</documentation>
+							</annotation>
+						</element>
+						<element name="ActionTimestamp" type="int" maxOccurs="1" minOccurs="0"></element>
+					</sequence>
+				</complexType>
+			</element>
+		</sequence>
+	</complexType>
+
+    <complexType name="ReasonListType">
+    	<sequence>
+			<element name="Reason" maxOccurs="unbounded" minOccurs="1">
+				<complexType>
+					<sequence>
+						<element name="ReasonCategory" maxOccurs="1"
+							minOccurs="1" type="string">
+							<annotation>
+								<documentation>
+									A general category of malicious
+									behavior, e.g. scanning.
+								</documentation>
+							</annotation>
+						</element>
+						<element name="ReasonDescription" maxOccurs="1"
+							minOccurs="0" type="string">
+							<annotation>
+								<documentation>
+									A specific description of the
+									behavior which prompted the alert,
+									e.g. "Excessive requests for
+									non-existent web pages".
+								</documentation>
+							</annotation>
+						</element>
+					</sequence>
+				</complexType>
+			</element>
+		</sequence>
+    </complexType>
+</schema>

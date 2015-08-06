@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema"
+		targetNamespace="http://www.anl.gov/cfm/2.0/current/CFMDownload"
+		xmlns:tns="http://www.anl.gov/cfm/2.0/current/CFMDownload"
+		elementFormDefault="qualified">
+
+    <element name="CFMDownload">
+    
+    <complexType>
+    	<sequence>
+    		<element name="Version" type="string" maxOccurs="1" minOccurs="1"></element>
+    		<element name="FileSet" type="tns:FileSetType" maxOccurs="1"
+    			minOccurs="1">
+    		</element>
+    		<element name="Files" type="string" maxOccurs="1"
+    			minOccurs="1">
+    		</element>
+    		<element name="DownloadExtendedAttribute"
+    			type="tns:DownloadExtendedAttributetype" maxOccurs="unbounded"
+    			minOccurs="0">
+    		</element>
+    	</sequence>
+    </complexType>
+    </element>
+
+    <complexType name="FileSetType">
+    	<sequence>
+    		<element name="FileElement" type="tns:FileElementType"
+    			maxOccurs="unbounded" minOccurs="1">
+    		</element>
+    	</sequence>
+    </complexType>
+
+    <complexType name="FileElementType">
+    	<sequence>
+    		<element name="UploadID" type="anyURI" maxOccurs="1"
+				minOccurs="1">
+			</element>
+    		<element name="FileName" type="string" maxOccurs="1" minOccurs="1"></element>
+    		<element name="SendingSite" type="anyURI" maxOccurs="1" minOccurs="1"></element>
+    		<element name="SentTimestamp" type="string" maxOccurs="1"
+    			minOccurs="1">
+    		</element>
+    		<element name="PayloadType" type="anyURI" maxOccurs="1"
+    			minOccurs="1">
+    		</element>
+    		<element name="PayloadFormat" type="anyURI" maxOccurs="1"
+    			minOccurs="1">
+    		</element>
+    		<element name="DataSensitivity" type="anyURI" maxOccurs="1"
+    			minOccurs="1">
+    		</element>
+    		<element name="SharingRestrictions" type="anyURI"
+    			maxOccurs="1" minOccurs="1">
+    		</element>
+    		<element name="ReconPolicy" type="anyURI" maxOccurs="1"
+    			minOccurs="1">
+    		</element>
+    		<element name="DownloadElementExtendedAttribute"
+    			type="tns:DownloadExtendedAttributetype" maxOccurs="unbounded"
+    			minOccurs="0">
+    		</element>
+    	</sequence>
+    </complexType>
+
+    <complexType name="DownloadExtendedAttributetype">
+    	<sequence>
+    		<element name="Field" type="anyURI" maxOccurs="1" minOccurs="1"></element>
+    		<element name="Value" type="string" maxOccurs="1" minOccurs="1"></element>
+    	</sequence>
+    </complexType>
+</schema>

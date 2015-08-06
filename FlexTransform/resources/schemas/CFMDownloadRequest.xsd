@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema targetNamespace="http://www.anl.gov/cfm/2.0/current/CFMRequest"
+	    xmlns="http://www.w3.org/2001/XMLSchema"
+	    xmlns:tns="http://www.anl.gov/cfm/2.0/current/CFMRequest"
+	    elementFormDefault="qualified">
+	    <element name="CFMRequest">
+	    	<annotation>
+	    		<documentation>
+	    			A CFM request is an encapsulated prompt for a client
+	    			for information from the repository.
+	    		</documentation>
+	    	</annotation>
+
+
+	    <complexType>
+	    	<sequence>
+	    		<element name="Version" type="string" maxOccurs="1" minOccurs="1"></element>
+	    		<element name="RequestingSite" type="anyURI" maxOccurs="1" minOccurs="1"></element>
+	    		<element name="StartTime" type="int" maxOccurs="1" minOccurs="0"></element>
+	    		<element name="EndTime" type="int" maxOccurs="1" minOccurs="0"></element>
+	    		<element name="Senders" type="tns:SendersType" maxOccurs="1" minOccurs="0"></element>
+	    		<element name="DataSensitivity" type="anyURI" maxOccurs="1" minOccurs="0"></element>
+	    		<element name="ReconPolicy" type="anyURI" maxOccurs="1" minOccurs="0"></element>
+	    		<element name="DownloadRequestExtendedAttribute" type="tns:DownloadRequestExtendedAttributeType" maxOccurs="unbounded" minOccurs="0"></element>
+	    	</sequence>
+	    </complexType>
+	    </element>
+
+	    <complexType name="SendersType">
+    	<sequence>
+    		<element name="Including" type="anyURI" minOccurs="0" maxOccurs="unbounded"></element>
+    		<element name="Excluding" type="anyURI" minOccurs="0" maxOccurs="unbounded"></element>
+    	</sequence>
+	    </complexType>
+
+	    <complexType name="DownloadRequestExtendedAttributeType">
+	    	<sequence>
+	    		<element name="Field" type="anyURI" maxOccurs="1" minOccurs="1"></element>
+	    		<element name="Value" type="string" maxOccurs="1" minOccurs="1"></element>
+	    	</sequence>
+	    </complexType>
+
+</schema>
