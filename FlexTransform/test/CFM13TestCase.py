@@ -7,8 +7,11 @@ import unittest
 import textwrap
 import io
 import os
+import operator
 
 import logging
+import pprint
+import json
 
 from FlexTransform import FlexTransform
 
@@ -313,25 +316,10 @@ class CFM13TestCase(unittest.TestCase):
                              'IndicatorData': [{'IndicatorType': 'IPv4-Address-Block',
                                                 'description': 'WEBattack',
                                                 'handling': [{'controlled_structure': 'ancestor-or-self::stix:Indicator//node()',
-                                                              'marking_structures': [{'statement': 'Requested '
-                                                                                                   'Data '
-                                                                                                   'Restrictions:\n'
-                                                                                                   '\t'
-                                                                                                   'Indicator '
-                                                                                                   'data '
-                                                                                                   'is '
-                                                                                                   'OUO: '
-                                                                                                   'False\n'
-                                                                                                   '\t'
-                                                                                                   'Reconnaissance '
-                                                                                                   'Allowed: '
-                                                                                                   'True\n'
-                                                                                                   '\t'
-                                                                                                   'Data '
-                                                                                                   'Sharing '
-                                                                                                   'Restrictions: '
-                                                                                                   'private\n',
-                                                                                      'xsi:type': 'simpleMarking:SimpleMarkingStructureType'}]}],
+                                                'marking_structures': [{'statement': 'OUO=False, '
+                                                                                     'ReconAllowed=True, '
+                                                                                     'SharingRestrictions=private',
+                                                                        'xsi:type': 'simpleMarking:SimpleMarkingStructureType'}]}],
                                                 'indicator_types': [{'value': 'IP Watchlist',
                                                                      'xsi:type': 'stixVocabs:IndicatorTypeVocab-1.1'}],
                                                 'observable': {'object': {'properties': {'address_value': {'condition': 'Equals',
@@ -357,24 +345,7 @@ class CFM13TestCase(unittest.TestCase):
                                                {'IndicatorType': 'IPv4-Address-Block',
                                                 'description': 'Netflow port or host scan',
                                                 'handling': [{'controlled_structure': 'ancestor-or-self::stix:Indicator//node()',
-                                                              'marking_structures': [{'statement': 'Requested '
-                                                                                                   'Data '
-                                                                                                   'Restrictions:\n'
-                                                                                                   '\t'
-                                                                                                   'Indicator '
-                                                                                                   'data '
-                                                                                                   'is '
-                                                                                                   'OUO: '
-                                                                                                   'False\n'
-                                                                                                   '\t'
-                                                                                                   'Reconnaissance '
-                                                                                                   'Allowed: '
-                                                                                                   'True\n'
-                                                                                                   '\t'
-                                                                                                   'Data '
-                                                                                                   'Sharing '
-                                                                                                   'Restrictions: '
-                                                                                                   'private\n',
+                                                              'marking_structures': [{'statement': 'OUO=False, ReconAllowed=True, SharingRestrictions=private',
                                                                                       'xsi:type': 'simpleMarking:SimpleMarkingStructureType'}]}],
                                                 'indicator_types': [{'value': 'IP Watchlist',
                                                                      'xsi:type': 'stixVocabs:IndicatorTypeVocab-1.1'}],
@@ -404,24 +375,7 @@ class CFM13TestCase(unittest.TestCase):
                                                                'direction:ingress, confidence:77, '
                                                                'severity:medium',
                                                 'handling': [{'controlled_structure': 'ancestor-or-self::stix:Indicator//node()',
-                                                              'marking_structures': [{'statement': 'Requested '
-                                                                                                   'Data '
-                                                                                                   'Restrictions:\n'
-                                                                                                   '\t'
-                                                                                                   'Indicator '
-                                                                                                   'data '
-                                                                                                   'is '
-                                                                                                   'OUO: '
-                                                                                                   'False\n'
-                                                                                                   '\t'
-                                                                                                   'Reconnaissance '
-                                                                                                   'Allowed: '
-                                                                                                   'True\n'
-                                                                                                   '\t'
-                                                                                                   'Data '
-                                                                                                   'Sharing '
-                                                                                                   'Restrictions: '
-                                                                                                   'public\n',
+                                                              'marking_structures': [{'statement': 'OUO=False, ReconAllowed=True, SharingRestrictions=public',
                                                                                       'xsi:type': 'simpleMarking:SimpleMarkingStructureType'}]}],
                                                 'indicator_types': [{'value': 'IP Watchlist',
                                                                      'xsi:type': 'stixVocabs:IndicatorTypeVocab-1.1'}],
@@ -448,24 +402,7 @@ class CFM13TestCase(unittest.TestCase):
                                                {'IndicatorType': 'URL-Block',
                                                 'description': 'URL Block: Random String',
                                                 'handling': [{'controlled_structure': 'ancestor-or-self::stix:Indicator//node()',
-                                                              'marking_structures': [{'statement': 'Requested '
-                                                                                                   'Data '
-                                                                                                   'Restrictions:\n'
-                                                                                                   '\t'
-                                                                                                   'Indicator '
-                                                                                                   'data '
-                                                                                                   'is '
-                                                                                                   'OUO: '
-                                                                                                   'True\n'
-                                                                                                   '\t'
-                                                                                                   'Reconnaissance '
-                                                                                                   'Allowed: '
-                                                                                                   'False\n'
-                                                                                                   '\t'
-                                                                                                   'Data '
-                                                                                                   'Sharing '
-                                                                                                   'Restrictions: '
-                                                                                                   'private\n',
+                                                              'marking_structures': [{'statement': 'OUO=True, ReconAllowed=False, SharingRestrictions=private',
                                                                                       'xsi:type': 'simpleMarking:SimpleMarkingStructureType'}]}],
                                                 'indicator_types': [{'value': 'URL Watchlist',
                                                                      'xsi:type': 'stixVocabs:IndicatorTypeVocab-1.1'}],
@@ -484,29 +421,11 @@ class CFM13TestCase(unittest.TestCase):
                                                {'IndicatorType': 'DNS-Hostname-Block',
                                                 'description': 'Domain Block: malicious',
                                                 'handling': [{'controlled_structure': 'ancestor-or-self::stix:Indicator//node()',
-                                                              'marking_structures': [{'statement': 'Requested '
-                                                                                                   'Data '
-                                                                                                   'Restrictions:\n'
-                                                                                                   '\t'
-                                                                                                   'Indicator '
-                                                                                                   'data '
-                                                                                                   'is '
-                                                                                                   'OUO: '
-                                                                                                   'True\n'
-                                                                                                   '\t'
-                                                                                                   'Reconnaissance '
-                                                                                                   'Allowed: '
-                                                                                                   'False\n'
-                                                                                                   '\t'
-                                                                                                   'Data '
-                                                                                                   'Sharing '
-                                                                                                   'Restrictions: '
-                                                                                                   'private\n',
+                                                              'marking_structures': [{'statement': 'OUO=True, ReconAllowed=False, SharingRestrictions=private',
                                                                                       'xsi:type': 'simpleMarking:SimpleMarkingStructureType'}]}],
                                                 'indicator_types': [{'value': 'Domain Watchlist',
                                                                      'xsi:type': 'stixVocabs:IndicatorTypeVocab-1.1'}],
-                                                'observable': {'object': {'properties': {'type': 'Domain '
-                                                                                                 'Name',
+                                                'observable': {'object': {'properties': {'type': 'FQDN',
                                                                                          'value': {'condition': 'Equals',
                                                                                                    'value': 'malicious.domain'},
                                                                                          'xsi:type': 'DomainNameObjectType'}},
@@ -533,8 +452,43 @@ class CFM13TestCase(unittest.TestCase):
         for idx, val in enumerate(ExpectedDataDict['IndicatorData']) :
             # The processedTime key changes with each run, so ignore it
             FinalizedData['IndicatorData'][idx].pop('timestamp')
-            self.assertDictEqual(val,FinalizedData['IndicatorData'][idx])
+            '''
+            print(idx)
+            pprint.pprint(self.deep_sort(val))
+            pprint.pprint(self.deep_sort(FinalizedData['IndicatorData'][idx]))
+            '''
+            self.assertDictEqual(self.deep_sort(val),self.deep_sort(FinalizedData['IndicatorData'][idx]))
 
+
+    def deep_sort(self, obj):
+        """
+        Recursively sort list or dict nested lists
+        """
+    
+        if isinstance(obj, dict):
+            _sorted = {}
+            for key in sorted(obj):
+                _sorted[key] = self.deep_sort(obj[key])
+    
+        elif isinstance(obj, list):
+            new_list = []
+            isdict = False
+            for val in obj:
+                if (isinstance(val, dict)) :
+                    isdict = True
+                    
+                new_list.append(self.deep_sort(val))
+                
+            if (isdict) :
+                _sorted = sorted(new_list, key=lambda d: hash(json.dumps(d)))                
+            else :
+                _sorted = sorted(new_list)
+
+    
+        else:
+            _sorted = obj
+    
+        return _sorted
 
 if __name__ == "__main__":
     unittest.main()
