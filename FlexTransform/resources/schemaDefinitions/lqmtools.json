@@ -447,7 +447,7 @@
 						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#ReconAllowedSemanticConcept"
 					},
 					"0": {
-						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#ReconNotAllowedSemanticConceptActionDescriptionSemanticConcept"
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#ReconNotAllowedSemanticConcept"
 					}
 				}
 			},

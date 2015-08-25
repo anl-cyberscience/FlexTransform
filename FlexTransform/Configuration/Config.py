@@ -36,6 +36,7 @@ class Config(object):
         '''
 
         self.config = configparser.ConfigParser(allow_no_value=False)
+        self.config.optionxform = str 
         self.config.read_file(self.config_file)
 
         self._ValidateConfig()
@@ -68,19 +69,46 @@ class Config(object):
         else :
             raise Exception('RequiredOptionNotFound', 'Syntax: FileParser')
         
-        # Load primary schema definition
-        if (self.config.has_option('SCHEMA', 'PrimarySchemaConfiguration')) :
-            self.SchemaConfig = self._ReadSchemaConfig(self.config['SCHEMA']['PrimarySchemaConfiguration'])
-        else :
-            raise Exception('RequiredOptionNotFound', 'Schema: PrimarySchemaConfiguration')
-
-        if (self.config.has_option('SCHEMA', 'SiteSchemaConfiguration')) :
-            NewSchemaConfig = self._ReadSchemaConfig(self.config['SCHEMA']['SiteSchemaConfiguration'])
-            self._MergeDictionaries(self.SchemaConfig, NewSchemaConfig)
+        if (self.config.has_option('SCHEMA', 'SchemaConfigurationType') and self.config['SCHEMA']['SchemaConfigurationType'] == 'Inline') :
+            # Build schema from configuration file
+            schemaConfiguration = {}
             
-        if (self.config.has_option('SCHEMA', 'MetadataSchemaConfiguration')) :
-            MetadataSchemaConfig = self._ReadSchemaConfig(self.config['SCHEMA']['MetadataSchemaConfiguration'])
-            self._MergeDictionaries(self.SchemaConfig, MetadataSchemaConfig)
+            for key in self.config['SCHEMA'] :
+                if (key == 'SchemaConfigurationType') :
+                    continue
+                
+                if (key == 'SupportedIndicatorTypes') :
+                    schemaConfiguration['SupportedIndicatorTypes'] = self.config['SCHEMA'][key]
+                    continue
+                
+                keyparts = key.split('_', maxsplit=1)
+                if (len(keyparts) != 2) :
+                    raise Exception('InlineSchemaError','Key ' + key + ' could not be parsed into a field name and schema entry split by _')
+                else :
+                    if (keyparts[0] not in schemaConfiguration) :
+                        schemaConfiguration[keyparts[0]] = {}
+                    
+                schemaConfiguration[keyparts[0]][keyparts[1]] = self.config['SCHEMA'][key]
+                
+            if (schemaConfiguration) :
+                self.SchemaConfig = self._BuildSchemaConfig(schemaConfiguration)
+            else :
+                raise Exception('RequiredOptionNotFound', 'Schema: no inline schema fields defined')
+                
+        else :
+            # Load primary schema definition
+            if (self.config.has_option('SCHEMA', 'PrimarySchemaConfiguration')) :
+                self.SchemaConfig = self._ReadSchemaConfig(self.config['SCHEMA']['PrimarySchemaConfiguration'])
+            else :
+                raise Exception('RequiredOptionNotFound', 'Schema: PrimarySchemaConfiguration')
+    
+            if (self.config.has_option('SCHEMA', 'SiteSchemaConfiguration')) :
+                NewSchemaConfig = self._ReadSchemaConfig(self.config['SCHEMA']['SiteSchemaConfiguration'])
+                self._MergeDictionaries(self.SchemaConfig, NewSchemaConfig)
+                
+            if (self.config.has_option('SCHEMA', 'MetadataSchemaConfiguration')) :
+                MetadataSchemaConfig = self._ReadSchemaConfig(self.config['SCHEMA']['MetadataSchemaConfiguration'])
+                self._MergeDictionaries(self.SchemaConfig, MetadataSchemaConfig)
         
         self.SchemaParser = SchemaParser(self.SchemaConfig)
         
@@ -118,5 +146,143 @@ class Config(object):
             else :
                 originalDict[k] = v
                 
+    def _BuildSchemaConfig(self, schemaConfiguration):
+        '''
+        Create a schema configuration dictionary from inline configuration data in the source document
+        
+        The supported indicator types must be defined in the SupportedIndicatorTypes key
+        
+        Example:
+        
+        SupportedIndicatorTypes = IPv4-Address-Block,DNS-Hostname-Block
+        
+        Example:
+        IPv4Address_OntologyMapping = IPv4AddressIndicatorValueSemanticComponent
+        
+        maps to:
+        
+        "IPv4Address": {
+                            "datatype": "string",
+                            "required": true,
+                            "ontologyMappingType": "simple",
+                            "ontologyMapping": "http://www.anl.gov/cfm/transform.owl#IPv4AddressIndicatorValueSemanticComponent"
+                       }
+                       
+        To map to multiple ontologies, use OntologyMappingMultiple, each seperated by a |
+        
+        Example:
+        Indicator_OntologyMappingMultiple = IPv4AddressIndicatorValueSemanticComponent|IPv6AddressIndicatorValueSemanticComponent|DNSIndicatorValueSemanticComponent
+        
+        maps to:
+        
+        "Indicator": {
+                            "datatype": "string",
+                            "required": true,
+                            "ontologyMappingType": "multiple",
+                            "ontologyMappings": [ 
+                                                    "http://www.anl.gov/cfm/transform.owl#IPv4AddressIndicatorValueSemanticComponent",
+                                                    "http://www.anl.gov/cfm/transform.owl#IPv6AddressIndicatorValueSemanticComponent",
+                                                    "http://www.anl.gov/cfm/transform.owl#DNSIndicatorValueSemanticComponent"
+                                                ]
+                       }
+                       
+        To map to multiple ontologies with a defined value, use OntologyMappingEnum, in the format of value:ontologymapping|value:ontologymapping
+        
+        Example:
+        restriction_OntologyMappingEnum = public:PublicCFM13SharingRestrictionSemanticConcept|need-to-know:NeedToKnowCFM13SharingRestrictionSemanticConcept|private:PrivateCFM13SharingRestrictionSemanticConcept
+        
+        maps to:
+        
+        "restriction": {
+                "datatype": "enum",
+                "required": true,
+                "ontologyMappingType": "enum",
+                "enumValues": {
+                    "public": {
+                        "ontologyMapping": "http://www.anl.gov/cfm/transform.owl#PublicCFM13SharingRestrictionSemanticConcept"
+                    },
+                    "need-to-know": {
+                        "ontologyMapping": "http://www.anl.gov/cfm/transform.owl#NeedToKnowCFM13SharingRestrictionSemanticConcept"
+                    },
+                    "private": {
+                        "ontologyMapping": "http://www.anl.gov/cfm/transform.owl#PrivateCFM13SharingRestrictionSemanticConcept"
+                    }
+                }
+            }
+        
+        Additional configuration items, like default value, can be included as well, with or without an OntologyMapping.
+        
+        Example:
+        Origin_DefaultValue = Federated
+        
+        maps to:
+        
+        "Origin": {
+                        "datatype": "string",
+                        "required": true,
+                        "defaultValue": "Federated",
+                        "ontologyMappingType": "none"
+                  }
+        '''
+        
+        SchemaConfig = {}
+        SchemaConfig['IndicatorData'] = {}
+        
+        if ('SupportedIndicatorTypes' in schemaConfiguration) :
+            SchemaConfig['IndicatorData']['types'] = {}
+            Types = schemaConfiguration.pop('SupportedIndicatorTypes')
+            for indicatorType in Types.split(",") :
+                SchemaConfig['IndicatorData']['types'][indicatorType] = []
+        else :
+            raise Exception('RequiredOptionNotFound', 'Schema: SupportedIndicatorTypes is not defined')
+        
+        fields = {}
+        
+        # TODO: add additional schema configuration directives
+        # TODO: integrate with Ontology to get default configurations for specific ontology objects
+        
+        for field in schemaConfiguration :
+            fields[field] = {}
+            fields[field]["datatype"] = "string"
+            fields[field]["required"] = True
+            
+            if ("OntologyMapping" in schemaConfiguration[field]) :
+                OntologyMapping = schemaConfiguration[field].pop("OntologyMapping")
+                fields[field]["ontologyMappingType"] = "simple"
+                fields[field]["ontologyMapping"] = "http://www.anl.gov/cfm/transform.owl#" + OntologyMapping
+                
+            elif ("OntologyMappingMultiple" in schemaConfiguration[field]) :
+                OntologyMappings = schemaConfiguration[field].pop("OntologyMappingMultiple")
+                fields[field]["ontologyMappingType"] = "multiple"
+                fields[field]["ontologyMappings"] = []
+                for mapping in OntologyMappings.split("|") :
+                    fields[field]["ontologyMappings"].append("http://www.anl.gov/cfm/transform.owl#" + mapping)
+                    
+            elif ("OntologyMappingEnum" in schemaConfiguration[field]) :
+                OntologyMappings = schemaConfiguration[field].pop("OntologyMappingEnum")
+                fields[field]["datatype"] = "enum"
+                fields[field]["ontologyMappingType"] = "enum"
+                fields[field]["enumValues"] = {}
+                for mapping in OntologyMappings.split("|") :
+                    kv = mapping.split(":")
+                    fields[field]["enumValues"][kv[0]] = {}
+                    fields[field]["enumValues"][kv[0]]["ontologyMapping"] = "http://www.anl.gov/cfm/transform.owl#" + kv[1]
+                    
+            else :
+                fields[field]["ontologyMappingType"] = "none"
+            
+            for configItem in schemaConfiguration[field] :
+                if (configItem == "DefaultValue") :
+                    fields[field]["defaultValue"] = schemaConfiguration[field][configItem]
+                elif (configItem == "DataType") :
+                    fields[field]["datatype"] = schemaConfiguration[field][configItem]
+                elif (configItem == "DateTimeFormat") :
+                    fields[field]["dateTimeFormat"] = schemaConfiguration[field][configItem]
+                else :
+                    raise Exception("UnknownDirective", configItem + " on field " + field + " is not defined")    
+                    
+        SchemaConfig['IndicatorData']['fields'] = fields
+        
+        return SchemaConfig
         
         

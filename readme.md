@@ -31,11 +31,11 @@ These challenges lead to islands of sharing defined not by communities, but by s
 Flexible Transform (FlexT) is a tool that enables dynamic translation between formats. FlexT accomplishes this by digesting CTI data down to its semantic roots (meaning and context). As seen in Figure 1, making this the core of the translation simplifies the process. This allows the use of new formats with improved scalability and ensures that the original meaning and context of CTI data is preserved.
 
 <figure>
-<a href="FlexibleTransform/resources/images/figure1a.png">
-<img src = "FlexibleTransform/resources/images/figure1a.png" />
+<a href="FlexTransform/resources/images/figure1a.png">
+<img src = "FlexTransform/resources/images/figure1a.png" />
 </a>
-<a href="FlexibleTransform/resources/images/figure1b.png">
-<img src = "FlexibleTransform/resources/images/figure1b.png" />
+<a href="FlexTransform/resources/images/figure1b.png">
+<img src = "FlexTransform/resources/images/figure1b.png" />
 </a>
 <figcaption>
 Figure 1 - On the left, the scaling problem with developing pairwise translators for all supported formats.  On the right, the advantage of using an intermediate semantic representation.

@@ -4,14 +4,13 @@ Created on Jun 1, 2015
 @author: ahoying
 '''
 import unittest
-import textwrap
-import io
 import os
 
 import logging
 import json
 
 from FlexTransform import FlexTransform
+from .TestData import CFM13Data
 
 class CFM13TestCase(unittest.TestCase):
 
@@ -30,174 +29,11 @@ class CFM13TestCase(unittest.TestCase):
         StixConfig = open(os.path.join(currentdir,'../resources/sampleConfigurations/stix_cfm.cfg'), 'r')
         self.Transform.AddParser('STIX', StixConfig)
         
-        self.sample_cfm13_string_head = """<?xml version="1.0" encoding="UTF-8"?>
-                                <!DOCTYPE IDMEF-Message PUBLIC "-//IETF//DTD RFC XXXX IDMEF v1.0//EN" "idmef-message.dtd">
-                                <IDMEF-Message>
-                                <Alert>
-                                <Analyzer analyzerid="TEST">
-                                <Node>
-                                <location>TEST</location>
-                                <name>Test User, 555-555-1212, test@test.int</name>
-                                </Node>
-                                </Analyzer>
-                                <AnalyzerTime>2015-05-30T09:10:45-0000</AnalyzerTime>
-                                <AdditionalData meaning="report start time" type="date-time">2015-05-30T09:10:45-0000</AdditionalData>
-                                <AdditionalData meaning="report type" type="string">alerts</AdditionalData>
-                                <AdditionalData meaning="report schedule" type="string">5 minutes</AdditionalData>
-                                <AdditionalData meaning="number of alerts in this report" type="integer">2</AdditionalData>
-                                </Alert>
-                                """
-                                
-        self.sample_cfm13_string_alert1 = """                        
-                                <Alert>
-                                <CreateTime>2015-05-30T09:08:00-0000</CreateTime>
-                                <Source>
-                                <Node category="dns">
-                                <name>badsite.example.int</name>
-                                <Address category="ipv4-addr">
-                                <address>192.168.123.231</address>
-                                </Address>
-                                </Node>
-                                </Source>
-                                <Classification text="WEBattack"/>
-                                <Assessment>
-                                <Action category="block-installed">Blocked for 2592000 seconds</Action>
-                                </Assessment>
-                                <AdditionalData meaning="restriction" type="string">private</AdditionalData>
-                                <AdditionalData meaning="recon" type="integer">0</AdditionalData>
-                                <AdditionalData meaning="prior offenses" type="integer">1</AdditionalData>
-                                <AdditionalData meaning="OUO" type="integer">0</AdditionalData>
-                                <AdditionalData meaning="top level domain owner" type="string">US, United States</AdditionalData>
-                                <AdditionalData meaning="duration" type="integer">2592000</AdditionalData>
-                                <AdditionalData meaning="alert threshold" type="integer">1</AdditionalData>
-                                </Alert>
-                                """
-                                
-        self.sample_cfm13_string_alert2 = """ 
-                                <Alert>
-                                <CreateTime>2015-05-30T09:09:00-0000</CreateTime>
-                                <Source>
-                                <Node category="dns">
-                                <name>another.evil.site</name>
-                                <Address category="ipv4-addr">
-                                <address>172.20.40.120</address>
-                                </Address>
-                                </Node>
-                                </Source>
-                                <Target>
-                                <Service>
-                                <port>22</port>
-                                </Service>
-                                </Target>
-                                <Classification text="Netflow port or host scan">
-                                <Reference origin="user-specific" meaning="Scanning">
-                                <name>Netflow port or host scan</name>
-                                </Reference>
-                                </Classification>
-                                <Assessment>
-                                <Action category="block-installed">Host scan</Action>
-                                </Assessment>
-                                <AdditionalData meaning="restriction" type="string">private</AdditionalData>
-                                <AdditionalData meaning="recon" type="integer">0</AdditionalData>
-                                <AdditionalData meaning="prior offenses" type="integer">2</AdditionalData>
-                                <AdditionalData meaning="OUO" type="integer">0</AdditionalData>
-                                <AdditionalData meaning="duration" type="integer">36000</AdditionalData>
-                                </Alert>
-                                """
-                                
-        self.sample_cfm13_string_alert_portlist = """
-                                <Alert>
-                                <CreateTime>2015-05-30T09:09:20-0000</CreateTime>
-                                <Source>
-                                <Node>
-                                <Address category="ipv4-addr">
-                                <address>172.17.17.172</address>
-                                </Address>
-                                </Node>
-                                </Source>
-                                <Target>
-                                <Service>
-                                <portlist>1433,3306</portlist>
-                                <protocol>TCP</protocol>
-                                </Service>
-                                </Target>
-                                <Classification text="MSSQL scans against multiple hosts, direction:ingress, confidence:77, severity:medium">
-                                <Reference meaning="Scanning" origin="user-specific">
-                                <name>Scanning</name>
-                                <url> </url>
-                                </Reference>
-                                </Classification>
-                                <Assessment>
-                                <Action category="block-installed"/>
-                                </Assessment>
-                                <AdditionalData meaning="alert threshold" type="integer">0</AdditionalData>
-                                <AdditionalData meaning="recon" type="integer">0</AdditionalData>
-                                <AdditionalData meaning="duration" type="integer">86400</AdditionalData>
-                                <AdditionalData meaning="OUO" type="integer">0</AdditionalData>
-                                <AdditionalData meaning="prior offenses" type="integer">5</AdditionalData>
-                                </Alert>
-                                """
-                                
-        self.sample_cfm13_string_alert_urlblock = """
-                                <Alert>
-                                <CreateTime>2015-05-30T09:09:00+00:00</CreateTime>
-                                <Source>
-                                <Node>
-                                <Address>
-                                <address>http://bad.domain.url/?ref=RANDOM_STRING</address>
-                                </Address>
-                                </Node>
-                                </Source>
-                                <Classification text="URL Block: Random String">
-                                <Reference origin="user-specific" meaning="Phishing">
-                                <name>target: bad.domain.url</name>
-                                </Reference>
-                                </Classification>
-                                <Assessment>
-                                <Action category="notification-sent" />
-                                </Assessment>
-                                <AdditionalData type="integer" meaning="prior offenses">0</AdditionalData>
-                                <AdditionalData type="integer" meaning="alert threshold">1</AdditionalData>
-                                <AdditionalData type="integer" meaning="duration">0</AdditionalData>
-                                <AdditionalData type="integer" meaning="recon">1</AdditionalData>
-                                <AdditionalData type="integer" meaning="OUO">1</AdditionalData>
-                                <AdditionalData type="string" meaning="restriction">private</AdditionalData>
-                                <AdditionalData type="string" meaning="alert provenance">badurl 12345</AdditionalData>
-                                </Alert>
-                                """
-                                
-        self.sample_cfm13_string_alert_domainblock = """
-                                <Alert>
-                                <CreateTime>2015-05-30T09:06:00+00:00</CreateTime>
-                                <Source>
-                                <Node category="dns">
-                                <name>malicious.domain</name>
-                                </Node>
-                                </Source>
-                                <Classification text="Domain Block: malicious"/>
-                                <Assessment>
-                                <Action category="notification-sent">observe_and_report</Action>
-                                </Assessment>
-                                <AdditionalData type="integer" meaning="prior offenses">0</AdditionalData>
-                                <AdditionalData type="integer" meaning="alert threshold">255</AdditionalData>
-                                <AdditionalData type="integer" meaning="duration">0</AdditionalData>
-                                <AdditionalData type="integer" meaning="recon">1</AdditionalData>
-                                <AdditionalData type="string" meaning="restriction">private</AdditionalData>
-                                <AdditionalData type="integer" meaning="OUO">1</AdditionalData>
-                                </Alert>
-                                """
-                                
-        self.sample_cfm13_string_tail = "</IDMEF-Message>"
+        self.CFM13Data = CFM13Data()
 
     def test_cfm13_to_lqmtools(self):
         
-        sample_cfm13_file = io.BytesIO(textwrap.dedent(self.sample_cfm13_string_head + 
-                                                        self.sample_cfm13_string_alert1 + 
-                                                        self.sample_cfm13_string_alert2 + 
-                                                        self.sample_cfm13_string_alert_portlist +
-                                                        self.sample_cfm13_string_alert_urlblock +
-                                                        self.sample_cfm13_string_alert_domainblock +
-                                                        self.sample_cfm13_string_tail).encode("UTF-8"))
+        sample_cfm13_file = self.CFM13Data.getFile()
         
         ExpectedDataList  = [{"action1": "Block", 
                               "comment": "WEBattack", 
@@ -293,13 +129,7 @@ class CFM13TestCase(unittest.TestCase):
 
     def test_cfm13_to_stix(self):
         
-        sample_cfm13_file = io.BytesIO(textwrap.dedent(self.sample_cfm13_string_head + 
-                                                        self.sample_cfm13_string_alert1 + 
-                                                        self.sample_cfm13_string_alert2 + 
-                                                        self.sample_cfm13_string_alert_portlist +
-                                                        self.sample_cfm13_string_alert_urlblock +
-                                                        self.sample_cfm13_string_alert_domainblock +
-                                                        self.sample_cfm13_string_tail).encode("UTF-8"))
+        sample_cfm13_file = self.CFM13Data.getFile()
 
         ExpectedDataDict = {'DocumentHeaderData': {'handling': [{'controlled_structure': '//node()',
                                                                   'marking_structures': [{'color': 'AMBER',
@@ -443,7 +273,7 @@ class CFM13TestCase(unittest.TestCase):
         self.assertEqual(cm.output, ["INFO:FlexTransform.SchemaParser:Validation failed for observable_sighting_count, ('DataOutOfRange', 'The value for field observable_sighting_count is outside of the allowed range(1-65535): 0')"])
         
         FinalizedData['DocumentHeaderData'].pop('timestamp')
-        self.assertDictEqual(ExpectedDataDict['DocumentHeaderData'],FinalizedData['DocumentHeaderData'])
+        self.assertDictEqual(self.deep_sort(ExpectedDataDict['DocumentHeaderData']),self.deep_sort(FinalizedData['DocumentHeaderData']))
         
         self.assertEqual(len(ExpectedDataDict['IndicatorData']),len(FinalizedData['IndicatorData']))
         
@@ -456,6 +286,7 @@ class CFM13TestCase(unittest.TestCase):
     def deep_sort(self, obj):
         """
         Recursively sort list or dict nested lists
+        Based on code from http://stackoverflow.com/questions/18464095/how-to-achieve-assertdictequal-with-assertsequenceequal-applied-to-values
         """
     
         if isinstance(obj, dict):
@@ -467,12 +298,13 @@ class CFM13TestCase(unittest.TestCase):
             new_list = []
             isdict = False
             for val in obj:
-                if (isinstance(val, dict)) :
+                if (not isdict and isinstance(val, dict)) :
                     isdict = True
                     
                 new_list.append(self.deep_sort(val))
                 
             if (isdict) :
+                # Sort lists of dictionaries by the hash value of the data in the dictionary
                 _sorted = sorted(new_list, key=lambda d: hash(json.dumps(d, ensure_ascii = True, sort_keys = True)))                
             else :
                 _sorted = sorted(new_list)
