@@ -9,7 +9,7 @@ Flexible Transform
 * Configuration File Details
 * Ontology Overview
 
-<a name="qs"></a>Quick Start
+<a name="qs"></a>Quick Start Guide
 --------
 
 Overview

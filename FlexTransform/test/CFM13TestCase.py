@@ -18,7 +18,7 @@ class CFM13TestCase(unittest.TestCase):
     def setUp(self):
         logging.basicConfig(format='%(name)s (%(pathname)s:%(lineno)d) %(levelname)s:%(message)s', level=logging.DEBUG)
         
-        self.Transform = FlexTransform.FlexTransform()
+        self.Transform = FlexTransform.FlexTransform()  # @UndefinedVariable
         
         currentdir = os.path.dirname(__file__)
         Cfm13AlertConfig = open(os.path.join(currentdir,'../resources/sampleConfigurations/cfm13.cfg'), 'r')
