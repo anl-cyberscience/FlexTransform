@@ -7,9 +7,11 @@ import unittest
 import textwrap
 import io
 import os
+import operator
 
 import logging
 import pprint
+import json
 
 from FlexTransform import FlexTransform
 
@@ -450,9 +452,11 @@ class CFM13TestCase(unittest.TestCase):
         for idx, val in enumerate(ExpectedDataDict['IndicatorData']) :
             # The processedTime key changes with each run, so ignore it
             FinalizedData['IndicatorData'][idx].pop('timestamp')
+            '''
             print(idx)
             pprint.pprint(self.deep_sort(val))
             pprint.pprint(self.deep_sort(FinalizedData['IndicatorData'][idx]))
+            '''
             self.assertDictEqual(self.deep_sort(val),self.deep_sort(FinalizedData['IndicatorData'][idx]))
 
 
@@ -468,13 +472,18 @@ class CFM13TestCase(unittest.TestCase):
     
         elif isinstance(obj, list):
             new_list = []
+            isdict = False
             for val in obj:
+                if (isinstance(val, dict)) :
+                    isdict = True
+                    
                 new_list.append(self.deep_sort(val))
                 
-            try :
+            if (isdict) :
+                _sorted = sorted(new_list, key=lambda d: hash(json.dumps(d)))                
+            else :
                 _sorted = sorted(new_list)
-            except :
-                _sorted = new_list
+
     
         else:
             _sorted = obj
