@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>FlexibleTransform</name>
+	<name>FlexTransform-Public</name>
 	<comment></comment>
 	<projects>
 	</projects>
@@ -10,52 +10,8 @@
 			<arguments>
 			</arguments>
 		</buildCommand>
-		<buildCommand>
-			<name>com.boothen.jsonedit.validation.builder</name>
-			<arguments>
-			</arguments>
-		</buildCommand>
 	</buildSpec>
 	<natures>
 		<nature>org.python.pydev.pythonNature</nature>
-		<nature>com.boothen.jsonedit.validation.nature</nature>
 	</natures>
-	<filteredResources>
-		<filter>
-			<id>1419356541500</id>
-			<name></name>
-			<type>29</type>
-			<matcher>
-				<id>org.eclipse.ui.ide.multiFilter</id>
-				<arguments>1.0-name-matches-false-false-*</arguments>
-			</matcher>
-		</filter>
-		<filter>
-			<id>1419356541503</id>
-			<name></name>
-			<type>21</type>
-			<matcher>
-				<id>org.eclipse.ui.ide.multiFilter</id>
-				<arguments>1.0-name-matches-false-false-.*</arguments>
-			</matcher>
-		</filter>
-		<filter>
-			<id>1416331420733</id>
-			<name>resources/sampleMessages/cfm13Uploads/WithMetadata</name>
-			<type>5</type>
-			<matcher>
-				<id>org.eclipse.ui.ide.multiFilter</id>
-				<arguments>1.0-name-matches-false-false-.*</arguments>
-			</matcher>
-		</filter>
-		<filter>
-			<id>1416331420749</id>
-			<name>resources/sampleMessages/cfm13Uploads/WithMetadata</name>
-			<type>5</type>
-			<matcher>
-				<id>org.eclipse.ui.ide.multiFilter</id>
-				<arguments>1.0-name-matches-false-false-*</arguments>
-			</matcher>
-		</filter>
-	</filteredResources>
 </projectDescription>
