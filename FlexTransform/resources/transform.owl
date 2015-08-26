@@ -40,6 +40,15 @@
     
 
 
+    <!-- http://www.anl.gov/cfm/transform.owl#hasComplexValueLogicalConnective -->
+
+    <ObjectProperty rdf:about="&cfmft;hasComplexValueLogicalConnective">
+        <rdfs:domain rdf:resource="&cfmft;ComplexDocumentComponentValue"/>
+        <rdfs:range rdf:resource="&cfmft;LogicalConnectives"/>
+    </ObjectProperty>
+    
+
+
     <!-- http://www.anl.gov/cfm/transform.owl#hasComponentName -->
 
     <ObjectProperty rdf:about="&cfmft;hasComponentName"/>
@@ -49,6 +58,43 @@
     <!-- http://www.anl.gov/cfm/transform.owl#hasComponentValue -->
 
     <ObjectProperty rdf:about="&cfmft;hasComponentValue"/>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#hasDefaultDocumentComponentValue -->
+
+    <ObjectProperty rdf:about="&cfmft;hasDefaultDocumentComponentValue">
+        <rdfs:comment>Links a document component to a default value defined for it.</rdfs:comment>
+        <rdfs:domain rdf:resource="&cfmft;DocumentComponent"/>
+        <rdfs:range rdf:resource="&cfmft;SimpleDocumentComponentValue"/>
+    </ObjectProperty>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#hasDocumentComponentSubValue -->
+
+    <ObjectProperty rdf:about="&cfmft;hasDocumentComponentSubValue">
+        <rdfs:domain rdf:resource="&cfmft;ComplexDocumentComponentValue"/>
+        <rdfs:range rdf:resource="&cfmft;DocumentComponentValue"/>
+    </ObjectProperty>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#hasDocumentComponentValue -->
+
+    <ObjectProperty rdf:about="&cfmft;hasDocumentComponentValue">
+        <rdfs:comment>Indicates that the given document component has the named document component value.  The value may be complex or simple.</rdfs:comment>
+        <rdfs:domain rdf:resource="&cfmft;DocumentComponent"/>
+        <rdfs:range rdf:resource="&cfmft;DocumentComponentValue"/>
+    </ObjectProperty>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#hasDocumentComponentValueType -->
+
+    <ObjectProperty rdf:about="&cfmft;hasDocumentComponentValueType">
+        <rdfs:comment>Indicates a &apos;type&apos; concept for a given document component value.  We needed something more flexible than the built-in type system in RDF as document components may have arbitrary type definitions.</rdfs:comment>
+    </ObjectProperty>
     
 
 
@@ -69,6 +115,15 @@
     <ObjectProperty rdf:about="&cfmft;hasSemanticConcept">
         <rdfs:domain rdf:resource="&cfmft;SemanticComponent"/>
         <rdfs:range rdf:resource="&cfmft;SemanticConcept"/>
+    </ObjectProperty>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#hasSemanticMeaning -->
+
+    <ObjectProperty rdf:about="&cfmft;hasSemanticMeaning">
+        <rdfs:domain rdf:resource="&cfmft;DocumentComponentValue"/>
+        <rdfs:range rdf:resource="&cfmft;SemanticComponent"/>
     </ObjectProperty>
     
 
@@ -103,10 +158,27 @@
     
 
 
+    <!-- http://www.anl.gov/cfm/transform.owl#requiresDocumentComponent -->
+
+    <ObjectProperty rdf:about="&cfmft;requiresDocumentComponent">
+        <rdfs:comment>Indicates that a given document component requires another document component</rdfs:comment>
+        <rdfs:subPropertyOf rdf:resource="&cfmft;supportsDocumentComponent"/>
+    </ObjectProperty>
+    
+
+
     <!-- http://www.anl.gov/cfm/transform.owl#requiresSemanticComponent -->
 
     <ObjectProperty rdf:about="&cfmft;requiresSemanticComponent">
         <rdfs:subPropertyOf rdf:resource="&cfmft;supportsSemanticComponent"/>
+    </ObjectProperty>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#supportsDocumentComponent -->
+
+    <ObjectProperty rdf:about="&cfmft;supportsDocumentComponent">
+        <rdfs:comment>Indicates that the given documentComponent contains another documentComponent</rdfs:comment>
     </ObjectProperty>
     
 
@@ -131,6 +203,14 @@
     ///////////////////////////////////////////////////////////////////////////////////////
      -->
 
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#hasDocumentComponentValueLiteral -->
+
+    <DatatypeProperty rdf:about="&cfmft;hasDocumentComponentValueLiteral">
+        <rdfs:comment>Yields the literal value that the document component value has.</rdfs:comment>
+    </DatatypeProperty>
     
 
 
@@ -349,6 +429,14 @@
     
 
 
+    <!-- http://www.anl.gov/cfm/transform.owl#BinaryReconDocumentComponentValue -->
+
+    <Class rdf:about="&cfmft;BinaryReconDocumentComponentValue">
+        <rdfs:subClassOf rdf:resource="&cfmft;ComplexDocumentComponentValue"/>
+    </Class>
+    
+
+
     <!-- http://www.anl.gov/cfm/transform.owl#BlockInstalledResponseActionTakenSemanticConcept -->
 
     <Class rdf:about="&cfmft;BlockInstalledResponseActionTakenSemanticConcept">
@@ -437,6 +525,14 @@
     
 
 
+    <!-- http://www.anl.gov/cfm/transform.owl#CSVDocument -->
+
+    <Class rdf:about="&cfmft;CSVDocument">
+        <rdfs:subClassOf rdf:resource="&cfmft;Document"/>
+    </Class>
+    
+
+
     <!-- http://www.anl.gov/cfm/transform.owl#CSVElement -->
 
     <Class rdf:about="&cfmft;CSVElement">
@@ -499,6 +595,7 @@
 
     <Class rdf:about="&cfmft;ComplexDocumentComponentValue">
         <rdfs:subClassOf rdf:resource="&cfmft;DocumentComponentValue"/>
+        <rdfs:comment>A complex document component value is comprised of a possible set of sub components rather than a type and value.</rdfs:comment>
     </Class>
     
 
@@ -632,7 +729,15 @@
 &quot;Scanning&quot;
 &quot;OUO&quot;
 
-Values are associated with document components, can have a form specification, and can be related to each other via cfm:sameMeaningAs</rdfs:comment>
+The DocumentComponentValue is actually comprised of both a value type and a value literal.</rdfs:comment>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#DocumentComponentValueType -->
+
+    <Class rdf:about="&cfmft;DocumentComponentValueType">
+        <rdfs:comment>Represents a class of value types for document component values.  Can represent any value format restriction.</rdfs:comment>
     </Class>
     
 
@@ -991,6 +1096,36 @@ The schema is associated with a schema parser class which can be dynamically loa
 
     <Class rdf:about="&cfmft;FilesizeByteValueSemanticConcept">
         <rdfs:subClassOf rdf:resource="&cfmft;IndicatorValueSemanticConcept"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#FlexTextDocument -->
+
+    <Class rdf:about="&cfmft;FlexTextDocument">
+        <rdfs:subClassOf rdf:resource="&cfmft;Document"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#FlexTextDocumentComponent -->
+
+    <Class rdf:about="&cfmft;FlexTextDocumentComponent">
+        <rdfs:subClassOf rdf:resource="&cfmft;DocumentComponent"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#FlexTextReconField -->
+
+    <Class rdf:about="&cfmft;FlexTextReconField">
+        <rdfs:subClassOf rdf:resource="&cfmft;FlexTextDocumentComponent"/>
+        <rdfs:subClassOf>
+            <Restriction>
+                <onProperty rdf:resource="&cfmft;hasDocumentComponentValue"/>
+                <someValuesFrom rdf:resource="&cfmft;BinaryReconDocumentComponentValue"/>
+            </Restriction>
+        </rdfs:subClassOf>
     </Class>
     
 
@@ -1431,6 +1566,12 @@ Indicates the specific origin or source of a submitted indicator.  For example, 
     <Class rdf:about="&cfmft;LinkObjectSchemaTypeSpecification">
         <rdfs:subClassOf rdf:resource="&cfmft;SchemaTypeSpecifications"/>
     </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#LogicalConnectives -->
+
+    <Class rdf:about="&cfmft;LogicalConnectives"/>
     
 
 
@@ -2333,6 +2474,21 @@ Indicates the specific origin or source of a submitted indicator.  For example, 
 
     <Class rdf:about="&cfmft;SimpleDocumentComponentValue">
         <rdfs:subClassOf rdf:resource="&cfmft;DocumentComponentValue"/>
+        <rdfs:subClassOf>
+            <Class>
+                <intersectionOf rdf:parseType="Collection">
+                    <Restriction>
+                        <onProperty rdf:resource="&cfmft;hasDocumentComponentValueType"/>
+                        <someValuesFrom rdf:resource="&cfmft;DocumentComponentValueType"/>
+                    </Restriction>
+                    <Restriction>
+                        <onProperty rdf:resource="&cfmft;hasSemanticMeaning"/>
+                        <someValuesFrom rdf:resource="&cfmft;SemanticComponent"/>
+                    </Restriction>
+                </intersectionOf>
+            </Class>
+        </rdfs:subClassOf>
+        <rdfs:comment>A simple document component value is a type/literal combination.</rdfs:comment>
     </Class>
     
 
@@ -3373,6 +3529,14 @@ Indicates the specific origin or source of a submitted indicator.  For example, 
     
 
 
+    <!-- http://www.anl.gov/cfm/transform.owl#ANDLogicalConnective -->
+
+    <NamedIndividual rdf:about="&cfmft;ANDLogicalConnective">
+        <rdf:type rdf:resource="&cfmft;LogicalConnectives"/>
+    </NamedIndividual>
+    
+
+
     <!-- http://www.anl.gov/cfm/transform.owl#ActionDescriptionSemanticConcept -->
 
     <NamedIndividual rdf:about="&cfmft;ActionDescriptionSemanticConcept"/>
@@ -3606,6 +3770,14 @@ Indicates the specific origin or source of a submitted indicator.  For example, 
     <!-- http://www.anl.gov/cfm/transform.owl#MutexNameIndicatorValueSemanticComponent -->
 
     <NamedIndividual rdf:about="&cfmft;MutexNameIndicatorValueSemanticComponent"/>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#ORLogicalConnective -->
+
+    <NamedIndividual rdf:about="&cfmft;ORLogicalConnective">
+        <rdf:type rdf:resource="&cfmft;LogicalConnectives"/>
+    </NamedIndividual>
     
 
 
@@ -4783,38 +4955,17 @@ Indicates the specific origin or source of a submitted indicator.  For example, 
     <rdf:Description>
         <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AllDisjointClasses"/>
         <members rdf:parseType="Collection">
-            <rdf:Description rdf:about="&cfmft;EmailMessageObjectSchemaTypeSpecification"/>
-            <rdf:Description rdf:about="&cfmft;FileObjectSchemaTypeSpecification"/>
-            <rdf:Description rdf:about="&cfmft;HTTPSessionObjectSchemaTypeSpecification"/>
-            <rdf:Description rdf:about="&cfmft;LinkObjectSchemaTypeSpecification"/>
-            <rdf:Description rdf:about="&cfmft;URIObjectSchemaTypeSpecification"/>
-            <rdf:Description rdf:about="&cfmft;WindowsRegistryKeyObjectSchemaTypeSpecification"/>
-        </members>
-    </rdf:Description>
-    <rdf:Description>
-        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AllDisjointClasses"/>
-        <members rdf:parseType="Collection">
-            <rdf:Description rdf:about="&cfmft;NeedToKnowCFM13SharingRestrictionSemanticConcept"/>
-            <rdf:Description rdf:about="&cfmft;PrivateCFM13SharingRestrictionSemanticConcept"/>
-            <rdf:Description rdf:about="&cfmft;PublicCFM13SharingRestrictionSemanticConcept"/>
-        </members>
-    </rdf:Description>
-    <rdf:Description>
-        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AllDisjointClasses"/>
-        <members rdf:parseType="Collection">
-            <rdf:Description rdf:about="&cfmft;TLPAmberSemanticConcept"/>
-            <rdf:Description rdf:about="&cfmft;TLPGreenSemanticConcept"/>
-            <rdf:Description rdf:about="&cfmft;TLPRedSemanticConcept"/>
-            <rdf:Description rdf:about="&cfmft;TLPWhiteSemanticConcept"/>
-        </members>
-    </rdf:Description>
-    <rdf:Description>
-        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AllDisjointClasses"/>
-        <members rdf:parseType="Collection">
-            <rdf:Description rdf:about="&cfmft;BlockInstalledResponseActionTakenSemanticConcept"/>
-            <rdf:Description rdf:about="&cfmft;NotificationSentResponseActionTakenSemanticConcept"/>
-            <rdf:Description rdf:about="&cfmft;OtherResponseActionTakenSemanticConcept"/>
-            <rdf:Description rdf:about="&cfmft;TakenOfflineResponseActionTakenSemanticConcept"/>
+            <rdf:Description rdf:about="&cfmft;BotnetAlertBehaviorCharacterizationSemanticComponent"/>
+            <rdf:Description rdf:about="&cfmft;ExploitAlertBehaviorCharacterizationSemanticComponent"/>
+            <rdf:Description rdf:about="&cfmft;KnownBadActorAlertBehaviorCharacterizationSemanticComponent"/>
+            <rdf:Description rdf:about="&cfmft;MalwareTrafficAlertBehaviorCharacterizationSemanticComponent"/>
+            <rdf:Description rdf:about="&cfmft;PhishingAlertBehaviorCharacterizationSemanticComponent"/>
+            <rdf:Description rdf:about="&cfmft;ReconnaissanceAlertBehaviorCharacterizationSemanticComponent"/>
+            <rdf:Description rdf:about="&cfmft;RevocationAlertBehaviorCharacterizationSemanticComponent"/>
+            <rdf:Description rdf:about="&cfmft;ScanningAlertBehaviorCharacterizationSemanticComponent"/>
+            <rdf:Description rdf:about="&cfmft;SpamAlertBehaviorCharacterizationSemanticComponent"/>
+            <rdf:Description rdf:about="&cfmft;UnauthorizedUseAlertBehaviorCharacterizationSemanticComponent"/>
+            <rdf:Description rdf:about="&cfmft;UnspecifiedAlertBehaviorCharacterizationSemanticComponent"/>
         </members>
     </rdf:Description>
     <rdf:Description>
@@ -4837,11 +4988,42 @@ Indicates the specific origin or source of a submitted indicator.  For example, 
     <rdf:Description>
         <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AllDisjointClasses"/>
         <members rdf:parseType="Collection">
-            <rdf:Description rdf:about="&cfmft;IndicatorCategoryEndpointCharacteristicsSemanticConcept"/>
-            <rdf:Description rdf:about="&cfmft;IndicatorCategoryMalwareArtifactsSemanticConcept"/>
-            <rdf:Description rdf:about="&cfmft;IndicatorCategoryNetworkActivitySemanticConcept"/>
-            <rdf:Description rdf:about="&cfmft;IndicatorCategoryPhishingSemanticConcept"/>
-            <rdf:Description rdf:about="&cfmft;IndicatorCategoryWatchlistSemanticConcept"/>
+            <rdf:Description rdf:about="&cfmft;TLPAmberSemanticConcept"/>
+            <rdf:Description rdf:about="&cfmft;TLPGreenSemanticConcept"/>
+            <rdf:Description rdf:about="&cfmft;TLPRedSemanticConcept"/>
+            <rdf:Description rdf:about="&cfmft;TLPWhiteSemanticConcept"/>
+        </members>
+    </rdf:Description>
+    <rdf:Description>
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AllDisjointClasses"/>
+        <members rdf:parseType="Collection">
+            <rdf:Description rdf:about="&cfmft;ActionDurationSemanticConcept"/>
+            <rdf:Description rdf:about="&cfmft;ActionSemanticConcept"/>
+            <rdf:Description rdf:about="&cfmft;CFMReasonSemanticConcept"/>
+            <rdf:Description rdf:about="&cfmft;ConfidenceSemanticConcept"/>
+            <rdf:Description rdf:about="&cfmft;DataSensitivitySemanticConcept"/>
+            <rdf:Description rdf:about="&cfmft;IndicatorSemanticConcept"/>
+            <rdf:Description rdf:about="&cfmft;IndicatorTypeSemanticConcept"/>
+            <rdf:Description rdf:about="&cfmft;InformationSourceSemanticConcept"/>
+            <rdf:Description rdf:about="&cfmft;PriorIndicatorReportsSemanticConcept"/>
+            <rdf:Description rdf:about="&cfmft;ReferenceSemanticConcept"/>
+            <rdf:Description rdf:about="&cfmft;RelatedIndicatorRelationTypeSemanticConcept"/>
+            <rdf:Description rdf:about="&cfmft;RelevancySemanticConcept"/>
+            <rdf:Description rdf:about="&cfmft;SeveritySemanticConcept"/>
+            <rdf:Description rdf:about="&cfmft;SharingRestrictionSemanticConcept"/>
+            <rdf:Description rdf:about="&cfmft;TimeAlertProcessedOnClientSemanticConcept"/>
+            <rdf:Description rdf:about="&cfmft;TimeOfDetectionSemanticConcept"/>
+            <rdf:Description rdf:about="&cfmft;TimeReportReceivedSemanticConcept"/>
+            <rdf:Description rdf:about="&cfmft;UniqueFileIdentifierSemanticConcept"/>
+            <rdf:Description rdf:about="&cfmft;UniqueIndicatorIdentifierSemanticConcept"/>
+        </members>
+    </rdf:Description>
+    <rdf:Description>
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AllDisjointClasses"/>
+        <members rdf:parseType="Collection">
+            <rdf:Description rdf:about="&cfmft;NeedToKnowCFM13SharingRestrictionSemanticConcept"/>
+            <rdf:Description rdf:about="&cfmft;PrivateCFM13SharingRestrictionSemanticConcept"/>
+            <rdf:Description rdf:about="&cfmft;PublicCFM13SharingRestrictionSemanticConcept"/>
         </members>
     </rdf:Description>
     <rdf:Description>
@@ -4878,41 +5060,31 @@ Indicates the specific origin or source of a submitted indicator.  For example, 
     <rdf:Description>
         <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AllDisjointClasses"/>
         <members rdf:parseType="Collection">
-            <rdf:Description rdf:about="&cfmft;BotnetAlertBehaviorCharacterizationSemanticComponent"/>
-            <rdf:Description rdf:about="&cfmft;ExploitAlertBehaviorCharacterizationSemanticComponent"/>
-            <rdf:Description rdf:about="&cfmft;KnownBadActorAlertBehaviorCharacterizationSemanticComponent"/>
-            <rdf:Description rdf:about="&cfmft;MalwareTrafficAlertBehaviorCharacterizationSemanticComponent"/>
-            <rdf:Description rdf:about="&cfmft;PhishingAlertBehaviorCharacterizationSemanticComponent"/>
-            <rdf:Description rdf:about="&cfmft;ReconnaissanceAlertBehaviorCharacterizationSemanticComponent"/>
-            <rdf:Description rdf:about="&cfmft;RevocationAlertBehaviorCharacterizationSemanticComponent"/>
-            <rdf:Description rdf:about="&cfmft;ScanningAlertBehaviorCharacterizationSemanticComponent"/>
-            <rdf:Description rdf:about="&cfmft;SpamAlertBehaviorCharacterizationSemanticComponent"/>
-            <rdf:Description rdf:about="&cfmft;UnauthorizedUseAlertBehaviorCharacterizationSemanticComponent"/>
-            <rdf:Description rdf:about="&cfmft;UnspecifiedAlertBehaviorCharacterizationSemanticComponent"/>
+            <rdf:Description rdf:about="&cfmft;IndicatorCategoryEndpointCharacteristicsSemanticConcept"/>
+            <rdf:Description rdf:about="&cfmft;IndicatorCategoryMalwareArtifactsSemanticConcept"/>
+            <rdf:Description rdf:about="&cfmft;IndicatorCategoryNetworkActivitySemanticConcept"/>
+            <rdf:Description rdf:about="&cfmft;IndicatorCategoryPhishingSemanticConcept"/>
+            <rdf:Description rdf:about="&cfmft;IndicatorCategoryWatchlistSemanticConcept"/>
         </members>
     </rdf:Description>
     <rdf:Description>
         <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AllDisjointClasses"/>
         <members rdf:parseType="Collection">
-            <rdf:Description rdf:about="&cfmft;ActionDurationSemanticConcept"/>
-            <rdf:Description rdf:about="&cfmft;ActionSemanticConcept"/>
-            <rdf:Description rdf:about="&cfmft;CFMReasonSemanticConcept"/>
-            <rdf:Description rdf:about="&cfmft;ConfidenceSemanticConcept"/>
-            <rdf:Description rdf:about="&cfmft;DataSensitivitySemanticConcept"/>
-            <rdf:Description rdf:about="&cfmft;IndicatorSemanticConcept"/>
-            <rdf:Description rdf:about="&cfmft;IndicatorTypeSemanticConcept"/>
-            <rdf:Description rdf:about="&cfmft;InformationSourceSemanticConcept"/>
-            <rdf:Description rdf:about="&cfmft;PriorIndicatorReportsSemanticConcept"/>
-            <rdf:Description rdf:about="&cfmft;ReferenceSemanticConcept"/>
-            <rdf:Description rdf:about="&cfmft;RelatedIndicatorRelationTypeSemanticConcept"/>
-            <rdf:Description rdf:about="&cfmft;RelevancySemanticConcept"/>
-            <rdf:Description rdf:about="&cfmft;SeveritySemanticConcept"/>
-            <rdf:Description rdf:about="&cfmft;SharingRestrictionSemanticConcept"/>
-            <rdf:Description rdf:about="&cfmft;TimeAlertProcessedOnClientSemanticConcept"/>
-            <rdf:Description rdf:about="&cfmft;TimeOfDetectionSemanticConcept"/>
-            <rdf:Description rdf:about="&cfmft;TimeReportReceivedSemanticConcept"/>
-            <rdf:Description rdf:about="&cfmft;UniqueFileIdentifierSemanticConcept"/>
-            <rdf:Description rdf:about="&cfmft;UniqueIndicatorIdentifierSemanticConcept"/>
+            <rdf:Description rdf:about="&cfmft;EmailMessageObjectSchemaTypeSpecification"/>
+            <rdf:Description rdf:about="&cfmft;FileObjectSchemaTypeSpecification"/>
+            <rdf:Description rdf:about="&cfmft;HTTPSessionObjectSchemaTypeSpecification"/>
+            <rdf:Description rdf:about="&cfmft;LinkObjectSchemaTypeSpecification"/>
+            <rdf:Description rdf:about="&cfmft;URIObjectSchemaTypeSpecification"/>
+            <rdf:Description rdf:about="&cfmft;WindowsRegistryKeyObjectSchemaTypeSpecification"/>
+        </members>
+    </rdf:Description>
+    <rdf:Description>
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AllDisjointClasses"/>
+        <members rdf:parseType="Collection">
+            <rdf:Description rdf:about="&cfmft;BlockInstalledResponseActionTakenSemanticConcept"/>
+            <rdf:Description rdf:about="&cfmft;NotificationSentResponseActionTakenSemanticConcept"/>
+            <rdf:Description rdf:about="&cfmft;OtherResponseActionTakenSemanticConcept"/>
+            <rdf:Description rdf:about="&cfmft;TakenOfflineResponseActionTakenSemanticConcept"/>
         </members>
     </rdf:Description>
 </rdf:RDF>
