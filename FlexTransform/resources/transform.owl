@@ -395,6 +395,14 @@
     
 
 
+    <!-- http://www.anl.gov/cfm/transform.owl#ActivityRiskSemanticConcept -->
+
+    <Class rdf:about="&cfmft;ActivityRiskSemanticConcept">
+        <rdfs:subClassOf rdf:resource="&cfmft;SemanticComponent"/>
+    </Class>
+    
+
+
     <!-- http://www.anl.gov/cfm/transform.owl#AddressObjectSchemaTypeSpecification -->
 
     <Class rdf:about="&cfmft;AddressObjectSchemaTypeSpecification">
@@ -600,6 +608,14 @@
     
 
 
+    <!-- http://www.anl.gov/cfm/transform.owl#CompromisedHostIndicatorSourceCharacterizationSemanticComponent -->
+
+    <Class rdf:about="&cfmft;CompromisedHostIndicatorSourceCharacterizationSemanticComponent">
+        <rdfs:subClassOf rdf:resource="&cfmft;IndicatorSourceCharacterizationSemanticComponent"/>
+    </Class>
+    
+
+
     <!-- http://www.anl.gov/cfm/transform.owl#ConfidenceSemanticConcept -->
 
     <Class rdf:about="&cfmft;ConfidenceSemanticConcept">
@@ -676,6 +692,34 @@
 
     <Class rdf:about="&cfmft;DataSensitivitySemanticConcept">
         <rdfs:subClassOf rdf:resource="&cfmft;SemanticComponent"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#DerivedFromDomainIPv4IndicatorTypeSemanticConcept -->
+
+    <Class rdf:about="&cfmft;DerivedFromDomainIPv4IndicatorTypeSemanticConcept">
+        <rdfs:subClassOf rdf:resource="&cfmft;DerivedIndicatorSemanticConcept"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#DerivedFromIPv4ASNIndicatorTypeSemanticConcept -->
+
+    <Class rdf:about="&cfmft;DerivedFromIPv4ASNIndicatorTypeSemanticConcept">
+        <rdfs:subClassOf rdf:resource="&cfmft;DerivedIndicatorSemanticConcept"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#DerivedIndicatorSemanticConcept -->
+
+    <Class rdf:about="&cfmft;DerivedIndicatorSemanticConcept">
+        <rdfs:subClassOf rdf:resource="&cfmft;SemanticComponent"/>
+        <rdfs:comment>Denotes that the member indicators are derived from other observed information.  Examples include:
+* Deriving an ip address from a domain name (or visa versa)
+* Deriving the ASN from an IP address
+* Deriving the domain name from the URL</rdfs:comment>
     </Class>
     
 
@@ -785,6 +829,15 @@ The schema is associated with a schema parser class which can be dynamically loa
     <!-- http://www.anl.gov/cfm/transform.owl#DocumentSyntax -->
 
     <Class rdf:about="&cfmft;DocumentSyntax"/>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#DocumentVersionSemanticConcept -->
+
+    <Class rdf:about="&cfmft;DocumentVersionSemanticConcept">
+        <rdfs:subClassOf rdf:resource="&cfmft;DocumentIdentifier"/>
+        <rdfs:comment>The version of the produced document.</rdfs:comment>
+    </Class>
     
 
 
@@ -1440,6 +1493,15 @@ Indicates the specific origin or source of a submitted indicator.  For example, 
     
 
 
+    <!-- http://www.anl.gov/cfm/transform.owl#IndicatorSourceCharacterizationSemanticComponent -->
+
+    <Class rdf:about="&cfmft;IndicatorSourceCharacterizationSemanticComponent">
+        <rdfs:subClassOf rdf:resource="&cfmft;SemanticComponent"/>
+        <rdfs:comment>Represents a characterization of the indicator source, e.g. whether it is believed to be an originating attacker, a compromised middle-man system, etc...</rdfs:comment>
+    </Class>
+    
+
+
     <!-- http://www.anl.gov/cfm/transform.owl#IndicatorTypeSemanticConcept -->
 
     <Class rdf:about="&cfmft;IndicatorTypeSemanticConcept">
@@ -1565,6 +1627,14 @@ Indicates the specific origin or source of a submitted indicator.  For example, 
 
     <Class rdf:about="&cfmft;LinkObjectSchemaTypeSpecification">
         <rdfs:subClassOf rdf:resource="&cfmft;SchemaTypeSpecifications"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#LocalDocumentIdentiferSemanticConcept -->
+
+    <Class rdf:about="&cfmft;LocalDocumentIdentiferSemanticConcept">
+        <rdfs:subClassOf rdf:resource="&cfmft;DocumentIdentifier"/>
     </Class>
     
 
@@ -1914,6 +1984,14 @@ Indicates the specific origin or source of a submitted indicator.  For example, 
     
 
 
+    <!-- http://www.anl.gov/cfm/transform.owl#OriginalAttackerIndicatorSourceCharacterizationSemanticComponent -->
+
+    <Class rdf:about="&cfmft;OriginalAttackerIndicatorSourceCharacterizationSemanticComponent">
+        <rdfs:subClassOf rdf:resource="&cfmft;IndicatorSourceCharacterizationSemanticComponent"/>
+    </Class>
+    
+
+
     <!-- http://www.anl.gov/cfm/transform.owl#OtherResponseActionTakenSemanticConcept -->
 
     <Class rdf:about="&cfmft;OtherResponseActionTakenSemanticConcept">
@@ -1975,6 +2053,14 @@ Indicates the specific origin or source of a submitted indicator.  For example, 
 
     <Class rdf:about="&cfmft;PublicCFM13SharingRestrictionSemanticConcept">
         <rdfs:subClassOf rdf:resource="&cfmft;CFM13SharingRestrictionSemanticConcept"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#QualitativeActivityRiskSemanticConcept -->
+
+    <Class rdf:about="&cfmft;QualitativeActivityRiskSemanticConcept">
+        <rdfs:subClassOf rdf:resource="&cfmft;ActivityRiskSemanticConcept"/>
     </Class>
     
 
@@ -2118,11 +2204,27 @@ Indicates the specific origin or source of a submitted indicator.  For example, 
     
 
 
+    <!-- http://www.anl.gov/cfm/transform.owl#ReportDetailedDescriptionSemanticComponent -->
+
+    <Class rdf:about="&cfmft;ReportDetailedDescriptionSemanticComponent">
+        <rdfs:subClassOf rdf:resource="&cfmft;ReportDescriptionSemanticComponent"/>
+    </Class>
+    
+
+
     <!-- http://www.anl.gov/cfm/transform.owl#ReportEndTimeSemanticConcept -->
 
     <Class rdf:about="&cfmft;ReportEndTimeSemanticConcept">
         <rdfs:subClassOf rdf:resource="&cfmft;SemanticComponent"/>
         <rdfs:comment xml:lang="en">Indicates the latest time that an event could have been included in the report.</rdfs:comment>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#ReportExecutiveSummarySemanticConcept -->
+
+    <Class rdf:about="&cfmft;ReportExecutiveSummarySemanticConcept">
+        <rdfs:subClassOf rdf:resource="&cfmft;ReportDescriptionSemanticComponent"/>
     </Class>
     
 
@@ -3380,6 +3482,14 @@ Indicates the specific origin or source of a submitted indicator.  For example, 
 
     <Class rdf:about="&cfmft;cfm20alertSchema">
         <rdfs:subClassOf rdf:resource="&cfmft;DocumentSchema"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#iSightQualitativeActivityRiskSemanticConcept -->
+
+    <Class rdf:about="&cfmft;iSightQualitativeActivityRiskSemanticConcept">
+        <rdfs:subClassOf rdf:resource="&cfmft;QualitativeActivityRiskSemanticConcept"/>
     </Class>
     
 

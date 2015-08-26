@@ -1083,6 +1083,9 @@ class SchemaParser(object) :
         '''
         TODO: This function is still messy and needs a lot more work. It works okay for most of the common use cases
         but will likely be broken for more complex groups
+        
+        ** Where does the group association need to be preserved to ensure that related indicators are still related on
+           output?
         '''
                        
         if (group not in groupDict) :
@@ -1142,6 +1145,12 @@ class SchemaParser(object) :
         additionalValueFields = []
         
         primaryKey = None
+        
+        '''
+        TODO: As an example:
+          * Incoming data includes multiple PORT/PROTOCOL pairs
+          * After translation, the pairings are decoupled
+        '''
         for k,v in subfields.items() :
             if ('primaryKey' in v and v['primaryKey'] == True) :
                 if (primaryKey is None) :
