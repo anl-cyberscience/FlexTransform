@@ -175,17 +175,26 @@ class STIX(object):
         
         self._AddObjectIDs(ParsedData)
         
-        stix_package = STIXPackage.from_dict({'id': ParsedData['DocumentHeaderData'].pop('id'),
-                                              'version': ParsedData['DocumentHeaderData'].pop('version'),
-                                              'timestamp': ParsedData['DocumentHeaderData'].pop('timestamp'),
-                                              'stix_header': ParsedData['DocumentHeaderData'],
-                                              'indicators': ParsedData['IndicatorData']})
-        
+        for indicator in ParsedData['IndicatorData'] :
+            if ("IndicatorType" in indicator) :
+                indicator.pop("IndicatorType")
         
         if (self.OutputSyntax == "XML") :
+            stix_package = STIXPackage.from_dict({'id': ParsedData['DocumentHeaderData'].pop('id'),
+                                                  'version': ParsedData['DocumentHeaderData'].pop('version'),
+                                                  'timestamp': ParsedData['DocumentHeaderData'].pop('timestamp'),
+                                                  'stix_header': ParsedData['DocumentHeaderData'],
+                                                  'indicators': ParsedData['IndicatorData']})
             stixfile.write(stix_package.to_xml())
+            
         elif (self.OutputSyntax == "JSON") :
-            json.dump(stix_package.to_dict(), stixfile, sort_keys=True, indent=4)
+            stix_package = {}
+            stix_package["id"] = ParsedData['DocumentHeaderData'].pop('id')
+            stix_package["version"] = ParsedData['DocumentHeaderData'].pop('version')
+            stix_package["timestamp"] = ParsedData['DocumentHeaderData'].pop('timestamp')
+            stix_package["stix_header"] = ParsedData['DocumentHeaderData']
+            stix_package["indicators"] = ParsedData['IndicatorData']
+            json.dump(stix_package, stixfile, sort_keys=True, indent=4)
             
         # stixfile.close()
 

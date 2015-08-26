@@ -83,7 +83,7 @@ class Config(object):
                 
                 keyparts = key.split('_', maxsplit=1)
                 if (len(keyparts) != 2) :
-                    raise Exception('InlineSchemaError','Key ' + key + ' could not be parsed into a field name and schema entry split by _')
+                    raise Exception('InlineSchemaError','Key ' + key + ' could not be parsed into a field name and directive split by _')
                 else :
                     if (keyparts[0] not in schemaConfiguration) :
                         schemaConfiguration[keyparts[0]] = {}
@@ -156,6 +156,19 @@ class Config(object):
         
         SupportedIndicatorTypes = IPv4-Address-Block,DNS-Hostname-Block
         
+        Fields and directives are defined using a field_directive format. Field names and directives are case sensitive. 
+        
+        Current accepted directives:
+        
+            OntologyMapping
+            OntologyMappingMultiple
+            OntologyMappingEnum
+            DefaultValue
+            DataType
+            DateTimeFormat
+            
+        To map to a single simple ontology, use OntologyMapping.
+        
         Example:
         IPv4Address_OntologyMapping = IPv4AddressIndicatorValueSemanticComponent
         
@@ -168,7 +181,7 @@ class Config(object):
                             "ontologyMapping": "http://www.anl.gov/cfm/transform.owl#IPv4AddressIndicatorValueSemanticComponent"
                        }
                        
-        To map to multiple ontologies, use OntologyMappingMultiple, each seperated by a |
+        To map to multiple ontologies, use OntologyMappingMultiple, each separated by a |
         
         Example:
         Indicator_OntologyMappingMultiple = IPv4AddressIndicatorValueSemanticComponent|IPv6AddressIndicatorValueSemanticComponent|DNSIndicatorValueSemanticComponent
@@ -239,7 +252,7 @@ class Config(object):
         fields = {}
         
         # TODO: add additional schema configuration directives
-        # TODO: integrate with Ontology to get default configurations for specific ontology objects
+        # TODO: integrate with Ontology to get default schema configurations for specific ontology objects
         
         for field in schemaConfiguration :
             fields[field] = {}
@@ -271,15 +284,15 @@ class Config(object):
             else :
                 fields[field]["ontologyMappingType"] = "none"
             
-            for configItem in schemaConfiguration[field] :
-                if (configItem == "DefaultValue") :
-                    fields[field]["defaultValue"] = schemaConfiguration[field][configItem]
-                elif (configItem == "DataType") :
-                    fields[field]["datatype"] = schemaConfiguration[field][configItem]
-                elif (configItem == "DateTimeFormat") :
-                    fields[field]["dateTimeFormat"] = schemaConfiguration[field][configItem]
+            for Directive in schemaConfiguration[field] :
+                if (Directive == "DefaultValue") :
+                    fields[field]["defaultValue"] = schemaConfiguration[field][Directive]
+                elif (Directive == "DataType") :
+                    fields[field]["datatype"] = schemaConfiguration[field][Directive]
+                elif (Directive == "DateTimeFormat") :
+                    fields[field]["dateTimeFormat"] = schemaConfiguration[field][Directive]
                 else :
-                    raise Exception("UnknownDirective", configItem + " on field " + field + " is not defined")    
+                    raise Exception("UnknownDirective", Directive + " on field " + field + " is not defined")    
                     
         SchemaConfig['IndicatorData']['fields'] = fields
         

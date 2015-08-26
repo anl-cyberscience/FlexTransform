@@ -7,7 +7,7 @@ Created on Jul 27, 2014
 import logging
 import rdflib
 from .Configuration import Config
-from .OntologyOracle import OntologyOracle
+from .OntologyOracle import Oracle
 
 # TODO: Document in Sphinx compatible format
 # TODO: Optimization - Too much pass by value for large dictionary objects currently, need to move to more pass by reference to minimize cpu and memory resource usage
