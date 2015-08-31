@@ -12,7 +12,7 @@ import json
 from FlexTransform import FlexTransform
 from .TestData import CFM13Data
 
-class CFM13TestCase(unittest.TestCase):
+class CFM13Tests(unittest.TestCase):
 
     def setUp(self):
         logging.basicConfig(format='%(name)s (%(pathname)s:%(lineno)d) %(levelname)s:%(message)s', level=logging.DEBUG)
@@ -273,46 +273,46 @@ class CFM13TestCase(unittest.TestCase):
         self.assertEqual(cm.output, ["INFO:FlexTransform.SchemaParser:Validation failed for observable_sighting_count, ('DataOutOfRange', 'The value for field observable_sighting_count is outside of the allowed range(1-65535): 0')"])
         
         FinalizedData['DocumentHeaderData'].pop('timestamp')
-        self.assertDictEqual(self.deep_sort(ExpectedDataDict['DocumentHeaderData']),self.deep_sort(FinalizedData['DocumentHeaderData']))
+        self.assertDictEqual(deep_sort(ExpectedDataDict['DocumentHeaderData']),deep_sort(FinalizedData['DocumentHeaderData']))
         
         self.assertEqual(len(ExpectedDataDict['IndicatorData']),len(FinalizedData['IndicatorData']))
         
         for idx, val in enumerate(ExpectedDataDict['IndicatorData']) :
             # The processedTime key changes with each run, so ignore it
             FinalizedData['IndicatorData'][idx].pop('timestamp')
-            self.assertDictEqual(self.deep_sort(val),self.deep_sort(FinalizedData['IndicatorData'][idx]))
+            self.assertDictEqual(deep_sort(val),deep_sort(FinalizedData['IndicatorData'][idx]))
 
 
-    def deep_sort(self, obj):
-        """
-        Recursively sort list or dict nested lists
-        Based on code from http://stackoverflow.com/questions/18464095/how-to-achieve-assertdictequal-with-assertsequenceequal-applied-to-values
-        """
-    
-        if isinstance(obj, dict):
-            _sorted = {}
-            for key in sorted(obj):
-                _sorted[key] = self.deep_sort(obj[key])
-    
-        elif isinstance(obj, list):
-            new_list = []
-            isdict = False
-            for val in obj:
-                if (not isdict and isinstance(val, dict)) :
-                    isdict = True
-                    
-                new_list.append(self.deep_sort(val))
+def deep_sort(obj):
+    """
+    Recursively sort list or dict nested lists
+    Based on code from http://stackoverflow.com/questions/18464095/how-to-achieve-assertdictequal-with-assertsequenceequal-applied-to-values
+    """
+
+    if isinstance(obj, dict):
+        _sorted = {}
+        for key in sorted(obj):
+            _sorted[key] = deep_sort(obj[key])
+
+    elif isinstance(obj, list):
+        new_list = []
+        isdict = False
+        for val in obj:
+            if (not isdict and isinstance(val, dict)) :
+                isdict = True
                 
-            if (isdict) :
-                # Sort lists of dictionaries by the hash value of the data in the dictionary
-                _sorted = sorted(new_list, key=lambda d: hash(json.dumps(d, ensure_ascii = True, sort_keys = True)))                
-            else :
-                _sorted = sorted(new_list)
-    
-        else:
-            _sorted = obj
-    
-        return _sorted
+            new_list.append(deep_sort(val))
+            
+        if (isdict) :
+            # Sort lists of dictionaries by the hash value of the data in the dictionary
+            _sorted = sorted(new_list, key=lambda d: hash(json.dumps(d, ensure_ascii = True, sort_keys = True)))                
+        else :
+            _sorted = sorted(new_list)
+
+    else:
+        _sorted = obj
+
+    return _sorted
 
 if __name__ == "__main__":
     unittest.main()

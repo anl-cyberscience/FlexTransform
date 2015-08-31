@@ -84,7 +84,7 @@ class SchemaParser(object) :
                                 DataRow = self._MapRowToSchema(SchemaParser.FlattenDict(row),rowType)
                                 self.MappedData[rowType].append(DataRow)
                             except Exception as inst :
-                                self.logging.exception(inst)
+                                self.logging.error(inst)
                                 # self.logging.debug(str(SchemaParser.FlattenDict(row)))
                         else :
                             raise Exception('NoParsableDataFound', "Data isn't in a parsable dictionary format")
@@ -183,7 +183,7 @@ class SchemaParser(object) :
                             try :
                                 self.TransformedData[rowType].append(self._TransformDataToNewSchema(rowType, row, DocumentHeaderData, DocumentMetaData, oracle))
                             except Exception as inst :
-                                self.logging.exception(inst)
+                                self.logging.error(inst)
                         else :
                             raise Exception('NoParsableDataFound', "Data isn't in a parsable dictionary format")
                         
@@ -675,7 +675,7 @@ class SchemaParser(object) :
                             value = match.group(1) + match.group(2)
                         fieldDict['ParsedValue'] = datetime.datetime.strptime(value, fieldDict['dateTimeFormat'])
                 except Exception as inst :
-                    self.logging.exception(inst)
+                    self.logging.error(inst)
                     raise Exception('DataTypeInvalid', 'Value for field ' + fieldName + ' is not a valid date time value: ' + value)
             elif (dataType == 'enum') :
                 if (value not in fieldDict['enumValues']) :

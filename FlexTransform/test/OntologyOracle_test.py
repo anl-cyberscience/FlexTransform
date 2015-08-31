@@ -10,16 +10,18 @@ TODO:
 '''
 import unittest
 from FlexTransform.OntologyOracle.OntologyOracle import Oracle
-from rdflib import Namespace, RDF, URIRef
+from rdflib import Namespace, RDF, URIRef  # @UnusedImport
+import os
 
-class Test(unittest.TestCase):
+class OntologyOracleTests(unittest.TestCase):
     
     myOracle = None
     IRIBaseNS = None
 
     def setUp(self):
         self.IRIBaseNS = Namespace("http://www.anl.gov/cfm/transform.owl#")
-        self.myOracle = Oracle("../resources/test.owl", self.IRIBaseNS.cfm13schema)
+        currentdir = os.path.dirname(__file__)
+        self.myOracle = Oracle(os.path.join(currentdir,"../resources/test.owl"), self.IRIBaseNS.cfm13schema)
 
     def tearDown(self):
         pass
@@ -55,7 +57,7 @@ class Test(unittest.TestCase):
             if not str(row[0]) == assignedName:
                 self.fail("Expected name %s, but got name %s"%(assignedName, row[0]))
             elif not tpass:
-               tpass = True
+                tpass = True
             else:
                 self.fail("Multiple rows returned after adding only a single triple:\n%s"([str(x) for x in result]))
         if not tpass:
@@ -69,7 +71,7 @@ class Test(unittest.TestCase):
             if not str(row[0]) == individualValue:
                 self.fail("Expected value %s, but got %s"%(individualValue, row[0]))
             elif not tpass:
-               tpass = True
+                tpass = True
             else:
                 self.fail("Multiple rows returned after adding only a single triple:\n%s"%([str(x) for x in result]))
         if not tpass:
@@ -91,7 +93,7 @@ class Test(unittest.TestCase):
             if not str(row[0]) == str(testClass):
                 self.fail("Expected parent class %s, but got class %s"%(testClass, row[0]))
             elif not tpass:
-               tpass = True
+                tpass = True
             else:
                 self.fail("Multiple rows returned after adding only a single triple:\n%s"([str(x) for x in result]))
         if not tpass:
@@ -105,7 +107,7 @@ class Test(unittest.TestCase):
             if not str(row[0]) == individualValue:
                 self.fail("Expected value %s, but got %s"%(individualValue, row[0]))
             elif not tpass:
-               tpass = True
+                tpass = True
             else:
                 self.fail("Multiple rows returned after adding only a single triple:\n%s"([str(x) for x in result]))
         if not tpass:
@@ -115,7 +117,7 @@ class Test(unittest.TestCase):
 
         start = self.myOracle.XFORMNS.PortNumberIndicatorValueSemanticComponent
         expectedParent = self.myOracle.XFORMNS.IndicatorValueSemanticConcept
-        ceiling = self.myOracle.XFORMNS.SemanticComponent
+        ceiling = self.myOracle.XFORMNS.SemanticComponent  # @UnusedVariable
         subject = self.myOracle.XFORMNS.cfm13schema
         predicate = self.myOracle.XFORMNS.containsComponent
         result = self.myOracle.stepUpHierarchy(start, predicate, subject)
@@ -154,7 +156,7 @@ class Test(unittest.TestCase):
         start = self.myOracle.XFORMNS.PortNumberIndicatorValueSemanticComponent
         specializationNode = self.myOracle.XFORMNS.DestinationPortListIndicatorValueSemanticComponent
         generalizationNode = self.myOracle.XFORMNS.IndicatorValueSemanticConcept
-        supportsRelation = self.myOracle.XFORMNS.containsComponent
+        supportsRelation = self.myOracle.XFORMNS.containsComponent  # @UnusedVariable
         requiresRelation = self.myOracle.XFORMNS.requiresComponent
 
         ## Test that we see no results by default:

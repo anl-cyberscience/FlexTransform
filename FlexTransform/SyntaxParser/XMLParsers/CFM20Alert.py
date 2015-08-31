@@ -79,7 +79,7 @@ class CFM20Alert(object):
                     Alerts.append(Alert)
                     
             except Exception as inst :
-                self.logging.exception(inst)
+                self.logging.error(inst)
                 
         # Name space mapping for CFM 2.0 Alert XML documents
         CFM20_URI = "http://www.anl.gov/cfm/2.0/current/CFMAlert"

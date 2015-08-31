@@ -88,7 +88,7 @@ try:
     args.dst.close()
     
 except Exception as inst :
-    log.exception(inst)
+    log.error(inst)
     args.dst.close()
     os.remove(args.dst.name)
     exit(1)
