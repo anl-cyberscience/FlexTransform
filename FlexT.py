@@ -10,9 +10,32 @@ import logging
 
 import argparse
 import os
+import sys
 import json
 
-logging.basicConfig(format='%(name)s (%(pathname)s:%(lineno)d) %(levelname)s:%(message)s', level=logging.DEBUG)
+# Configure logging to send INFO, DEGUB and TRACE messages to stdout and all other logs to stderr
+# Based on code from http://stackoverflow.com/questions/2302315/how-can-info-and-debug-logging-message-be-sent-to-stdout-and-higher-level-messag
+class LessThenFilter(logging.Filter):
+    def __init__(self, level):
+        self._level = level
+        logging.Filter.__init__(self)
+
+    def filter(self, rec):
+        return rec.levelno < self._level
+
+log = logging.getLogger()
+log.setLevel(logging.NOTSET)
+
+sh_out = logging.StreamHandler(stream=sys.stdout)
+sh_out.setLevel(logging.DEBUG)
+sh_out.setFormatter(logging.Formatter('%(name)s (%(pathname)s:%(lineno)d) %(levelname)s:%(message)s'))
+sh_out.addFilter(LessThenFilter(logging.WARNING))
+log.addHandler(sh_out)
+
+sh_err = logging.StreamHandler(stream=sys.stderr)
+sh_err.setLevel(logging.WARNING)
+sh_err.setFormatter(logging.Formatter('%(name)s (%(pathname)s:%(lineno)d) %(levelname)s:%(message)s'))
+log.addHandler(sh_err)
 
 parser = argparse.ArgumentParser(description="Transform a source file's syntax and schema to the target file document type")
 parser.add_argument('--src-config',
@@ -65,10 +88,12 @@ try:
     args.dst.close()
     
 except Exception as inst :
-    logging.exception(inst)
+    log.exception(inst)
     args.dst.close()
     os.remove(args.dst.name)
+    exit(1)
 
 else :
-    logging.info("Success")
+    log.info("Success")
+    exit(0)
 
