@@ -58,3 +58,8 @@ target/
 /.project
 /.pydevproject
 /ISAMarkingExtension/
+
+# virtualenv
+bin/
+include/
+pip-selfcheck.json
