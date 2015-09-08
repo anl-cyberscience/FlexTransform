@@ -48,5 +48,9 @@ setup(
 	'console_scripts': [
 	    'flext = FlexTransform.FlexT:main'
 	]
+    },
+    include_package_data=True,
+    package_data={
+        'FlexTransform': ['resources/*.rdf', 'resources/*.zip', 'resources/schemas/*']
     }
 )
