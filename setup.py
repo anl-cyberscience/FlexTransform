@@ -44,5 +44,9 @@ setup(
         'dumper',
         'rdflib',
     ],
-    scripts=['FlexT.py'],
+    entry_points={
+	'console_scripts': [
+	    'flext = FlexTransform.FlexT:main'
+	]
+    }
 )
