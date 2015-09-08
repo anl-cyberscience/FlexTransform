@@ -1,0 +1,36 @@
+{
+	"DocumentHeaderData": {
+		"fields": {
+			"analyzerid": {
+				"defaultValue": "ANL-CFM"
+			},
+			"location": {
+				"defaultValue": "Argonne National Laboratory - Cyber Fed Model"
+			},
+			"contact_name": {
+				"defaultValue": "Dan Harkness"
+			},
+			"contact_phone": {
+				"required": true,
+				"defaultValue": "630-252-5977"
+			},
+			"contact_email": {
+				"required": true,
+				"defaultValue": "federated-admins@anl.gov"
+			},
+			"report_schedule": {
+				"defaultValue": "5 minutes"
+			}
+		}
+	},
+	"IndicatorData": {
+		"fields": {
+			"reference_origin": {
+				"defaultValue": "user-specific"
+			},
+			"action_duration": {
+				"defaultValue": "86400"
+			}
+		}
+	}
+}
