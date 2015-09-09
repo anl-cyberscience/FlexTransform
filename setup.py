@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 
 setup(
-    name='flext',
+    name='FlexTransform',
     version='1.0.0.b1',
     description='',
     long_description='',
