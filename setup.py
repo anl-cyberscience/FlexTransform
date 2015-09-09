@@ -3,8 +3,7 @@ from setuptools import setup, find_packages
 setup(
     name='FlexTransform',
     version='1.0.0.b1',
-    description='',
-    long_description='',
+    description='Flexible Transform is a tool that enables dynamic translation between formats',
     url='https://github.com/anl-cyberscience/FlexTransform/',
     author='The CFM Team',
     author_email='fedhelp@anl.gov',
