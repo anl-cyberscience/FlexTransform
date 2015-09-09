@@ -51,6 +51,11 @@ setup(
     },
     include_package_data=True,
     package_data={
-        'FlexTransform': ['resources/*.rdf', 'resources/*.zip', 'resources/schemas/*']
+        'FlexTransform': [
+	    'resources/*',
+	    'resources/sampleConfigurations/*',
+	    'resources/schemaDefinitions/*',
+	    'resources/schemas/*'
+	]
     }
 )
