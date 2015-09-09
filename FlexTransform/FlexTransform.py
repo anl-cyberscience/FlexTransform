@@ -92,7 +92,7 @@ class FlexTransform(object):
         return FinalizedData
 
 
-if __name__ == '__main__':
+def main():
     import argparse
     import os
     import json
@@ -157,3 +157,5 @@ if __name__ == '__main__':
     else :
         logging.info("Success")
 
+if __name__ == '__main__':
+    main()

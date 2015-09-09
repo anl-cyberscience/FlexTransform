@@ -4,7 +4,7 @@ Created on Jun 17, 2015
 @author: ahoying
 '''
 
-def main():
+if __name__ == '__main__':
     from FlexTransform import FlexTransform
     from FlexTransform.OntologyOracle import OntologyOracle
     import logging

@@ -46,7 +46,7 @@ setup(
     ],
     entry_points={
 	'console_scripts': [
-	    'flext = FlexTransform.FlexT:main'
+	    'flext = FlexTransform.FlexTransform:main'
 	]
     },
     include_package_data=True,
