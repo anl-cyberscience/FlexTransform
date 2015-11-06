@@ -10,7 +10,7 @@ class ISAMarkingStructure(MarkingStructure):
     '''
     _binding = isa_binding
     _binding_class = isa_binding.ISAMarkingStructureType
-    _namespace = 'http://data-marking.mitre.org/extensions/MarkingStructure#EDH2Cyber-1'
+    _namespace = 'http://www.us-cert.gov/essa/Markings/ISAMarkings'
     _namespace_xsd = 'ISAMarkingsType.xsd'
     _XSI_TYPE = "edh2cyberMarking:ISAMarkingsType"
 
@@ -165,7 +165,7 @@ class ISAMarkingAssertionsStructure(MarkingStructure):
     '''
     _binding = isa_binding
     _binding_class = isa_binding.ISAMarkingAssertionsStructureType
-    _namespace = 'http://data-marking.mitre.org/extensions/MarkingAssertion#EDH2Cyber-1'
+    _namespace = 'http://www.us-cert.gov/essa/Markings/ISAMarkingAssertions'
     _namespace_xsd = 'ISAMarkingsAssertionsType.xsd'
     _XSI_TYPE = "edh2cyberMarkingAssert:ISAMarkingsAssertionType"
 
@@ -509,7 +509,7 @@ class EDH2Text(stix.Entity):
         return str(self.value)
 
 class AddlReference(stix.Entity):
-    _namespace = 'http://data-marking.mitre.org/extensions/MarkingAssertion#EDH2Cyber-1'
+    _namespace = 'http://www.us-cert.gov/essa/Markings/ISAMarkingAssertions'
     _binding = isa_binding
     _binding_class = isa_binding.AddlReferenceType
 
