@@ -249,6 +249,9 @@ class SchemaParser(object) :
                         FieldOrder[field] = 5
                         if (fieldDict['memberof'] not in FieldOrder or FieldOrder[fieldDict['memberof']] <= FieldOrder[field]) :
                             FieldOrder[fieldDict['memberof']] = FieldOrder[field] + 1
+                elif ('dependsOn' in fieldDict) :
+                    if (field not in FieldOrder or FieldOrder[field] < 6) :
+                        FieldOrder[field] = 6
                 else :
                     if (field not in FieldOrder or FieldOrder[field] > 4) :
                         FieldOrder[field] = 4
@@ -945,6 +948,11 @@ class SchemaParser(object) :
                                     if ('Value' in newDict[ReferenceField] and newDict[ReferenceField]['Value'].startswith(val.strip('*'))) :
                                         required = True
                                         break
+                                    else :
+                                        match = re.match(val, newDict[ReferenceField]['Value'])
+                                        if match:
+                                            required = True
+                                            break
 
                 if (required == True or ('required' in fieldDict and fieldDict['required'] == True) ) :
                     if ('defaultValue' in fieldDict) :
@@ -1343,15 +1351,16 @@ class SchemaParser(object) :
                     self.logging.warning('Key %s already exists in data row, value %s, overwritten by DocumentMetaData key with value %s', k, CombinedDataRow[k], v)
                     
             CombinedDataRow.update(DocumentMetaData)
+                           
                 
+        if (DataRow is not None) :
+            # Check to see if the specific data overrides the document header data or document metadata
+            for k, v in DataRow.items() :
+                if (k in CombinedDataRow) :
+                    self.logging.warning('Key %s already exists in data row, value %s, overwritten by DataRow key with value %s', k, CombinedDataRow[k], v)
+                    
+            CombinedDataRow.update(DataRow)
                 
-        # Check to see if the specific data overrides the document header data or document metadata
-        for k, v in DataRow.items() :
-            if (k in CombinedDataRow) :
-                self.logging.warning('Key %s already exists in data row, value %s, overwritten by DataRow key with value %s', k, CombinedDataRow[k], v)
-                
-        CombinedDataRow.update(DataRow)
-        
         for field, fieldDict in CombinedDataRow.items() :
             if ('Value' not in fieldDict) :
                 self.logging.warning("Field %s has no value", field)

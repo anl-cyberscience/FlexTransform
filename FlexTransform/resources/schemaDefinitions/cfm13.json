@@ -519,8 +519,8 @@
 				"valuemap": "Source;Node;@category",
 				"datatype": "enum",
 				"defaultValue": "dns",
-				"requiredIfReferenceField": "classification_text",
-				"requiredIfReferenceValuesMatch": [ "Domain Block:*" ],
+				"requiredIfReferenceField": "source_dns_name",
+				"requiredIfReferenceValuesMatch": [ "*" ],
 				"dependsOn": "source_dns_name",
 				"enumValues": {
 					"dns": {
@@ -562,8 +562,9 @@
 				"datatype": "enum",
 				"defaultValue": "ipv4-addr",
 				"requiredIfReferenceField": "source_address_value",
-				"requiredIfReferenceValuesMatch": [ "[0-9]*" ],
+				"requiredIfReferenceValuesMatch": [ "[0-9].*" ],
 				"ontologyMappingType": "enum",
+				"dependsOn": "source_address_value",
 				"enumValues": {
 					"ipv4-addr": {
 						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#IPv4IndicatorTypeSemanticConcept"
@@ -581,6 +582,7 @@
 				"requiredIfReferenceValues": [ "" ],
 				"ontologyMappingType": "referencedEnum",
 				"ontologyEnumField": "classification_text",
+				"dependsOn": "classification_text",
 				"ontologyMappingEnumValues": {
 					"URL Block:*": {
 						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#URLIndicatorValueSemanticComponent"

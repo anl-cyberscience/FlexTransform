@@ -52,6 +52,9 @@ class KVParser(object):
         
         for line in file :
             try :
+                if isinstance(line, bytes):
+                    line = line.decode('UTF-8')
+                    
                 match = KVRegex.findall(line)
                 DataRow = dict(match)
                 
