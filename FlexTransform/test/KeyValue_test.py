@@ -7,10 +7,10 @@ import unittest
 import os
 
 import logging
-import json
 
 from FlexTransform import FlexTransform
 from .TestData import KeyValueData
+from .utils import deep_sort
 
 class KeyValueTests(unittest.TestCase):
 
@@ -31,7 +31,7 @@ class KeyValueTests(unittest.TestCase):
     def test_kv_to_cfm13(self):
         sample_kv_file = self.KeyValueData.getFile()
         
-        ExpectedDataDict = {'DocumentHeaderData': {'AdditionalData': {'number of alerts in this report': '2',
+        ExpectedDataDict = {'DocumentHeaderData': {'AdditionalData': {'number of alerts in this report': '3',
                                                                        'report schedule': 'NoValue',
                                                                        'report start time': '2012-01-01T07:00:00+0000',
                                                                        'report type': 'alerts'},
@@ -67,7 +67,25 @@ class KeyValueTests(unittest.TestCase):
                                                 'Source': {'Node': {'Address': {'@category': 'ipv4-addr',
                                                                                 'address': '10.11.12.13'}}},
                                                 'Target': {'Service': {'port': '3389',
-                                                                       'protocol': 'TCP'}}}]}
+                                                                       'protocol': 'TCP'}}},
+                                               {'AdditionalData': {'OUO': '0',
+                                                                   'duration': '0',
+                                                                   'recon': '0',
+                                                                   'restriction': 'public'},
+                                                'Assessment': {'Action': {'@category': 'block-installed'}},
+                                                'Classification': {'@text': 'Attacker scanning for SSH, direction:ingress, confidence:0, severity:high',
+                                                                   'Reference': {'@meaning': 'Scanning',
+                                                                                 '@origin': 'unknown',
+                                                                                 'name': 'Scanning',
+                                                                                 'url': ' '}},
+                                                'CreateTime': '2012-01-01T07:00:00+0000',
+                                                'IndicatorType': 'IPv4-Address-Block',
+                                                'Source': {'Node': {'@category': 'dns',
+                                                                    'Address': {'@category': 'ipv4-addr',
+                                                                                'address': '10.11.12.14'},
+                                                                    'name': 'bad.scanning.dom'}},
+                                                'Target': {'Service': {'port': '22', 'protocol': 'TCP'}}}]}
+
         
         with self.assertLogs('FlexTransform.SchemaParser', 'INFO') as cm:
             FinalizedData = self.Transform.TransformFile(sourceFileName=sample_kv_file, sourceParserName='KeyValue', targetParserName='Cfm13Alert')
@@ -79,38 +97,6 @@ class KeyValueTests(unittest.TestCase):
         
         for idx, val in enumerate(ExpectedDataDict['IndicatorData']) :
             self.assertDictEqual(deep_sort(val),deep_sort(FinalizedData['IndicatorData'][idx]))
-
-
-def deep_sort(obj):
-    """
-    Recursively sort list or dict nested lists
-    Based on code from http://stackoverflow.com/questions/18464095/how-to-achieve-assertdictequal-with-assertsequenceequal-applied-to-values
-    """
-
-    if isinstance(obj, dict):
-        _sorted = {}
-        for key in sorted(obj):
-            _sorted[key] = deep_sort(obj[key])
-
-    elif isinstance(obj, list):
-        new_list = []
-        isdict = False
-        for val in obj:
-            if (not isdict and isinstance(val, dict)) :
-                isdict = True
-                
-            new_list.append(deep_sort(val))
-            
-        if (isdict) :
-            # Sort lists of dictionaries by the hash value of the data in the dictionary
-            _sorted = sorted(new_list, key=lambda d: hash(json.dumps(d, ensure_ascii = True, sort_keys = True)))                
-        else :
-            _sorted = sorted(new_list)
-
-    else:
-        _sorted = obj
-
-    return _sorted
 
 if __name__ == "__main__":
     unittest.main()
