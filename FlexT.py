@@ -5,8 +5,9 @@ Created on Jun 17, 2015
 '''
 
 from FlexTransform import FlexTransform
-from FlexTransform.OntologyOracle import OntologyOracle
+from FlexTransform.OntologyOracle import Oracle
 import logging
+import rdflib
 
 import argparse
 import os
@@ -65,7 +66,12 @@ parser.add_argument('--tbox-uri',
                     type=argparse.FileType('r'),
                     help='The uri location of the tbox file to load',
                     required=False)
-
+parser.add_argument('--source-schema-IRI',
+                    help='The ontology IRI for the destination',
+                    required=False)
+parser.add_argument('--destination-schema-IRI',
+                    help='The ontology IRI for the destination',
+                    required=False)
 
 args = parser.parse_args()
 
@@ -81,8 +87,12 @@ try:
     
     kb = None
 
-    if (args.tbox_uri) :
-        kb = OntologyOracle.Oracle(args.tbox_uri)
+    if args.tbox_uri :
+        if args.destination_schema_IRI:
+            kb = Oracle(args.tbox_uri, rdflib.URIRef(args.destination_schema_IRI))
+        else:
+            logging.warn("Ontology file specified, but no destination schema IRI is given.  Ontology will not be used.")
+
 
     FinalizedData = Transform.TransformFile(sourceFileName=args.src, targetFileName=args.dst, sourceParserName='src', targetParserName='dst', sourceMetaData=metadata, oracle=kb)
     args.dst.close()

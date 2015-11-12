@@ -281,7 +281,7 @@
 				"datatype": "enum",
 				"defaultValue": "Unspecified",
 				"requiredIfReferenceField": "reference_origin",
-				"requiredIfReferenceValues": [ "vendor-specific", "user-specific" ], 
+				"requiredIfReferenceValues": [ "vendor-specific", "user-specific", "unknown" ], 
 				"ontologyMappingType": "enum",
 				"enumValues": {
 					"DoS": {
@@ -586,6 +586,9 @@
 				"ontologyMappingEnumValues": {
 					"URL Block:*": {
 						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#URLIndicatorValueSemanticComponent"
+					},
+					"Domain Block:*": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#DerivedFromDomainIPv4IndicatorValueSemanticConcept"
 					},
 					"*": {
 						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#IPv4AddressIndicatorValueSemanticComponent"

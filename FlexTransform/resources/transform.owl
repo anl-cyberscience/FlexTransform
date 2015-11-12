@@ -696,17 +696,18 @@
     
 
 
-    <!-- http://www.anl.gov/cfm/transform.owl#DerivedFromDomainIPv4IndicatorTypeSemanticConcept -->
+    <!-- http://www.anl.gov/cfm/transform.owl#DerivedFromDomainIPv4IndicatorValueSemanticConcept -->
 
-    <Class rdf:about="&cfmft;DerivedFromDomainIPv4IndicatorTypeSemanticConcept">
+    <Class rdf:about="&cfmft;DerivedFromDomainIPv4IndicatorValueSemanticConcept">
         <rdfs:subClassOf rdf:resource="&cfmft;DerivedIndicatorSemanticConcept"/>
+        <rdfs:subClassOf rdf:resource="&cfmft;IPv4AddressIndicatorValueSemanticComponent"/>
     </Class>
     
 
 
-    <!-- http://www.anl.gov/cfm/transform.owl#DerivedFromIPv4ASNIndicatorTypeSemanticConcept -->
+    <!-- http://www.anl.gov/cfm/transform.owl#DerivedFromIPv4ASNIndicatorValueSemanticConcept -->
 
-    <Class rdf:about="&cfmft;DerivedFromIPv4ASNIndicatorTypeSemanticConcept">
+    <Class rdf:about="&cfmft;DerivedFromIPv4ASNIndicatorValueSemanticConcept">
         <rdfs:subClassOf rdf:resource="&cfmft;DerivedIndicatorSemanticConcept"/>
     </Class>
     
@@ -3490,6 +3491,14 @@ Indicates the specific origin or source of a submitted indicator.  For example, 
 
     <Class rdf:about="&cfmft;iSightQualitativeActivityRiskSemanticConcept">
         <rdfs:subClassOf rdf:resource="&cfmft;QualitativeActivityRiskSemanticConcept"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#isight-jsonSchema -->
+
+    <Class rdf:about="&cfmft;isight-jsonSchema">
+        <rdfs:subClassOf rdf:resource="&cfmft;DocumentSchema"/>
     </Class>
     
 

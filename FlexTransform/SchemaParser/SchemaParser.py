@@ -901,6 +901,7 @@ class SchemaParser(object) :
                                 if (fieldDict['ontologyMappingEnumValues']['*']['ontologyMapping'] != '') :
                                     OntologyReference = fieldDict['ontologyMappingEnumValues']['*']['ontologyMapping']
                                     
+                            # TODO: If this test fails, no direct map back to source.  Check the ontology for other options
                             if (OntologyReference in DataDictionary) :
                                 OntologyReferences[OntologyReference].extend(DataDictionary[OntologyReference].keys())
                         else :
