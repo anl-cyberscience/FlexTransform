@@ -93,7 +93,7 @@
 			"indicator_description": {
 				"description": "Description of indicator",
 				"datatype": "string",
-				"defaultValue": "CRISP Report Indicator",
+				"defaultValue": "ES-FedP Report Indicator",
 				"requiredIfReferenceField": "source_file_base64_encoded",
 				"requiredIfReferenceValues": [ "" ],
 				"ontologyMappingType": "simple",
@@ -164,7 +164,7 @@
 			"report_title": {
 				"description": "Title of the report",
 				"datatype": "string",
-				"defaultValue": "Original CRISP Report Document",
+				"defaultValue": "Original ES-FedP Report Document",
 				"requiredIfReferenceField": "source_file_base64_encoded",
 				"requiredIfReferenceValuesMatch": [ "*" ],
 				"ontologyMappingType": "simple",
