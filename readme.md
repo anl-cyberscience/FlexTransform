@@ -1,16 +1,20 @@
 Flexible Transform
 =====
 
-* [Quick Start](qs)
-* Overview
-* Installing
-* Use and testing
-* Architecture
-* Configuration File Details
-* Ontology Overview
+* [Quick Start](Quick-Start-Guide)
+* [Overview](Overview)
+* [Installing](Installing)
+* [Use and testing](Use-and-testing)
+* [Architecture](Architecture)
+* [Configuration File Details](Configuration-File-Details)
+* [Ontology Overview](Ontology-Overview)
 
-<a name="qs"></a>Quick Start Guide
+Quick Start Guide
 --------
+1. Install:
+2. Configure:
+3. Run:
+4. Test:
 
 Overview
 --------
@@ -60,18 +64,17 @@ Using FlexT, organizations are empowered to participate in sharing communities u
 
 Currently Supports:
 
-- Structured Threat Information eXpression (STIX)  with multiple profiles 
-- All CFM XML schemas 
-  - CFM 1.3 Legacy Format
-  - CFM 2.0 Format
-- Key/Value indicator schema
-
+* Structured Threat Information eXpression (STIX)  with multiple profiles 
+* All CFM XML schemas 
+  * CFM 1.3 Legacy Format
+  * CFM 2.0 Format
+* Key/Value indicator schema
+* [FlexText](FlexText) 
 
 Coming Soon:
 
 - Additional Data Formats
   - OpenIOC
-  - FlexText 
 - REST Web-based interface
 
 *Get Involved*
@@ -133,9 +136,16 @@ The configuration file is comprised of several sections including:
 
 *Example config file*
 
+Source config file location -> resources/sampleConfigurations/cfm13.cfg
+Destination config file location -> resources/sampleConfigurations/cfm13_nrel.cfg
+
 *Example metadata file*
 
+Source metadata file location -> resources/sampleMessages/cfm13Uploads/WithMetadata/.anl.Alert.Cfm13Alert
+
 *Example JSON schema file*
+
+Json schema file location -> resources/schemaDefinitions/cfm13.json
 
 Ontology Overview
 ---------
