@@ -2,21 +2,21 @@
 	"DocumentHeaderData": {
 		"fields": {
 			"analyzerid": {
-				"defaultValue": "ANL-CFM"
+				"defaultValue": "E-ISAC"
 			},
 			"location": {
-				"defaultValue": "Argonne National Laboratory - Cyber Fed Model"
+				"defaultValue": "1325 G St, NW, Suite 600, Washington DC 20005"
 			},
 			"contact_name": {
-				"defaultValue": "Dan Harkness"
+				"defaultValue": "Operations Desk"
 			},
 			"contact_phone": {
-				"required": true,
-				"defaultValue": "630-252-5977"
+				"defaultValue": "404-446-9780",
+				"required": true
 			},
 			"contact_email": {
-				"required": true,
-				"defaultValue": "federated-admins@anl.gov"
+				"defaultValue": "operations@esisac.com",
+				"required": true
 			},
 			"report_schedule": {
 				"defaultValue": "5 minutes"
