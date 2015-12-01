@@ -12,9 +12,31 @@ Flexible Transform
 Quick Start Guide
 --------
 1. Install:
+
+    Download the FlexTransform zip file from github and extract it		
 2. Configure:
+
+    Make sure you have Python3 and Pip3 installed in your machine. FlexTransform process needs to be executed with Python3
+
 3. Run:
+
+    An example execution might be:
+           
+       python3 FlexTransform.py \
+        --src-config resources/sampleConfigurations/cfm13.cfg \
+        --src resources/sampleMessages/cfm13Uploads/WithMetadata/anl.Alert.Cfm13Alert \
+        --src-metadata resources/sampleMessages/cfm13Uploads/WithMetadata/.anl.Alert.Cfm13Alert \
+        --dst-config resources/sampleConfigurations/cfm13_nrel.cfg \
+        --dst resources/testing/dst13to13nrelwithMeta.xml \
+        --tbox-uri resources/test.owl
+
+
 4. Test:
+
+    - The process should have created the resources/testing/dst13to13nrelwithMeta.xml file without any errors. 
+    
+    - The converted file should have captured the values from the source file.
+
 
 Overview
 --------
@@ -25,7 +47,7 @@ Most cyber defense systems incorporate some form of cyber threat intelligence (C
 While simple translators can be written to convert data from one format to another, challenges to this approach include:
 
 - An exponential increase in the effort required to support new formats
-- Potential loss of meaning and context (semantics) between formats.
+- Potential loss of meaning and context (semantics) between formats. 
 
 These challenges lead to islands of sharing defined not by communities, but by sharing formats, leaving smaller organizations unable to participate at all, isolated and defenseless.
 
@@ -122,6 +144,16 @@ The above would transform the cfm13 formatted document (anl.Alert.Cfm13Alert) in
 
 Architecture
 ---------
+<figure>
+<a href="FlexTransform/resources/images/dev-figure1.png">
+<img src = "FlexTransform/resources/images/dev-figure1.png" />
+</a>
+
+
+<figcaption>
+Figure 1 - Architecture of FlexTransform.
+</figcaption>
+</figure>
 
 Configuration File Overview
 ---------
@@ -134,18 +166,13 @@ The configuration file is comprised of several sections including:
 * <SYNTAX SPECIFIC Options> -- Depending on the syntax(es) selected above, one or more syntax-specific sections provide details to the syntax parsers on how to digest/produce documents.  For example, a CSV file may or may not have a header line, may treat quotes as optional or required, and may or may not strip spaces.
 * SCHEMA -- The schema section indicates the schema definition files that should be applied to the document along with metadata schema configuration if required.
 
-*Example config file*
 
-Source config file location -> resources/sampleConfigurations/cfm13.cfg
-Destination config file location -> resources/sampleConfigurations/cfm13_nrel.cfg
 
-*Example metadata file*
+[Example Configuration File](FlexTransform/resources/sampleConfigurations/cfm13.cfg)
 
-Source metadata file location -> resources/sampleMessages/cfm13Uploads/WithMetadata/.anl.Alert.Cfm13Alert
+[Example Metadata File](FlexTransform/resources/schemaDefinitions/cfm-metadata.json)
 
-*Example JSON schema file*
-
-Json schema file location -> resources/schemaDefinitions/cfm13.json
+[Example Schema File](FlexTransform/resources/schemaDefinitions/cfm13.json)
 
 Ontology Overview
 ---------
