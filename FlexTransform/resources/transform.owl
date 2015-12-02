@@ -480,6 +480,7 @@
 
     <Class rdf:about="&cfmft;CFM13SharingRestrictionSemanticConcept">
         <rdfs:subClassOf rdf:resource="&cfmft;SharingRestrictionSemanticConcept"/>
+        <rdfs:comment>The set of semantic concepts that CFM uses when specifying sharing restrictions.</rdfs:comment>
     </Class>
     
 
@@ -2533,7 +2534,6 @@ Indicates the specific origin or source of a submitted indicator.  For example, 
     <!-- http://www.anl.gov/cfm/transform.owl#SemanticComponent -->
 
     <Class rdf:about="&cfmft;SemanticComponent">
-        <rdfs:subClassOf rdf:resource="&cfmft;UniqueIdentifierSemanticConcept"/>
         <rdfs:comment xml:lang="en">A semantic component is a combination of a concept and a value (or value set or range) which represents a particular meaning.</rdfs:comment>
     </Class>
     
@@ -2694,6 +2694,7 @@ Indicates the specific origin or source of a submitted indicator.  For example, 
 
     <Class rdf:about="&cfmft;TLPSharingRestrictionSemanticConcept">
         <rdfs:subClassOf rdf:resource="&cfmft;SharingRestrictionSemanticConcept"/>
+        <rdfs:comment>Represents the set of semantic concepts that TLP captures</rdfs:comment>
     </Class>
     
 
@@ -5090,32 +5091,6 @@ Indicates the specific origin or source of a submitted indicator.  For example, 
     <rdf:Description>
         <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AllDisjointClasses"/>
         <members rdf:parseType="Collection">
-            <rdf:Description rdf:about="&cfmft;STIXXMLBody"/>
-            <rdf:Description rdf:about="&cfmft;STIXXMLHeader"/>
-            <rdf:Description rdf:about="&cfmft;XMLAttribute"/>
-            <rdf:Description rdf:about="&cfmft;XMLElement"/>
-        </members>
-    </rdf:Description>
-    <rdf:Description>
-        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AllDisjointClasses"/>
-        <members rdf:parseType="Collection">
-            <rdf:Description rdf:about="&cfmft;DocumentComponent"/>
-            <rdf:Description rdf:about="&cfmft;DocumentSchema"/>
-            <rdf:Description rdf:about="&cfmft;DocumentSyntax"/>
-        </members>
-    </rdf:Description>
-    <rdf:Description>
-        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AllDisjointClasses"/>
-        <members rdf:parseType="Collection">
-            <rdf:Description rdf:about="&cfmft;TLPAmberSemanticConcept"/>
-            <rdf:Description rdf:about="&cfmft;TLPGreenSemanticConcept"/>
-            <rdf:Description rdf:about="&cfmft;TLPRedSemanticConcept"/>
-            <rdf:Description rdf:about="&cfmft;TLPWhiteSemanticConcept"/>
-        </members>
-    </rdf:Description>
-    <rdf:Description>
-        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AllDisjointClasses"/>
-        <members rdf:parseType="Collection">
             <rdf:Description rdf:about="&cfmft;ActionDurationSemanticConcept"/>
             <rdf:Description rdf:about="&cfmft;ActionSemanticConcept"/>
             <rdf:Description rdf:about="&cfmft;CFMReasonSemanticConcept"/>
@@ -5140,9 +5115,21 @@ Indicates the specific origin or source of a submitted indicator.  For example, 
     <rdf:Description>
         <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AllDisjointClasses"/>
         <members rdf:parseType="Collection">
-            <rdf:Description rdf:about="&cfmft;NeedToKnowCFM13SharingRestrictionSemanticConcept"/>
-            <rdf:Description rdf:about="&cfmft;PrivateCFM13SharingRestrictionSemanticConcept"/>
-            <rdf:Description rdf:about="&cfmft;PublicCFM13SharingRestrictionSemanticConcept"/>
+            <rdf:Description rdf:about="&cfmft;TLPAmberSemanticConcept"/>
+            <rdf:Description rdf:about="&cfmft;TLPGreenSemanticConcept"/>
+            <rdf:Description rdf:about="&cfmft;TLPRedSemanticConcept"/>
+            <rdf:Description rdf:about="&cfmft;TLPWhiteSemanticConcept"/>
+        </members>
+    </rdf:Description>
+    <rdf:Description>
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AllDisjointClasses"/>
+        <members rdf:parseType="Collection">
+            <rdf:Description rdf:about="&cfmft;EmailMessageObjectSchemaTypeSpecification"/>
+            <rdf:Description rdf:about="&cfmft;FileObjectSchemaTypeSpecification"/>
+            <rdf:Description rdf:about="&cfmft;HTTPSessionObjectSchemaTypeSpecification"/>
+            <rdf:Description rdf:about="&cfmft;LinkObjectSchemaTypeSpecification"/>
+            <rdf:Description rdf:about="&cfmft;URIObjectSchemaTypeSpecification"/>
+            <rdf:Description rdf:about="&cfmft;WindowsRegistryKeyObjectSchemaTypeSpecification"/>
         </members>
     </rdf:Description>
     <rdf:Description>
@@ -5179,22 +5166,36 @@ Indicates the specific origin or source of a submitted indicator.  For example, 
     <rdf:Description>
         <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AllDisjointClasses"/>
         <members rdf:parseType="Collection">
-            <rdf:Description rdf:about="&cfmft;IndicatorCategoryEndpointCharacteristicsSemanticConcept"/>
-            <rdf:Description rdf:about="&cfmft;IndicatorCategoryMalwareArtifactsSemanticConcept"/>
-            <rdf:Description rdf:about="&cfmft;IndicatorCategoryNetworkActivitySemanticConcept"/>
-            <rdf:Description rdf:about="&cfmft;IndicatorCategoryPhishingSemanticConcept"/>
-            <rdf:Description rdf:about="&cfmft;IndicatorCategoryWatchlistSemanticConcept"/>
+            <rdf:Description rdf:about="&cfmft;NeedToKnowCFM13SharingRestrictionSemanticConcept"/>
+            <rdf:Description rdf:about="&cfmft;PrivateCFM13SharingRestrictionSemanticConcept"/>
+            <rdf:Description rdf:about="&cfmft;PublicCFM13SharingRestrictionSemanticConcept"/>
         </members>
     </rdf:Description>
     <rdf:Description>
         <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AllDisjointClasses"/>
         <members rdf:parseType="Collection">
-            <rdf:Description rdf:about="&cfmft;EmailMessageObjectSchemaTypeSpecification"/>
-            <rdf:Description rdf:about="&cfmft;FileObjectSchemaTypeSpecification"/>
-            <rdf:Description rdf:about="&cfmft;HTTPSessionObjectSchemaTypeSpecification"/>
-            <rdf:Description rdf:about="&cfmft;LinkObjectSchemaTypeSpecification"/>
-            <rdf:Description rdf:about="&cfmft;URIObjectSchemaTypeSpecification"/>
-            <rdf:Description rdf:about="&cfmft;WindowsRegistryKeyObjectSchemaTypeSpecification"/>
+            <rdf:Description rdf:about="&cfmft;STIXXMLBody"/>
+            <rdf:Description rdf:about="&cfmft;STIXXMLHeader"/>
+            <rdf:Description rdf:about="&cfmft;XMLAttribute"/>
+            <rdf:Description rdf:about="&cfmft;XMLElement"/>
+        </members>
+    </rdf:Description>
+    <rdf:Description>
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AllDisjointClasses"/>
+        <members rdf:parseType="Collection">
+            <rdf:Description rdf:about="&cfmft;DocumentComponent"/>
+            <rdf:Description rdf:about="&cfmft;DocumentSchema"/>
+            <rdf:Description rdf:about="&cfmft;DocumentSyntax"/>
+        </members>
+    </rdf:Description>
+    <rdf:Description>
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AllDisjointClasses"/>
+        <members rdf:parseType="Collection">
+            <rdf:Description rdf:about="&cfmft;IndicatorCategoryEndpointCharacteristicsSemanticConcept"/>
+            <rdf:Description rdf:about="&cfmft;IndicatorCategoryMalwareArtifactsSemanticConcept"/>
+            <rdf:Description rdf:about="&cfmft;IndicatorCategoryNetworkActivitySemanticConcept"/>
+            <rdf:Description rdf:about="&cfmft;IndicatorCategoryPhishingSemanticConcept"/>
+            <rdf:Description rdf:about="&cfmft;IndicatorCategoryWatchlistSemanticConcept"/>
         </members>
     </rdf:Description>
     <rdf:Description>
