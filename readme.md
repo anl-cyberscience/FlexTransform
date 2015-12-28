@@ -35,7 +35,7 @@ Quick Start Guide
 
     - The process should have created the resources/testing/dst13to13nrelwithMeta.xml file without any errors. 
     
-    - The converted file should have captured the values from the source file.
+    - The converted file should include the values from the source file.
 
 
 Overview
