@@ -27,8 +27,8 @@ class InlineSchemaTests(unittest.TestCase):
         StixConfig = open(os.path.join(currentdir,'../resources/sampleConfigurations/stix_cfm.cfg'), 'r')
         self.Transform.AddParser('STIX', StixConfig)
         
-        StixConfig = open(os.path.join(currentdir,'./InlineSchemaTest.cfg'), 'r')
-        self.Transform.AddParser('InlineSchema', StixConfig)
+        InlineConfig = open(os.path.join(currentdir,'./InlineSchemaTest.cfg'), 'r')
+        self.Transform.AddParser('InlineSchema', InlineConfig)
         
         self.CFM13Data = CFM13Data()
 
