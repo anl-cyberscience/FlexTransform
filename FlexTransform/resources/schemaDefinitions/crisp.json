@@ -86,6 +86,8 @@
 			"IPv4-Address-Block": [ { "ipv4address": "*" } ],
 			"DNS-Hostname-Block": [ { "fqdn": "*" } ],
 			"Malicious-File-IOC": [	{ "md5hash": "*" } ],
+			"Malicious-File-IOC": [ { "filename": "*"} ],
+			"URL-Block": [ { "url": "*"} ],
 			"Artifact": [ { "source_file_base64_encoded": "*" } ]
 		},
 		
@@ -93,7 +95,7 @@
 			"indicator_description": {
 				"description": "Description of indicator",
 				"datatype": "string",
-				"defaultValue": "ES-FedP Report Indicator",
+				"defaultValue": "CRISP Report Indicator",
 				"requiredIfReferenceField": "source_file_base64_encoded",
 				"requiredIfReferenceValues": [ "" ],
 				"ontologyMappingType": "simple",
@@ -164,11 +166,24 @@
 			"report_title": {
 				"description": "Title of the report",
 				"datatype": "string",
-				"defaultValue": "Original ES-FedP Report Document",
+				"defaultValue": "Original CRISP Report Document",
 				"requiredIfReferenceField": "source_file_base64_encoded",
 				"requiredIfReferenceValuesMatch": [ "*" ],
 				"ontologyMappingType": "simple",
 				"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#IndicatorTitleSemanticConcept"
+			},
+			"filename": {
+				"description": "Filename of a an artifact",
+				"datatype": "string",
+				"ontologyMappingType": "simple",
+				"ontologyMapping": "https://cfm.gss.anl.gov/transform.owl#FileNameIndicatorTypeSemanticComponent"
+			},
+			"url": {
+				"description": "URL of an artifact",
+				"datatype": "string",
+				"defaultValue": "Original CRISP Report Document",
+				"ontologyMappingType": "simple",
+				"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#URLIndicatorSemanticComponent"
 			}
 		}
 	}
