@@ -919,10 +919,16 @@
 						]
 					},
 					"SHA1": {
-						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#SHA1FilehashIndicatorTypeSemanticComponent"
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#SHA1FilehashIndicatorTypeSemanticComponent",
+						"reverseOntologyMappings": [
+							"http://www.anl.gov/cfm/transform.owl#SHA1FilehashIndicatorValueSemanticComponent"
+						]
 					},
 					"SHA256": {
-						"ontologyMapping": ""
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#SHA256FilehashIndicatorTypeSemanticComponent",
+						"reverseOntologyMappings": [
+							"http://www.anl.gov/cfm/transform.owl#SHA256FilehashIndicatorValueSemanticComponent"
+						]
 					},
 					"SSDEEP": {
 						"ontologyMapping": ""
