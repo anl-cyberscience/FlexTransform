@@ -1,0 +1,28 @@
+{
+	"DocumentHeaderData": {
+		"fields": {
+                        "produced_time": {
+                                "description": "Time the report was generated",
+                                "valuemap": "information_source;time;produced_time", 
+                                "datatype": "datetime",
+                                "dateTimeFormat": "%Y-%m-%dT%H:%M:%S%z",
+                                "required": false,
+                                "ontologyMappingType": "simple",
+                                "ontologyMapping": "http://www.anl.gov/cfm/transform.owl#ReportProducedTimeSemanticConcept"
+                        },
+			"handling_markingstructures": {
+				"subfields": { 
+								"handling_markingstructures_color": {"required": true, "primaryKeyMatch": "tlpMarking:TLPMarkingStructureType"}, 
+								"handling_markingstructures_xsitype": {"required": true, "primaryKey": true}, 
+								"handling_markingstructures_statement": {"required": false, "primaryKeyMatch": "simpleMarking:SimpleMarkingStructureType"}
+				},
+				"defaultFields": {
+					"handling_markingstructures_xsitype": "tlpMarking:TLPMarkingStructureType"
+				}
+			},
+			"handling_markingstructures_color": {
+				"defaultValue": "GREEN"
+			}
+		}
+	}
+}

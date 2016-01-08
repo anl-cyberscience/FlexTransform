@@ -1,0 +1,23 @@
+{
+	"DocumentHeaderData": {
+		"fields": {
+			"analyzerid": {
+				"defaultValue": "TEST"
+			},
+			"location": {
+				"defaultValue": "TEST"
+			},
+			"contact_name": {
+				"defaultValue": "Test User"
+			},
+			"contact_phone": {
+				"defaultValue": "555-555-1212",
+				"required": true
+			},
+			"contact_email": {
+				"defaultValue": "test@test.int",
+				"required": true
+			}
+		}
+	}
+}

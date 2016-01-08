@@ -1,0 +1,536 @@
+{
+	"IndicatorData": {
+		"types": {
+			"IPv4-Address-Block": [ ],
+			"IPv6-Address-Block": [ ],
+			"DNS-Hostname-Block": [ ],
+			"URL-Block": [ ],
+			"DNS-Hostname-Revoke": [ ],
+			"IPv4-Address-Revoke": [ ]
+		},
+		"fields": {
+			"dataItemID": {
+				"description": "UUID for data item",
+				"datatype": "string",
+				"required": false,
+				"ontologyMappingType": "multiple",
+				"ontologyMappings": [
+					"http://www.anl.gov/cfm/transform.owl#UUIDv4DataItemIdentifierSemanticConcept",
+					"http://www.anl.gov/cfm/transform.owl#UUIDv4IndicatorIdentifierSemanticConcept"
+				]
+			},
+			"fileID": {
+				"description": "UUID for file",
+				"datatype": "string",
+				"required": false,
+				"ontologyMappingType": "multiple",
+				"ontologyMappings": [
+					"http://www.anl.gov/cfm/transform.owl#UUIDv4DocumentIdentifierSemanticConcept",
+					"http://www.anl.gov/cfm/transform.owl#UniqueFileIdentifierSemanticConcept"
+				]
+			},
+			"detectedTime": {
+				"description": "UTC epoch of time in the alert itself (if present, filled with reportedTime if not)",
+				"datatype": "datetime",
+				"dateTimeFormat": "unixtime",
+				"required": false,
+				"ontologyMappingType": "multiple",
+				"ontologyMappings": [
+						"http://www.anl.gov/cfm/transform.owl#TimeOfDetectionSemanticConcept",
+						"http://www.anl.gov/cfm/transform.owl#ReportSubmittedTimeSemanticConcept"
+				]
+			},
+			"reportedTime": {
+				"description": "UTC epoch of time reported to CFM (or other system)",
+				"datatype": "datetime",
+				"dateTimeFormat": "unixtime",
+				"required": false,
+				"ontologyMappingType": "simple",
+				"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#ReportSubmittedTimeSemanticConcept"
+			},
+			"processedTime": {
+				"description": "UTC epoch of time processed locally on client (i.e. when THIS parsed record was created)",
+				"datatype": "datetime",
+				"dateTimeFormat": "unixtime",
+				"required": true,
+				"defaultValue": "&now()",
+				"ontologyMappingType": "simple",
+				"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#TimeAlertProcessedOnClientSemanticConcept"
+			},
+			"indicator": {
+				"description": "The value to be acted upon (e.g. ip, domain name, URL)",
+				"datatype": "string",
+				"required": true,
+				"ontologyMappingType": "multiple",
+				"ontologyMappings": [ 
+					"http://www.anl.gov/cfm/transform.owl#IPv4AddressIndicatorValueSemanticComponent", 
+					"http://www.anl.gov/cfm/transform.owl#DNSIndicatorValueSemanticComponent",
+					"http://www.anl.gov/cfm/transform.owl#URLIndicatorMetadataSemanticComponent",
+					"http://www.anl.gov/cfm/transform.owl#URLIndicatorValueSemanticComponent",
+					"http://www.anl.gov/cfm/transform.owl#IPv6AddressIndicatorValueSemanticComponent"
+				]
+			},
+			"indicatorType": {
+				"description": "A type name that informs how to interpret the indicator (e.g. ipv4, emailAddress) (enum)",
+				"datatype": "enum",
+				"required": true,
+				"ontologyMappingType": "enum",
+				"enumValues": { 
+					"IPv6Address": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#IPv6IndicatorTypeSemanticComponent",
+						"reverseOntologyMappings": [
+							"http://www.anl.gov/cfm/transform.owl#IPv6AddressIndicatorValueSemanticComponent"
+						]
+					},
+					"IPv4Address": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#IPv4IndicatorTypeSemanticComponent",
+						"reverseOntologyMappings": [
+							"http://www.anl.gov/cfm/transform.owl#IPv4AddressIndicatorValueSemanticComponent"
+						]
+					},
+					"IPProtocol": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#IPProtocolIndicatorTypeSemanticComponent"
+					},
+					"EmailAddress": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#EmailAddressIndicatorTypeSemanticComponent"
+					},
+					"URL": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#URLIndicatorTypeSemanticComponent",
+						"reverseOntologyMappings": [
+							"http://www.anl.gov/cfm/transform.owl#URLIndicatorMetadataSemanticComponent",
+							"http://www.anl.gov/cfm/transform.owl#URLIndicatorValueSemanticComponent"
+						]
+					},
+					"DNSDomainName": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#DNSDomainNameIndicatorTypeSemanticComponent",
+						"reverseOntologyMappings": [
+							"http://www.anl.gov/cfm/transform.owl#DNSIndicatorValueSemanticComponent"
+						]
+					},
+					"DNSHostName": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#DNSHostNameIndicatorTypeSemanticComponent"
+					},
+					"FileName": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#FileNameIndicatorTypeSemanticComponent"
+					},
+					"UserName": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#UserNameIndicatorTypeSemanticComponent"
+					},
+					"FileMD5Hash": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#FileMD5HashIndicatorTypeSemanticComponent"
+					},
+					"FileSHA1Hash": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#FileSHA1HashIndicatorTypeSemanticComponent"
+					},
+					"FileSizeBytes": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#FileSizeBytesIndicatorTypeSemanticComponent"
+					},
+					"FileSizeMegabytes": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#FileSizeMegabytesIndicatorTypeSemanticComponent"
+					},
+					"SSHKeyFingerprint": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#SSHKeyFingerprintIndicatorTypeSemanticComponent"
+					},
+					"EmailSubject": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#EmailSubjectIndicatorTypeSemanticComponent"
+					},
+					"EmailBody": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#EmailBodyIndicatorTypeSemanticComponent"
+					},
+					"EmailHeader": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#EmailHeaderIndicatorTypeSemanticComponent"
+					}
+				}
+			},
+			"indicatorDirection": {
+				"description": "enum { source, destination }",
+				"datatype": "enum",
+				"required": false,
+				"ontologyMappingType": "enum",
+				"enumValues": { 
+					"source": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#NetworkSourceDirectionIndicatorSemanticComponent"
+					},
+					"destination": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#NetworkDestinationDirectionIndicatorSemanticComponent"
+					}
+				}
+			},
+			"secondaryIndicator": {
+				"description": "The value to be acted upon (e.g. ip, domain name, URL)",
+				"datatype": "string",
+				"required": false,
+				"ontologyMappingType": "multiple",
+				"ontologyMappings": [ 
+					"http://www.anl.gov/cfm/transform.owl#DNSHostNameIPv4IndicatorMetadataSemanticComponent"
+				]
+			},
+			"secondaryIndicatorType": {
+				"description": "A type name that informs how to interpret the indicator (e.g. ipv4, emailAddress) (enum)",
+				"datatype": "enum",
+				"requiredIfReferenceField": "secondaryIndicator",
+				"requiredIfReferenceValuesMatch": [ "*" ],
+				"ontologyMappingType": "enum",
+				"enumValues": { 
+					"IPv6Address": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#IPv6IndicatorTypeSemanticComponent"
+					},
+					"IPv4Address": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#IPv4IndicatorTypeSemanticComponent"
+					},
+					"IPProtocol": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#IPProtocolIndicatorTypeSemanticComponent"
+					},
+					"EmailAddress": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#EmailAddressIndicatorTypeSemanticComponent"
+					},
+					"URL": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#URLIndicatorTypeSemanticComponent"
+					},
+					"DNSDomainName": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#RelatedDomainNameObjectSchemaTypeSpecification",
+						"reverseOntologyMappings": [
+							"http://www.anl.gov/cfm/transform.owl#DNSHostNameIPv4IndicatorMetadataSemanticComponent"
+						]
+					},
+					"DNSHostName": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#DNSHostNameIndicatorTypeSemanticComponent"
+					},
+					"FileName": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#FileNameIndicatorTypeSemanticComponent"
+					},
+					"UserName": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#UserNameIndicatorTypeSemanticComponent"
+					},
+					"FileMD5Hash": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#FileMD5HashIndicatorTypeSemanticComponent"
+					},
+					"FileSHA1Hash": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#FileSHA1HashIndicatorTypeSemanticComponent"
+					},
+					"FileSizeBytes": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#FileSizeBytesIndicatorTypeSemanticComponent"
+					},
+					"FileSizeMegabytes": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#FileSizeMegabytesIndicatorTypeSemanticComponent"
+					},
+					"SSHKeyFingerprint": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#SSHKeyFingerprintIndicatorTypeSemanticComponent"
+					},
+					"EmailSubject": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#EmailSubjectIndicatorTypeSemanticComponent"
+					},
+					"EmailBody": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#EmailBodyIndicatorTypeSemanticComponent"
+					},
+					"EmailHeader": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#EmailHeaderIndicatorTypeSemanticComponent"
+					}
+				}
+			},
+			"secondaryIndicatorDirection": {
+				"description": "enum { source, destination }",
+				"datatype": "enum",
+				"required": false,
+				"ontologyMappingType": "enum",
+				"enumValues": { 
+					"source": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#NetworkSourceDirectionIndicatorSemanticComponent"
+					},
+					"destination": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#NetworkDestinationDirectionIndicatorSemanticComponent"
+					}
+				}
+			},
+			"directSource": {
+				"description": "The CFM site abbr (or other applicable identifier) that uploaded the data",
+				"datatype": "string",
+				"required": false,
+				"ontologyMappingType": "simple",
+				"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#SiteAbbreviationSemanticConcept"
+			},
+			"secondarySource": {
+				"description": "String representing where the CFM site got it from (when appropriate)",
+				"datatype": "string",
+				"required": false,
+				"ontologyMappingType": "simple",
+				"ontologyMapping": ""
+			},
+			"action1": {
+				"description": "An action to be performed when the indicator is seen (semi-enum)",
+				"datatype": "enum",
+				"required": true,
+				"defaultValue": "Block",
+				"ontologyMappingType": "enum",
+				"enumValues": { 
+					"Block": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#BlockInstalledResponseActionTakenSemanticConcept"
+					},
+					"Watch": {
+						"ontologyMapping": ""
+					},
+					"Notify": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#NotificationSentResponseActionTakenSemanticConcept"
+					},
+					"SendReport": {
+						"ontologyMapping": ""
+					},
+					"OtherAction": {
+						"ontologyMapping": ""
+					},
+					"Revoke": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#RevocationAlertBehaviorCharacterizationSemanticComponent"
+					}
+				}
+			},
+			"duration1": {
+				"description": "How long the action is to be performed",
+				"datatype": "int",
+				"required": true,
+				"defaultValue": "86400",
+				"ontologyMappingType": "simple",
+				"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#ActionDurationSemanticConcept"
+			},
+			"action2": {
+				"description": "A secondary action to be performed when the indicator is seen (semi-enum)",
+				"datatype": "enum",
+				"required": false,
+				"ontologyMappingType": "enum",
+				"enumValues": { 
+					"Block": {
+						"ontologyMapping": ""
+					},
+					"Watch": {
+						"ontologyMapping": ""
+					},
+					"Notify": {
+						"ontologyMapping": ""
+					},
+					"SendReport": {
+						"ontologyMapping": ""
+					},
+					"OtherAction": {
+						"ontologyMapping": ""
+					},
+					"Revoke": {
+						"ontologyMapping": ""
+					}
+				}
+			},
+			"duration2": {
+				"description": "How long the secondary action is to be performed",
+				"datatype": "int",
+				"requiredIfReferenceField": "action2",
+				"requiredIfReferenceValuesMatch": [ "*" ],
+				"defaultValue": "86400",
+				"ontologyMappingType": "simple",
+				"ontologyMapping": ""
+			},
+			"reason1": {
+				"description": "First reason for this alert",
+				"datatype": "string",
+				"required": false,
+				"defaultValue": "noValue",
+				"ontologyMappingType": "multiple",
+				"ontologyMappings": [
+					"http://www.anl.gov/cfm/transform.owl#AlertReferenceNameSemanticComponent",
+					"http://www.anl.gov/cfm/transform.owl#DOSAlertBehaviorCharacterizationSemanticComponent",
+					"http://www.anl.gov/cfm/transform.owl#ScanningAlertBehaviorCharacterizationSemanticComponent",
+					"http://www.anl.gov/cfm/transform.owl#ReconnaissanceAlertBehaviorCharacterizationSemanticComponent",
+					"http://www.anl.gov/cfm/transform.owl#BotnetAlertBehaviorCharacterizationSemanticComponent",
+					"http://www.anl.gov/cfm/transform.owl#MalwareTrafficAlertBehaviorCharacterizationSemanticComponent",
+					"http://www.anl.gov/cfm/transform.owl#ExploitAlertBehaviorCharacterizationSemanticComponent",
+					"http://www.anl.gov/cfm/transform.owl#SpamAlertBehaviorCharacterizationSemanticComponent",
+					"http://www.anl.gov/cfm/transform.owl#PhishingAlertBehaviorCharacterizationSemanticComponent",
+					"http://www.anl.gov/cfm/transform.owl#UnauthorizedUseAlertBehaviorCharacterizationSemanticComponent",
+					"http://www.anl.gov/cfm/transform.owl#KnownBadActorAlertBehaviorCharacterizationSemanticComponent",
+					"http://www.anl.gov/cfm/transform.owl#RevocationAlertBehaviorCharacterizationSemanticComponent",
+					"http://www.anl.gov/cfm/transform.owl#UnspecifiedAlertBehaviorCharacterizationSemanticComponent"
+				]
+			},
+			"reference1": {
+				"description": "Reference for info for reason",
+				"datatype": "string",
+				"required": false,
+				"ontologyMappingType": "multiple",
+				"ontologyMappings": [
+					"http://www.anl.gov/cfm/transform.owl#UnknownOriginSemanticConcept",
+					"http://www.anl.gov/cfm/transform.owl#VendorSpecificOriginSemanticConcept",
+					"http://www.anl.gov/cfm/transform.owl#UserSpecificOriginSemanticConcept",
+					"http://www.anl.gov/cfm/transform.owl#BugTraqOriginSemanticConcept",
+					"http://www.anl.gov/cfm/transform.owl#CVEOriginSemanticConcept",
+					"http://www.anl.gov/cfm/transform.owl#OSVDBOriginSemanticConcept"
+				]
+			},
+			"reason2": {
+				"description": "Additional reason for this alert",
+				"datatype": "string",
+				"required": false,
+				"ontologyMappingType": "simple",
+				"ontologyMapping": ""
+			},
+			"reference2": {
+				"description": "Reference for info for reason",
+				"datatype": "string",
+				"required": false,
+				"ontologyMappingType": "simple",
+				"ontologyMapping": ""
+			},
+			"majorTags": {
+				"description": "A string containing a comma separated list of tags. These are high-level concepts that tend to remain 'tag worthy' over time (e.g. Ransomware)",
+				"datatype": "string",
+				"required": false,
+				"ontologyMappingType": "multiple",
+				"ontologyMappings": [
+					"http://www.anl.gov/cfm/transform.owl#DOSAlertBehaviorCharacterizationSemanticComponent",
+					"http://www.anl.gov/cfm/transform.owl#ScanningAlertBehaviorCharacterizationSemanticComponent",
+					"http://www.anl.gov/cfm/transform.owl#ReconnaissanceAlertBehaviorCharacterizationSemanticComponent",
+					"http://www.anl.gov/cfm/transform.owl#BotnetAlertBehaviorCharacterizationSemanticComponent",
+					"http://www.anl.gov/cfm/transform.owl#MalwareTrafficAlertBehaviorCharacterizationSemanticComponent",
+					"http://www.anl.gov/cfm/transform.owl#ExploitAlertBehaviorCharacterizationSemanticComponent",
+					"http://www.anl.gov/cfm/transform.owl#SpamAlertBehaviorCharacterizationSemanticComponent",
+					"http://www.anl.gov/cfm/transform.owl#PhishingAlertBehaviorCharacterizationSemanticComponent",
+					"http://www.anl.gov/cfm/transform.owl#UnauthorizedUseAlertBehaviorCharacterizationSemanticComponent",
+					"http://www.anl.gov/cfm/transform.owl#KnownBadActorAlertBehaviorCharacterizationSemanticComponent"
+				]
+			},
+			"minorTags": {
+				"description": "A string containing a comma separated list of tags. These are highly detailed and/or only important for a short time (e.g. Cryptolocker)",
+				"datatype": "string",
+				"required": false,
+				"ontologyMappingType": "simple",
+				"ontologyMapping": ""
+			},
+			"restriction": {
+				"description": "The TLP level for the indicator",
+				"datatype": "enum",
+				"required": false,
+				"ontologyMappingType": "enum",
+				"enumValues": {
+					"WHITE": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#TLPWhiteSemanticConcept"
+					},					
+					"GREEN": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#TLPGreenSemanticConcept"
+					},
+					"AMBER": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#TLPAmberSemanticConcept"
+					},
+					"RED": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#TLPRedSemanticConcept"
+					}
+				}
+			},
+			"sensitivity": {
+				"description": "OUO marking",
+				"datatype": "enum",
+				"required": true,
+				"defaultValue": "noSensitivity",
+				"ontologyMappingType": "enum",
+				"enumValues": {
+					"ouo": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#OUOSemanticConcept"
+					},					
+					"noSensitivity": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#NotOUOSemanticConcept"
+					}
+				}
+			},
+			"reconAllowed": {
+				"description": "Boolean: true (default) = recon is ok, false = recon is not ok",
+				"datatype": "enum",
+				"required": true,
+				"defaultValue": "1",
+				"ontologyMappingType": "enum",
+				"enumValues": {
+					"1": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#ReconAllowedSemanticConcept"
+					},
+					"0": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#ReconNotAllowedSemanticConcept"
+					}
+				}
+			},
+			"priors": {
+				"description": "number of previous (known) reports",
+				"datatype": "int",
+				"required": false,
+				"ontologyMappingType": "simple",
+				"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#PriorIndicatorReportsSemanticConcept"
+			},
+			"confidence": {
+				"description": "Confidence in accuracy: 0 = none, 100 = full",
+				"datatype": "int",
+				"dataRange": "0-100",
+				"required": false,
+				"ontologyMappingType": "simple",
+				"ontologyMapping": ""
+			},
+			"severity": {
+				"description": "How significant is the impact (assuming relevant): 0 = no impact, 100 = catastrophic",
+				"datatype": "int",
+				"dataRange": "0-100",
+				"required": false,
+				"ontologyMappingType": "simple",
+				"ontologyMapping": ""
+			},
+			"relevancy": {
+				"description": "How relevant is this alert: 0 = not applicable, 100 = perfectly targeted",
+				"datatype": "int",
+				"dataRange": "0-100",
+				"required": false,
+				"ontologyMappingType": "simple",
+				"ontologyMapping": ""
+			},
+			"relatedID": {
+				"description": "UUID of a related indicator",
+				"datatype": "string",
+				"required": false,
+				"ontologyMappingType": "simple",
+				"ontologyMapping": ""
+			},
+			"relationType": {
+				"description": "OUO marking",
+				"datatype": "enum",
+				"required": false,
+				"ontologyMappingType": "enum",
+				"enumValues": {
+					"supersedes": {
+						"ontologyMapping": ""
+					},
+					"extends": {
+						"ontologyMapping": ""
+					},
+					"superseded by": {
+						"ontologyMapping": ""
+					},
+					"extended by": {
+						"ontologyMapping": ""
+					}
+				}
+			},
+			"comment": {
+				"description": "A string that represents a comment that was included with the alert",
+				"datatype": "string",
+				"required": false,
+				"ontologyMappingType": "simple",
+				"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#IndicatorDescriptionSemanticConcept"
+			},
+			"fileHasMore": {
+				"description": "boolean: false (default) = data item was fully translated, true = More details on the data item are present in file)",
+				"datatype": "enum",
+				"required": true,
+				"defaultValue": "0",
+				"ontologyMappingType": "enum",
+				"enumValues": {
+					"0": {
+						"ontologyMapping": ""
+					},
+					"1": {
+						"ontologyMapping": ""
+					}
+				}
+			}
+		}
+	}
+}

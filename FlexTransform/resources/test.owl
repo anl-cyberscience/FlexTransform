@@ -1,0 +1,4923 @@
+<?xml version="1.0"?>
+
+
+<!DOCTYPE rdf:RDF [
+    <!ENTITY xsd "http://www.w3.org/2001/XMLSchema#" >
+    <!ENTITY cfmft "http://www.anl.gov/cfm/transform.owl#" >
+    <!ENTITY rdfs "http://www.w3.org/2000/01/rdf-schema#" >
+    <!ENTITY rdf "http://www.w3.org/1999/02/22-rdf-syntax-ns#" >
+]>
+
+
+<rdf:RDF xmlns="http://www.w3.org/2002/07/owl#"
+     xml:base="http://www.w3.org/2002/07/owl"
+     xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+     xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+     xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+     xmlns:cfmft="http://www.anl.gov/cfm/transform.owl#">
+    <Ontology rdf:about="http://www.anl.gov/cfm/transform.owl">
+        <rdfs:comment xml:lang="en">This ontology will capture the concepts and relations necessar to perform flexible transformations of indicator and other cyber threat data.  That is, it will provide representational structure in a semantically rich and syntactically neutral way such that parsing and producing data in a variety of formats is automatable.</rdfs:comment>
+    </Ontology>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Object Properties
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#containsComponent -->
+
+    <ObjectProperty rdf:about="&cfmft;containsComponent">
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#TransitiveProperty"/>
+    </ObjectProperty>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#hasComponentName -->
+
+    <ObjectProperty rdf:about="&cfmft;hasComponentName"/>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#hasComponentValue -->
+
+    <ObjectProperty rdf:about="&cfmft;hasComponentValue"/>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#hasEncoding -->
+
+    <ObjectProperty rdf:about="&cfmft;hasEncoding"/>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#hasEscapeCharacter -->
+
+    <ObjectProperty rdf:about="&cfmft;hasEscapeCharacter"/>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#hasSemanticConcept -->
+
+    <ObjectProperty rdf:about="&cfmft;hasSemanticConcept">
+        <rdfs:domain rdf:resource="&cfmft;SemanticComponent"/>
+        <rdfs:range rdf:resource="&cfmft;SemanticConcept"/>
+    </ObjectProperty>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#hasSemanticValue -->
+
+    <ObjectProperty rdf:about="&cfmft;hasSemanticValue">
+        <rdfs:domain rdf:resource="&cfmft;SemanticComponent"/>
+        <rdfs:range rdf:resource="&cfmft;SemanticValue"/>
+    </ObjectProperty>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#hasSyntax -->
+
+    <ObjectProperty rdf:about="&cfmft;hasSyntax"/>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#hasValueForm -->
+
+    <ObjectProperty rdf:about="&cfmft;hasValueForm"/>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#requiresComponent -->
+
+    <ObjectProperty rdf:about="&cfmft;requiresComponent">
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#TransitiveProperty"/>
+        <rdfs:subPropertyOf rdf:resource="&cfmft;containsComponent"/>
+    </ObjectProperty>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#requiresSemanticComponent -->
+
+    <ObjectProperty rdf:about="&cfmft;requiresSemanticComponent">
+        <rdfs:subPropertyOf rdf:resource="&cfmft;supportsSemanticComponent"/>
+    </ObjectProperty>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#supportsSemanticComponent -->
+
+    <ObjectProperty rdf:about="&cfmft;supportsSemanticComponent"/>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#usesSchema -->
+
+    <ObjectProperty rdf:about="&cfmft;usesSchema"/>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Data properties
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#hasNameValue -->
+
+    <DatatypeProperty rdf:about="&cfmft;hasNameValue"/>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#hasSourceData -->
+
+    <DatatypeProperty rdf:about="&cfmft;hasSourceData">
+        <rdfs:domain rdf:resource="&cfmft;SourceComponent"/>
+        <rdfs:range rdf:resource="&xsd;base64Binary"/>
+    </DatatypeProperty>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#hasValueType -->
+
+    <DatatypeProperty rdf:about="&cfmft;hasValueType"/>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Classes
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owlassessment_action-Bag -->
+
+    <Class rdf:about="http://www.anl.gov/cfm/transform.owlassessment_action-Bag">
+        <rdfs:subClassOf rdf:resource="&cfmft;SemanticComponent"/>
+        <rdfs:comment xml:lang="en">Action taken by the submitting site on this alert</rdfs:comment>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owlassessment_description-Bag -->
+
+    <Class rdf:about="http://www.anl.gov/cfm/transform.owlassessment_description-Bag">
+        <rdfs:subClassOf rdf:resource="http://www.anl.gov/cfm/transform.owlassessment_action-Bag"/>
+        <rdfs:comment xml:lang="en">Site description of action taken on this alert</rdfs:comment>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owlouo-Bag -->
+
+    <Class rdf:about="http://www.anl.gov/cfm/transform.owlouo-Bag">
+        <rdfs:subClassOf rdf:resource="&cfmft;SemanticComponent"/>
+        <rdfs:comment xml:lang="en">Is this document ouo (0 means no, 1 means yes)</rdfs:comment>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owlrecon-Bag -->
+
+    <Class rdf:about="http://www.anl.gov/cfm/transform.owlrecon-Bag">
+        <rdfs:subClassOf rdf:resource="&cfmft;SemanticComponent"/>
+        <rdfs:comment xml:lang="en">Is recon allowed (0 means yes, 1 means no)</rdfs:comment>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owlreference_meaning-Bag -->
+
+    <Class rdf:about="http://www.anl.gov/cfm/transform.owlreference_meaning-Bag">
+        <rdfs:subClassOf rdf:resource="&cfmft;SemanticComponent"/>
+        <rdfs:comment xml:lang="en">The category for the alert</rdfs:comment>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owlreference_origin-Bag -->
+
+    <Class rdf:about="http://www.anl.gov/cfm/transform.owlreference_origin-Bag">
+        <rdfs:subClassOf rdf:resource="&cfmft;SemanticComponent"/>
+        <rdfs:comment xml:lang="en">Origin of the alert</rdfs:comment>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owlreport_tlp-Bag -->
+
+    <Class rdf:about="http://www.anl.gov/cfm/transform.owlreport_tlp-Bag">
+        <rdfs:subClassOf rdf:resource="&cfmft;SemanticComponent"/>
+        <rdfs:comment xml:lang="en">The TLP restriction for this document</rdfs:comment>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owlreport_type-Bag -->
+
+    <Class rdf:about="http://www.anl.gov/cfm/transform.owlreport_type-Bag">
+        <rdfs:subClassOf rdf:resource="&cfmft;SemanticComponent"/>
+        <rdfs:comment xml:lang="en">The type of report</rdfs:comment>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owlrestriction-Bag -->
+
+    <Class rdf:about="http://www.anl.gov/cfm/transform.owlrestriction-Bag">
+        <rdfs:subClassOf rdf:resource="&cfmft;SemanticComponent"/>
+        <rdfs:comment xml:lang="en">Restriction for use of data</rdfs:comment>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owlsource_address_type-Bag -->
+
+    <Class rdf:about="http://www.anl.gov/cfm/transform.owlsource_address_type-Bag">
+        <rdfs:subClassOf rdf:resource="&cfmft;SemanticComponent"/>
+        <rdfs:comment xml:lang="en">The type for the alert source</rdfs:comment>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#ActionDescriptionSemanticConcept -->
+
+    <Class rdf:about="&cfmft;ActionDescriptionSemanticConcept">
+        <rdfs:subClassOf rdf:resource="&cfmft;SemanticComponent"/>
+        <rdfs:comment xml:lang="en">A description of the action associated with a reported indicator.</rdfs:comment>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#ActionDurationSemanticConcept -->
+
+    <Class rdf:about="&cfmft;ActionDurationSemanticConcept">
+        <rdfs:subClassOf rdf:resource="&cfmft;SemanticComponent"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#ActionRecommendedDescriptionSemanticComponent -->
+
+    <Class rdf:about="&cfmft;ActionRecommendedDescriptionSemanticComponent">
+        <rdfs:subClassOf rdf:resource="&cfmft;ActionDescriptionSemanticConcept"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#ActionRestrictionSemanticConcept -->
+
+    <Class rdf:about="&cfmft;ActionRestrictionSemanticConcept">
+        <rdfs:subClassOf rdf:resource="&cfmft;ActionSemanticConcept"/>
+        <disjointWith rdf:resource="&cfmft;ResponseActionSemanticConcept"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#ActionSemanticConcept -->
+
+    <Class rdf:about="&cfmft;ActionSemanticConcept">
+        <rdfs:subClassOf rdf:resource="&cfmft;SemanticComponent"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#ActionTakenDescriptionSemanticComponent -->
+
+    <Class rdf:about="&cfmft;ActionTakenDescriptionSemanticComponent">
+        <rdfs:subClassOf rdf:resource="&cfmft;ActionDescriptionSemanticConcept"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#ActionThresholdSemanticConcept -->
+
+    <Class rdf:about="&cfmft;ActionThresholdSemanticConcept">
+        <rdfs:subClassOf rdf:resource="&cfmft;SemanticComponent"/>
+        <rdfs:comment xml:lang="en">Number of times seen before action was taken</rdfs:comment>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#AddressObjectSchemaTypeSpecification -->
+
+    <Class rdf:about="&cfmft;AddressObjectSchemaTypeSpecification">
+        <rdfs:subClassOf rdf:resource="&cfmft;SchemaTypeSpecifications"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#AlertBehaviorCharacterizationSemanticComponent -->
+
+    <Class rdf:about="&cfmft;AlertBehaviorCharacterizationSemanticComponent">
+        <rdfs:subClassOf rdf:resource="&cfmft;SemanticComponent"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#AlertReferenceNameSemanticConcept -->
+
+    <Class rdf:about="&cfmft;AlertReferenceNameSemanticConcept">
+        <rdfs:subClassOf rdf:resource="&cfmft;SemanticComponent"/>
+        <rdfs:comment xml:lang="en">The name of the alert, from one of the IndicatorOriginSemanticConcepts</rdfs:comment>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#AlertReferenceURLSemanticComponent -->
+
+    <Class rdf:about="&cfmft;AlertReferenceURLSemanticComponent">
+        <rdfs:subClassOf rdf:resource="&cfmft;SemanticComponent"/>
+        <rdfs:comment xml:lang="en">A URL at which the manager (or the human operator of the manager) can find additional information about the alert. The document pointed to by the URL may include an in-depth description of the attack, appropriate countermeasures, or other information deemed relevant by the vendor.</rdfs:comment>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#BlockInstalledResponseActionTakenSemanticConcept -->
+
+    <Class rdf:about="&cfmft;BlockInstalledResponseActionTakenSemanticConcept">
+        <rdfs:subClassOf rdf:resource="&cfmft;ResponseActionTakenSemanticConcept"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#BotnetAlertBehaviorCharacterizationSemanticComponent -->
+
+    <Class rdf:about="&cfmft;BotnetAlertBehaviorCharacterizationSemanticComponent">
+        <rdfs:subClassOf rdf:resource="&cfmft;AlertBehaviorCharacterizationSemanticComponent"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#BugTraqOriginSemanticConcept -->
+
+    <Class rdf:about="&cfmft;BugTraqOriginSemanticConcept">
+        <rdfs:subClassOf rdf:resource="&cfmft;IndicatorOriginSemanticConcept"/>
+        <rdfs:comment xml:lang="en">Signifies that a submitted indicator originated from Bug Traq.</rdfs:comment>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#CFM13Schema -->
+
+    <Class rdf:about="&cfmft;CFM13Schema"/>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#CFM13SharingRestrictionSemanticConcept -->
+
+    <Class rdf:about="&cfmft;CFM13SharingRestrictionSemanticConcept">
+        <rdfs:subClassOf rdf:resource="&cfmft;SharingRestrictionSemanticConcept"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#CFMReasonReferenceSemanticConcept -->
+
+    <Class rdf:about="&cfmft;CFMReasonReferenceSemanticConcept">
+        <rdfs:subClassOf rdf:resource="&cfmft;ReferenceSemanticConcept"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#CFMReasonSemanticConcept -->
+
+    <Class rdf:about="&cfmft;CFMReasonSemanticConcept">
+        <rdfs:subClassOf rdf:resource="&cfmft;SemanticComponent"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#CFMZeroToOneHundredConfidenceMeasureSemanticConcept -->
+
+    <Class rdf:about="&cfmft;CFMZeroToOneHundredConfidenceMeasureSemanticConcept">
+        <rdfs:subClassOf rdf:resource="&cfmft;IndicatorConfidenceSemanticConcept"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#CFMZeroToOneHundredRelevancyMeasureSemanticConcept -->
+
+    <Class rdf:about="&cfmft;CFMZeroToOneHundredRelevancyMeasureSemanticConcept">
+        <rdfs:subClassOf rdf:resource="&cfmft;RelevancySemanticConcept"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#CFMZeroToOneHundredSeverityMeasureSemanticConcept -->
+
+    <Class rdf:about="&cfmft;CFMZeroToOneHundredSeverityMeasureSemanticConcept">
+        <rdfs:subClassOf rdf:resource="&cfmft;SeveritySemanticConcept"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#CRISPReport -->
+
+    <Class rdf:about="&cfmft;CRISPReport">
+        <rdfs:subClassOf rdf:resource="&cfmft;Document"/>
+        <rdfs:comment xml:lang="en">Represents a PNNL Crisp report</rdfs:comment>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#CSVElement -->
+
+    <Class rdf:about="&cfmft;CSVElement">
+        <rdfs:subClassOf rdf:resource="&cfmft;DocumentComponent"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#CSVField -->
+
+    <Class rdf:about="&cfmft;CSVField">
+        <rdfs:subClassOf rdf:resource="&cfmft;CSVElement"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#CSVRecord -->
+
+    <Class rdf:about="&cfmft;CSVRecord">
+        <rdfs:subClassOf rdf:resource="&cfmft;DocumentComponent"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#CSVSchema -->
+
+    <Class rdf:about="&cfmft;CSVSchema">
+        <rdfs:subClassOf rdf:resource="&cfmft;DocumentSchema"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#CSVSyntax -->
+
+    <Class rdf:about="&cfmft;CSVSyntax">
+        <rdfs:subClassOf rdf:resource="&cfmft;DocumentSyntax"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#CVEOriginSemanticConcept -->
+
+    <Class rdf:about="&cfmft;CVEOriginSemanticConcept">
+        <rdfs:subClassOf rdf:resource="&cfmft;IndicatorOriginSemanticConcept"/>
+        <rdfs:comment xml:lang="en">Signifies that a submitted indicator originated from CVE.</rdfs:comment>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#CYBOXVersionSemanticConcept -->
+
+    <Class rdf:about="&cfmft;CYBOXVersionSemanticConcept">
+        <rdfs:subClassOf rdf:resource="&cfmft;VersionSemanticConcept"/>
+        <rdfs:comment xml:lang="en">Indicates the version of CyBox used to represent the indicator data.</rdfs:comment>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#ComplexDocumentComponentValue -->
+
+    <Class rdf:about="&cfmft;ComplexDocumentComponentValue">
+        <rdfs:subClassOf rdf:resource="&cfmft;DocumentComponentValue"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#ConfidenceSemanticConcept -->
+
+    <Class rdf:about="&cfmft;ConfidenceSemanticConcept">
+        <rdfs:subClassOf rdf:resource="&cfmft;SemanticComponent"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#CountryCodeRemoteHostResourceLocationSpecification -->
+
+    <Class rdf:about="&cfmft;CountryCodeRemoteHostResourceLocationSpecification">
+        <rdfs:subClassOf rdf:resource="&cfmft;RemoteHostResourceLocationSpecification"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#CountryNameRemoteHostResourceLocationSpecification -->
+
+    <Class rdf:about="&cfmft;CountryNameRemoteHostResourceLocationSpecification">
+        <rdfs:subClassOf rdf:resource="&cfmft;RemoteHostResourceLocationSpecification"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#DNSDomainNameIndicatorTypeSemanticComponent -->
+
+    <Class rdf:about="&cfmft;DNSDomainNameIndicatorTypeSemanticComponent">
+        <rdfs:subClassOf rdf:resource="&cfmft;DNSIndicatorTypeSemanticConcept"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#DNSHostNameIPv4IndicatorMetadataSemanticComponent -->
+
+    <Class rdf:about="&cfmft;DNSHostNameIPv4IndicatorMetadataSemanticComponent">
+        <rdfs:subClassOf rdf:resource="&cfmft;IPv4IndicatorMetadataSemanticComponent"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#DNSHostNameIndicatorTypeSemanticComponent -->
+
+    <Class rdf:about="&cfmft;DNSHostNameIndicatorTypeSemanticComponent">
+        <rdfs:subClassOf rdf:resource="&cfmft;DNSIndicatorTypeSemanticConcept"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#DNSIndicatorTypeSemanticConcept -->
+
+    <Class rdf:about="&cfmft;DNSIndicatorTypeSemanticConcept">
+        <rdfs:subClassOf rdf:resource="&cfmft;IndicatorTypeSemanticConcept"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#DNSMatchConstraintSemanticConcept -->
+
+    <Class rdf:about="&cfmft;DNSMatchConstraintSemanticConcept">
+        <rdfs:subClassOf rdf:resource="&cfmft;IndicatorMatchConstraintSemanticConcept"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#DOSAlertBehaviorCharacterizationSemanticComponent -->
+
+    <Class rdf:about="&cfmft;DOSAlertBehaviorCharacterizationSemanticComponent">
+        <rdfs:subClassOf rdf:resource="&cfmft;AlertBehaviorCharacterizationSemanticComponent"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#DataSensitivitySemanticConcept -->
+
+    <Class rdf:about="&cfmft;DataSensitivitySemanticConcept">
+        <rdfs:subClassOf rdf:resource="&cfmft;SemanticComponent"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#DestinationPortListIndicatorValueSemanticComponent -->
+
+    <Class rdf:about="&cfmft;DestinationPortListIndicatorValueSemanticComponent">
+        <rdfs:subClassOf rdf:resource="&cfmft;PortNumberIndicatorValueSemanticComponent"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#DestinationPortNumberIndicatorValueSemanticComponent -->
+
+    <Class rdf:about="&cfmft;DestinationPortNumberIndicatorValueSemanticComponent">
+        <rdfs:subClassOf rdf:resource="&cfmft;PortNumberIndicatorValueSemanticComponent"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#DirectSourceSemanticConcept -->
+
+    <Class rdf:about="&cfmft;DirectSourceSemanticConcept">
+        <rdfs:subClassOf rdf:resource="&cfmft;InformationSourceSemanticConcept"/>
+        <disjointWith rdf:resource="&cfmft;SecondarySourceSemanticConcept"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#Document -->
+
+    <Class rdf:about="&cfmft;Document">
+        <rdfs:subClassOf rdf:resource="&cfmft;DocumentComponent"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#DocumentComponent -->
+
+    <Class rdf:about="&cfmft;DocumentComponent"/>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#DocumentComponentValue -->
+
+    <Class rdf:about="&cfmft;DocumentComponentValue">
+        <rdfs:comment xml:lang="en">A component value is a specific meaning (reference to a concept or real-world entity) assigned to a document component.  Examples include:
+
+&quot;127.0.0.1&quot;
+&quot;Block&quot;
+&quot;Scanning&quot;
+&quot;OUO&quot;
+
+Values are associated with document components, can have a form specification, and can be related to each other via cfm:sameMeaningAs</rdfs:comment>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#DocumentControlledStructureSemanticConcept -->
+
+    <Class rdf:about="&cfmft;DocumentControlledStructureSemanticConcept">
+        <rdfs:subClassOf rdf:resource="&cfmft;SemanticComponent"/>
+        <rdfs:comment xml:lang="en">A concept denoting the specification of components of a document.  An example is the XML XPath specification of document components for the purpose of applying an Access Control marking structure.</rdfs:comment>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#DocumentGeneratedTimeSemanticConcept -->
+
+    <Class rdf:about="&cfmft;DocumentGeneratedTimeSemanticConcept">
+        <rdfs:subClassOf rdf:resource="&cfmft;ReportProducedTimeSemanticConcept"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#DocumentIdentifier -->
+
+    <Class rdf:about="&cfmft;DocumentIdentifier">
+        <rdfs:subClassOf rdf:resource="&cfmft;SemanticComponent"/>
+        <rdfs:comment xml:lang="en">A globally unique document identifier.</rdfs:comment>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#DocumentSchema -->
+
+    <Class rdf:about="&cfmft;DocumentSchema">
+        <rdfs:comment xml:lang="en">A document schema is a structural specification for a document.  In particular, it may specify:
+
+* Optional and Required document components
+* Types of document components
+* Component names or ID values
+
+The schema is associated with a schema parser class which can be dynamically loaded to validate and produce valid documents (given what?)</rdfs:comment>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#DocumentSyntax -->
+
+    <Class rdf:about="&cfmft;DocumentSyntax"/>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#DomainNameIndicatorSemanticComponent -->
+
+    <Class rdf:about="&cfmft;DomainNameIndicatorSemanticComponent">
+        <rdfs:subClassOf rdf:resource="&cfmft;IndicatorSemanticConcept"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#EmailAddressIndicatorTypeSemanticComponent -->
+
+    <Class rdf:about="&cfmft;EmailAddressIndicatorTypeSemanticComponent">
+        <rdfs:subClassOf rdf:resource="&cfmft;EmailIndicatorTypeSemanticConcept"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#EmailAddressIndicatorValueSemanticComponent -->
+
+    <Class rdf:about="&cfmft;EmailAddressIndicatorValueSemanticComponent">
+        <rdfs:subClassOf rdf:resource="&cfmft;EmailIndicatorValueSemanticConcept"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#EmailAddressMatchConstraintSemanticConcept -->
+
+    <Class rdf:about="&cfmft;EmailAddressMatchConstraintSemanticConcept">
+        <rdfs:subClassOf rdf:resource="&cfmft;IndicatorMatchConstraintSemanticConcept"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#EmailBodyIndicatorTypeSemanticComponent -->
+
+    <Class rdf:about="&cfmft;EmailBodyIndicatorTypeSemanticComponent">
+        <rdfs:subClassOf rdf:resource="&cfmft;EmailIndicatorTypeSemanticConcept"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#EmailHeaderIndicatorTypeSemanticConponent -->
+
+    <Class rdf:about="&cfmft;EmailHeaderIndicatorTypeSemanticConponent">
+        <rdfs:subClassOf rdf:resource="&cfmft;EmailIndicatorTypeSemanticConcept"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#EmailHeaderMessageIDIndicatorValueSemanticComponent -->
+
+    <Class rdf:about="&cfmft;EmailHeaderMessageIDIndicatorValueSemanticComponent">
+        <rdfs:subClassOf rdf:resource="&cfmft;EmailIndicatorValueSemanticConcept"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#EmailHeaderMessageIDMatchConstraintSemanticComponent -->
+
+    <Class rdf:about="&cfmft;EmailHeaderMessageIDMatchConstraintSemanticComponent">
+        <rdfs:subClassOf rdf:resource="&cfmft;IndicatorMatchConstraintSemanticConcept"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#EmailHeaderSenderSpoofedIndicatorMetadataSemanticConcept -->
+
+    <Class rdf:about="&cfmft;EmailHeaderSenderSpoofedIndicatorMetadataSemanticConcept">
+        <rdfs:subClassOf rdf:resource="&cfmft;IndicatorMetadataSemanticComponent"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#EmailHeaderXmailerIndicatorValueSemanticComponent -->
+
+    <Class rdf:about="&cfmft;EmailHeaderXmailerIndicatorValueSemanticComponent">
+        <rdfs:subClassOf rdf:resource="&cfmft;EmailIndicatorValueSemanticConcept"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#EmailHeaderXmailerMatchConstraintSemanticComponent -->
+
+    <Class rdf:about="&cfmft;EmailHeaderXmailerMatchConstraintSemanticComponent">
+        <rdfs:subClassOf rdf:resource="&cfmft;IndicatorMatchConstraintSemanticConcept"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#EmailIndicatorTypeSemanticConcept -->
+
+    <Class rdf:about="&cfmft;EmailIndicatorTypeSemanticConcept">
+        <rdfs:subClassOf rdf:resource="&cfmft;IndicatorTypeSemanticConcept"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#EmailIndicatorValueSemanticConcept -->
+
+    <Class rdf:about="&cfmft;EmailIndicatorValueSemanticConcept">
+        <rdfs:subClassOf rdf:resource="&cfmft;IndicatorValueSemanticConcept"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#EmailMessageObjectSchemaTypeSpecification -->
+
+    <Class rdf:about="&cfmft;EmailMessageObjectSchemaTypeSpecification">
+        <rdfs:subClassOf rdf:resource="&cfmft;SchemaTypeSpecifications"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#EmailSenderAddressIndicatorValueSemanticComponent -->
+
+    <Class rdf:about="&cfmft;EmailSenderAddressIndicatorValueSemanticComponent">
+        <rdfs:subClassOf rdf:resource="&cfmft;EmailAddressIndicatorValueSemanticComponent"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#EmailSenderIndicatorSemanticConcept -->
+
+    <Class rdf:about="&cfmft;EmailSenderIndicatorSemanticConcept">
+        <rdfs:subClassOf rdf:resource="&cfmft;IndicatorSemanticConcept"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#EmailSubjectIndicatorSemanticComponent -->
+
+    <Class rdf:about="&cfmft;EmailSubjectIndicatorSemanticComponent">
+        <rdfs:subClassOf rdf:resource="&cfmft;IndicatorSemanticConcept"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#EmailSubjectIndicatorTypeSemanticComponent -->
+
+    <Class rdf:about="&cfmft;EmailSubjectIndicatorTypeSemanticComponent">
+        <rdfs:subClassOf rdf:resource="&cfmft;EmailIndicatorTypeSemanticConcept"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#EmailSubjectMatchConstraintSemanticConcept -->
+
+    <Class rdf:about="&cfmft;EmailSubjectMatchConstraintSemanticConcept">
+        <rdfs:subClassOf rdf:resource="&cfmft;EmailSubjetMultiMatchConstraintSemanticConcept"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#EmailSubjectValueSemanticComponent -->
+
+    <Class rdf:about="&cfmft;EmailSubjectValueSemanticComponent">
+        <rdfs:subClassOf rdf:resource="&cfmft;EmailIndicatorValueSemanticConcept"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#EmailSubjetMultiMatchConstraintSemanticConcept -->
+
+    <Class rdf:about="&cfmft;EmailSubjetMultiMatchConstraintSemanticConcept">
+        <rdfs:subClassOf rdf:resource="&cfmft;IndicatorMatchConstraintSemanticConcept"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#ExploitAlertBehaviorCharacterizationSemanticComponent -->
+
+    <Class rdf:about="&cfmft;ExploitAlertBehaviorCharacterizationSemanticComponent">
+        <rdfs:subClassOf rdf:resource="&cfmft;AlertBehaviorCharacterizationSemanticComponent"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#FileHashIndicatorTypeSemanticComponent -->
+
+    <Class rdf:about="&cfmft;FileHashIndicatorTypeSemanticComponent">
+        <rdfs:subClassOf rdf:resource="&cfmft;FileIndicatorTypeSemanticComponent"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#FileIndicatorTypeSemanticComponent -->
+
+    <Class rdf:about="&cfmft;FileIndicatorTypeSemanticComponent">
+        <rdfs:subClassOf rdf:resource="&cfmft;IndicatorTypeSemanticConcept"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#FileMD5HashIndicatorTypeSemanticComponent -->
+
+    <Class rdf:about="&cfmft;FileMD5HashIndicatorTypeSemanticComponent">
+        <rdfs:subClassOf rdf:resource="&cfmft;FileHashIndicatorTypeSemanticComponent"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#FileNameIndicatorTypeSemanticComponent -->
+
+    <Class rdf:about="&cfmft;FileNameIndicatorTypeSemanticComponent">
+        <rdfs:subClassOf rdf:resource="&cfmft;FileIndicatorTypeSemanticComponent"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#FileObjectSchemaTypeSpecification -->
+
+    <Class rdf:about="&cfmft;FileObjectSchemaTypeSpecification">
+        <rdfs:subClassOf rdf:resource="&cfmft;SchemaTypeSpecifications"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#FileSHA1HashIndicatorTypeSemanticComponent -->
+
+    <Class rdf:about="&cfmft;FileSHA1HashIndicatorTypeSemanticComponent">
+        <rdfs:subClassOf rdf:resource="&cfmft;FileHashIndicatorTypeSemanticComponent"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#FileSizeBytesIndicatorSemanticComponent -->
+
+    <Class rdf:about="&cfmft;FileSizeBytesIndicatorSemanticComponent">
+        <rdfs:subClassOf rdf:resource="&cfmft;FileSizeIndicatorSemanticComponent"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#FileSizeIndicatorSemanticComponent -->
+
+    <Class rdf:about="&cfmft;FileSizeIndicatorSemanticComponent">
+        <rdfs:subClassOf rdf:resource="&cfmft;FileIndicatorTypeSemanticComponent"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#FileSizeMegabytesIndicatorSemanticComponent -->
+
+    <Class rdf:about="&cfmft;FileSizeMegabytesIndicatorSemanticComponent">
+        <rdfs:subClassOf rdf:resource="&cfmft;FileSizeIndicatorSemanticComponent"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#FilehashIndicatorValueSemanticComponent -->
+
+    <Class rdf:about="&cfmft;FilehashIndicatorValueSemanticComponent">
+        <rdfs:subClassOf rdf:resource="&cfmft;IndicatorValueSemanticConcept"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#FilenameIndicatorValueSemanticConcept -->
+
+    <Class rdf:about="&cfmft;FilenameIndicatorValueSemanticConcept">
+        <rdfs:subClassOf rdf:resource="&cfmft;FilepathIndicatorValueSemanticConcept"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#FilenameMatchConstraintSemanticConcept -->
+
+    <Class rdf:about="&cfmft;FilenameMatchConstraintSemanticConcept">
+        <rdfs:subClassOf rdf:resource="&cfmft;IndicatorMatchConstraintSemanticConcept"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#FilepathIndicatorValueSemanticConcept -->
+
+    <Class rdf:about="&cfmft;FilepathIndicatorValueSemanticConcept">
+        <rdfs:subClassOf rdf:resource="&cfmft;IndicatorValueSemanticConcept"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#FilepathMatchConstraintSemanticConcept -->
+
+    <Class rdf:about="&cfmft;FilepathMatchConstraintSemanticConcept">
+        <rdfs:subClassOf rdf:resource="&cfmft;IndicatorMatchConstraintSemanticConcept"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#FilesizeByteEqualityConstraintSemanticConcept -->
+
+    <Class rdf:about="&cfmft;FilesizeByteEqualityConstraintSemanticConcept">
+        <rdfs:subClassOf rdf:resource="&cfmft;FilesizeByteMultiEqualityConstraintSemanticConcept"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#FilesizeByteMultiEqualityConstraintSemanticConcept -->
+
+    <Class rdf:about="&cfmft;FilesizeByteMultiEqualityConstraintSemanticConcept">
+        <rdfs:subClassOf rdf:resource="&cfmft;IndicatorMatchConstraintSemanticConcept"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#FilesizeByteValueSemanticConcept -->
+
+    <Class rdf:about="&cfmft;FilesizeByteValueSemanticConcept">
+        <rdfs:subClassOf rdf:resource="&cfmft;IndicatorValueSemanticConcept"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#FullSiteNameSemanticConcept -->
+
+    <Class rdf:about="&cfmft;FullSiteNameSemanticConcept">
+        <rdfs:subClassOf rdf:resource="&cfmft;InformationSourceSemanticConcept"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#HTTPClientRequestHeaderUserAgentEqualityConstraintSemanticComponent -->
+
+    <Class rdf:about="&cfmft;HTTPClientRequestHeaderUserAgentEqualityConstraintSemanticComponent">
+        <rdfs:subClassOf rdf:resource="&cfmft;IndicatorMatchConstraintSemanticConcept"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#HTTPClientRequestHeaderUserAgentIndicatorValueSemanticComponent -->
+
+    <Class rdf:about="&cfmft;HTTPClientRequestHeaderUserAgentIndicatorValueSemanticComponent">
+        <rdfs:subClassOf rdf:resource="&cfmft;IndicatorValueSemanticConcept"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#HTTPSessionObjectSchemaTypeSpecification -->
+
+    <Class rdf:about="&cfmft;HTTPSessionObjectSchemaTypeSpecification">
+        <rdfs:subClassOf rdf:resource="&cfmft;SchemaTypeSpecifications"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#IPProtocolIndicatorTypeSemanticComponent -->
+
+    <Class rdf:about="&cfmft;IPProtocolIndicatorTypeSemanticComponent">
+        <rdfs:subClassOf rdf:resource="&cfmft;IndicatorTypeSemanticConcept"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#IPv4AddressIndicatorSemanticComponent -->
+
+    <Class rdf:about="&cfmft;IPv4AddressIndicatorSemanticComponent">
+        <rdfs:subClassOf rdf:resource="&cfmft;IndicatorSemanticConcept"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#IPv4AddressIndicatorValueSemanticComponent -->
+
+    <Class rdf:about="&cfmft;IPv4AddressIndicatorValueSemanticComponent">
+        <rdfs:subClassOf rdf:resource="&cfmft;IPv4IndicatorValueSemanticComponent"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#IPv4AddressMatchConstraintSemanticConcept -->
+
+    <Class rdf:about="&cfmft;IPv4AddressMatchConstraintSemanticConcept">
+        <rdfs:subClassOf rdf:resource="&cfmft;IndicatorMatchConstraintSemanticConcept"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#IPv4IndicatorMetadataSemanticComponent -->
+
+    <Class rdf:about="&cfmft;IPv4IndicatorMetadataSemanticComponent">
+        <rdfs:subClassOf rdf:resource="&cfmft;IndicatorMetadataSemanticComponent"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#IPv4IndicatorTypeSemanticConcept -->
+
+    <Class rdf:about="&cfmft;IPv4IndicatorTypeSemanticConcept">
+        <rdfs:subClassOf rdf:resource="&cfmft;IndicatorTypeSemanticConcept"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#IPv4IndicatorValueSemanticComponent -->
+
+    <Class rdf:about="&cfmft;IPv4IndicatorValueSemanticComponent">
+        <rdfs:subClassOf rdf:resource="&cfmft;IndicatorValueSemanticConcept"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#IPv6IndicatorTypeSemanticComponent -->
+
+    <Class rdf:about="&cfmft;IPv6IndicatorTypeSemanticComponent">
+        <rdfs:subClassOf rdf:resource="&cfmft;IndicatorTypeSemanticConcept"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#IndicatorCategoryC2SemanticConcept -->
+
+    <Class rdf:about="&cfmft;IndicatorCategoryC2SemanticConcept">
+        <rdfs:subClassOf rdf:resource="&cfmft;IndicatorCategorySemanticConcept"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#IndicatorCategoryDomainWatchlistSemanticConcept -->
+
+    <Class rdf:about="&cfmft;IndicatorCategoryDomainWatchlistSemanticConcept">
+        <rdfs:subClassOf rdf:resource="&cfmft;IndicatorCategoryWatchlistSemanticConcept"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#IndicatorCategoryEndpointCharacteristicsSemanticConcept -->
+
+    <Class rdf:about="&cfmft;IndicatorCategoryEndpointCharacteristicsSemanticConcept">
+        <rdfs:subClassOf rdf:resource="&cfmft;IndicatorCategorySemanticConcept"/>
+        <rdfs:comment xml:lang="en">Indicates an indicator with the category of &apos;EndpointCharacteristics&apos;.</rdfs:comment>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#IndicatorCategoryFileHashWatchlistConcept -->
+
+    <Class rdf:about="&cfmft;IndicatorCategoryFileHashWatchlistConcept">
+        <rdfs:subClassOf rdf:resource="&cfmft;IndicatorCategoryWatchlistSemanticConcept"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#IndicatorCategoryGeneralIndicatorSemanticConcept -->
+
+    <Class rdf:about="&cfmft;IndicatorCategoryGeneralIndicatorSemanticConcept">
+        <rdfs:subClassOf rdf:resource="&cfmft;IndicatorCategorySemanticConcept"/>
+        <rdfs:comment xml:lang="en">Represents an indicator which does not fit into a current known category.</rdfs:comment>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#IndicatorCategoryHostCharacteristicsSemanticConcept -->
+
+    <Class rdf:about="&cfmft;IndicatorCategoryHostCharacteristicsSemanticConcept">
+        <rdfs:subClassOf rdf:resource="&cfmft;IndicatorCategoryEndpointCharacteristicsSemanticConcept"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#IndicatorCategoryIPWatchlistSemanticConcept -->
+
+    <Class rdf:about="&cfmft;IndicatorCategoryIPWatchlistSemanticConcept">
+        <rdfs:subClassOf rdf:resource="&cfmft;IndicatorCategoryWatchlistSemanticConcept"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#IndicatorCategoryMaliciousEmailSemanticConcept -->
+
+    <Class rdf:about="&cfmft;IndicatorCategoryMaliciousEmailSemanticConcept">
+        <rdfs:subClassOf rdf:resource="&cfmft;IndicatorCategorySemanticConcept"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#IndicatorCategoryMalwareArtifactsSemanticConcept -->
+
+    <Class rdf:about="&cfmft;IndicatorCategoryMalwareArtifactsSemanticConcept">
+        <rdfs:subClassOf rdf:resource="&cfmft;IndicatorCategorySemanticConcept"/>
+        <rdfs:comment xml:lang="en">Indicates an indicator with the category of &apos;NetworkArtifcats&apos;.</rdfs:comment>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#IndicatorCategoryNetworkActivitySemanticConcept -->
+
+    <Class rdf:about="&cfmft;IndicatorCategoryNetworkActivitySemanticConcept">
+        <rdfs:subClassOf rdf:resource="&cfmft;IndicatorCategorySemanticConcept"/>
+        <rdfs:comment xml:lang="en">Indicates an indicator with the category of &apos;NetworkActivity&apos;.</rdfs:comment>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#IndicatorCategoryPhishingSemanticConcept -->
+
+    <Class rdf:about="&cfmft;IndicatorCategoryPhishingSemanticConcept">
+        <rdfs:subClassOf rdf:resource="&cfmft;IndicatorCategoryMaliciousEmailSemanticConcept"/>
+        <rdfs:comment xml:lang="en">Indicates an indicator with the categorization of &apos;phishing&apos;.</rdfs:comment>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#IndicatorCategorySemanticConcept -->
+
+    <Class rdf:about="&cfmft;IndicatorCategorySemanticConcept">
+        <rdfs:subClassOf rdf:resource="&cfmft;SemanticComponent"/>
+        <rdfs:comment xml:lang="en">Represents a broad categorization of an indicator, for example a Watchlist
+indicator, or a Phishing indicator. </rdfs:comment>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#IndicatorCategoryURLWatchlistSemanticConcept -->
+
+    <Class rdf:about="&cfmft;IndicatorCategoryURLWatchlistSemanticConcept">
+        <rdfs:subClassOf rdf:resource="&cfmft;IndicatorCategoryWatchlistSemanticConcept"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#IndicatorCategoryUnknownSemanticConcept -->
+
+    <Class rdf:about="&cfmft;IndicatorCategoryUnknownSemanticConcept">
+        <rdfs:subClassOf rdf:resource="&cfmft;IndicatorCategorySemanticConcept"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#IndicatorCategoryWatchlistSemanticConcept -->
+
+    <Class rdf:about="&cfmft;IndicatorCategoryWatchlistSemanticConcept">
+        <rdfs:subClassOf rdf:resource="&cfmft;IndicatorCategorySemanticConcept"/>
+        <rdfs:comment xml:lang="en">Indicates an indicator with the category of &apos;Watchlist&apos;.</rdfs:comment>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#IndicatorConfidenceSemanticConcept -->
+
+    <Class rdf:about="&cfmft;IndicatorConfidenceSemanticConcept">
+        <rdfs:subClassOf rdf:resource="&cfmft;ConfidenceSemanticConcept"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#IndicatorConstraintSemanticConcept -->
+
+    <Class rdf:about="&cfmft;IndicatorConstraintSemanticConcept">
+        <rdfs:subClassOf rdf:resource="&cfmft;SemanticComponent"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#IndicatorDescriptionSemanticConcept -->
+
+    <Class rdf:about="&cfmft;IndicatorDescriptionSemanticConcept">
+        <rdfs:subClassOf rdf:resource="&cfmft;SemanticComponent"/>
+        <rdfs:comment xml:lang="en">User defined description of the alert</rdfs:comment>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#IndicatorGeneratedTimeSemanticConcept -->
+
+    <Class rdf:about="&cfmft;IndicatorGeneratedTimeSemanticConcept">
+        <rdfs:subClassOf rdf:resource="&cfmft;ReportProducedTimeSemanticConcept"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#IndicatorMatchConstraintSemanticConcept -->
+
+    <Class rdf:about="&cfmft;IndicatorMatchConstraintSemanticConcept">
+        <rdfs:subClassOf rdf:resource="&cfmft;IndicatorConstraintSemanticConcept"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#IndicatorMetadataSemanticComponent -->
+
+    <Class rdf:about="&cfmft;IndicatorMetadataSemanticComponent">
+        <rdfs:subClassOf rdf:resource="&cfmft;SemanticComponent"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#IndicatorOriginSemanticConcept -->
+
+    <Class rdf:about="&cfmft;IndicatorOriginSemanticConcept">
+        <rdfs:subClassOf rdf:resource="&cfmft;SemanticComponent"/>
+        <rdfs:comment xml:lang="en">The source from which the name of the alert originates.
+
+Indicates the specific origin or source of a submitted indicator.  For example, was it obtained from the public domain, a site-observation, a vendor, or some other source?</rdfs:comment>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#IndicatorSemanticConcept -->
+
+    <Class rdf:about="&cfmft;IndicatorSemanticConcept">
+        <rdfs:subClassOf rdf:resource="&cfmft;SemanticComponent"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#IndicatorSightingsSemanticConcept -->
+
+    <Class rdf:about="&cfmft;IndicatorSightingsSemanticConcept">
+        <rdfs:subClassOf rdf:resource="&cfmft;SemanticComponent"/>
+        <rdfs:comment xml:lang="en">Number of times an indicator has been seen</rdfs:comment>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#IndicatorSimpleSharingRestrictionSemanticConcept -->
+
+    <Class rdf:about="&cfmft;IndicatorSimpleSharingRestrictionSemanticConcept">
+        <rdfs:subClassOf rdf:resource="&cfmft;SemanticComponent"/>
+        <rdfs:comment xml:lang="en">A human readable description of the restrictions for this indicator</rdfs:comment>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#IndicatorTypeSemanticConcept -->
+
+    <Class rdf:about="&cfmft;IndicatorTypeSemanticConcept">
+        <rdfs:subClassOf rdf:resource="&cfmft;SemanticComponent"/>
+        <rdfs:comment xml:lang="en">Indicates whether the indicator is an IPv4, DNS, IPv6, E-Mail, or other type.</rdfs:comment>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#IndicatorTypeVocabulary1-1SemanticConcept -->
+
+    <Class rdf:about="&cfmft;IndicatorTypeVocabulary1-1SemanticConcept">
+        <rdfs:subClassOf rdf:resource="&cfmft;IndicatorTypeVocabularySemanticConcept"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#IndicatorTypeVocabularySemanticConcept -->
+
+    <Class rdf:about="&cfmft;IndicatorTypeVocabularySemanticConcept">
+        <rdfs:subClassOf rdf:resource="&cfmft;SemanticComponent"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#IndicatorValueSemanticConcept -->
+
+    <Class rdf:about="&cfmft;IndicatorValueSemanticConcept">
+        <rdfs:subClassOf rdf:resource="&cfmft;SemanticComponent"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#InformationSourceSemanticConcept -->
+
+    <Class rdf:about="&cfmft;InformationSourceSemanticConcept">
+        <rdfs:subClassOf rdf:resource="&cfmft;SemanticComponent"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#KeyValueSchema -->
+
+    <Class rdf:about="&cfmft;KeyValueSchema">
+        <rdfs:subClassOf rdf:resource="&cfmft;DocumentSchema"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#KeyValueSyntax -->
+
+    <Class rdf:about="&cfmft;KeyValueSyntax">
+        <rdfs:subClassOf rdf:resource="&cfmft;DocumentSyntax"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#KillChainIDSemanticConcept -->
+
+    <Class rdf:about="&cfmft;KillChainIDSemanticConcept">
+        <rdfs:subClassOf rdf:resource="&cfmft;KillChainSemanticConcept"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#KillChainNameSemanticConcept -->
+
+    <Class rdf:about="&cfmft;KillChainNameSemanticConcept">
+        <rdfs:subClassOf rdf:resource="&cfmft;KillChainSemanticConcept"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#KillChainPhaseIDSemanticConcept -->
+
+    <Class rdf:about="&cfmft;KillChainPhaseIDSemanticConcept">
+        <rdfs:subClassOf rdf:resource="&cfmft;KillChainPhaseSemanticConcept"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#KillChainPhaseNameSemanticConcept -->
+
+    <Class rdf:about="&cfmft;KillChainPhaseNameSemanticConcept">
+        <rdfs:subClassOf rdf:resource="&cfmft;KillChainPhaseSemanticConcept"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#KillChainPhaseOrdinalitySemanticConcept -->
+
+    <Class rdf:about="&cfmft;KillChainPhaseOrdinalitySemanticConcept">
+        <rdfs:subClassOf rdf:resource="&cfmft;KillChainPhaseSemanticConcept"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#KillChainPhaseSemanticConcept -->
+
+    <Class rdf:about="&cfmft;KillChainPhaseSemanticConcept">
+        <rdfs:subClassOf rdf:resource="&cfmft;KillChainSemanticConcept"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#KillChainSemanticConcept -->
+
+    <Class rdf:about="&cfmft;KillChainSemanticConcept">
+        <rdfs:subClassOf rdf:resource="&cfmft;SemanticComponent"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#KnownBadActorAlertBehaviorCharacterizationSemanticComponent -->
+
+    <Class rdf:about="&cfmft;KnownBadActorAlertBehaviorCharacterizationSemanticComponent">
+        <rdfs:subClassOf rdf:resource="&cfmft;AlertBehaviorCharacterizationSemanticComponent"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#LinkObjectSchemaTypeSpecification -->
+
+    <Class rdf:about="&cfmft;LinkObjectSchemaTypeSpecification">
+        <rdfs:subClassOf rdf:resource="&cfmft;SchemaTypeSpecifications"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#MD5FilehashIndicatorValueSemanticComponent -->
+
+    <Class rdf:about="&cfmft;MD5FilehashIndicatorValueSemanticComponent">
+        <rdfs:subClassOf rdf:resource="&cfmft;FilehashIndicatorValueSemanticComponent"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#MalwareTrafficAlertBehaviorCharacterizationSemanticComponent -->
+
+    <Class rdf:about="&cfmft;MalwareTrafficAlertBehaviorCharacterizationSemanticComponent">
+        <rdfs:subClassOf rdf:resource="&cfmft;AlertBehaviorCharacterizationSemanticComponent"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#MutexNameEqualityConstraintSemanticComponent -->
+
+    <Class rdf:about="&cfmft;MutexNameEqualityConstraintSemanticComponent">
+        <rdfs:subClassOf rdf:resource="&cfmft;IndicatorMatchConstraintSemanticConcept"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#MutexNameIndicatorValueSemanticComponent -->
+
+    <Class rdf:about="&cfmft;MutexNameIndicatorValueSemanticComponent">
+        <rdfs:subClassOf rdf:resource="&cfmft;IndicatorValueSemanticConcept"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#MutexObjectSchemaTypeSpecification -->
+
+    <Class rdf:about="&cfmft;MutexObjectSchemaTypeSpecification">
+        <rdfs:subClassOf rdf:resource="&cfmft;SchemaTypeSpecifications"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#NeedToKnowCFM13SharingRestrictionSemanticConcept -->
+
+    <Class rdf:about="&cfmft;NeedToKnowCFM13SharingRestrictionSemanticConcept">
+        <rdfs:subClassOf rdf:resource="&cfmft;CFM13SharingRestrictionSemanticConcept"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#NetworkDestinationDirectionIndicatorSemanticComponent -->
+
+    <Class rdf:about="&cfmft;NetworkDestinationDirectionIndicatorSemanticComponent">
+        <rdfs:subClassOf rdf:resource="&cfmft;NetworkDirectionIndicatorSemanticComponent"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#NetworkDirectionIndicatorSemanticComponent -->
+
+    <Class rdf:about="&cfmft;NetworkDirectionIndicatorSemanticComponent">
+        <rdfs:subClassOf rdf:resource="&cfmft;IndicatorMetadataSemanticComponent"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#NetworkSourceDirectionIndicatorSemanticComponent -->
+
+    <Class rdf:about="&cfmft;NetworkSourceDirectionIndicatorSemanticComponent">
+        <rdfs:subClassOf rdf:resource="&cfmft;NetworkDirectionIndicatorSemanticComponent"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#NotOUOSemanticConcept -->
+
+    <Class rdf:about="&cfmft;NotOUOSemanticConcept">
+        <rdfs:subClassOf rdf:resource="&cfmft;DataSensitivitySemanticConcept"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#NotificationSentResponseActionTakenSemanticConcept -->
+
+    <Class rdf:about="&cfmft;NotificationSentResponseActionTakenSemanticConcept">
+        <rdfs:subClassOf rdf:resource="&cfmft;ResponseActionTakenSemanticConcept"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#NumberOfPriorIndicatorReportsSemanticConcept -->
+
+    <Class rdf:about="&cfmft;NumberOfPriorIndicatorReportsSemanticConcept">
+        <rdfs:subClassOf rdf:resource="&cfmft;PriorIndicatorReportsSemanticConcept"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#OSVDBOriginSemanticConcept -->
+
+    <Class rdf:about="&cfmft;OSVDBOriginSemanticConcept">
+        <rdfs:subClassOf rdf:resource="&cfmft;IndicatorOriginSemanticConcept"/>
+        <rdfs:comment xml:lang="en">Signifies that a submitted indicator originated from the OSVDB.</rdfs:comment>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#OUOSemanticConcept -->
+
+    <Class rdf:about="&cfmft;OUOSemanticConcept">
+        <rdfs:subClassOf rdf:resource="&cfmft;DataSensitivitySemanticConcept"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#ObservableObjectConnectedToRelationshipValueSemanticComponent -->
+
+    <Class rdf:about="&cfmft;ObservableObjectConnectedToRelationshipValueSemanticComponent">
+        <rdfs:subClassOf rdf:resource="&cfmft;ObservableObjectRelationshipValueSemanticComponent"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#ObservableObjectContainsRelationshipValueSemanticComponent -->
+
+    <Class rdf:about="&cfmft;ObservableObjectContainsRelationshipValueSemanticComponent">
+        <rdfs:subClassOf rdf:resource="&cfmft;ObservableObjectRelationshipValueSemanticComponent"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#ObservableObjectHeaderSenderSchemaTypeSpecification -->
+
+    <Class rdf:about="&cfmft;ObservableObjectHeaderSenderSchemaTypeSpecification">
+        <rdfs:subClassOf rdf:resource="&cfmft;SchemaTypeSpecifications"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#ObservableObjectRelationshipValueSemanticComponent -->
+
+    <Class rdf:about="&cfmft;ObservableObjectRelationshipValueSemanticComponent">
+        <rdfs:subClassOf rdf:resource="&cfmft;SemanticComponent"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#OpenIOC-AuthoredBy -->
+
+    <Class rdf:about="&cfmft;OpenIOC-AuthoredBy">
+        <rdfs:subClassOf rdf:resource="&cfmft;OpenIOCElement"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#OpenIOC-AuthoredDate -->
+
+    <Class rdf:about="&cfmft;OpenIOC-AuthoredDate">
+        <rdfs:subClassOf rdf:resource="&cfmft;OpenIOCElement"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#OpenIOC-Condition -->
+
+    <Class rdf:about="&cfmft;OpenIOC-Condition">
+        <rdfs:subClassOf rdf:resource="&cfmft;OpenIOCAttribute"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#OpenIOC-Content -->
+
+    <Class rdf:about="&cfmft;OpenIOC-Content">
+        <rdfs:subClassOf rdf:resource="&cfmft;OpenIOCElement"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#OpenIOC-ContentType -->
+
+    <Class rdf:about="&cfmft;OpenIOC-ContentType">
+        <rdfs:subClassOf rdf:resource="&cfmft;OpenIOCAttribute"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#OpenIOC-Context -->
+
+    <Class rdf:about="&cfmft;OpenIOC-Context">
+        <rdfs:subClassOf rdf:resource="&cfmft;OpenIOCElement"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#OpenIOC-ContextDocument -->
+
+    <Class rdf:about="&cfmft;OpenIOC-ContextDocument">
+        <rdfs:subClassOf rdf:resource="&cfmft;OpenIOCAttribute"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#OpenIOC-ContextSearch -->
+
+    <Class rdf:about="&cfmft;OpenIOC-ContextSearch">
+        <rdfs:subClassOf rdf:resource="&cfmft;OpenIOCAttribute"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#OpenIOC-ContextType -->
+
+    <Class rdf:about="&cfmft;OpenIOC-ContextType">
+        <rdfs:subClassOf rdf:resource="&cfmft;OpenIOCAttribute"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#OpenIOC-Definition -->
+
+    <Class rdf:about="&cfmft;OpenIOC-Definition">
+        <rdfs:subClassOf rdf:resource="&cfmft;OpenIOCElement"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#OpenIOC-Description -->
+
+    <Class rdf:about="&cfmft;OpenIOC-Description">
+        <rdfs:subClassOf rdf:resource="&cfmft;OpenIOCElement"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#OpenIOC-ID -->
+
+    <Class rdf:about="&cfmft;OpenIOC-ID">
+        <rdfs:subClassOf rdf:resource="&cfmft;OpenIOCAttribute"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#OpenIOC-Indicator -->
+
+    <Class rdf:about="&cfmft;OpenIOC-Indicator">
+        <rdfs:subClassOf rdf:resource="&cfmft;OpenIOCElement"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#OpenIOC-IndicatorItem -->
+
+    <Class rdf:about="&cfmft;OpenIOC-IndicatorItem">
+        <rdfs:subClassOf rdf:resource="&cfmft;OpenIOCElement"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#OpenIOC-Keywords -->
+
+    <Class rdf:about="&cfmft;OpenIOC-Keywords">
+        <rdfs:subClassOf rdf:resource="&cfmft;OpenIOCElement"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#OpenIOC-LastModified -->
+
+    <Class rdf:about="&cfmft;OpenIOC-LastModified">
+        <rdfs:subClassOf rdf:resource="&cfmft;OpenIOCAttribute"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#OpenIOC-Links -->
+
+    <Class rdf:about="&cfmft;OpenIOC-Links">
+        <rdfs:subClassOf rdf:resource="&cfmft;OpenIOCElement"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#OpenIOC-Operator -->
+
+    <Class rdf:about="&cfmft;OpenIOC-Operator">
+        <rdfs:subClassOf rdf:resource="&cfmft;OpenIOCAttribute"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#OpenIOC-ShortDescription -->
+
+    <Class rdf:about="&cfmft;OpenIOC-ShortDescription">
+        <rdfs:subClassOf rdf:resource="&cfmft;OpenIOCElement"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#OpenIOCAttribute -->
+
+    <Class rdf:about="&cfmft;OpenIOCAttribute">
+        <rdfs:subClassOf rdf:resource="&cfmft;OpenIOCComponent"/>
+        <rdfs:subClassOf rdf:resource="&cfmft;XMLAttribute"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#OpenIOCComponent -->
+
+    <Class rdf:about="&cfmft;OpenIOCComponent">
+        <rdfs:subClassOf rdf:resource="&cfmft;XMLComponent"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#OpenIOCDocument -->
+
+    <Class rdf:about="&cfmft;OpenIOCDocument">
+        <rdfs:subClassOf rdf:resource="&cfmft;Document"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#OpenIOCElement -->
+
+    <Class rdf:about="&cfmft;OpenIOCElement">
+        <rdfs:subClassOf rdf:resource="&cfmft;OpenIOCComponent"/>
+        <rdfs:subClassOf rdf:resource="&cfmft;XMLElement"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#OpenIOCRootElement -->
+
+    <Class rdf:about="&cfmft;OpenIOCRootElement">
+        <rdfs:subClassOf rdf:resource="&cfmft;OpenIOCElement"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#OtherResponseActionTakenSemanticConcept -->
+
+    <Class rdf:about="&cfmft;OtherResponseActionTakenSemanticConcept">
+        <rdfs:subClassOf rdf:resource="&cfmft;ResponseActionTakenSemanticConcept"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#PackageIntentSemanticConcept -->
+
+    <Class rdf:about="&cfmft;PackageIntentSemanticConcept">
+        <rdfs:subClassOf rdf:resource="&cfmft;SemanticComponent"/>
+        <rdfs:comment xml:lang="en">Indicates the type of indicator data.  E.g. the STIX package_intent_vocab schema element.</rdfs:comment>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#PhishingAlertBehaviorCharacterizationSemanticComponent -->
+
+    <Class rdf:about="&cfmft;PhishingAlertBehaviorCharacterizationSemanticComponent">
+        <rdfs:subClassOf rdf:resource="&cfmft;AlertBehaviorCharacterizationSemanticComponent"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#PortNumberIndicatorValueSemanticComponent -->
+
+    <Class rdf:about="&cfmft;PortNumberIndicatorValueSemanticComponent">
+        <rdfs:subClassOf rdf:resource="&cfmft;IndicatorValueSemanticConcept"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#PriorIndicatorReportsSemanticConcept -->
+
+    <Class rdf:about="&cfmft;PriorIndicatorReportsSemanticConcept">
+        <rdfs:subClassOf rdf:resource="&cfmft;SemanticComponent"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#PrivateCFM13SharingRestrictionSemanticConcept -->
+
+    <Class rdf:about="&cfmft;PrivateCFM13SharingRestrictionSemanticConcept">
+        <rdfs:subClassOf rdf:resource="&cfmft;CFM13SharingRestrictionSemanticConcept"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#ProtocolIndicatorValueSemanticComponent -->
+
+    <Class rdf:about="&cfmft;ProtocolIndicatorValueSemanticComponent">
+        <rdfs:subClassOf rdf:resource="&cfmft;IndicatorValueSemanticConcept"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#PublicCFM13SharingRestrictionSemanticConcept -->
+
+    <Class rdf:about="&cfmft;PublicCFM13SharingRestrictionSemanticConcept">
+        <rdfs:subClassOf rdf:resource="&cfmft;CFM13SharingRestrictionSemanticConcept"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#ReconAllowedSemanticConcept -->
+
+    <Class rdf:about="&cfmft;ReconAllowedSemanticConcept">
+        <rdfs:subClassOf rdf:resource="&cfmft;ActionRestrictionSemanticConcept"/>
+        <disjointWith rdf:resource="&cfmft;ReconNotAllowedSemanticConcept"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#ReconNotAllowedSemanticConcept -->
+
+    <Class rdf:about="&cfmft;ReconNotAllowedSemanticConcept">
+        <rdfs:subClassOf rdf:resource="&cfmft;ActionRestrictionSemanticConcept"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#ReconnaissanceAlertBehaviorCharacterizationSemanticComponent -->
+
+    <Class rdf:about="&cfmft;ReconnaissanceAlertBehaviorCharacterizationSemanticComponent">
+        <rdfs:subClassOf rdf:resource="&cfmft;AlertBehaviorCharacterizationSemanticComponent"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#ReferenceSemanticConcept -->
+
+    <Class rdf:about="&cfmft;ReferenceSemanticConcept">
+        <rdfs:subClassOf rdf:resource="&cfmft;SemanticComponent"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#ReghiveEqualityConstraintSemanticComponent -->
+
+    <Class rdf:about="&cfmft;ReghiveEqualityConstraintSemanticComponent">
+        <rdfs:subClassOf rdf:resource="&cfmft;IndicatorMatchConstraintSemanticConcept"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#ReghiveIndicatorValueSemanticComponent -->
+
+    <Class rdf:about="&cfmft;ReghiveIndicatorValueSemanticComponent">
+        <rdfs:subClassOf rdf:resource="&cfmft;IndicatorValueSemanticConcept"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#RegkeySubkeyNameIndicatorValueSemanticComponent -->
+
+    <Class rdf:about="&cfmft;RegkeySubkeyNameIndicatorValueSemanticComponent">
+        <rdfs:subClassOf rdf:resource="&cfmft;IndicatorValueSemanticConcept"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#RegkeySubkeyValueIndicatorValueSemanticComponent -->
+
+    <Class rdf:about="&cfmft;RegkeySubkeyValueIndicatorValueSemanticComponent">
+        <rdfs:subClassOf rdf:resource="&cfmft;IndicatorValueSemanticConcept"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#RegkeyValueEqualityConstraintSemanticComponent -->
+
+    <Class rdf:about="&cfmft;RegkeyValueEqualityConstraintSemanticComponent">
+        <rdfs:subClassOf rdf:resource="&cfmft;IndicatorMatchConstraintSemanticConcept"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#RegkeyValueIndicatorValueSemanticComponent -->
+
+    <Class rdf:about="&cfmft;RegkeyValueIndicatorValueSemanticComponent">
+        <rdfs:subClassOf rdf:resource="&cfmft;IndicatorValueSemanticConcept"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#RelatedIndicatorRelationTypeSemanticConcept -->
+
+    <Class rdf:about="&cfmft;RelatedIndicatorRelationTypeSemanticConcept">
+        <rdfs:subClassOf rdf:resource="&cfmft;SemanticComponent"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#RelatedUniqueIndicatorIdentifierSemanticConcept -->
+
+    <Class rdf:about="&cfmft;RelatedUniqueIndicatorIdentifierSemanticConcept">
+        <rdfs:subClassOf rdf:resource="&cfmft;UniqueIndicatorIdentifierSemanticConcept"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#RelevancySemanticConcept -->
+
+    <Class rdf:about="&cfmft;RelevancySemanticConcept">
+        <rdfs:subClassOf rdf:resource="&cfmft;SemanticComponent"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#RemoteHostResourceLocationSpecification -->
+
+    <Class rdf:about="&cfmft;RemoteHostResourceLocationSpecification">
+        <rdfs:subClassOf rdf:resource="&cfmft;RemoteResourceLocationSpecification"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#RemoteResourceLocationSpecification -->
+
+    <Class rdf:about="&cfmft;RemoteResourceLocationSpecification">
+        <rdfs:subClassOf rdf:resource="&cfmft;SemanticComponent"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#ReportAlertCountSemanticConcept -->
+
+    <Class rdf:about="&cfmft;ReportAlertCountSemanticConcept">
+        <rdfs:subClassOf rdf:resource="&cfmft;SemanticComponent"/>
+        <rdfs:comment xml:lang="en">The number of indicators present in an alert-style upload.</rdfs:comment>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#ReportDescriptionSemanticComponent -->
+
+    <Class rdf:about="&cfmft;ReportDescriptionSemanticComponent">
+        <rdfs:subClassOf rdf:resource="&cfmft;SemanticComponent"/>
+        <rdfs:comment xml:lang="en">A human-consumable description of the data within a given report.  For example, the description element in a STIX document.</rdfs:comment>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#ReportEndTimeSemanticConcept -->
+
+    <Class rdf:about="&cfmft;ReportEndTimeSemanticConcept">
+        <rdfs:subClassOf rdf:resource="&cfmft;SemanticComponent"/>
+        <rdfs:comment xml:lang="en">Indicates the latest time that an event could have been included in the report.</rdfs:comment>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#ReportGeneratedTimeSemanticConcept -->
+
+    <Class rdf:about="&cfmft;ReportGeneratedTimeSemanticConcept">
+        <rdfs:subClassOf rdf:resource="&cfmft;ReportProducedTimeSemanticConcept"/>
+        <rdfs:comment xml:lang="en">The time that this report was produced.  E.g. STIX produced_time.</rdfs:comment>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#ReportProducedTimeSemanticConcept -->
+
+    <Class rdf:about="&cfmft;ReportProducedTimeSemanticConcept">
+        <rdfs:subClassOf rdf:resource="&cfmft;SemanticComponent"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#ReportScheduleSemanticConcept -->
+
+    <Class rdf:about="&cfmft;ReportScheduleSemanticConcept">
+        <rdfs:subClassOf rdf:resource="&cfmft;SemanticComponent"/>
+        <rdfs:comment xml:lang="en">Indicates the schedule on which reports are submitted by an automated uploader.  For example, legacy CFM reports were often submitted on a 15 minute schedule.</rdfs:comment>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#ReportStartTimeSemanticConcept -->
+
+    <Class rdf:about="&cfmft;ReportStartTimeSemanticConcept">
+        <rdfs:subClassOf rdf:resource="&cfmft;SemanticComponent"/>
+        <rdfs:comment xml:lang="en">Indicates the earliest time an event could have been included in the report.</rdfs:comment>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#ReportSubmittedTimeSemanticConcept -->
+
+    <Class rdf:about="&cfmft;ReportSubmittedTimeSemanticConcept">
+        <rdfs:subClassOf rdf:resource="&cfmft;ReportProducedTimeSemanticConcept"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#ReportTitleSemanticComponent -->
+
+    <Class rdf:about="&cfmft;ReportTitleSemanticComponent">
+        <rdfs:subClassOf rdf:resource="&cfmft;SemanticComponent"/>
+        <rdfs:comment xml:lang="en">A human-readable title for the given report.  E.g. the title of a STIX document.</rdfs:comment>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#ReportTypeSemanticConcept -->
+
+    <Class rdf:about="&cfmft;ReportTypeSemanticConcept">
+        <rdfs:subClassOf rdf:resource="&cfmft;SemanticComponent"/>
+        <rdfs:comment xml:lang="en">Indicates the type of submitted file that is being processed.  For example, a set of indicator &apos;alerts&apos;, a human consumable report, a set of signatures, etc...</rdfs:comment>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#ResponseActionRecommendedSemanticConcept -->
+
+    <Class rdf:about="&cfmft;ResponseActionRecommendedSemanticConcept">
+        <rdfs:subClassOf rdf:resource="&cfmft;ResponseActionSemanticConcept"/>
+        <disjointWith rdf:resource="&cfmft;ResponseActionTakenSemanticConcept"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#ResponseActionSemanticConcept -->
+
+    <Class rdf:about="&cfmft;ResponseActionSemanticConcept">
+        <rdfs:subClassOf rdf:resource="&cfmft;ActionSemanticConcept"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#ResponseActionTakenSemanticConcept -->
+
+    <Class rdf:about="&cfmft;ResponseActionTakenSemanticConcept">
+        <rdfs:subClassOf rdf:resource="&cfmft;ResponseActionSemanticConcept"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#RevocationAlertBehaviorCharacterizationSemanticComponent -->
+
+    <Class rdf:about="&cfmft;RevocationAlertBehaviorCharacterizationSemanticComponent">
+        <rdfs:subClassOf rdf:resource="&cfmft;AlertBehaviorCharacterizationSemanticComponent"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#RevocationResponseActionRecommendedSemanticConcept -->
+
+    <Class rdf:about="&cfmft;RevocationResponseActionRecommendedSemanticConcept">
+        <rdfs:subClassOf rdf:resource="&cfmft;ResponseActionRecommendedSemanticConcept"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#SHA1FilehashIndicatorValueSemanticComponent -->
+
+    <Class rdf:about="&cfmft;SHA1FilehashIndicatorValueSemanticComponent">
+        <rdfs:subClassOf rdf:resource="&cfmft;FilehashIndicatorValueSemanticComponent"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#SHA256FilehashIndicatorValueSemanticComponent -->
+
+    <Class rdf:about="&cfmft;SHA256FilehashIndicatorValueSemanticComponent">
+        <rdfs:subClassOf rdf:resource="&cfmft;FilehashIndicatorValueSemanticComponent"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#SSDeepFilehashIndicatorValueSemanticComponent -->
+
+    <Class rdf:about="&cfmft;SSDeepFilehashIndicatorValueSemanticComponent">
+        <rdfs:subClassOf rdf:resource="&cfmft;FilehashIndicatorValueSemanticComponent"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#SSHKeyFingerprintIndicatorSemanticComponent -->
+
+    <Class rdf:about="&cfmft;SSHKeyFingerprintIndicatorSemanticComponent">
+        <rdfs:subClassOf rdf:resource="&cfmft;IndicatorTypeSemanticConcept"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#STIXAttribute -->
+
+    <Class rdf:about="&cfmft;STIXAttribute">
+        <rdfs:subClassOf rdf:resource="&cfmft;XMLAttribute"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#STIXBodyComponent -->
+
+    <Class rdf:about="&cfmft;STIXBodyComponent">
+        <rdfs:subClassOf rdf:resource="&cfmft;XMLComponent"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#STIXDocument -->
+
+    <Class rdf:about="&cfmft;STIXDocument">
+        <rdfs:subClassOf rdf:resource="&cfmft;Document"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#STIXHeaderComponent -->
+
+    <Class rdf:about="&cfmft;STIXHeaderComponent">
+        <rdfs:subClassOf rdf:resource="&cfmft;XMLComponent"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#STIXIDAttribute -->
+
+    <Class rdf:about="&cfmft;STIXIDAttribute">
+        <rdfs:subClassOf rdf:resource="&cfmft;STIXAttribute"/>
+        <rdfs:subClassOf>
+            <Restriction>
+                <onProperty rdf:resource="&cfmft;hasNameValue"/>
+                <hasValue>ID</hasValue>
+            </Restriction>
+        </rdfs:subClassOf>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#STIXIndicatorComponent -->
+
+    <Class rdf:about="&cfmft;STIXIndicatorComponent">
+        <rdfs:subClassOf rdf:resource="&cfmft;STIXBodyComponent"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#STIXSchema -->
+
+    <Class rdf:about="&cfmft;STIXSchema">
+        <rdfs:subClassOf rdf:resource="&cfmft;XMLDocumentSchema"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#STIXVersionSemanticConcept -->
+
+    <Class rdf:about="&cfmft;STIXVersionSemanticConcept">
+        <rdfs:subClassOf rdf:resource="&cfmft;VersionSemanticConcept"/>
+        <rdfs:comment xml:lang="en">A version of the version concept as used by STIX.</rdfs:comment>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#STIXXMLBody -->
+
+    <Class rdf:about="&cfmft;STIXXMLBody">
+        <rdfs:subClassOf rdf:resource="&cfmft;XMLComponent"/>
+        <disjointWith rdf:resource="&cfmft;STIXXMLHeader"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#STIXXMLDocument -->
+
+    <Class rdf:about="&cfmft;STIXXMLDocument">
+        <equivalentClass>
+            <Class>
+                <intersectionOf rdf:parseType="Collection">
+                    <Restriction>
+                        <onProperty rdf:resource="&cfmft;requiresComponent"/>
+                        <someValuesFrom rdf:resource="&cfmft;STIXXMLBody"/>
+                    </Restriction>
+                    <Restriction>
+                        <onProperty rdf:resource="&cfmft;requiresComponent"/>
+                        <someValuesFrom rdf:resource="&cfmft;STIXXMLHeader"/>
+                    </Restriction>
+                </intersectionOf>
+            </Class>
+        </equivalentClass>
+        <rdfs:subClassOf rdf:resource="&cfmft;STIXDocument"/>
+        <rdfs:subClassOf rdf:resource="&cfmft;XMLDocument"/>
+        <rdfs:comment xml:lang="en">Represents a STIX document - subclasses specify profiles</rdfs:comment>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#STIXXMLElement -->
+
+    <Class rdf:about="&cfmft;STIXXMLElement">
+        <rdfs:subClassOf rdf:resource="&cfmft;XMLElement"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#STIXXMLHeader -->
+
+    <Class rdf:about="&cfmft;STIXXMLHeader">
+        <rdfs:subClassOf rdf:resource="&cfmft;XMLComponent"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#ScanningAlertBehaviorCharacterizationSemanticComponent -->
+
+    <Class rdf:about="&cfmft;ScanningAlertBehaviorCharacterizationSemanticComponent">
+        <rdfs:subClassOf rdf:resource="&cfmft;AlertBehaviorCharacterizationSemanticComponent"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#SchemaLanguage -->
+
+    <Class rdf:about="&cfmft;SchemaLanguage"/>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#SchemaTypeSpecifications -->
+
+    <Class rdf:about="&cfmft;SchemaTypeSpecifications">
+        <rdfs:subClassOf rdf:resource="&cfmft;SchemaLanguage"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#SecondaryIndicatorSemanticConcept -->
+
+    <Class rdf:about="&cfmft;SecondaryIndicatorSemanticConcept">
+        <rdfs:subClassOf rdf:resource="&cfmft;IndicatorSemanticConcept"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#SecondaryIndicatorTypeSemanticConcept -->
+
+    <Class rdf:about="&cfmft;SecondaryIndicatorTypeSemanticConcept">
+        <rdfs:subClassOf rdf:resource="&cfmft;IndicatorTypeSemanticConcept"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#SecondarySourceSemanticConcept -->
+
+    <Class rdf:about="&cfmft;SecondarySourceSemanticConcept">
+        <rdfs:subClassOf rdf:resource="&cfmft;InformationSourceSemanticConcept"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#SemanticComponent -->
+
+    <Class rdf:about="&cfmft;SemanticComponent">
+        <rdfs:subClassOf rdf:resource="&cfmft;UniqueIdentifierSemanticConcept"/>
+        <rdfs:comment xml:lang="en">A semantic component is a combination of a concept and a value (or value set or range) which represents a particular meaning.</rdfs:comment>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#SemanticConcept -->
+
+    <Class rdf:about="&cfmft;SemanticConcept"/>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#SemanticValue -->
+
+    <Class rdf:about="&cfmft;SemanticValue"/>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#Semantics -->
+
+    <Class rdf:about="&cfmft;Semantics"/>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#SeveritySemanticConcept -->
+
+    <Class rdf:about="&cfmft;SeveritySemanticConcept">
+        <rdfs:subClassOf rdf:resource="&cfmft;SemanticComponent"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#SharingRestrictionSemanticConcept -->
+
+    <Class rdf:about="&cfmft;SharingRestrictionSemanticConcept">
+        <rdfs:subClassOf rdf:resource="&cfmft;SemanticComponent"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#SimpleDocumentComponentValue -->
+
+    <Class rdf:about="&cfmft;SimpleDocumentComponentValue">
+        <rdfs:subClassOf rdf:resource="&cfmft;DocumentComponentValue"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#SimpleSharingRestrictionSemanticConcept -->
+
+    <Class rdf:about="&cfmft;SimpleSharingRestrictionSemanticConcept">
+        <rdfs:subClassOf rdf:resource="&cfmft;SharingRestrictionSemanticConcept"/>
+        <rdfs:comment xml:lang="en">Indicates a &apos;simple&apos;, human-readable, specification of a restriction marking.</rdfs:comment>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#SiteAbbreviationSemanticConcept -->
+
+    <Class rdf:about="&cfmft;SiteAbbreviationSemanticConcept">
+        <rdfs:subClassOf rdf:resource="&cfmft;InformationSourceSemanticConcept"/>
+        <rdfs:comment xml:lang="en">An Analyzer identifier, such as a CFM site ID (e.g. AMES)</rdfs:comment>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#SiteContactEmailSemanticConcept -->
+
+    <Class rdf:about="&cfmft;SiteContactEmailSemanticConcept">
+        <rdfs:subClassOf rdf:resource="&cfmft;InformationSourceSemanticConcept"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#SiteContactNameSemanticConcept -->
+
+    <Class rdf:about="&cfmft;SiteContactNameSemanticConcept">
+        <rdfs:subClassOf rdf:resource="&cfmft;InformationSourceSemanticConcept"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#SiteContactPhoneSemanticConcept -->
+
+    <Class rdf:about="&cfmft;SiteContactPhoneSemanticConcept">
+        <rdfs:subClassOf rdf:resource="&cfmft;InformationSourceSemanticConcept"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#SiteNameSemanticConcept -->
+
+    <Class rdf:about="&cfmft;SiteNameSemanticConcept">
+        <rdfs:subClassOf rdf:resource="&cfmft;InformationSourceSemanticConcept"/>
+        <rdfs:comment xml:lang="en">Long site name</rdfs:comment>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#SourceComponent -->
+
+    <Class rdf:about="&cfmft;SourceComponent">
+        <rdfs:subClassOf rdf:resource="&cfmft;DocumentComponent"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#SpamAlertBehaviorCharacterizationSemanticComponent -->
+
+    <Class rdf:about="&cfmft;SpamAlertBehaviorCharacterizationSemanticComponent">
+        <rdfs:subClassOf rdf:resource="&cfmft;AlertBehaviorCharacterizationSemanticComponent"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#TLPAmberSemanticConcept -->
+
+    <Class rdf:about="&cfmft;TLPAmberSemanticConcept">
+        <rdfs:subClassOf rdf:resource="&cfmft;TLPSharingRestrictionSemanticConcept"/>
+        <rdfs:comment xml:lang="en">Indicates that the marked data can be shared within an organization, but only on a limited, as-needed basis.</rdfs:comment>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#TLPGreenSemanticConcept -->
+
+    <Class rdf:about="&cfmft;TLPGreenSemanticConcept">
+        <rdfs:subClassOf rdf:resource="&cfmft;TLPSharingRestrictionSemanticConcept"/>
+        <rdfs:comment xml:lang="en">Indicates that the marked data can be shared freely within an organization, but is not intended for a general public audience.</rdfs:comment>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#TLPRedSemanticConcept -->
+
+    <Class rdf:about="&cfmft;TLPRedSemanticConcept">
+        <rdfs:subClassOf rdf:resource="&cfmft;TLPSharingRestrictionSemanticConcept"/>
+        <rdfs:comment xml:lang="en">Indicates that the marked data is intended only for the designated recipients, and cannot be shared further.</rdfs:comment>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#TLPSharingRestrictionSemanticConcept -->
+
+    <Class rdf:about="&cfmft;TLPSharingRestrictionSemanticConcept">
+        <rdfs:subClassOf rdf:resource="&cfmft;SharingRestrictionSemanticConcept"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#TLPWhiteSemanticConcept -->
+
+    <Class rdf:about="&cfmft;TLPWhiteSemanticConcept">
+        <rdfs:subClassOf rdf:resource="&cfmft;TLPSharingRestrictionSemanticConcept"/>
+        <rdfs:comment xml:lang="en">Indicates that the marked data can be shared freely - it is publicly consumable.</rdfs:comment>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#TakenOfflineResponseActionTakenSemanticConcept -->
+
+    <Class rdf:about="&cfmft;TakenOfflineResponseActionTakenSemanticConcept">
+        <rdfs:subClassOf rdf:resource="&cfmft;ResponseActionTakenSemanticConcept"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#TimeAlertProcessedOnClientSemanticConcept -->
+
+    <Class rdf:about="&cfmft;TimeAlertProcessedOnClientSemanticConcept">
+        <rdfs:subClassOf rdf:resource="&cfmft;SemanticComponent"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#TimeOfDetectionSemanticConcept -->
+
+    <Class rdf:about="&cfmft;TimeOfDetectionSemanticConcept">
+        <rdfs:subClassOf rdf:resource="&cfmft;SemanticComponent"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#TimeOfMostRecentPriorIndicatorReportSemanticConcept -->
+
+    <Class rdf:about="&cfmft;TimeOfMostRecentPriorIndicatorReportSemanticConcept">
+        <rdfs:subClassOf rdf:resource="&cfmft;PriorIndicatorReportsSemanticConcept"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#TimePrecisionOfMostRecentPriorIndicatorReportSemanticConcept -->
+
+    <Class rdf:about="&cfmft;TimePrecisionOfMostRecentPriorIndicatorReportSemanticConcept">
+        <rdfs:subClassOf rdf:resource="&cfmft;PriorIndicatorReportsSemanticConcept"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#TimeReportReceivedSemanticConcept -->
+
+    <Class rdf:about="&cfmft;TimeReportReceivedSemanticConcept">
+        <rdfs:subClassOf rdf:resource="&cfmft;SemanticComponent"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#ToStarAction1 -->
+
+    <Class rdf:about="&cfmft;ToStarAction1">
+        <rdfs:subClassOf rdf:resource="&cfmft;ToStarConcept"/>
+        <rdfs:comment xml:lang="en">An action to be performed when the indicator is seen (semi-enum)</rdfs:comment>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#ToStarAction2 -->
+
+    <Class rdf:about="&cfmft;ToStarAction2">
+        <rdfs:subClassOf rdf:resource="&cfmft;ToStarConcept"/>
+        <rdfs:comment xml:lang="en">An action to be performed when the indicator is seen (semi-enum)</rdfs:comment>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#ToStarConcept -->
+
+    <Class rdf:about="&cfmft;ToStarConcept">
+        <rdfs:subClassOf rdf:resource="&cfmft;SemanticConcept"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#ToStarConfidence -->
+
+    <Class rdf:about="&cfmft;ToStarConfidence">
+        <rdfs:subClassOf rdf:resource="&cfmft;ToStarConcept"/>
+        <rdfs:comment xml:lang="en">Confidence in accuracy: 0 = none, 100 = full</rdfs:comment>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#ToStarDataItemID -->
+
+    <Class rdf:about="&cfmft;ToStarDataItemID">
+        <rdfs:subClassOf rdf:resource="&cfmft;ToStarConcept"/>
+        <rdfs:comment>UUID for data item</rdfs:comment>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#ToStarDetectedTime -->
+
+    <Class rdf:about="&cfmft;ToStarDetectedTime">
+        <rdfs:subClassOf rdf:resource="&cfmft;ToStarConcept"/>
+        <rdfs:comment>UTC epoch of time in the alert itself (if present, filled with reportedTime if not)</rdfs:comment>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#ToStarDirectSource -->
+
+    <Class rdf:about="&cfmft;ToStarDirectSource">
+        <rdfs:subClassOf rdf:resource="&cfmft;ToStarConcept"/>
+        <rdfs:comment xml:lang="en">The CFM site abbr (or other applicable identifier) that uploaded the data</rdfs:comment>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#ToStarDuration1 -->
+
+    <Class rdf:about="&cfmft;ToStarDuration1">
+        <rdfs:subClassOf rdf:resource="&cfmft;ToStarConcept"/>
+        <rdfs:comment xml:lang="en">How long the action is to be performed</rdfs:comment>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#ToStarDuration2 -->
+
+    <Class rdf:about="&cfmft;ToStarDuration2">
+        <rdfs:subClassOf rdf:resource="&cfmft;ToStarConcept"/>
+        <rdfs:comment xml:lang="en">How long the action is to be performed</rdfs:comment>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#ToStarFalse -->
+
+    <Class rdf:about="&cfmft;ToStarFalse">
+        <rdfs:subClassOf rdf:resource="&cfmft;ToStarSemanticValue"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#ToStarFileHasMore -->
+
+    <Class rdf:about="&cfmft;ToStarFileHasMore">
+        <rdfs:subClassOf rdf:resource="&cfmft;ToStarConcept"/>
+        <rdfs:comment xml:lang="en">boolean: false (default) = data item was fully translated, true = More details on the data item are present in file)</rdfs:comment>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#ToStarFileHasMoreFalseValue -->
+
+    <Class rdf:about="&cfmft;ToStarFileHasMoreFalseValue">
+        <equivalentClass>
+            <Class>
+                <intersectionOf rdf:parseType="Collection">
+                    <Restriction>
+                        <onProperty rdf:resource="&cfmft;hasSemanticConcept"/>
+                        <someValuesFrom rdf:resource="&cfmft;ToStarFileHasMore"/>
+                    </Restriction>
+                    <Restriction>
+                        <onProperty rdf:resource="&cfmft;hasSemanticValue"/>
+                        <someValuesFrom rdf:resource="&cfmft;ToStarFalse"/>
+                    </Restriction>
+                </intersectionOf>
+            </Class>
+        </equivalentClass>
+        <rdfs:subClassOf rdf:resource="&cfmft;SemanticComponent"/>
+        <rdfs:comment xml:lang="en">This semantic concept indicates that the data item was fully translated</rdfs:comment>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#ToStarFileID -->
+
+    <Class rdf:about="&cfmft;ToStarFileID">
+        <rdfs:subClassOf rdf:resource="&cfmft;ToStarConcept"/>
+        <rdfs:comment>UUID for file</rdfs:comment>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#ToStarIndicator -->
+
+    <Class rdf:about="&cfmft;ToStarIndicator">
+        <rdfs:subClassOf rdf:resource="&cfmft;ToStarConcept"/>
+        <rdfs:comment xml:lang="en">The value to be acted upon (e.g. ip, domain name, URL)</rdfs:comment>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#ToStarIndicatorType -->
+
+    <Class rdf:about="&cfmft;ToStarIndicatorType">
+        <rdfs:subClassOf rdf:resource="&cfmft;ToStarConcept"/>
+        <rdfs:comment xml:lang="en">A type name that informs how to interpret the indicator (e.g. ipv4, emailAddress) (enum)</rdfs:comment>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#ToStarOUOMarkingValue -->
+
+    <Class rdf:about="&cfmft;ToStarOUOMarkingValue">
+        <rdfs:subClassOf rdf:resource="&cfmft;ToStarSemanticValue"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#ToStarPriors -->
+
+    <Class rdf:about="&cfmft;ToStarPriors">
+        <rdfs:subClassOf rdf:resource="&cfmft;ToStarConcept"/>
+        <rdfs:comment xml:lang="en">number of previous (known) reports</rdfs:comment>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#ToStarProcessedTime -->
+
+    <Class rdf:about="&cfmft;ToStarProcessedTime">
+        <rdfs:subClassOf rdf:resource="&cfmft;ToStarConcept"/>
+        <rdfs:comment xml:lang="en">UTC epoch of time processed locally on client (i.e. when THIS parsed record was created)</rdfs:comment>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#ToStarReason1 -->
+
+    <Class rdf:about="&cfmft;ToStarReason1">
+        <rdfs:subClassOf rdf:resource="&cfmft;ToStarConcept"/>
+        <rdfs:comment xml:lang="en">First reason for this alert</rdfs:comment>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#ToStarReason2 -->
+
+    <Class rdf:about="&cfmft;ToStarReason2">
+        <rdfs:subClassOf rdf:resource="&cfmft;ToStarConcept"/>
+        <rdfs:comment xml:lang="en">Additional reason for this alert</rdfs:comment>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#ToStarReconAllowed -->
+
+    <Class rdf:about="&cfmft;ToStarReconAllowed">
+        <rdfs:subClassOf rdf:resource="&cfmft;ToStarConcept"/>
+        <rdfs:comment xml:lang="en">Boolean: true (default) = recon is ok, false = recon is not ok</rdfs:comment>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#ToStarReference1 -->
+
+    <Class rdf:about="&cfmft;ToStarReference1">
+        <rdfs:subClassOf rdf:resource="&cfmft;ToStarConcept"/>
+        <rdfs:comment xml:lang="en">Reference for info for reason</rdfs:comment>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#ToStarReference2 -->
+
+    <Class rdf:about="&cfmft;ToStarReference2">
+        <rdfs:subClassOf rdf:resource="&cfmft;ToStarConcept"/>
+        <rdfs:comment xml:lang="en">Reference for info for reason</rdfs:comment>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#ToStarReferenceValue -->
+
+    <Class rdf:about="&cfmft;ToStarReferenceValue">
+        <rdfs:subClassOf rdf:resource="&cfmft;ToStarSemanticValue"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#ToStarRelatedID -->
+
+    <Class rdf:about="&cfmft;ToStarRelatedID">
+        <rdfs:subClassOf rdf:resource="&cfmft;ToStarConcept"/>
+        <rdfs:comment xml:lang="en">UUID of a related indicator</rdfs:comment>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#ToStarRelationType -->
+
+    <Class rdf:about="&cfmft;ToStarRelationType">
+        <rdfs:subClassOf rdf:resource="&cfmft;ToStarConcept"/>
+        <rdfs:comment xml:lang="en">enum { supersedes, extends, superseded by, extended by }</rdfs:comment>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#ToStarRelevancy -->
+
+    <Class rdf:about="&cfmft;ToStarRelevancy">
+        <rdfs:subClassOf rdf:resource="&cfmft;ToStarConcept"/>
+        <rdfs:comment xml:lang="en">How relevant is this alert: 0 = not applicable, 100 = perfectly targeted</rdfs:comment>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#ToStarReportedTime -->
+
+    <Class rdf:about="&cfmft;ToStarReportedTime">
+        <rdfs:subClassOf rdf:resource="&cfmft;ToStarConcept"/>
+        <rdfs:comment xml:lang="en">UTC epoch of time reported to CFM (or other system)</rdfs:comment>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#ToStarRestriction -->
+
+    <Class rdf:about="&cfmft;ToStarRestriction">
+        <rdfs:subClassOf rdf:resource="&cfmft;ToStarConcept"/>
+        <rdfs:comment xml:lang="en">TLP level</rdfs:comment>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#ToStarSecondaryIndicator -->
+
+    <Class rdf:about="&cfmft;ToStarSecondaryIndicator">
+        <rdfs:subClassOf rdf:resource="&cfmft;ToStarConcept"/>
+        <rdfs:comment xml:lang="en">A secondary indicator that restricts (logical AND) the indicator (e.g. a port number) (when appropriate)</rdfs:comment>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#ToStarSecondaryIndicatorType -->
+
+    <Class rdf:about="&cfmft;ToStarSecondaryIndicatorType">
+        <rdfs:subClassOf rdf:resource="&cfmft;ToStarConcept"/>
+        <rdfs:comment xml:lang="en">A type name that informs how to interpret the secondaryIndicator (e.g. tcpport, udpport) (enum)</rdfs:comment>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#ToStarSecondarySource -->
+
+    <Class rdf:about="&cfmft;ToStarSecondarySource">
+        <rdfs:subClassOf rdf:resource="&cfmft;ToStarConcept"/>
+        <rdfs:comment xml:lang="en">String representing where the CFM site got it from (when appropriate)</rdfs:comment>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#ToStarSemanticValue -->
+
+    <Class rdf:about="&cfmft;ToStarSemanticValue">
+        <rdfs:subClassOf rdf:resource="&cfmft;SemanticValue"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#ToStarSensitivity -->
+
+    <Class rdf:about="&cfmft;ToStarSensitivity">
+        <rdfs:subClassOf rdf:resource="&cfmft;ToStarConcept"/>
+        <rdfs:comment xml:lang="en">OUO marking</rdfs:comment>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#ToStarSeverity -->
+
+    <Class rdf:about="&cfmft;ToStarSeverity">
+        <rdfs:subClassOf rdf:resource="&cfmft;ToStarConcept"/>
+        <rdfs:comment xml:lang="en">How significant is the impact (assuming relevant): 0 = no impact, 100 = catastrophic</rdfs:comment>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#ToStarTLPLevelValue -->
+
+    <Class rdf:about="&cfmft;ToStarTLPLevelValue">
+        <rdfs:subClassOf rdf:resource="&cfmft;ToStarSemanticValue"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#ToStarTextValue -->
+
+    <Class rdf:about="&cfmft;ToStarTextValue">
+        <rdfs:subClassOf rdf:resource="&cfmft;ToStarSemanticValue"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#ToStarTrue -->
+
+    <Class rdf:about="&cfmft;ToStarTrue">
+        <rdfs:subClassOf rdf:resource="&cfmft;ToStarSemanticValue"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#ToStarUUID -->
+
+    <Class rdf:about="&cfmft;ToStarUUID">
+        <rdfs:subClassOf rdf:resource="&cfmft;ToStarSemanticValue"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#ToStarZeroHundredScale -->
+
+    <Class rdf:about="&cfmft;ToStarZeroHundredScale">
+        <rdfs:subClassOf rdf:resource="&cfmft;ToStarSemanticValue"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#URIObjectSchemaTypeSpecification -->
+
+    <Class rdf:about="&cfmft;URIObjectSchemaTypeSpecification">
+        <rdfs:subClassOf rdf:resource="&cfmft;SchemaTypeSpecifications"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#URLIndicatorMetadataSemanticComponent -->
+
+    <Class rdf:about="&cfmft;URLIndicatorMetadataSemanticComponent">
+        <rdfs:subClassOf rdf:resource="&cfmft;IndicatorMetadataSemanticComponent"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#URLIndicatorSemanticComponent -->
+
+    <Class rdf:about="&cfmft;URLIndicatorSemanticComponent">
+        <rdfs:subClassOf rdf:resource="&cfmft;IndicatorSemanticConcept"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#URLIndicatorTypeSemanticComponent -->
+
+    <Class rdf:about="&cfmft;URLIndicatorTypeSemanticComponent">
+        <rdfs:subClassOf rdf:resource="&cfmft;IndicatorTypeSemanticConcept"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#URLLabelIndicatorValueSemanticComponent -->
+
+    <Class rdf:about="&cfmft;URLLabelIndicatorValueSemanticComponent">
+        <rdfs:subClassOf rdf:resource="&cfmft;IndicatorValueSemanticConcept"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#URLLabelMatchConstraintSemanticComponent -->
+
+    <Class rdf:about="&cfmft;URLLabelMatchConstraintSemanticComponent">
+        <rdfs:subClassOf rdf:resource="&cfmft;IndicatorMatchConstraintSemanticConcept"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#URLLabelObfuscatedIndicatorMetadataSemanticConcept -->
+
+    <Class rdf:about="&cfmft;URLLabelObfuscatedIndicatorMetadataSemanticConcept">
+        <rdfs:subClassOf rdf:resource="&cfmft;IndicatorMetadataSemanticComponent"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#URLLabelPatternTypeSemanticComponent -->
+
+    <Class rdf:about="&cfmft;URLLabelPatternTypeSemanticComponent">
+        <rdfs:subClassOf rdf:resource="&cfmft;IndicatorTypeSemanticConcept"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#URLLabelStringPatternTypeSemanticComponent -->
+
+    <Class rdf:about="&cfmft;URLLabelStringPatternTypeSemanticComponent">
+        <rdfs:subClassOf rdf:resource="&cfmft;URLLabelPatternTypeSemanticComponent"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#UUIDv4DataItemIdentifierSemanticConcept -->
+
+    <Class rdf:about="&cfmft;UUIDv4DataItemIdentifierSemanticConcept">
+        <rdfs:subClassOf rdf:resource="&cfmft;UniqueDataItemIdentifierSemanticConcept"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#UUIDv4DocumentIdentifier -->
+
+    <Class rdf:about="&cfmft;UUIDv4DocumentIdentifier">
+        <rdfs:subClassOf rdf:resource="&cfmft;DocumentIdentifier"/>
+        <rdfs:comment xml:lang="en">A globally unique UUIDv4 document identifier.  E.g., the STIX document ID.</rdfs:comment>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#UUIDv4DocumentIdentifierSemanticConcept -->
+
+    <Class rdf:about="&cfmft;UUIDv4DocumentIdentifierSemanticConcept">
+        <rdfs:subClassOf rdf:resource="&cfmft;UniqueFileIdentifierSemanticConcept"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#UUIDv4IndicatorIdentifierSemanticConcept -->
+
+    <Class rdf:about="&cfmft;UUIDv4IndicatorIdentifierSemanticConcept">
+        <rdfs:subClassOf rdf:resource="&cfmft;UUIDv4DataItemIdentifierSemanticConcept"/>
+        <rdfs:subClassOf rdf:resource="&cfmft;UniqueIndicatorIdentifierSemanticConcept"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#UUIDv4ObservableIdentifierSemanticConcept -->
+
+    <Class rdf:about="&cfmft;UUIDv4ObservableIdentifierSemanticConcept">
+        <rdfs:subClassOf rdf:resource="&cfmft;UniqueObservableIdentifierSemanticConcept"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#UUIDv4ObservableObjectIdentifierSemanticConcept -->
+
+    <Class rdf:about="&cfmft;UUIDv4ObservableObjectIdentifierSemanticConcept">
+        <rdfs:subClassOf rdf:resource="&cfmft;UniqueObservableObjectIdentifierSemanticConcept"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#UUIDv4RelatedIndicatorIdentifierSemanticConcept -->
+
+    <Class rdf:about="&cfmft;UUIDv4RelatedIndicatorIdentifierSemanticConcept">
+        <rdfs:subClassOf rdf:resource="&cfmft;RelatedUniqueIndicatorIdentifierSemanticConcept"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#UnauthorizedUseAlertBehaviorCharacterizationSemanticComponent -->
+
+    <Class rdf:about="&cfmft;UnauthorizedUseAlertBehaviorCharacterizationSemanticComponent">
+        <rdfs:subClassOf rdf:resource="&cfmft;AlertBehaviorCharacterizationSemanticComponent"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#UniqueDataItemIdentifierSemanticConcept -->
+
+    <Class rdf:about="&cfmft;UniqueDataItemIdentifierSemanticConcept">
+        <rdfs:subClassOf rdf:resource="&cfmft;UniqueIdentifierSemanticConcept"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#UniqueFileIdentifierSemanticConcept -->
+
+    <Class rdf:about="&cfmft;UniqueFileIdentifierSemanticConcept">
+        <rdfs:subClassOf rdf:resource="&cfmft;UniqueIdentifierSemanticConcept"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#UniqueIdentifierSemanticConcept -->
+
+    <Class rdf:about="&cfmft;UniqueIdentifierSemanticConcept">
+        <rdfs:subClassOf rdf:resource="&cfmft;SemanticComponent"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#UniqueIndicatorIdentifierSemanticConcept -->
+
+    <Class rdf:about="&cfmft;UniqueIndicatorIdentifierSemanticConcept">
+        <rdfs:subClassOf rdf:resource="&cfmft;UniqueDataItemIdentifierSemanticConcept"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#UniqueObservableIdentifierSemanticConcept -->
+
+    <Class rdf:about="&cfmft;UniqueObservableIdentifierSemanticConcept">
+        <rdfs:subClassOf rdf:resource="&cfmft;SemanticComponent"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#UniqueObservableObjectIdentifierSemanticConcept -->
+
+    <Class rdf:about="&cfmft;UniqueObservableObjectIdentifierSemanticConcept">
+        <rdfs:subClassOf rdf:resource="&cfmft;SemanticComponent"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#UnknownOriginSemanticConcept -->
+
+    <Class rdf:about="&cfmft;UnknownOriginSemanticConcept">
+        <rdfs:subClassOf rdf:resource="&cfmft;IndicatorOriginSemanticConcept"/>
+        <rdfs:comment xml:lang="en">Signifies that a submitted indicator has an unknown or unspecified origin.</rdfs:comment>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#UnspecifiedAlertBehaviorCharacterizationSemanticComponent -->
+
+    <Class rdf:about="&cfmft;UnspecifiedAlertBehaviorCharacterizationSemanticComponent">
+        <rdfs:subClassOf rdf:resource="&cfmft;AlertBehaviorCharacterizationSemanticComponent"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#UserNameIndicatorTypeSemanticComponent -->
+
+    <Class rdf:about="&cfmft;UserNameIndicatorTypeSemanticComponent">
+        <rdfs:subClassOf rdf:resource="&cfmft;IndicatorTypeSemanticConcept"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#UserSpecificOriginSemanticConcept -->
+
+    <Class rdf:about="&cfmft;UserSpecificOriginSemanticConcept">
+        <rdfs:subClassOf rdf:resource="&cfmft;IndicatorOriginSemanticConcept"/>
+        <rdfs:comment xml:lang="en">Signifies that a submitted indicator originated from a user specific source (e.g. an IDS).</rdfs:comment>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#VendorSpecificOriginSemanticConcept -->
+
+    <Class rdf:about="&cfmft;VendorSpecificOriginSemanticConcept">
+        <rdfs:subClassOf rdf:resource="&cfmft;IndicatorOriginSemanticConcept"/>
+        <rdfs:comment xml:lang="en">Signifies that a submitted indicator originated from a vendor specific source (e.g. a proxy rule set).</rdfs:comment>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#VersionSemanticConcept -->
+
+    <Class rdf:about="&cfmft;VersionSemanticConcept">
+        <rdfs:subClassOf rdf:resource="&cfmft;SemanticComponent"/>
+        <rdfs:comment xml:lang="en">A concept representing the schema version of the indicator data.</rdfs:comment>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#WindowsRegistryKeyObjectSchemaTypeSpecification -->
+
+    <Class rdf:about="&cfmft;WindowsRegistryKeyObjectSchemaTypeSpecification">
+        <rdfs:subClassOf rdf:resource="&cfmft;SchemaTypeSpecifications"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#XMLAttribute -->
+
+    <Class rdf:about="&cfmft;XMLAttribute">
+        <rdfs:subClassOf rdf:resource="&cfmft;XMLComponent"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#XMLComponent -->
+
+    <Class rdf:about="&cfmft;XMLComponent">
+        <equivalentClass>
+            <Restriction>
+                <onProperty rdf:resource="&cfmft;containsComponent"/>
+                <allValuesFrom rdf:resource="&cfmft;XMLComponent"/>
+            </Restriction>
+        </equivalentClass>
+        <rdfs:subClassOf rdf:resource="&cfmft;DocumentComponent"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#XMLDocument -->
+
+    <Class rdf:about="&cfmft;XMLDocument">
+        <equivalentClass>
+            <Class>
+                <intersectionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="&cfmft;Document"/>
+                    <Restriction>
+                        <onProperty rdf:resource="&cfmft;hasSyntax"/>
+                        <hasValue rdf:resource="&cfmft;XMLSyntax1.0"/>
+                    </Restriction>
+                </intersectionOf>
+            </Class>
+        </equivalentClass>
+        <rdfs:subClassOf rdf:resource="&cfmft;Document"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#XMLDocumentControlledStructureSemanticConcept -->
+
+    <Class rdf:about="&cfmft;XMLDocumentControlledStructureSemanticConcept">
+        <rdfs:subClassOf rdf:resource="&cfmft;DocumentControlledStructureSemanticConcept"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#XMLDocumentSchema -->
+
+    <Class rdf:about="&cfmft;XMLDocumentSchema">
+        <rdfs:subClassOf rdf:resource="&cfmft;DocumentSchema"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#XMLElement -->
+
+    <Class rdf:about="&cfmft;XMLElement">
+        <rdfs:subClassOf rdf:resource="&cfmft;XMLComponent"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#XMLNodeControlledStructureSemanticConcept -->
+
+    <Class rdf:about="&cfmft;XMLNodeControlledStructureSemanticConcept">
+        <rdfs:subClassOf rdf:resource="&cfmft;SemanticComponent"/>
+        <rdfs:comment xml:lang="en">Indicator has specific handling instructions</rdfs:comment>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#XMLRootElement -->
+
+    <Class rdf:about="&cfmft;XMLRootElement">
+        <rdfs:subClassOf rdf:resource="&cfmft;XMLElement"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#XMLSyntax -->
+
+    <Class rdf:about="&cfmft;XMLSyntax">
+        <rdfs:subClassOf rdf:resource="&cfmft;DocumentSyntax"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#cfm-metadataSchema -->
+
+    <Class rdf:about="&cfmft;cfm-metadataSchema">
+        <rdfs:subClassOf rdf:resource="&cfmft;DocumentSchema"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#cfm13-nrelSchema -->
+
+    <Class rdf:about="&cfmft;cfm13-nrelSchema">
+        <rdfs:subClassOf rdf:resource="&cfmft;DocumentSchema"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#cfm13Schema -->
+
+    <Class rdf:about="&cfmft;cfm13Schema">
+        <rdfs:subClassOf rdf:resource="&cfmft;DocumentSchema"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#cfm20alertSchema -->
+
+    <Class rdf:about="&cfmft;cfm20alertSchema">
+        <rdfs:subClassOf rdf:resource="&cfmft;DocumentSchema"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#keyvalue-nrelSchema -->
+
+    <Class rdf:about="&cfmft;keyvalue-nrelSchema">
+        <rdfs:subClassOf rdf:resource="&cfmft;DocumentSchema"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#lqmtoolsSchema -->
+
+    <Class rdf:about="&cfmft;lqmtoolsSchema">
+        <rdfs:subClassOf rdf:resource="&cfmft;DocumentSchema"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#stix-cfmSchema -->
+
+    <Class rdf:about="&cfmft;stix-cfmSchema">
+        <rdfs:subClassOf rdf:resource="&cfmft;DocumentSchema"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#stix-essaSchema -->
+
+    <Class rdf:about="&cfmft;stix-essaSchema">
+        <rdfs:subClassOf rdf:resource="&cfmft;DocumentSchema"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#stix-tlpSchema -->
+
+    <Class rdf:about="&cfmft;stix-tlpSchema">
+        <rdfs:subClassOf rdf:resource="&cfmft;DocumentSchema"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#stixSchema -->
+
+    <Class rdf:about="&cfmft;stixSchema">
+        <rdfs:subClassOf rdf:resource="&cfmft;DocumentSchema"/>
+    </Class>
+    
+
+
+    <!-- http://www.w3.org/1999/02/22-rdf-syntax-ns#Bag -->
+
+    <Class rdf:about="&rdf;Bag"/>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Individuals
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owlassessment_action-Bag -->
+
+    <NamedIndividual rdf:about="http://www.anl.gov/cfm/transform.owlassessment_action-Bag">
+        <rdf:type rdf:resource="&rdf;Bag"/>
+    </NamedIndividual>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owlassessment_description-Bag -->
+
+    <NamedIndividual rdf:about="http://www.anl.gov/cfm/transform.owlassessment_description-Bag">
+        <rdf:type rdf:resource="&rdf;Bag"/>
+    </NamedIndividual>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owlouo-Bag -->
+
+    <NamedIndividual rdf:about="http://www.anl.gov/cfm/transform.owlouo-Bag">
+        <rdf:type rdf:resource="&rdf;Bag"/>
+    </NamedIndividual>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owlrecon-Bag -->
+
+    <NamedIndividual rdf:about="http://www.anl.gov/cfm/transform.owlrecon-Bag">
+        <rdf:type rdf:resource="&rdf;Bag"/>
+    </NamedIndividual>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owlreference_meaning-Bag -->
+
+    <NamedIndividual rdf:about="http://www.anl.gov/cfm/transform.owlreference_meaning-Bag">
+        <rdf:type rdf:resource="&rdf;Bag"/>
+    </NamedIndividual>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owlreference_origin-Bag -->
+
+    <NamedIndividual rdf:about="http://www.anl.gov/cfm/transform.owlreference_origin-Bag">
+        <rdf:type rdf:resource="&rdf;Bag"/>
+    </NamedIndividual>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owlreport_tlp-Bag -->
+
+    <NamedIndividual rdf:about="http://www.anl.gov/cfm/transform.owlreport_tlp-Bag">
+        <rdf:type rdf:resource="&rdf;Bag"/>
+    </NamedIndividual>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owlreport_type-Bag -->
+
+    <NamedIndividual rdf:about="http://www.anl.gov/cfm/transform.owlreport_type-Bag">
+        <rdf:type rdf:resource="&rdf;Bag"/>
+    </NamedIndividual>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owlrestriction-Bag -->
+
+    <NamedIndividual rdf:about="http://www.anl.gov/cfm/transform.owlrestriction-Bag">
+        <rdf:type rdf:resource="&rdf;Bag"/>
+    </NamedIndividual>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owlsource_address_type-Bag -->
+
+    <NamedIndividual rdf:about="http://www.anl.gov/cfm/transform.owlsource_address_type-Bag">
+        <rdf:type rdf:resource="&rdf;Bag"/>
+    </NamedIndividual>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#ActionDescriptionSemanticConcept -->
+
+    <NamedIndividual rdf:about="&cfmft;ActionDescriptionSemanticConcept"/>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#ActionDurationSemanticConcept -->
+
+    <NamedIndividual rdf:about="&cfmft;ActionDurationSemanticConcept"/>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#ActionThresholdSemanticConcept -->
+
+    <NamedIndividual rdf:about="&cfmft;ActionThresholdSemanticConcept"/>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#AlertReferenceNameSemanticComponent -->
+
+    <NamedIndividual rdf:about="&cfmft;AlertReferenceNameSemanticComponent"/>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#AlertReferenceURLSemanticComponent -->
+
+    <NamedIndividual rdf:about="&cfmft;AlertReferenceURLSemanticComponent"/>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#CFM13Schema -->
+
+    <NamedIndividual rdf:about="&cfmft;CFM13Schema">
+        <cfmft:supportsSemanticComponent rdf:resource="http://www.anl.gov/cfm/transform.owlassessment_action-Bag"/>
+        <cfmft:supportsSemanticComponent rdf:resource="http://www.anl.gov/cfm/transform.owlassessment_description-Bag"/>
+        <cfmft:supportsSemanticComponent rdf:resource="http://www.anl.gov/cfm/transform.owlouo-Bag"/>
+        <cfmft:supportsSemanticComponent rdf:resource="http://www.anl.gov/cfm/transform.owlrecon-Bag"/>
+        <cfmft:supportsSemanticComponent rdf:resource="http://www.anl.gov/cfm/transform.owlreference_meaning-Bag"/>
+        <cfmft:supportsSemanticComponent rdf:resource="http://www.anl.gov/cfm/transform.owlreference_origin-Bag"/>
+        <cfmft:supportsSemanticComponent rdf:resource="http://www.anl.gov/cfm/transform.owlreport_tlp-Bag"/>
+        <cfmft:supportsSemanticComponent rdf:resource="http://www.anl.gov/cfm/transform.owlreport_type-Bag"/>
+        <cfmft:supportsSemanticComponent rdf:resource="http://www.anl.gov/cfm/transform.owlrestriction-Bag"/>
+        <cfmft:supportsSemanticComponent rdf:resource="http://www.anl.gov/cfm/transform.owlsource_address_type-Bag"/>
+        <cfmft:supportsSemanticComponent rdf:resource="&cfmft;ActionDurationSemanticConcept"/>
+        <cfmft:supportsSemanticComponent rdf:resource="&cfmft;ActionThresholdSemanticConcept"/>
+        <cfmft:supportsSemanticComponent rdf:resource="&cfmft;AlertReferenceURLSemanticComponent"/>
+        <cfmft:supportsSemanticComponent rdf:resource="&cfmft;CountryCodeRemoteHostResourceLocationSpecification"/>
+        <cfmft:supportsSemanticComponent rdf:resource="&cfmft;CountryNameRemoteHostResourceLocationSpecification"/>
+        <cfmft:supportsSemanticComponent rdf:resource="&cfmft;DestinationPortListIndicatorValueSemanticComponent"/>
+        <cfmft:supportsSemanticComponent rdf:resource="&cfmft;DestinationPortNumberIndicatorValueSemanticComponent"/>
+        <cfmft:supportsSemanticComponent rdf:resource="&cfmft;IndicatorDescriptionSemanticConcept"/>
+        <cfmft:supportsSemanticComponent rdf:resource="&cfmft;IndicatorSightingsSemanticConcept"/>
+        <cfmft:supportsSemanticComponent rdf:resource="&cfmft;IndicatorSimpleSharingRestrictionSemanticConcept"/>
+        <cfmft:supportsSemanticComponent rdf:resource="&cfmft;PriorIndicatorReportsSemanticConcept"/>
+        <cfmft:supportsSemanticComponent rdf:resource="&cfmft;ProtocolIndicatorValueSemanticComponent"/>
+        <cfmft:supportsSemanticComponent rdf:resource="&cfmft;ReportAlertCountSemanticConcept"/>
+        <cfmft:supportsSemanticComponent rdf:resource="&cfmft;ReportScheduleSemanticConcept"/>
+        <cfmft:supportsSemanticComponent rdf:resource="&cfmft;ReportStartTimeSemanticConcept"/>
+        <cfmft:supportsSemanticComponent rdf:resource="&cfmft;ReportSubmittedTimeSemanticConcept"/>
+        <cfmft:supportsSemanticComponent rdf:resource="&cfmft;SiteAbbreviationSemanticConcept"/>
+        <cfmft:supportsSemanticComponent rdf:resource="&cfmft;SiteContactEmailSemanticConcept"/>
+        <cfmft:supportsSemanticComponent rdf:resource="&cfmft;SiteContactNameSemanticConcept"/>
+        <cfmft:supportsSemanticComponent rdf:resource="&cfmft;SiteContactPhoneSemanticConcept"/>
+        <cfmft:supportsSemanticComponent rdf:resource="&cfmft;SiteNameSemanticConcept"/>
+        <cfmft:supportsSemanticComponent rdf:resource="&cfmft;TimeOfDetectionSemanticConcept"/>
+        <cfmft:supportsSemanticComponent rdf:resource="&cfmft;XMLNodeControlledStructureSemanticConcept"/>
+    </NamedIndividual>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#CountryCodeRemoteHostResourceLocationSpecification -->
+
+    <NamedIndividual rdf:about="&cfmft;CountryCodeRemoteHostResourceLocationSpecification"/>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#CountryNameRemoteHostResourceLocationSpecification -->
+
+    <NamedIndividual rdf:about="&cfmft;CountryNameRemoteHostResourceLocationSpecification"/>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#DNSIndicatorValueSemanticComponent -->
+
+    <NamedIndividual rdf:about="&cfmft;DNSIndicatorValueSemanticComponent"/>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#DataSensitivity-Bag -->
+
+    <NamedIndividual rdf:about="&cfmft;DataSensitivity-Bag">
+        <rdf:type rdf:resource="&rdf;Bag"/>
+    </NamedIndividual>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#DestinationPortListIndicatorValueSemanticComponent -->
+
+    <NamedIndividual rdf:about="&cfmft;DestinationPortListIndicatorValueSemanticComponent"/>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#DestinationPortNumberIndicatorValueSemanticComponent -->
+
+    <NamedIndividual rdf:about="&cfmft;DestinationPortNumberIndicatorValueSemanticComponent"/>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#DocumentGeneratedTimeSemanticConcept -->
+
+    <NamedIndividual rdf:about="&cfmft;DocumentGeneratedTimeSemanticConcept"/>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#DownloadElementExtendedAttribute_Field-Bag -->
+
+    <NamedIndividual rdf:about="&cfmft;DownloadElementExtendedAttribute_Field-Bag">
+        <rdf:type rdf:resource="&rdf;Bag"/>
+    </NamedIndividual>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#EmailHeaderMessageIDIndicatorValueSemanticComponent -->
+
+    <NamedIndividual rdf:about="&cfmft;EmailHeaderMessageIDIndicatorValueSemanticComponent"/>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#EmailHeaderXmailerIndicatorValueSemanticComponent -->
+
+    <NamedIndividual rdf:about="&cfmft;EmailHeaderXmailerIndicatorValueSemanticComponent"/>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#EmailSubjectValueSemanticComponent -->
+
+    <NamedIndividual rdf:about="&cfmft;EmailSubjectValueSemanticComponent"/>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#FilenameIndicatorValueSemanticConcept -->
+
+    <NamedIndividual rdf:about="&cfmft;FilenameIndicatorValueSemanticConcept"/>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#FilepathIndicatorValueSemanticConcept -->
+
+    <NamedIndividual rdf:about="&cfmft;FilepathIndicatorValueSemanticConcept"/>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#FilesizeByteValueSemanticConcept -->
+
+    <NamedIndividual rdf:about="&cfmft;FilesizeByteValueSemanticConcept"/>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#HTTPClientRequestHeaderUserAgentIndicatorValueSemanticComponent -->
+
+    <NamedIndividual rdf:about="&cfmft;HTTPClientRequestHeaderUserAgentIndicatorValueSemanticComponent"/>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#IPv4AddressIndicatorValueSemanticComponent -->
+
+    <NamedIndividual rdf:about="&cfmft;IPv4AddressIndicatorValueSemanticComponent"/>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#IPv6AddressIndicatorValueSemanticComponent -->
+
+    <NamedIndividual rdf:about="&cfmft;IPv6AddressIndicatorValueSemanticComponent"/>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#IndicatorDescriptionSemanticConcept -->
+
+    <NamedIndividual rdf:about="&cfmft;IndicatorDescriptionSemanticConcept"/>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#IndicatorGeneratedTimeSemanticConcept -->
+
+    <NamedIndividual rdf:about="&cfmft;IndicatorGeneratedTimeSemanticConcept"/>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#IndicatorSightingsSemanticConcept -->
+
+    <NamedIndividual rdf:about="&cfmft;IndicatorSightingsSemanticConcept"/>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#IndicatorSimpleSharingRestrictionSemanticConcept -->
+
+    <NamedIndividual rdf:about="&cfmft;IndicatorSimpleSharingRestrictionSemanticConcept"/>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#KillChainIDSemanticConcept -->
+
+    <NamedIndividual rdf:about="&cfmft;KillChainIDSemanticConcept"/>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#KillChainNameSemanticConcept -->
+
+    <NamedIndividual rdf:about="&cfmft;KillChainNameSemanticConcept"/>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#KillChainPhaseIDSemanticConcept -->
+
+    <NamedIndividual rdf:about="&cfmft;KillChainPhaseIDSemanticConcept"/>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#KillChainPhaseNameSemanticConcept -->
+
+    <NamedIndividual rdf:about="&cfmft;KillChainPhaseNameSemanticConcept"/>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#KillChainPhaseOrdinalitySemanticConcept -->
+
+    <NamedIndividual rdf:about="&cfmft;KillChainPhaseOrdinalitySemanticConcept"/>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#MutexNameIndicatorValueSemanticComponent -->
+
+    <NamedIndividual rdf:about="&cfmft;MutexNameIndicatorValueSemanticComponent"/>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#PayloadFormat-Bag -->
+
+    <NamedIndividual rdf:about="&cfmft;PayloadFormat-Bag">
+        <rdf:type rdf:resource="&rdf;Bag"/>
+    </NamedIndividual>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#PayloadType-Bag -->
+
+    <NamedIndividual rdf:about="&cfmft;PayloadType-Bag">
+        <rdf:type rdf:resource="&rdf;Bag"/>
+    </NamedIndividual>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#PriorIndicatorReportsSemanticConcept -->
+
+    <NamedIndividual rdf:about="&cfmft;PriorIndicatorReportsSemanticConcept"/>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#ProtocolIndicatorValueSemanticComponent -->
+
+    <NamedIndividual rdf:about="&cfmft;ProtocolIndicatorValueSemanticComponent"/>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#ReconPolicy-Bag -->
+
+    <NamedIndividual rdf:about="&cfmft;ReconPolicy-Bag">
+        <rdf:type rdf:resource="&rdf;Bag"/>
+    </NamedIndividual>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#ReghiveIndicatorValueSemanticComponent -->
+
+    <NamedIndividual rdf:about="&cfmft;ReghiveIndicatorValueSemanticComponent"/>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#RegkeySubkeyNameIndicatorValueSemanticComponent -->
+
+    <NamedIndividual rdf:about="&cfmft;RegkeySubkeyNameIndicatorValueSemanticComponent"/>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#RegkeySubkeyValueIndicatorValueSemanticComponent -->
+
+    <NamedIndividual rdf:about="&cfmft;RegkeySubkeyValueIndicatorValueSemanticComponent"/>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#RegkeyValueIndicatorValueSemanticComponent -->
+
+    <NamedIndividual rdf:about="&cfmft;RegkeyValueIndicatorValueSemanticComponent"/>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#ReportAlertCountSemanticConcept -->
+
+    <NamedIndividual rdf:about="&cfmft;ReportAlertCountSemanticConcept"/>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#ReportDescriptionSemanticComponent -->
+
+    <NamedIndividual rdf:about="&cfmft;ReportDescriptionSemanticComponent"/>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#ReportScheduleSemanticConcept -->
+
+    <NamedIndividual rdf:about="&cfmft;ReportScheduleSemanticConcept"/>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#ReportStartTimeSemanticConcept -->
+
+    <NamedIndividual rdf:about="&cfmft;ReportStartTimeSemanticConcept"/>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#ReportSubmittedTimeSemanticConcept -->
+
+    <NamedIndividual rdf:about="&cfmft;ReportSubmittedTimeSemanticConcept"/>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#ReportTitleSemanticComponent -->
+
+    <NamedIndividual rdf:about="&cfmft;ReportTitleSemanticComponent"/>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#SimpleSharingRestrictionSemanticConcept -->
+
+    <NamedIndividual rdf:about="&cfmft;SimpleSharingRestrictionSemanticConcept"/>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#SiteAbbreviationSemanticConcept -->
+
+    <NamedIndividual rdf:about="&cfmft;SiteAbbreviationSemanticConcept"/>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#SiteContactEmailSemanticConcept -->
+
+    <NamedIndividual rdf:about="&cfmft;SiteContactEmailSemanticConcept"/>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#SiteContactNameSemanticConcept -->
+
+    <NamedIndividual rdf:about="&cfmft;SiteContactNameSemanticConcept"/>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#SiteContactPhoneSemanticConcept -->
+
+    <NamedIndividual rdf:about="&cfmft;SiteContactPhoneSemanticConcept"/>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#SiteNameSemanticConcept -->
+
+    <NamedIndividual rdf:about="&cfmft;SiteNameSemanticConcept"/>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#TimeAlertProcessedOnClientSemanticConcept -->
+
+    <NamedIndividual rdf:about="&cfmft;TimeAlertProcessedOnClientSemanticConcept"/>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#TimeOfDetectionSemanticConcept -->
+
+    <NamedIndividual rdf:about="&cfmft;TimeOfDetectionSemanticConcept"/>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#URLLabelIndicatorValueSemanticComponent -->
+
+    <NamedIndividual rdf:about="&cfmft;URLLabelIndicatorValueSemanticComponent"/>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#UUIDv4IndicatorIdentifierSemanticConcept -->
+
+    <NamedIndividual rdf:about="&cfmft;UUIDv4IndicatorIdentifierSemanticConcept"/>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#UUIDv4ObservableIdentifierSemanticConcept -->
+
+    <NamedIndividual rdf:about="&cfmft;UUIDv4ObservableIdentifierSemanticConcept"/>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#UUIDv4ObservableObjectIdentifierSemanticConcept -->
+
+    <NamedIndividual rdf:about="&cfmft;UUIDv4ObservableObjectIdentifierSemanticConcept"/>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#UniqueFileIdentifierSemanticConcept -->
+
+    <NamedIndividual rdf:about="&cfmft;UniqueFileIdentifierSemanticConcept"/>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#XMLDTD -->
+
+    <NamedIndividual rdf:about="&cfmft;XMLDTD">
+        <rdf:type rdf:resource="&cfmft;SchemaLanguage"/>
+    </NamedIndividual>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#XMLNodeControlledStructureSemanticConcept -->
+
+    <NamedIndividual rdf:about="&cfmft;XMLNodeControlledStructureSemanticConcept"/>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#XMLSchema -->
+
+    <NamedIndividual rdf:about="&cfmft;XMLSchema">
+        <rdf:type rdf:resource="&cfmft;SchemaLanguage"/>
+    </NamedIndividual>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#XMLSyntax1.0 -->
+
+    <NamedIndividual rdf:about="&cfmft;XMLSyntax1.0">
+        <rdf:type rdf:resource="&cfmft;XMLSyntax"/>
+    </NamedIndividual>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#action1-Bag -->
+
+    <NamedIndividual rdf:about="&cfmft;action1-Bag">
+        <rdf:type rdf:resource="&rdf;Bag"/>
+    </NamedIndividual>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#action2-Bag -->
+
+    <NamedIndividual rdf:about="&cfmft;action2-Bag">
+        <rdf:type rdf:resource="&rdf;Bag"/>
+    </NamedIndividual>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#actionList_actionCategory-Bag -->
+
+    <NamedIndividual rdf:about="&cfmft;actionList_actionCategory-Bag">
+        <rdf:type rdf:resource="&rdf;Bag"/>
+    </NamedIndividual>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#alertExtendedAttribute_Field-Bag -->
+
+    <NamedIndividual rdf:about="&cfmft;alertExtendedAttribute_Field-Bag">
+        <rdf:type rdf:resource="&rdf;Bag"/>
+    </NamedIndividual>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#assessment_action-Bag -->
+
+    <NamedIndividual rdf:about="&cfmft;assessment_action-Bag">
+        <rdf:type rdf:resource="&rdf;Bag"/>
+    </NamedIndividual>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#assessment_description-Bag -->
+
+    <NamedIndividual rdf:about="&cfmft;assessment_description-Bag">
+        <rdf:type rdf:resource="&rdf;Bag"/>
+    </NamedIndividual>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#category-Bag -->
+
+    <NamedIndividual rdf:about="&cfmft;category-Bag">
+        <rdf:type rdf:resource="&rdf;Bag"/>
+    </NamedIndividual>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#cfm-metadataSchema -->
+
+    <NamedIndividual rdf:about="&cfmft;cfm-metadataSchema">
+        <cfmft:supportsSemanticComponent rdf:resource="&cfmft;DataSensitivity-Bag"/>
+        <cfmft:supportsSemanticComponent rdf:resource="&cfmft;DownloadElementExtendedAttribute_Field-Bag"/>
+        <cfmft:supportsSemanticComponent rdf:resource="&cfmft;PayloadFormat-Bag"/>
+        <cfmft:supportsSemanticComponent rdf:resource="&cfmft;PayloadType-Bag"/>
+        <cfmft:supportsSemanticComponent rdf:resource="&cfmft;ReconPolicy-Bag"/>
+        <cfmft:supportsSemanticComponent rdf:resource="&cfmft;SiteAbbreviationSemanticConcept"/>
+        <cfmft:supportsSemanticComponent rdf:resource="&cfmft;UniqueFileIdentifierSemanticConcept"/>
+    </NamedIndividual>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#cfm13Schema -->
+
+    <NamedIndividual rdf:about="&cfmft;cfm13Schema">
+        <cfmft:supportsSemanticComponent rdf:resource="&cfmft;ActionDurationSemanticConcept"/>
+        <cfmft:supportsSemanticComponent rdf:resource="&cfmft;ActionThresholdSemanticConcept"/>
+        <cfmft:supportsSemanticComponent rdf:resource="&cfmft;AlertReferenceURLSemanticComponent"/>
+        <cfmft:supportsSemanticComponent rdf:resource="&cfmft;CountryCodeRemoteHostResourceLocationSpecification"/>
+        <cfmft:supportsSemanticComponent rdf:resource="&cfmft;CountryNameRemoteHostResourceLocationSpecification"/>
+        <cfmft:supportsSemanticComponent rdf:resource="&cfmft;DestinationPortListIndicatorValueSemanticComponent"/>
+        <cfmft:supportsSemanticComponent rdf:resource="&cfmft;DestinationPortNumberIndicatorValueSemanticComponent"/>
+        <cfmft:supportsSemanticComponent rdf:resource="&cfmft;IndicatorDescriptionSemanticConcept"/>
+        <cfmft:supportsSemanticComponent rdf:resource="&cfmft;IndicatorSightingsSemanticConcept"/>
+        <cfmft:supportsSemanticComponent rdf:resource="&cfmft;IndicatorSimpleSharingRestrictionSemanticConcept"/>
+        <cfmft:supportsSemanticComponent rdf:resource="&cfmft;PriorIndicatorReportsSemanticConcept"/>
+        <cfmft:supportsSemanticComponent rdf:resource="&cfmft;ProtocolIndicatorValueSemanticComponent"/>
+        <cfmft:supportsSemanticComponent rdf:resource="&cfmft;ReportAlertCountSemanticConcept"/>
+        <cfmft:supportsSemanticComponent rdf:resource="&cfmft;ReportScheduleSemanticConcept"/>
+        <cfmft:supportsSemanticComponent rdf:resource="&cfmft;ReportStartTimeSemanticConcept"/>
+        <cfmft:supportsSemanticComponent rdf:resource="&cfmft;ReportSubmittedTimeSemanticConcept"/>
+        <cfmft:supportsSemanticComponent rdf:resource="&cfmft;SiteAbbreviationSemanticConcept"/>
+        <cfmft:supportsSemanticComponent rdf:resource="&cfmft;SiteContactEmailSemanticConcept"/>
+        <cfmft:supportsSemanticComponent rdf:resource="&cfmft;SiteContactNameSemanticConcept"/>
+        <cfmft:supportsSemanticComponent rdf:resource="&cfmft;SiteContactPhoneSemanticConcept"/>
+        <cfmft:supportsSemanticComponent rdf:resource="&cfmft;SiteNameSemanticConcept"/>
+        <cfmft:supportsSemanticComponent rdf:resource="&cfmft;TimeOfDetectionSemanticConcept"/>
+        <cfmft:supportsSemanticComponent rdf:resource="&cfmft;XMLNodeControlledStructureSemanticConcept"/>
+        <cfmft:supportsSemanticComponent rdf:resource="&cfmft;assessment_action-Bag"/>
+        <cfmft:supportsSemanticComponent rdf:resource="&cfmft;assessment_description-Bag"/>
+        <cfmft:supportsSemanticComponent rdf:resource="&cfmft;ouo-Bag"/>
+        <cfmft:supportsSemanticComponent rdf:resource="&cfmft;recon-Bag"/>
+        <cfmft:supportsSemanticComponent rdf:resource="&cfmft;reference_meaning-Bag"/>
+        <cfmft:supportsSemanticComponent rdf:resource="&cfmft;reference_origin-Bag"/>
+        <cfmft:supportsSemanticComponent rdf:resource="&cfmft;report_tlp-Bag"/>
+        <cfmft:supportsSemanticComponent rdf:resource="&cfmft;report_type-Bag"/>
+        <cfmft:supportsSemanticComponent rdf:resource="&cfmft;restriction-Bag"/>
+        <cfmft:supportsSemanticComponent rdf:resource="&cfmft;source_address_type-Bag"/>
+    </NamedIndividual>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#cfm20alertSchema -->
+
+    <NamedIndividual rdf:about="&cfmft;cfm20alertSchema">
+        <cfmft:supportsSemanticComponent rdf:resource="&cfmft;IndicatorDescriptionSemanticConcept"/>
+        <cfmft:supportsSemanticComponent rdf:resource="&cfmft;ReportDescriptionSemanticComponent"/>
+        <cfmft:supportsSemanticComponent rdf:resource="&cfmft;TimeOfDetectionSemanticConcept"/>
+        <cfmft:supportsSemanticComponent rdf:resource="&cfmft;UUIDv4IndicatorIdentifierSemanticConcept"/>
+        <cfmft:supportsSemanticComponent rdf:resource="&cfmft;actionList_actionCategory-Bag"/>
+        <cfmft:supportsSemanticComponent rdf:resource="&cfmft;alertExtendedAttribute_Field-Bag"/>
+        <cfmft:supportsSemanticComponent rdf:resource="&cfmft;indicatorSet_Constraint-Bag"/>
+        <cfmft:supportsSemanticComponent rdf:resource="&cfmft;indicatorSet_Type-Bag"/>
+        <cfmft:supportsSemanticComponent rdf:resource="&cfmft;reasonList_reasonCategory-Bag"/>
+    </NamedIndividual>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#dataItemID-Bag -->
+
+    <NamedIndividual rdf:about="&cfmft;dataItemID-Bag">
+        <rdf:type rdf:resource="&rdf;Bag"/>
+    </NamedIndividual>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#detectedTime-Bag -->
+
+    <NamedIndividual rdf:about="&cfmft;detectedTime-Bag">
+        <rdf:type rdf:resource="&rdf;Bag"/>
+    </NamedIndividual>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#direction-Bag -->
+
+    <NamedIndividual rdf:about="&cfmft;direction-Bag">
+        <rdf:type rdf:resource="&rdf;Bag"/>
+    </NamedIndividual>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#fileHasMore-Bag -->
+
+    <NamedIndividual rdf:about="&cfmft;fileHasMore-Bag">
+        <rdf:type rdf:resource="&rdf;Bag"/>
+    </NamedIndividual>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#fileID-Bag -->
+
+    <NamedIndividual rdf:about="&cfmft;fileID-Bag">
+        <rdf:type rdf:resource="&rdf;Bag"/>
+    </NamedIndividual>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#fileid-Bag -->
+
+    <NamedIndividual rdf:about="&cfmft;fileid-Bag">
+        <rdf:type rdf:resource="&rdf;Bag"/>
+    </NamedIndividual>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#handling_controlledstructure-Bag -->
+
+    <NamedIndividual rdf:about="&cfmft;handling_controlledstructure-Bag">
+        <rdf:type rdf:resource="&rdf;Bag"/>
+    </NamedIndividual>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#handling_markingstructures_color-Bag -->
+
+    <NamedIndividual rdf:about="&cfmft;handling_markingstructures_color-Bag">
+        <rdf:type rdf:resource="&rdf;Bag"/>
+    </NamedIndividual>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#handling_markingstructures_isamversion-Bag -->
+
+    <NamedIndividual rdf:about="&cfmft;handling_markingstructures_isamversion-Bag">
+        <rdf:type rdf:resource="&rdf;Bag"/>
+    </NamedIndividual>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#handling_markingstructures_isamversion2-Bag -->
+
+    <NamedIndividual rdf:about="&cfmft;handling_markingstructures_isamversion2-Bag">
+        <rdf:type rdf:resource="&rdf;Bag"/>
+    </NamedIndividual>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#handling_markingstructures_xsitype-Bag -->
+
+    <NamedIndividual rdf:about="&cfmft;handling_markingstructures_xsitype-Bag">
+        <rdf:type rdf:resource="&rdf;Bag"/>
+    </NamedIndividual>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#indicator-Bag -->
+
+    <NamedIndividual rdf:about="&cfmft;indicator-Bag">
+        <rdf:type rdf:resource="&rdf;Bag"/>
+    </NamedIndividual>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#indicatorDirection-Bag -->
+
+    <NamedIndividual rdf:about="&cfmft;indicatorDirection-Bag">
+        <rdf:type rdf:resource="&rdf;Bag"/>
+    </NamedIndividual>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#indicatorSet_Constraint-Bag -->
+
+    <NamedIndividual rdf:about="&cfmft;indicatorSet_Constraint-Bag">
+        <rdf:type rdf:resource="&rdf;Bag"/>
+    </NamedIndividual>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#indicatorSet_Type-Bag -->
+
+    <NamedIndividual rdf:about="&cfmft;indicatorSet_Type-Bag">
+        <rdf:type rdf:resource="&rdf;Bag"/>
+    </NamedIndividual>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#indicatorType-Bag -->
+
+    <NamedIndividual rdf:about="&cfmft;indicatorType-Bag">
+        <rdf:type rdf:resource="&rdf;Bag"/>
+    </NamedIndividual>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#indicator_cybox_version-Bag -->
+
+    <NamedIndividual rdf:about="&cfmft;indicator_cybox_version-Bag">
+        <rdf:type rdf:resource="&rdf;Bag"/>
+    </NamedIndividual>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#indicator_handling_controlledstructure-Bag -->
+
+    <NamedIndividual rdf:about="&cfmft;indicator_handling_controlledstructure-Bag">
+        <rdf:type rdf:resource="&rdf;Bag"/>
+    </NamedIndividual>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#indicator_handling_markingstructures_xsitype-Bag -->
+
+    <NamedIndividual rdf:about="&cfmft;indicator_handling_markingstructures_xsitype-Bag">
+        <rdf:type rdf:resource="&rdf;Bag"/>
+    </NamedIndividual>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#indicator_type-Bag -->
+
+    <NamedIndividual rdf:about="&cfmft;indicator_type-Bag">
+        <rdf:type rdf:resource="&rdf;Bag"/>
+    </NamedIndividual>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#indicator_type_vocab-Bag -->
+
+    <NamedIndividual rdf:about="&cfmft;indicator_type_vocab-Bag">
+        <rdf:type rdf:resource="&rdf;Bag"/>
+    </NamedIndividual>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#information_source_description-Bag -->
+
+    <NamedIndividual rdf:about="&cfmft;information_source_description-Bag">
+        <rdf:type rdf:resource="&rdf;Bag"/>
+    </NamedIndividual>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#information_source_name-Bag -->
+
+    <NamedIndividual rdf:about="&cfmft;information_source_name-Bag">
+        <rdf:type rdf:resource="&rdf;Bag"/>
+    </NamedIndividual>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#keyvalue-nrelSchema -->
+
+    <NamedIndividual rdf:about="&cfmft;keyvalue-nrelSchema">
+        <cfmft:supportsSemanticComponent rdf:resource="&cfmft;ActionDurationSemanticConcept"/>
+        <cfmft:supportsSemanticComponent rdf:resource="&cfmft;AlertReferenceNameSemanticComponent"/>
+        <cfmft:supportsSemanticComponent rdf:resource="&cfmft;CountryCodeRemoteHostResourceLocationSpecification"/>
+        <cfmft:supportsSemanticComponent rdf:resource="&cfmft;CountryNameRemoteHostResourceLocationSpecification"/>
+        <cfmft:supportsSemanticComponent rdf:resource="&cfmft;DNSIndicatorValueSemanticComponent"/>
+        <cfmft:supportsSemanticComponent rdf:resource="&cfmft;DestinationPortListIndicatorValueSemanticComponent"/>
+        <cfmft:supportsSemanticComponent rdf:resource="&cfmft;DestinationPortNumberIndicatorValueSemanticComponent"/>
+        <cfmft:supportsSemanticComponent rdf:resource="&cfmft;IPv4AddressIndicatorValueSemanticComponent"/>
+        <cfmft:supportsSemanticComponent rdf:resource="&cfmft;IPv6AddressIndicatorValueSemanticComponent"/>
+        <cfmft:supportsSemanticComponent rdf:resource="&cfmft;IndicatorDescriptionSemanticConcept"/>
+        <cfmft:supportsSemanticComponent rdf:resource="&cfmft;PriorIndicatorReportsSemanticConcept"/>
+        <cfmft:supportsSemanticComponent rdf:resource="&cfmft;ProtocolIndicatorValueSemanticComponent"/>
+        <cfmft:supportsSemanticComponent rdf:resource="&cfmft;TimeOfDetectionSemanticConcept"/>
+        <cfmft:supportsSemanticComponent rdf:resource="&cfmft;category-Bag"/>
+        <cfmft:supportsSemanticComponent rdf:resource="&cfmft;direction-Bag"/>
+        <cfmft:supportsSemanticComponent rdf:resource="&cfmft;severity-Bag"/>
+    </NamedIndividual>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#lqmtoolsSchema -->
+
+    <NamedIndividual rdf:about="&cfmft;lqmtoolsSchema">
+        <cfmft:supportsSemanticComponent rdf:resource="&cfmft;ActionDurationSemanticConcept"/>
+        <cfmft:supportsSemanticComponent rdf:resource="&cfmft;IndicatorDescriptionSemanticConcept"/>
+        <cfmft:supportsSemanticComponent rdf:resource="&cfmft;PriorIndicatorReportsSemanticConcept"/>
+        <cfmft:supportsSemanticComponent rdf:resource="&cfmft;ReportSubmittedTimeSemanticConcept"/>
+        <cfmft:supportsSemanticComponent rdf:resource="&cfmft;SiteAbbreviationSemanticConcept"/>
+        <cfmft:supportsSemanticComponent rdf:resource="&cfmft;TimeAlertProcessedOnClientSemanticConcept"/>
+        <cfmft:supportsSemanticComponent rdf:resource="&cfmft;action1-Bag"/>
+        <cfmft:supportsSemanticComponent rdf:resource="&cfmft;action2-Bag"/>
+        <cfmft:supportsSemanticComponent rdf:resource="&cfmft;dataItemID-Bag"/>
+        <cfmft:supportsSemanticComponent rdf:resource="&cfmft;detectedTime-Bag"/>
+        <cfmft:supportsSemanticComponent rdf:resource="&cfmft;fileHasMore-Bag"/>
+        <cfmft:supportsSemanticComponent rdf:resource="&cfmft;fileID-Bag"/>
+        <cfmft:supportsSemanticComponent rdf:resource="&cfmft;indicator-Bag"/>
+        <cfmft:supportsSemanticComponent rdf:resource="&cfmft;indicatorDirection-Bag"/>
+        <cfmft:supportsSemanticComponent rdf:resource="&cfmft;indicatorType-Bag"/>
+        <cfmft:supportsSemanticComponent rdf:resource="&cfmft;majorTags-Bag"/>
+        <cfmft:supportsSemanticComponent rdf:resource="&cfmft;reason1-Bag"/>
+        <cfmft:supportsSemanticComponent rdf:resource="&cfmft;reconAllowed-Bag"/>
+        <cfmft:supportsSemanticComponent rdf:resource="&cfmft;reference1-Bag"/>
+        <cfmft:supportsSemanticComponent rdf:resource="&cfmft;relationType-Bag"/>
+        <cfmft:supportsSemanticComponent rdf:resource="&cfmft;restriction-Bag"/>
+        <cfmft:supportsSemanticComponent rdf:resource="&cfmft;secondaryIndicator-Bag"/>
+        <cfmft:supportsSemanticComponent rdf:resource="&cfmft;secondaryIndicatorDirection-Bag"/>
+        <cfmft:supportsSemanticComponent rdf:resource="&cfmft;secondaryIndicatorType-Bag"/>
+        <cfmft:supportsSemanticComponent rdf:resource="&cfmft;sensitivity-Bag"/>
+    </NamedIndividual>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#majorTags-Bag -->
+
+    <NamedIndividual rdf:about="&cfmft;majorTags-Bag">
+        <rdf:type rdf:resource="&rdf;Bag"/>
+    </NamedIndividual>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#observable_keywords_keyword-Bag -->
+
+    <NamedIndividual rdf:about="&cfmft;observable_keywords_keyword-Bag">
+        <rdf:type rdf:resource="&rdf;Bag"/>
+    </NamedIndividual>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#observable_object_addressvalue_condition-Bag -->
+
+    <NamedIndividual rdf:about="&cfmft;observable_object_addressvalue_condition-Bag">
+        <rdf:type rdf:resource="&rdf;Bag"/>
+    </NamedIndividual>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#observable_object_category-Bag -->
+
+    <NamedIndividual rdf:about="&cfmft;observable_object_category-Bag">
+        <rdf:type rdf:resource="&rdf;Bag"/>
+    </NamedIndividual>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#observable_object_filename_condition-Bag -->
+
+    <NamedIndividual rdf:about="&cfmft;observable_object_filename_condition-Bag">
+        <rdf:type rdf:resource="&rdf;Bag"/>
+    </NamedIndividual>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#observable_object_filepath_condition-Bag -->
+
+    <NamedIndividual rdf:about="&cfmft;observable_object_filepath_condition-Bag">
+        <rdf:type rdf:resource="&rdf;Bag"/>
+    </NamedIndividual>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#observable_object_hashes_type_value-Bag -->
+
+    <NamedIndividual rdf:about="&cfmft;observable_object_hashes_type_value-Bag">
+        <rdf:type rdf:resource="&rdf;Bag"/>
+    </NamedIndividual>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#observable_object_header_messageid_condition-Bag -->
+
+    <NamedIndividual rdf:about="&cfmft;observable_object_header_messageid_condition-Bag">
+        <rdf:type rdf:resource="&rdf;Bag"/>
+    </NamedIndividual>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#observable_object_header_sender_addressvalue_condition-Bag -->
+
+    <NamedIndividual rdf:about="&cfmft;observable_object_header_sender_addressvalue_condition-Bag">
+        <rdf:type rdf:resource="&rdf;Bag"/>
+    </NamedIndividual>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#observable_object_header_sender_category-Bag -->
+
+    <NamedIndividual rdf:about="&cfmft;observable_object_header_sender_category-Bag">
+        <rdf:type rdf:resource="&rdf;Bag"/>
+    </NamedIndividual>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#observable_object_header_sender_customproperties_name-Bag -->
+
+    <NamedIndividual rdf:about="&cfmft;observable_object_header_sender_customproperties_name-Bag">
+        <rdf:type rdf:resource="&rdf;Bag"/>
+    </NamedIndividual>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#observable_object_header_sender_xsitype-Bag -->
+
+    <NamedIndividual rdf:about="&cfmft;observable_object_header_sender_xsitype-Bag">
+        <rdf:type rdf:resource="&rdf;Bag"/>
+    </NamedIndividual>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#observable_object_header_subject_applycondition-Bag -->
+
+    <NamedIndividual rdf:about="&cfmft;observable_object_header_subject_applycondition-Bag">
+        <rdf:type rdf:resource="&rdf;Bag"/>
+    </NamedIndividual>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#observable_object_header_subject_condition-Bag -->
+
+    <NamedIndividual rdf:about="&cfmft;observable_object_header_subject_condition-Bag">
+        <rdf:type rdf:resource="&rdf;Bag"/>
+    </NamedIndividual>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#observable_object_header_xmailer_condition-Bag -->
+
+    <NamedIndividual rdf:about="&cfmft;observable_object_header_xmailer_condition-Bag">
+        <rdf:type rdf:resource="&rdf;Bag"/>
+    </NamedIndividual>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#observable_object_http_client_request_user_agent_header_condition-Bag -->
+
+    <NamedIndividual rdf:about="&cfmft;observable_object_http_client_request_user_agent_header_condition-Bag">
+        <rdf:type rdf:resource="&rdf;Bag"/>
+    </NamedIndividual>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#observable_object_mutexname_condition-Bag -->
+
+    <NamedIndividual rdf:about="&cfmft;observable_object_mutexname_condition-Bag">
+        <rdf:type rdf:resource="&rdf;Bag"/>
+    </NamedIndividual>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#observable_object_reghive_condition-Bag -->
+
+    <NamedIndividual rdf:about="&cfmft;observable_object_reghive_condition-Bag">
+        <rdf:type rdf:resource="&rdf;Bag"/>
+    </NamedIndividual>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#observable_object_regkey_condition-Bag -->
+
+    <NamedIndividual rdf:about="&cfmft;observable_object_regkey_condition-Bag">
+        <rdf:type rdf:resource="&rdf;Bag"/>
+    </NamedIndividual>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#observable_object_regkey_subkey_data_condition-Bag -->
+
+    <NamedIndividual rdf:about="&cfmft;observable_object_regkey_subkey_data_condition-Bag">
+        <rdf:type rdf:resource="&rdf;Bag"/>
+    </NamedIndividual>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#observable_object_regkey_subkey_name_condition-Bag -->
+
+    <NamedIndividual rdf:about="&cfmft;observable_object_regkey_subkey_name_condition-Bag">
+        <rdf:type rdf:resource="&rdf;Bag"/>
+    </NamedIndividual>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#observable_object_relationship-Bag -->
+
+    <NamedIndividual rdf:about="&cfmft;observable_object_relationship-Bag">
+        <rdf:type rdf:resource="&rdf;Bag"/>
+    </NamedIndividual>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#observable_object_sizeinbytes_applycondition-Bag -->
+
+    <NamedIndividual rdf:about="&cfmft;observable_object_sizeinbytes_applycondition-Bag">
+        <rdf:type rdf:resource="&rdf;Bag"/>
+    </NamedIndividual>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#observable_object_sizeinbytes_condition-Bag -->
+
+    <NamedIndividual rdf:about="&cfmft;observable_object_sizeinbytes_condition-Bag">
+        <rdf:type rdf:resource="&rdf;Bag"/>
+    </NamedIndividual>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#observable_object_type-Bag -->
+
+    <NamedIndividual rdf:about="&cfmft;observable_object_type-Bag">
+        <rdf:type rdf:resource="&rdf;Bag"/>
+    </NamedIndividual>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#observable_object_urllabel_condition-Bag -->
+
+    <NamedIndividual rdf:about="&cfmft;observable_object_urllabel_condition-Bag">
+        <rdf:type rdf:resource="&rdf;Bag"/>
+    </NamedIndividual>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#observable_object_urllabel_is_obfuscated-Bag -->
+
+    <NamedIndividual rdf:about="&cfmft;observable_object_urllabel_is_obfuscated-Bag">
+        <rdf:type rdf:resource="&rdf;Bag"/>
+    </NamedIndividual>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#observable_object_urllabel_pattern_type-Bag -->
+
+    <NamedIndividual rdf:about="&cfmft;observable_object_urllabel_pattern_type-Bag">
+        <rdf:type rdf:resource="&rdf;Bag"/>
+    </NamedIndividual>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#observable_object_value_condition-Bag -->
+
+    <NamedIndividual rdf:about="&cfmft;observable_object_value_condition-Bag">
+        <rdf:type rdf:resource="&rdf;Bag"/>
+    </NamedIndividual>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#observable_object_xsitype-Bag -->
+
+    <NamedIndividual rdf:about="&cfmft;observable_object_xsitype-Bag">
+        <rdf:type rdf:resource="&rdf;Bag"/>
+    </NamedIndividual>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#observable_relatedobject_condition-Bag -->
+
+    <NamedIndividual rdf:about="&cfmft;observable_relatedobject_condition-Bag">
+        <rdf:type rdf:resource="&rdf;Bag"/>
+    </NamedIndividual>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#observable_relatedobject_relationship-Bag -->
+
+    <NamedIndividual rdf:about="&cfmft;observable_relatedobject_relationship-Bag">
+        <rdf:type rdf:resource="&rdf;Bag"/>
+    </NamedIndividual>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#observable_relatedobject_xsitype-Bag -->
+
+    <NamedIndividual rdf:about="&cfmft;observable_relatedobject_xsitype-Bag">
+        <rdf:type rdf:resource="&rdf;Bag"/>
+    </NamedIndividual>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#ouo-Bag -->
+
+    <NamedIndividual rdf:about="&cfmft;ouo-Bag">
+        <rdf:type rdf:resource="&rdf;Bag"/>
+    </NamedIndividual>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#package_intent-Bag -->
+
+    <NamedIndividual rdf:about="&cfmft;package_intent-Bag">
+        <rdf:type rdf:resource="&rdf;Bag"/>
+    </NamedIndividual>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#package_intent_vocab-Bag -->
+
+    <NamedIndividual rdf:about="&cfmft;package_intent_vocab-Bag">
+        <rdf:type rdf:resource="&rdf;Bag"/>
+    </NamedIndividual>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#produced_time-Bag -->
+
+    <NamedIndividual rdf:about="&cfmft;produced_time-Bag">
+        <rdf:type rdf:resource="&rdf;Bag"/>
+    </NamedIndividual>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#reason1-Bag -->
+
+    <NamedIndividual rdf:about="&cfmft;reason1-Bag">
+        <rdf:type rdf:resource="&rdf;Bag"/>
+    </NamedIndividual>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#reasonList_reasonCategory-Bag -->
+
+    <NamedIndividual rdf:about="&cfmft;reasonList_reasonCategory-Bag">
+        <rdf:type rdf:resource="&rdf;Bag"/>
+    </NamedIndividual>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#recon-Bag -->
+
+    <NamedIndividual rdf:about="&cfmft;recon-Bag">
+        <rdf:type rdf:resource="&rdf;Bag"/>
+    </NamedIndividual>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#reconAllowed-Bag -->
+
+    <NamedIndividual rdf:about="&cfmft;reconAllowed-Bag">
+        <rdf:type rdf:resource="&rdf;Bag"/>
+    </NamedIndividual>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#reference1-Bag -->
+
+    <NamedIndividual rdf:about="&cfmft;reference1-Bag">
+        <rdf:type rdf:resource="&rdf;Bag"/>
+    </NamedIndividual>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#reference_meaning-Bag -->
+
+    <NamedIndividual rdf:about="&cfmft;reference_meaning-Bag">
+        <rdf:type rdf:resource="&rdf;Bag"/>
+    </NamedIndividual>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#reference_origin-Bag -->
+
+    <NamedIndividual rdf:about="&cfmft;reference_origin-Bag">
+        <rdf:type rdf:resource="&rdf;Bag"/>
+    </NamedIndividual>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#relationType-Bag -->
+
+    <NamedIndividual rdf:about="&cfmft;relationType-Bag">
+        <rdf:type rdf:resource="&rdf;Bag"/>
+    </NamedIndividual>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#report_tlp-Bag -->
+
+    <NamedIndividual rdf:about="&cfmft;report_tlp-Bag">
+        <rdf:type rdf:resource="&rdf;Bag"/>
+    </NamedIndividual>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#report_type-Bag -->
+
+    <NamedIndividual rdf:about="&cfmft;report_type-Bag">
+        <rdf:type rdf:resource="&rdf;Bag"/>
+    </NamedIndividual>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#restriction-Bag -->
+
+    <NamedIndividual rdf:about="&cfmft;restriction-Bag">
+        <rdf:type rdf:resource="&rdf;Bag"/>
+    </NamedIndividual>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#secondaryIndicator-Bag -->
+
+    <NamedIndividual rdf:about="&cfmft;secondaryIndicator-Bag">
+        <rdf:type rdf:resource="&rdf;Bag"/>
+    </NamedIndividual>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#secondaryIndicatorDirection-Bag -->
+
+    <NamedIndividual rdf:about="&cfmft;secondaryIndicatorDirection-Bag">
+        <rdf:type rdf:resource="&rdf;Bag"/>
+    </NamedIndividual>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#secondaryIndicatorType-Bag -->
+
+    <NamedIndividual rdf:about="&cfmft;secondaryIndicatorType-Bag">
+        <rdf:type rdf:resource="&rdf;Bag"/>
+    </NamedIndividual>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#sensitivity-Bag -->
+
+    <NamedIndividual rdf:about="&cfmft;sensitivity-Bag">
+        <rdf:type rdf:resource="&rdf;Bag"/>
+    </NamedIndividual>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#severity-Bag -->
+
+    <NamedIndividual rdf:about="&cfmft;severity-Bag">
+        <rdf:type rdf:resource="&rdf;Bag"/>
+    </NamedIndividual>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#sightings_timestamp-Bag -->
+
+    <NamedIndividual rdf:about="&cfmft;sightings_timestamp-Bag">
+        <rdf:type rdf:resource="&rdf;Bag"/>
+    </NamedIndividual>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#sightings_timestamp_precision-Bag -->
+
+    <NamedIndividual rdf:about="&cfmft;sightings_timestamp_precision-Bag">
+        <rdf:type rdf:resource="&rdf;Bag"/>
+    </NamedIndividual>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#source_address_type-Bag -->
+
+    <NamedIndividual rdf:about="&cfmft;source_address_type-Bag">
+        <rdf:type rdf:resource="&rdf;Bag"/>
+    </NamedIndividual>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#stix-cfmSchema -->
+
+    <NamedIndividual rdf:about="&cfmft;stix-cfmSchema">
+        <cfmft:supportsSemanticComponent rdf:resource="&cfmft;IndicatorSimpleSharingRestrictionSemanticConcept"/>
+        <cfmft:supportsSemanticComponent rdf:resource="&cfmft;indicator_handling_controlledstructure-Bag"/>
+        <cfmft:supportsSemanticComponent rdf:resource="&cfmft;indicator_handling_markingstructures_xsitype-Bag"/>
+    </NamedIndividual>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#stix-essaSchema -->
+
+    <NamedIndividual rdf:about="&cfmft;stix-essaSchema">
+        <cfmft:supportsSemanticComponent rdf:resource="&cfmft;handling_markingstructures_isamversion-Bag"/>
+        <cfmft:supportsSemanticComponent rdf:resource="&cfmft;handling_markingstructures_isamversion2-Bag"/>
+    </NamedIndividual>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#stixSchema -->
+
+    <NamedIndividual rdf:about="&cfmft;stixSchema">
+        <cfmft:supportsSemanticComponent rdf:resource="&cfmft;ActionDescriptionSemanticConcept"/>
+        <cfmft:supportsSemanticComponent rdf:resource="&cfmft;ActionThresholdSemanticConcept"/>
+        <cfmft:supportsSemanticComponent rdf:resource="&cfmft;DestinationPortNumberIndicatorValueSemanticComponent"/>
+        <cfmft:supportsSemanticComponent rdf:resource="&cfmft;DocumentGeneratedTimeSemanticConcept"/>
+        <cfmft:supportsSemanticComponent rdf:resource="&cfmft;EmailHeaderMessageIDIndicatorValueSemanticComponent"/>
+        <cfmft:supportsSemanticComponent rdf:resource="&cfmft;EmailHeaderXmailerIndicatorValueSemanticComponent"/>
+        <cfmft:supportsSemanticComponent rdf:resource="&cfmft;EmailSubjectValueSemanticComponent"/>
+        <cfmft:supportsSemanticComponent rdf:resource="&cfmft;FilenameIndicatorValueSemanticConcept"/>
+        <cfmft:supportsSemanticComponent rdf:resource="&cfmft;FilepathIndicatorValueSemanticConcept"/>
+        <cfmft:supportsSemanticComponent rdf:resource="&cfmft;FilesizeByteValueSemanticConcept"/>
+        <cfmft:supportsSemanticComponent rdf:resource="&cfmft;HTTPClientRequestHeaderUserAgentIndicatorValueSemanticComponent"/>
+        <cfmft:supportsSemanticComponent rdf:resource="&cfmft;IndicatorDescriptionSemanticConcept"/>
+        <cfmft:supportsSemanticComponent rdf:resource="&cfmft;IndicatorGeneratedTimeSemanticConcept"/>
+        <cfmft:supportsSemanticComponent rdf:resource="&cfmft;IndicatorSightingsSemanticConcept"/>
+        <cfmft:supportsSemanticComponent rdf:resource="&cfmft;KillChainIDSemanticConcept"/>
+        <cfmft:supportsSemanticComponent rdf:resource="&cfmft;KillChainNameSemanticConcept"/>
+        <cfmft:supportsSemanticComponent rdf:resource="&cfmft;KillChainPhaseIDSemanticConcept"/>
+        <cfmft:supportsSemanticComponent rdf:resource="&cfmft;KillChainPhaseNameSemanticConcept"/>
+        <cfmft:supportsSemanticComponent rdf:resource="&cfmft;KillChainPhaseOrdinalitySemanticConcept"/>
+        <cfmft:supportsSemanticComponent rdf:resource="&cfmft;MutexNameIndicatorValueSemanticComponent"/>
+        <cfmft:supportsSemanticComponent rdf:resource="&cfmft;ProtocolIndicatorValueSemanticComponent"/>
+        <cfmft:supportsSemanticComponent rdf:resource="&cfmft;ReghiveIndicatorValueSemanticComponent"/>
+        <cfmft:supportsSemanticComponent rdf:resource="&cfmft;RegkeySubkeyNameIndicatorValueSemanticComponent"/>
+        <cfmft:supportsSemanticComponent rdf:resource="&cfmft;RegkeySubkeyValueIndicatorValueSemanticComponent"/>
+        <cfmft:supportsSemanticComponent rdf:resource="&cfmft;RegkeyValueIndicatorValueSemanticComponent"/>
+        <cfmft:supportsSemanticComponent rdf:resource="&cfmft;ReportDescriptionSemanticComponent"/>
+        <cfmft:supportsSemanticComponent rdf:resource="&cfmft;ReportTitleSemanticComponent"/>
+        <cfmft:supportsSemanticComponent rdf:resource="&cfmft;SimpleSharingRestrictionSemanticConcept"/>
+        <cfmft:supportsSemanticComponent rdf:resource="&cfmft;URLLabelIndicatorValueSemanticComponent"/>
+        <cfmft:supportsSemanticComponent rdf:resource="&cfmft;UUIDv4IndicatorIdentifierSemanticConcept"/>
+        <cfmft:supportsSemanticComponent rdf:resource="&cfmft;UUIDv4ObservableIdentifierSemanticConcept"/>
+        <cfmft:supportsSemanticComponent rdf:resource="&cfmft;UUIDv4ObservableObjectIdentifierSemanticConcept"/>
+        <cfmft:supportsSemanticComponent rdf:resource="&cfmft;fileid-Bag"/>
+        <cfmft:supportsSemanticComponent rdf:resource="&cfmft;handling_controlledstructure-Bag"/>
+        <cfmft:supportsSemanticComponent rdf:resource="&cfmft;handling_markingstructures_color-Bag"/>
+        <cfmft:supportsSemanticComponent rdf:resource="&cfmft;handling_markingstructures_xsitype-Bag"/>
+        <cfmft:supportsSemanticComponent rdf:resource="&cfmft;indicator_cybox_version-Bag"/>
+        <cfmft:supportsSemanticComponent rdf:resource="&cfmft;indicator_type-Bag"/>
+        <cfmft:supportsSemanticComponent rdf:resource="&cfmft;indicator_type_vocab-Bag"/>
+        <cfmft:supportsSemanticComponent rdf:resource="&cfmft;information_source_description-Bag"/>
+        <cfmft:supportsSemanticComponent rdf:resource="&cfmft;information_source_name-Bag"/>
+        <cfmft:supportsSemanticComponent rdf:resource="&cfmft;observable_keywords_keyword-Bag"/>
+        <cfmft:supportsSemanticComponent rdf:resource="&cfmft;observable_object_addressvalue_condition-Bag"/>
+        <cfmft:supportsSemanticComponent rdf:resource="&cfmft;observable_object_category-Bag"/>
+        <cfmft:supportsSemanticComponent rdf:resource="&cfmft;observable_object_filename_condition-Bag"/>
+        <cfmft:supportsSemanticComponent rdf:resource="&cfmft;observable_object_filepath_condition-Bag"/>
+        <cfmft:supportsSemanticComponent rdf:resource="&cfmft;observable_object_hashes_type_value-Bag"/>
+        <cfmft:supportsSemanticComponent rdf:resource="&cfmft;observable_object_header_messageid_condition-Bag"/>
+        <cfmft:supportsSemanticComponent rdf:resource="&cfmft;observable_object_header_sender_addressvalue_condition-Bag"/>
+        <cfmft:supportsSemanticComponent rdf:resource="&cfmft;observable_object_header_sender_category-Bag"/>
+        <cfmft:supportsSemanticComponent rdf:resource="&cfmft;observable_object_header_sender_customproperties_name-Bag"/>
+        <cfmft:supportsSemanticComponent rdf:resource="&cfmft;observable_object_header_sender_xsitype-Bag"/>
+        <cfmft:supportsSemanticComponent rdf:resource="&cfmft;observable_object_header_subject_applycondition-Bag"/>
+        <cfmft:supportsSemanticComponent rdf:resource="&cfmft;observable_object_header_subject_condition-Bag"/>
+        <cfmft:supportsSemanticComponent rdf:resource="&cfmft;observable_object_header_xmailer_condition-Bag"/>
+        <cfmft:supportsSemanticComponent rdf:resource="&cfmft;observable_object_http_client_request_user_agent_header_condition-Bag"/>
+        <cfmft:supportsSemanticComponent rdf:resource="&cfmft;observable_object_mutexname_condition-Bag"/>
+        <cfmft:supportsSemanticComponent rdf:resource="&cfmft;observable_object_reghive_condition-Bag"/>
+        <cfmft:supportsSemanticComponent rdf:resource="&cfmft;observable_object_regkey_condition-Bag"/>
+        <cfmft:supportsSemanticComponent rdf:resource="&cfmft;observable_object_regkey_subkey_data_condition-Bag"/>
+        <cfmft:supportsSemanticComponent rdf:resource="&cfmft;observable_object_regkey_subkey_name_condition-Bag"/>
+        <cfmft:supportsSemanticComponent rdf:resource="&cfmft;observable_object_relationship-Bag"/>
+        <cfmft:supportsSemanticComponent rdf:resource="&cfmft;observable_object_sizeinbytes_applycondition-Bag"/>
+        <cfmft:supportsSemanticComponent rdf:resource="&cfmft;observable_object_sizeinbytes_condition-Bag"/>
+        <cfmft:supportsSemanticComponent rdf:resource="&cfmft;observable_object_type-Bag"/>
+        <cfmft:supportsSemanticComponent rdf:resource="&cfmft;observable_object_urllabel_condition-Bag"/>
+        <cfmft:supportsSemanticComponent rdf:resource="&cfmft;observable_object_urllabel_is_obfuscated-Bag"/>
+        <cfmft:supportsSemanticComponent rdf:resource="&cfmft;observable_object_urllabel_pattern_type-Bag"/>
+        <cfmft:supportsSemanticComponent rdf:resource="&cfmft;observable_object_value_condition-Bag"/>
+        <cfmft:supportsSemanticComponent rdf:resource="&cfmft;observable_object_xsitype-Bag"/>
+        <cfmft:supportsSemanticComponent rdf:resource="&cfmft;observable_relatedobject_condition-Bag"/>
+        <cfmft:supportsSemanticComponent rdf:resource="&cfmft;observable_relatedobject_relationship-Bag"/>
+        <cfmft:supportsSemanticComponent rdf:resource="&cfmft;observable_relatedobject_xsitype-Bag"/>
+        <cfmft:supportsSemanticComponent rdf:resource="&cfmft;package_intent-Bag"/>
+        <cfmft:supportsSemanticComponent rdf:resource="&cfmft;package_intent_vocab-Bag"/>
+        <cfmft:supportsSemanticComponent rdf:resource="&cfmft;produced_time-Bag"/>
+        <cfmft:supportsSemanticComponent rdf:resource="&cfmft;sightings_timestamp-Bag"/>
+        <cfmft:supportsSemanticComponent rdf:resource="&cfmft;sightings_timestamp_precision-Bag"/>
+        <cfmft:supportsSemanticComponent rdf:resource="&cfmft;suggested_coas_coa_stage-Bag"/>
+        <cfmft:supportsSemanticComponent rdf:resource="&cfmft;suggested_coas_coa_type-Bag"/>
+        <cfmft:supportsSemanticComponent rdf:resource="&cfmft;suggested_coas_scope-Bag"/>
+        <cfmft:supportsSemanticComponent rdf:resource="&cfmft;version-Bag"/>
+    </NamedIndividual>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#suggested_coas_coa_stage-Bag -->
+
+    <NamedIndividual rdf:about="&cfmft;suggested_coas_coa_stage-Bag">
+        <rdf:type rdf:resource="&rdf;Bag"/>
+    </NamedIndividual>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#suggested_coas_coa_type-Bag -->
+
+    <NamedIndividual rdf:about="&cfmft;suggested_coas_coa_type-Bag">
+        <rdf:type rdf:resource="&rdf;Bag"/>
+    </NamedIndividual>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#suggested_coas_scope-Bag -->
+
+    <NamedIndividual rdf:about="&cfmft;suggested_coas_scope-Bag">
+        <rdf:type rdf:resource="&rdf;Bag"/>
+    </NamedIndividual>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#testToStarValue -->
+
+    <NamedIndividual rdf:about="&cfmft;testToStarValue"/>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#version-Bag -->
+
+    <NamedIndividual rdf:about="&cfmft;version-Bag">
+        <rdf:type rdf:resource="&rdf;Bag"/>
+    </NamedIndividual>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // General axioms
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    <rdf:Description>
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AllDisjointClasses"/>
+        <members rdf:parseType="Collection">
+            <rdf:Description rdf:about="&cfmft;EmailMessageObjectSchemaTypeSpecification"/>
+            <rdf:Description rdf:about="&cfmft;FileObjectSchemaTypeSpecification"/>
+            <rdf:Description rdf:about="&cfmft;HTTPSessionObjectSchemaTypeSpecification"/>
+            <rdf:Description rdf:about="&cfmft;LinkObjectSchemaTypeSpecification"/>
+            <rdf:Description rdf:about="&cfmft;URIObjectSchemaTypeSpecification"/>
+            <rdf:Description rdf:about="&cfmft;WindowsRegistryKeyObjectSchemaTypeSpecification"/>
+        </members>
+    </rdf:Description>
+    <rdf:Description>
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AllDisjointClasses"/>
+        <members rdf:parseType="Collection">
+            <rdf:Description rdf:about="&cfmft;NeedToKnowCFM13SharingRestrictionSemanticConcept"/>
+            <rdf:Description rdf:about="&cfmft;PrivateCFM13SharingRestrictionSemanticConcept"/>
+            <rdf:Description rdf:about="&cfmft;PublicCFM13SharingRestrictionSemanticConcept"/>
+        </members>
+    </rdf:Description>
+    <rdf:Description>
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AllDisjointClasses"/>
+        <members rdf:parseType="Collection">
+            <rdf:Description rdf:about="&cfmft;TLPAmberSemanticConcept"/>
+            <rdf:Description rdf:about="&cfmft;TLPGreenSemanticConcept"/>
+            <rdf:Description rdf:about="&cfmft;TLPRedSemanticConcept"/>
+            <rdf:Description rdf:about="&cfmft;TLPWhiteSemanticConcept"/>
+        </members>
+    </rdf:Description>
+    <rdf:Description>
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AllDisjointClasses"/>
+        <members rdf:parseType="Collection">
+            <rdf:Description rdf:about="&cfmft;BlockInstalledResponseActionTakenSemanticConcept"/>
+            <rdf:Description rdf:about="&cfmft;NotificationSentResponseActionTakenSemanticConcept"/>
+            <rdf:Description rdf:about="&cfmft;OtherResponseActionTakenSemanticConcept"/>
+            <rdf:Description rdf:about="&cfmft;TakenOfflineResponseActionTakenSemanticConcept"/>
+        </members>
+    </rdf:Description>
+    <rdf:Description>
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AllDisjointClasses"/>
+        <members rdf:parseType="Collection">
+            <rdf:Description rdf:about="&cfmft;STIXXMLBody"/>
+            <rdf:Description rdf:about="&cfmft;STIXXMLHeader"/>
+            <rdf:Description rdf:about="&cfmft;XMLAttribute"/>
+            <rdf:Description rdf:about="&cfmft;XMLElement"/>
+        </members>
+    </rdf:Description>
+    <rdf:Description>
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AllDisjointClasses"/>
+        <members rdf:parseType="Collection">
+            <rdf:Description rdf:about="&cfmft;DocumentComponent"/>
+            <rdf:Description rdf:about="&cfmft;DocumentSchema"/>
+            <rdf:Description rdf:about="&cfmft;DocumentSyntax"/>
+        </members>
+    </rdf:Description>
+    <rdf:Description>
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AllDisjointClasses"/>
+        <members rdf:parseType="Collection">
+            <rdf:Description rdf:about="&cfmft;IndicatorCategoryEndpointCharacteristicsSemanticConcept"/>
+            <rdf:Description rdf:about="&cfmft;IndicatorCategoryMalwareArtifactsSemanticConcept"/>
+            <rdf:Description rdf:about="&cfmft;IndicatorCategoryNetworkActivitySemanticConcept"/>
+            <rdf:Description rdf:about="&cfmft;IndicatorCategoryPhishingSemanticConcept"/>
+            <rdf:Description rdf:about="&cfmft;IndicatorCategoryWatchlistSemanticConcept"/>
+        </members>
+    </rdf:Description>
+    <rdf:Description>
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AllDisjointClasses"/>
+        <members rdf:parseType="Collection">
+            <rdf:Description rdf:about="&cfmft;ToStarAction1"/>
+            <rdf:Description rdf:about="&cfmft;ToStarAction2"/>
+            <rdf:Description rdf:about="&cfmft;ToStarConfidence"/>
+            <rdf:Description rdf:about="&cfmft;ToStarDirectSource"/>
+            <rdf:Description rdf:about="&cfmft;ToStarDuration1"/>
+            <rdf:Description rdf:about="&cfmft;ToStarDuration2"/>
+            <rdf:Description rdf:about="&cfmft;ToStarFileHasMore"/>
+            <rdf:Description rdf:about="&cfmft;ToStarIndicator"/>
+            <rdf:Description rdf:about="&cfmft;ToStarIndicatorType"/>
+            <rdf:Description rdf:about="&cfmft;ToStarPriors"/>
+            <rdf:Description rdf:about="&cfmft;ToStarProcessedTime"/>
+            <rdf:Description rdf:about="&cfmft;ToStarReason1"/>
+            <rdf:Description rdf:about="&cfmft;ToStarReason2"/>
+            <rdf:Description rdf:about="&cfmft;ToStarReconAllowed"/>
+            <rdf:Description rdf:about="&cfmft;ToStarReference1"/>
+            <rdf:Description rdf:about="&cfmft;ToStarReference2"/>
+            <rdf:Description rdf:about="&cfmft;ToStarRelatedID"/>
+            <rdf:Description rdf:about="&cfmft;ToStarRelationType"/>
+            <rdf:Description rdf:about="&cfmft;ToStarRelevancy"/>
+            <rdf:Description rdf:about="&cfmft;ToStarReportedTime"/>
+            <rdf:Description rdf:about="&cfmft;ToStarRestriction"/>
+            <rdf:Description rdf:about="&cfmft;ToStarSecondaryIndicator"/>
+            <rdf:Description rdf:about="&cfmft;ToStarSecondaryIndicatorType"/>
+            <rdf:Description rdf:about="&cfmft;ToStarSecondarySource"/>
+            <rdf:Description rdf:about="&cfmft;ToStarSensitivity"/>
+            <rdf:Description rdf:about="&cfmft;ToStarSeverity"/>
+        </members>
+    </rdf:Description>
+    <rdf:Description>
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AllDisjointClasses"/>
+        <members rdf:parseType="Collection">
+            <rdf:Description rdf:about="&cfmft;BotnetAlertBehaviorCharacterizationSemanticComponent"/>
+            <rdf:Description rdf:about="&cfmft;ExploitAlertBehaviorCharacterizationSemanticComponent"/>
+            <rdf:Description rdf:about="&cfmft;KnownBadActorAlertBehaviorCharacterizationSemanticComponent"/>
+            <rdf:Description rdf:about="&cfmft;MalwareTrafficAlertBehaviorCharacterizationSemanticComponent"/>
+            <rdf:Description rdf:about="&cfmft;PhishingAlertBehaviorCharacterizationSemanticComponent"/>
+            <rdf:Description rdf:about="&cfmft;ReconnaissanceAlertBehaviorCharacterizationSemanticComponent"/>
+            <rdf:Description rdf:about="&cfmft;RevocationAlertBehaviorCharacterizationSemanticComponent"/>
+            <rdf:Description rdf:about="&cfmft;ScanningAlertBehaviorCharacterizationSemanticComponent"/>
+            <rdf:Description rdf:about="&cfmft;SpamAlertBehaviorCharacterizationSemanticComponent"/>
+            <rdf:Description rdf:about="&cfmft;UnauthorizedUseAlertBehaviorCharacterizationSemanticComponent"/>
+            <rdf:Description rdf:about="&cfmft;UnspecifiedAlertBehaviorCharacterizationSemanticComponent"/>
+        </members>
+    </rdf:Description>
+    <rdf:Description>
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AllDisjointClasses"/>
+        <members rdf:parseType="Collection">
+            <rdf:Description rdf:about="&cfmft;ActionDurationSemanticConcept"/>
+            <rdf:Description rdf:about="&cfmft;ActionSemanticConcept"/>
+            <rdf:Description rdf:about="&cfmft;CFMReasonSemanticConcept"/>
+            <rdf:Description rdf:about="&cfmft;ConfidenceSemanticConcept"/>
+            <rdf:Description rdf:about="&cfmft;DataSensitivitySemanticConcept"/>
+            <rdf:Description rdf:about="&cfmft;IndicatorSemanticConcept"/>
+            <rdf:Description rdf:about="&cfmft;IndicatorTypeSemanticConcept"/>
+            <rdf:Description rdf:about="&cfmft;InformationSourceSemanticConcept"/>
+            <rdf:Description rdf:about="&cfmft;PriorIndicatorReportsSemanticConcept"/>
+            <rdf:Description rdf:about="&cfmft;ReferenceSemanticConcept"/>
+            <rdf:Description rdf:about="&cfmft;RelatedIndicatorRelationTypeSemanticConcept"/>
+            <rdf:Description rdf:about="&cfmft;RelevancySemanticConcept"/>
+            <rdf:Description rdf:about="&cfmft;SeveritySemanticConcept"/>
+            <rdf:Description rdf:about="&cfmft;SharingRestrictionSemanticConcept"/>
+            <rdf:Description rdf:about="&cfmft;TimeAlertProcessedOnClientSemanticConcept"/>
+            <rdf:Description rdf:about="&cfmft;TimeOfDetectionSemanticConcept"/>
+            <rdf:Description rdf:about="&cfmft;TimeReportReceivedSemanticConcept"/>
+            <rdf:Description rdf:about="&cfmft;UniqueFileIdentifierSemanticConcept"/>
+            <rdf:Description rdf:about="&cfmft;UniqueIndicatorIdentifierSemanticConcept"/>
+        </members>
+    </rdf:Description>
+</rdf:RDF>
+
+
+
+<!-- Generated by the OWL API (version 3.4.2) http://owlapi.sourceforge.net -->
+

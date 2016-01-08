@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema targetNamespace="http://www.anl.gov/cfm/2.0/current/CFMEnvelope" 
+	xmlns="http://www.w3.org/2001/XMLSchema" 
+	xmlns:tns="http://www.anl.gov/cfm/2.0/current/CFMEnvelope"
+	xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+	elementFormDefault="qualified">
+    <element name="CFMEnvelope">
+        <annotation>
+        	<documentation>The CFM envelope comprises both the header information and any embedded 
+        	message.</documentation>
+        </annotation>
+        <complexType>
+            <annotation>
+            	<documentation>The CFMEnvelopeType is comprised of the following elements:
+* SubmittingSite - the site idenifier of the submitter
+* CFMSchemaVersion - A number indicating the version of the schema used for the envelope
+* Authentication Credential - The GPG-signed UUID of the submitting site
+* Message - An embedded message - may be another XML document, plain text, or binary data</documentation>
+            </annotation>
+            <sequence>
+            	<element name="Version" type="string" maxOccurs="1"
+            		minOccurs="1">
+            		<annotation>
+            			<documentation>
+            				The version identifier for the envelope
+            				schema version. The current value is "2.0"
+            			</documentation>
+            		</annotation>
+            	</element>
+            	<element name="SendingSite" type="anyURI" maxOccurs="1"
+            		minOccurs="1">
+            		<annotation>
+            			<documentation>
+            				The sending site is the site shortname as
+            				provided to CFM. E.g., for Argonne, this
+            				would be ANL; for Ames Laboratory, it would
+            				be AMES. Case does not matter.
+            			</documentation>
+            		</annotation>
+            	</element>
+            	<element name="SentTimestamp" type="int" maxOccurs="1"
+            		minOccurs="1">
+            		<annotation>
+            			<documentation>
+            				The timestamp, set by the sender, indicating
+            				when the message was sent. (unix epoch time seconds)
+            			</documentation>
+            		</annotation>
+            	</element>
+            	<element name="ReceivedTimestamp" type="int"
+            		maxOccurs="1" minOccurs="0">
+            	</element>
+            	<element name="ProcessedTimestamp" type="int" maxOccurs="1" minOccurs="0"></element>
+            	<element name="PayloadType" maxOccurs="1" minOccurs="0"
+            		type="anyURI">
+            		<annotation>
+            			<documentation>
+            				The type of embedded message. Predefined
+            				types are Alert, Report, and Other. * Alert
+            				corresponds to a notification of observed
+            				malicious activity. * Report indicates
+            				informational content such as those provided
+            				by CPP for use with CASA. * Other indicates
+            				that the message is neither an Alert nor a
+            				Report, and normal processing of these types
+            				should not be attempted on this message.
+            			</documentation>
+            		</annotation>
+            	</element>
+            	<element name="PayloadFormat" type="anyURI"
+            		maxOccurs="1" minOccurs="0">
+            	</element>
+            	<element name="DataSensitivity" maxOccurs="1"
+            		minOccurs="0" type="anyURI">
+            		<annotation>
+            			<documentation>
+            				An indication of the sensitivity of the
+            				enclosed message. The URI should be a
+            				reference to a sensitivity definition, e.g.
+            				'http://www.anl.gov/cfm/2.0#OUO'
+
+            				An optional element, if it is absent it is
+            				assumed to be non-sensitive.
+
+            				OUO is DOE's Official Use Only designation,
+            				indicating that data should be protected at
+            				a Moderate level, and only shared within
+            				DOE.
+            			</documentation>
+            		</annotation>
+            	</element>
+            	<element name="SharingRestrictions" type="anyURI"
+            		maxOccurs="1" minOccurs="0">
+            	</element>
+            	<element name="ReconPolicy" type="anyURI" maxOccurs="1"
+            		minOccurs="0">
+            	</element>
+            	<element name="Recipients" type="tns:RecipientType"
+            		maxOccurs="1" minOccurs="0">
+            	</element>
+            	<element name="MessagePayload" type="string"
+            		maxOccurs="1" minOccurs="1">
+            		<annotation>
+            			<documentation>
+            				The message is the content indended for the
+            				recipients. It may be arbitrary, however,
+            				CFM does define some message types/formats
+            				in the schema (e.g. OpenIOC alert).
+            			</documentation>
+            		</annotation>
+            	</element>
+            	<element name="EnvelopeExtendedAttribute"
+            		type="tns:EnvelopeExtendedAttributeType" maxOccurs="unbounded"
+            		minOccurs="0">
+            	</element>
+            </sequence>
+        </complexType>
+    </element>
+
+    <complexType name="RecipientType">
+    	<sequence>
+    		<element name="Including" type="anyURI" minOccurs="0" maxOccurs="unbounded"></element>
+    		<element name="Excluding" type="anyURI" minOccurs="0" maxOccurs="unbounded"></element>
+    	</sequence>
+    </complexType>
+    
+    <complexType name="EnvelopeExtendedAttributeType">
+    	<sequence>
+    		<element name="Field" type="anyURI"></element>
+    		<element name="Value" type="string"></element>
+    	</sequence>
+    </complexType>
+</schema>

@@ -1,0 +1,133 @@
+{
+	"DocumentMetaData": {
+		"fields": {
+			"DataSensitivity": {
+				"description": "OUO marking",
+				"datatype": "enum",
+				"required": true,
+				"defaultValue": "noSensitivity",
+				"ontologyMappingType": "enum",
+				"enumValues": {
+					"ouo": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#OUOSemanticConcept"
+					},					
+					"noSensitivity": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#NotOUOSemanticConcept"
+					}
+				}
+			},
+			"FileName": {
+				"description": "File name the metadata is attached to",
+				"datatype": "string",
+				"required": true,
+				"ontologyMappingType": "simple",
+				"ontologyMapping": ""
+			},
+			"PayloadFormat": {
+				"description": "Schema format of the data",
+				"datatype": "enum",
+				"required": true,
+				"ontologyMappingType": "enum",
+				"enumValues": {
+					"STIX": {
+						"ontologyMapping": ""
+					},					
+					"Cfm13Alert": {
+						"ontologyMapping": ""
+					},
+					"Cfm20Alert": {
+						"ontologyMapping": ""
+					}
+				}
+			},
+			"PayloadType": {
+				"description": "CFM Payload type marking",
+				"datatype": "enum",
+				"required": true,
+				"defaultValue": "Alert",
+				"ontologyMappingType": "enum",
+				"enumValues": {
+					"Alert": {
+						"ontologyMapping": ""
+					}
+				}
+			},
+			"ReconPolicy": {
+				"description": "Is additional recon allowed on the indicator",
+				"datatype": "enum",
+				"required": true,
+				"defaultValue": "Touch",
+				"ontologyMappingType": "enum",
+				"enumValues": {
+					"Touch": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#ReconAllowedSemanticConcept"
+					},
+					"NoTouch": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#ReconNotAllowedSemanticConcept"
+					}
+				}
+			},
+			"SendingSite": {
+				"description": "Site name that submitted the report",
+				"datatype": "string",
+				"required": true,
+				"ontologyMappingType": "simple",
+				"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#SiteAbbreviationSemanticConcept"
+			},
+			"SentTimestamp": {
+				"description": "The timestamp when the file was uploaded",
+				"datatype": "datetime",
+				"dateTimeFormat": "unixtime",
+				"required": true,
+				"ontologyMappingType": "simple",
+				"ontologyMapping": ""
+			},
+			"UploadID": {
+				"description": "The UUID for the uploaded document",
+				"datatype": "string",
+				"required": true,
+				"ontologyMappingType": "simple",
+				"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#UniqueFileIdentifierSemanticConcept"
+			},
+			"DownloadElementExtendedAttribute_Field": {
+				"description": "Extended information type",
+				"valuemap": "DownloadElementExtendedAttribute;Field",
+				"datatype": "enum",
+				"required": false,
+				"ontologyMappingType": "enum",
+				"enumValues": {
+					"origFileName": {
+						"ontologyMapping": ""
+					},
+					"orig1.3Filename": {
+						"ontologyMapping": ""
+					},
+					"comment": {
+						"ontologyMapping": ""
+					}
+				}
+			},
+			"DownloadElementExtendedAttribute_Value": {
+				"description": "The value for the extended data",
+				"valuemap": "DownloadElementExtendedAttribute;Value",
+				"datatype": "string",
+				"defaultValue": "NoValue",
+				"requiredIfReferenceField": "DownloadElementExtendedAttribute_Field",
+				"requiredIfReferenceValuesMatch": [ "*" ], 
+				"ontologyMappingType": "referencedEnum",
+				"ontologyEnumField": "DownloadElementExtendedAttribute_Field",
+				"ontologyMappingEnumValues": {
+					"origFileName": {
+						"ontologyMapping": ""
+					},
+					"orig1.3Filename": {
+						"ontologyMapping": ""
+					},
+					"comment": {
+						"ontologyMapping": ""
+					}
+				}
+			}
+		}
+	}
+}
