@@ -389,7 +389,9 @@
 					"File Hash Watchlist": {
 						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#IndicatorCategoryFileHashWatchlistSemanticConcept",
 						"reverseOntologyMappings": [
-							"http://www.anl.gov/cfm/transform.owl#MD5FilehashIndicatorValueSemanticComponent"
+							"http://www.anl.gov/cfm/transform.owl#MD5FilehashIndicatorValueSemanticComponent",
+							"http://www.anl.gov/cfm/transform.owl#SHA1FilehashIndicatorValueSemanticComponent",
+							"http://www.anl.gov/cfm/transform.owl#SHA256FilehashIndicatorValueSemanticComponent"
 						]
 					},
 					"Malicious E-mail": {
@@ -532,7 +534,9 @@
 					"FileObjectType": {
 						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#FileObjectSchemaTypeSpecification",
 						"reverseOntologyMappings": [
-							"http://www.anl.gov/cfm/transform.owl#MD5FilehashIndicatorValueSemanticComponent"
+							"http://www.anl.gov/cfm/transform.owl#MD5FilehashIndicatorValueSemanticComponent",
+							"http://www.anl.gov/cfm/transform.owl#SHA1FilehashIndicatorValueSemanticComponent",
+							"http://www.anl.gov/cfm/transform.owl#SHA256FilehashIndicatorValueSemanticComponent"
 						]
 					},
 					"EmailMessageObjectType": {
