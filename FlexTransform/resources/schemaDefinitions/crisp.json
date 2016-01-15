@@ -176,7 +176,7 @@
 				"description": "Filename of a an artifact",
 				"datatype": "string",
 				"ontologyMappingType": "simple",
-				"ontologyMapping": "https://cfm.gss.anl.gov/transform.owl#FileNameIndicatorTypeSemanticComponent"
+				"ontologyMapping": "https://cfm.anl.gov/transform.owl#FileNameIndicatorTypeSemanticComponent"
 			},
 			"url": {
 				"description": "URL of an artifact",
