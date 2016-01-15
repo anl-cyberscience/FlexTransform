@@ -1,0 +1,198 @@
+{
+	"DocumentHeaderData": {
+		"fields": {
+			"description": {
+				"description": "Description of the data in the STIX document",
+				"datatype": "string",
+				"required": true,
+				"ontologyMappingType": "simple",
+				"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#ReportDescriptionSemanticComponent"
+			},
+			"title": {
+				"description": "Title of the STIX document",
+				"datatype": "string",
+				"required": true,
+				"ontologyMappingType": "simple",
+				"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#ReportTitleSemanticComponent"
+			},
+			"produced_time": {
+				"description": "Time the report was generated",
+				"datatype": "datetime",
+				"dateTimeFormat": "%Y-%m-%dT%H:%M:%SZ",
+				"required": true,
+				"ontologyMappingType": "simple",
+				"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#ReportGeneratedTimeSemanticConcept"
+			},
+			"information_source": {
+				"description": "The source of the report",
+				"datatype": "string",
+				"required": false,
+				"ontologyMappingType": "multiple",
+				"ontologyMappings": [
+						"http://www.anl.gov/cfm/transform.owl#SiteAbbreviationSemanticConcept"
+				]
+			},
+			"package_intent": {
+				"description": "The type of indicator data in the document",
+				"datatype": "enum",
+				"required": true,
+				"defaultValue": "Indicators",
+				"ontologyMappingType": "enum",
+				"enumValues": { 
+					"Indicators - Network Activity": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#IndicatorCategoryNetworkActivitySemanticConcept"
+					},
+					"Indicators - Watchlist": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#IndicatorCategoryWatchlistSemanticConcept"
+					},
+					"Indicators - Phishing": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#IndicatorCategoryPhishingSemanticConcept"
+					},
+					"Indicators - Malware Artifacts": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#IndicatorCategoryMalwareArtifactsSemanticConcept"
+					},
+					"Indicators - Endpoint Characteristics": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#IndicatorCategoryEndpointCharacteristicsSemanticConcept"
+					},
+					"Indicators": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#IndicatorCategoryGeneralIndicatorSemanticConcept"
+					}
+				}
+			},
+			"tlp": {
+				"description": "The TLP color for the document",
+				"datatype": "enum",
+				"required": false,
+				"ontologyMappingType": "enum",
+				"enumValues": {
+					"WHITE": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#TLPWhiteSemanticConcept"
+					},					
+					"GREEN": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#TLPGreenSemanticConcept"
+					},
+					"AMBER": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#TLPAmberSemanticConcept"
+					},
+					"RED": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#TLPRedSemanticConcept"
+					}
+				}
+			}
+		}
+	},
+	"IndicatorData": {
+		"types": {
+			"IPv4-Address-Block": [ { "ipv4address": "*" } ],
+			"DNS-Hostname-Block": [ { "fqdn": "*" } ],
+			"Malicious-File-IOC": [ { "filename": "*"} ],
+			"Malicious-File-IOC": [	{ "md5hash": "*" } ],
+			"Malicious-File-IOC": [ { "sha1hash": "*"} ],
+			"Malicious-File-IOC": [ { "sha256hash": "*"} ],
+			"Artifact": [ { "source_file_base64_encoded": "*" } ]
+		},
+		
+		"fields": {
+			"indicator_description": {
+				"description": "Description of indicator",
+				"datatype": "string",
+				"defaultValue": "E-ISAC Indicator",
+				"requiredIfReferenceField": "source_file_base64_encoded",
+				"requiredIfReferenceValues": [ "" ],
+				"ontologyMappingType": "simple",
+				"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#IndicatorDescriptionSemanticConcept"
+			},
+			"ipv4address": {
+				"description": "IPv4 address of indicator",
+				"datatype": "ipv4",
+				"required": false,
+				"ontologyMappingType": "simple",
+				"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#IPv4AddressIndicatorValueSemanticComponent"
+			},
+			"fqdn": {
+				"description": "Fully qualified domain name of indicator",
+				"datatype": "string",
+				"required": false,
+				"ontologyMappingType": "simple",
+				"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#DNSIndicatorValueSemanticComponent"
+			},
+			"filename": {
+				"description": "Filename of a an artifact",
+				"datatype": "string",
+				"ontologyMappingType": "simple",
+				"ontologyMapping": "https://cfm.anl.gov/transform.owl#FileNameIndicatorTypeSemanticComponent"
+			},
+			"md5hash": {
+				"description": "The type of the hash of the file",
+				"datatype": "string",
+				"required": false,
+				"ontologyMappingType": "simple",
+				"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#MD5FilehashIndicatorValueSemanticComponent"
+			},
+			"sha1hash": {
+				"description": "The type of the hash of the file",
+				"datatype": "string",
+				"required": false,
+				"ontologyMappingType": "simple",
+				"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#SHA1FilehashIndicatorValueSemanticComponent"
+			},
+			"sha256hash": {
+				"description": "The type of the hash of the file",
+				"datatype": "string",
+				"required": false,
+				"ontologyMappingType": "simple",
+				"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#SHA256FilehashIndicatorValueSemanticComponent"
+			},
+			"source_file_name": {
+				"description": "Source file name for the report",
+				"datatype": "string",
+				"required": false,
+				"ontologyMappingType": "simple",
+				"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#IndicatorDescriptionSemanticConcept"
+			},
+			"source_file_base64_encoded": {
+				"description": "The type of the hash of the file",
+				"datatype": "string",
+				"required": false,
+				"ontologyMappingType": "simple",
+				"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#ArtifactRawObjectIndicatorValueSemanticComponent"
+			},
+			"base64_encoding": {
+				"description": "The type of the hash of the file",
+				"datatype": "string",
+				"defaultValue": "Base64",
+				"requiredIfReferenceField": "source_file_base64_encoded",
+				"requiredIfReferenceValuesMatch": [ "*" ],
+				"ontologyMappingType": "simple",
+				"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#ArtifactRawObjectBase64EncodingAlgorithmSemanticComponent"
+			},
+			"content_type": {
+				"description": "The content type of the report",
+				"datatype": "string",
+				"defaultValue": "application/pdf",
+				"requiredIfReferenceField": "source_file_base64_encoded",
+				"requiredIfReferenceValuesMatch": [ "*" ],
+				"ontologyMappingType": "simple",
+				"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#ArtifactContentTypeSemanticComponent"
+			},
+			"suspected_malicious": {
+				"description": "True if artifact is suspected malicious",
+				"datatype": "string",
+				"defaultValue": "False",
+				"requiredIfReferenceField": "source_file_base64_encoded",
+				"requiredIfReferenceValuesMatch": [ "*" ],
+				"ontologyMappingType": "simple",
+				"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#NotSuspectedMaliciousIndicatorMetadataSemanticConcept"
+			},
+			"report_title": {
+				"description": "Title of the report",
+				"datatype": "string",
+				"defaultValue": "E-ISAC Cyber Bulletin Document",
+				"requiredIfReferenceField": "source_file_base64_encoded",
+				"requiredIfReferenceValuesMatch": [ "*" ],
+				"ontologyMappingType": "simple",
+				"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#IndicatorTitleSemanticConcept"
+			}
+		}
+	}
+}
