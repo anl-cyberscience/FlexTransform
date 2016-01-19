@@ -6,6 +6,7 @@ Created on Aug 13, 2015
 
 import logging
 import csv
+from copy import deepcopy
 
 class CSVParser(object):
     '''
@@ -73,17 +74,36 @@ class CSVParser(object):
                 self.LineTerminator = bytes(config['CSV']['LineTerminator'], "utf-8").decode("unicode_escape")
     
 
-#===============================================================================
-#     def Read(self,file):
-#         '''
-#         Read file and parse into Transform object
-#         '''
-#         
-#         self.ParsedData = {}
-#         raise Exception('NotImplemented')
-# 
-#         return self.ParsedData
-#===============================================================================
+    def Read(self,file):
+        '''
+        Read file and parse into Transform object
+        '''
+        
+        self.ParsedData = {
+                           "IndicatorData": []
+                           }
+        position = {}
+        
+        for idx, field in enumerate(self.Fields):
+            position[idx] = field
+            if idx > 0:
+                print(',', end='')
+            print(field, end='')
+        print('\n')
+        
+        content = file.readlines()
+        for line in content:
+            records = line.split(self.Delimiter)
+            to_add = {}
+            for idx, record in enumerate(records): 
+                record = record.rstrip(self.LineTerminator)
+                to_add.update({position[idx] : record})
+                if idx > 0:
+                    print(',', end='')
+                print(record, end='')
+            self.ParsedData["IndicatorData"].append(to_add)
+ 
+        return self.ParsedData
                 
     def Finalize(self, MappedData):
         '''
