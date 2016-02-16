@@ -292,7 +292,8 @@
 			],
 			"Registry-Key-IOC": [ { "observable_object_xsitype": "WindowsRegistryKeyObjectType" } ],
 			"Mutex-IOC": [ { "observable_object_xsitype": "MutexObjectType" } ],
-			"Artifact": [ { "observable_object_xsitype": "ArtifactObjectType" } ]
+			"Artifact": [ { "observable_object_xsitype": "ArtifactObjectType" } ],
+			"FilePath": [ { "indicator_type": "FilePath Watchlist"}, {"observable_object_xsitype": "FileObjectType"} ]
 		},
 		"fields": {
 			"description": {
@@ -405,6 +406,12 @@
 					},
 					"Unknown": {
 						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#IndicatorCategoryUnknownSemanticConcept"
+					},
+					"FilePath Watchlist": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#IndicatorCategoryFilePathWatchlistSemanticConcept",
+						"reverseOntologyMapping": [
+							"http://www.anl.gov/cfm/transform.owl#FilePathIndicatorValueSemanticComponent"
+						]
 					}
 				}
 			},
@@ -536,7 +543,8 @@
 						"reverseOntologyMappings": [
 							"http://www.anl.gov/cfm/transform.owl#MD5FilehashIndicatorValueSemanticComponent",
 							"http://www.anl.gov/cfm/transform.owl#SHA1FilehashIndicatorValueSemanticComponent",
-							"http://www.anl.gov/cfm/transform.owl#SHA256FilehashIndicatorValueSemanticComponent"
+							"http://www.anl.gov/cfm/transform.owl#SHA256FilehashIndicatorValueSemanticComponent",
+							"http://www.anl.gov/cfm/transform.owl#FilePathIndicatorValueSemanticComponent"
 						]
 					},
 					"EmailMessageObjectType": {
@@ -622,7 +630,7 @@
 				"datatype": "string",
 				"required": false, 
 				"ontologyMappingType": "simple",
-				"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#FilepathIndicatorValueSemanticConcept"
+				"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#FilePathIndicatorValueSemanticComponent"
 			},
 			"observable_object_filepath_condition": {
 				"description": "The match condition for the filepath object",
