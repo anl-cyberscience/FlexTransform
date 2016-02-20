@@ -86,8 +86,9 @@
 			"IPv4-Address-Block": [ { "ipv4address": "*" } ],
 			"DNS-Hostname-Block": [ { "fqdn": "*" } ],
 			"Malicious-File-IOC": [	{ "md5hash": "*" }, { "filename": "*"}],
-			"URL-Block": [ { "url": "*"} ],
-			"Artifact": [ { "source_file_base64_encoded": "*" } ]
+			"URL-Block": [ { "uri": "*"} ],
+			"Artifact": [ { "source_file_base64_encoded": "*" } ],
+			"FilePath": [ { "filepath": "*" } ]
 		},
 		
 		"fields": {
@@ -177,12 +178,19 @@
 				"ontologyMappingType": "simple",
 				"ontologyMapping": "https://cfm.anl.gov/transform.owl#FileNameIndicatorTypeSemanticComponent"
 			},
-			"url": {
-				"description": "URL of an artifact",
+			"uri": {
+				"description": "URI of malicious file",
 				"datatype": "string",
-				"defaultValue": "Original CRISP Report Document",
+				"required": "false",
 				"ontologyMappingType": "simple",
-				"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#URLIndicatorSemanticComponent"
+				"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#URLIndicatorValueSemanticComponent"
+			},
+			"filepath": {
+				"description": "Path to malicious file",
+				"datatype": "string",
+				"required": "false",
+				"ontologyMappingType": "simple",
+				"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#FilePathIndicatorValueSemanticComponent"
 			}
 		}
 	}
