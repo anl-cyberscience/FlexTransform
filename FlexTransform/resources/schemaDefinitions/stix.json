@@ -169,6 +169,9 @@
 					"//node()": {
 						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#XMLDocumentControlledStructureSemanticConcept"
 					},
+					"//node() | //@*": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#XMLDocumentControlledStructureSemanticConcept"
+					}, 
 					"../../../../descendant-or-self::node()": {
 						"ontologyMapping": ""
 					}
