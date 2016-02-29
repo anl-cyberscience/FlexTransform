@@ -43,4 +43,14 @@ The configuration files has several sections inside it, which are briefly listed
 - Description – A brief description of the field- Datatype – The data type of the field- DefaultValue – The default value this field would take if the incoming file does not have a value for this field.- OntologyMapping – The RDF file that specifies the ontology mapping for the format- OntologyMappingType – The type of the underlying ontology mapping- Required – Is this a mandatory file?- Valuemap – (only if the incoming file is in xml syntax) map to find the field in the xml tree- Subfields – Does the field have any subfields associated with them. If so, list them along with their attributes- Multiple – Does this field take multiple values?- Memberof – is this field a member of any other field present in the schema definition, if so then give its name- EnumValues – an enumeration of legal values this field can take[Example Schema File](FlexTransform/resources/schemaDefinitions/cfm13.json)## Parser Definition
 [Look at the parser modules written for formats such as CFM13,CFM20 and STIX under the directory FlexTransform/SyntaxParser/XMLParsers to get better understanding]- Read() – The source file needs to be parsed alongside the information available in the schema definition file. A dictionary needs to be created with DocumentHeaderData and IndicatorData as the first level keys and then packing the key-value pairs in the same manner as in the schema definition file. The information about the field to pick up from the source file is present in the schema file. The key is the key of that field in the schema file and the value is the data present in the corresponding field in the source file. This Dictionary is given to the engine for translation - Validate_config() - Validate the source data against the schema configuration. Make sure the fields with the required attribute set to true are present in the source file.- Finalize() - finalize the formatting of data before being sent to the write object. Make sure all the required fields are present- Write() – Write the data in the form of the destination schema configuration by adhering to the attributes and properties defined.
 
-[Example XML Parser](FlexTransform/SyntaxParser/XMLParsers/CFM13.py)
+[Example XML Parser](FlexTransform/SyntaxParser/XMLParsers/CFM13.py)
+
+## Code flow diagram - Direct vs Ontology Mapping
+<figure>
+<a href="FlexTransform/resources/images/figure2.png">
+<img src = "FlexTransform/resources/images/figure2.png" />
+</a>
+<figcaption>
+Figure 2 - Code flow diagram
+</figcaption>
+</figure>
