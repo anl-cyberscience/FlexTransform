@@ -162,7 +162,7 @@
 				"valuemap": "handling;controlled_structure", 
 				"datatype": "enum",
 				"required": false,
-				"defaultValue": "//node()",
+				"defaultValue": "//node() | //@*",
 				"ontologyMappingType": "enum",
 				"memberof": "handling",
 				"enumValues": {
