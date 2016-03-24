@@ -1,14 +1,12 @@
-"""
+'''
 Created on Jul 27, 2014
 
 @author: ahoying
-"""
+'''
 import json
 import os
 import logging
-import ast
 import configparser
-
 from FlexTransform.SyntaxParser import Parser
 from FlexTransform.SchemaParser import SchemaParser
 
@@ -164,7 +162,6 @@ class Config(object):
         Fields and directives are defined using a field_directive format. Field names and directives are case sensitive. 
         
         Current accepted directives:
-        ast.literal_eval(
             OntologyMapping
             OntologyMappingMultiple
             OntologyMappingEnum
