@@ -906,7 +906,7 @@ class SchemaParser(object) :
                         else :
                             raise Exception('ontologyMappingEnumValues', 'ontologyMappingEnumValues missing from field %s' % field)
                     elif ('ontologyMappingEnumValues' in fieldDict and '' in fieldDict['ontologyMappingEnumValues']) :
--                        OntologyReference = fieldDict['ontologyMappingEnumValues']['']['ontologyMapping']
+                        OntologyReference = fieldDict['ontologyMappingEnumValues']['']['ontologyMapping']
                 else :
                     raise Exception('UnknownOntologyMappingType', 'The OntologyMappingType %s in field %s is undefined' % (fieldDict['ontologyMappingType'], field))
                 
