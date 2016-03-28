@@ -27,8 +27,8 @@ class CFM13Data(object):
                                 <name>Test User, 555-555-1212, test@test.int</name>
                                 </Node>
                                 </Analyzer>
-                                <AnalyzerTime>2015-05-30T09:10:45-0000</AnalyzerTime>
-                                <AdditionalData meaning="report start time" type="date-time">2015-05-30T09:10:45-0000</AdditionalData>
+                                <AnalyzerTime>2015-05-30T09:10:45+00:00</AnalyzerTime>
+                                <AdditionalData meaning="report start time" type="date-time">2015-05-30T09:10:45+00:00</AdditionalData>
                                 <AdditionalData meaning="report type" type="string">alerts</AdditionalData>
                                 <AdditionalData meaning="report schedule" type="string">5 minutes</AdditionalData>
                                 <AdditionalData meaning="number of alerts in this report" type="integer">2</AdditionalData>
@@ -37,7 +37,7 @@ class CFM13Data(object):
                                 
         self.sample_cfm13_string_alert1 = """                        
                                 <Alert>
-                                <CreateTime>2015-05-30T09:08:00-0000</CreateTime>
+                                <CreateTime>2015-05-30T09:08:00+0000</CreateTime>
                                 <Source>
                                 <Node category="dns">
                                 <name>badsite.example.int</name>
@@ -62,7 +62,7 @@ class CFM13Data(object):
                                 
         self.sample_cfm13_string_alert2 = """ 
                                 <Alert>
-                                <CreateTime>2015-05-30T09:09:00-0000</CreateTime>
+                                <CreateTime>2015-05-30T09:09:00-00:00</CreateTime>
                                 <Source>
                                 <Node category="dns">
                                 <name>another.evil.site</name>
@@ -94,7 +94,7 @@ class CFM13Data(object):
                                 
         self.sample_cfm13_string_alert_portlist = """
                                 <Alert>
-                                <CreateTime>2015-05-30T09:09:20-0000</CreateTime>
+                                <CreateTime>2015-05-30T09:09:20+00:00</CreateTime>
                                 <Source>
                                 <Node>
                                 <Address category="ipv4-addr">

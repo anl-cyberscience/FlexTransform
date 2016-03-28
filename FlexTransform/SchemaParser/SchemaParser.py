@@ -14,7 +14,7 @@ import logging
 # import dumper
 import copy
 from builtins import str
-from .TransformFunctions import TransformFunctionManager
+from FlexTransform.SchemaParser.TransformFunctions import TransformFunctionManager
 # from _sqlite3 import Row
 
 class SchemaParser(object) :
@@ -745,7 +745,6 @@ class SchemaParser(object) :
                             newIndicatorType = altResult.getAlternative()
                             logging.warn("No direct mapping from source concept {0} to target schema.  Found a {1} of the concept ({2}).".format(IndicatorType, altResult.getLossType(), newIndicatorType))
                     '''
-                            
                     if newIndicatorType is not None :
                         IndicatorType = newIndicatorType
                     else :
@@ -783,29 +782,30 @@ class SchemaParser(object) :
                 
                 elif (fieldDict['ontologyMappingType'] == 'simple') :
                     if (fieldDict['ontologyMapping'] != '') :
-                        # Get the ontology reference we need in the destination schema:
-                        OntologyReference = fieldDict['ontologyMapping']
-                        if OntologyReference in DataDictionary:
-                            # If the semantic value exists exactly in the data dictionary, we can use it 
-                            # directly; no oracle call is required.
-                            OntologyReferences[OntologyReference].extend(DataDictionary[OntologyReference].keys())
-                        elif oracle is not None:
-                            # If we have a semantic mismatch, check the DataDictionary for ontology references which are
-                            # either specializations (prefered) or generalizations of the concept.
-                            # Lookup Ontology reference from the oracle instead:
-                            oRefList = oracle.getCompatibleConcepts(OntologyReference)
-                            for altOntologyReference in oRefList:
-                                # For each possible value returned in oRefList, see if we have it in the data dictionary:
-                                if altOntologyReference.IRI.__str__() in DataDictionary:
-                                    OntologyReferences[OntologyReference].extend(DataDictionary[altOntologyReference.IRI.__str__()].keys())
-                                # TODO: Re-enable this when we start checking supported vs. required
-                                #else:
-                                    #logging.warn("Semantic match attempt found an ontology reference not in Data Dictionary (%s)"%altOntologyReference.IRI)
+                         # Get the ontology reference we need in the destination schema:
+                         OntologyReference = fieldDict['ontologyMapping']
+                         if OntologyReference in DataDictionary:
+                             # If the semantic value exists exactly in the data dictionary, we can use it 
+                             # directly; no oracle call is required.
+                             OntologyReferences[OntologyReference].extend(DataDictionary[OntologyReference].keys())
+                         elif oracle is not None:
+                             # If we have a semantic mismatch, check the DataDictionary for ontology references which are
+                             # either specializations (prefered) or generalizations of the concept.
+                             # Lookup Ontology reference from the oracle instead:
+                             oRefList = oracle.getCompatibleConcepts(OntologyReference)
+                             for altOntologyReference in oRefList:
+                                 # For each possible value returned in oRefList, see if we have it in the data dictionary:
+                                 if altOntologyReference.IRI.__str__() in DataDictionary:
+                                     OntologyReferences[OntologyReference].extend(DataDictionary[altOntologyReference.IRI.__str__()].keys())
+                                 # TODO: Re-enable this when we start checking supported vs. required
+                                 #else:
+                                     #logging.warn("Semantic match attempt found an ontology reference not in Data Dictionary (%s)"%altOntologyReference.IRI)
                     
                 elif (fieldDict['ontologyMappingType'] == 'multiple') :
                     # In the case of multiple possible fields, look up which one(s) are present:
                     if ('ontologyMappings' in fieldDict) :
                         for OntologyReference in fieldDict['ontologyMappings'] :
+                            # Lookup Ontology reference from the oracle instead:
                             if (OntologyReference != '') :
                                 if (OntologyReference in DataDictionary) :
                                     # If the semantic value exists exactly in the data dictionary, we can use it 
@@ -820,11 +820,11 @@ class SchemaParser(object) :
                                             if altOntologyReference.IRI.__str__() in DataDictionary:
                                                 logging.warn("Semantic mismatch detected (Type/Distance: %s/%d ; Source: %s ; Target: %s )"%(altOntologyReference.stype,altOntologyReference.distance,altOntologyReference.IRI, OntologyReference))
                                                 OntologyReferences[OntologyReference].extend(DataDictionary[altOntologyReference.IRI.__str__()].keys())
-                                
+ 
                 elif (fieldDict['ontologyMappingType'] == 'enum') :
                     # If the destination field type is an enum, we need to determine what value to use for it
                     # based on the source's data values.  An enum ontology mapping type indicates that the value
-                    # of the field carries a semantic significance, not just the field itself.
+                    # of the field carries a semantic significance, not just the field itself.                    
                     if ('enumValues' in fieldDict) :
                         for k, v in fieldDict['enumValues'].items() :
                             if (v['ontologyMapping'] != '') :
@@ -842,7 +842,6 @@ class SchemaParser(object) :
                                             if altOntologyReference.IRI.__str__() in DataDictionary:
                                                 logging.warn("Semantic mismatch detected (Type/Distance: %s/%d ; Source: %s ; Target: %s )"%(altOntologyReference.stype,altOntologyReference.distance,altOntologyReference.IRI, OntologyReference))
                                                 OntologyReference = altOntologyReference.IRI.__str__()
-
                                 if (OntologyReference in DataDictionary) :
                                     # If the ontology reference is in the DataDictionary, then it is something that is
                                     # provided by the source file
@@ -900,8 +899,8 @@ class SchemaParser(object) :
                             if (OntologyReference is None and "*" in fieldDict['ontologyMappingEnumValues']) :
                                 if (fieldDict['ontologyMappingEnumValues']['*']['ontologyMapping'] != '') :
                                     OntologyReference = fieldDict['ontologyMappingEnumValues']['*']['ontologyMapping']
-                                    
-                            # TODO: If this test fails, no direct map back to source.  Check the ontology for other options
+                             
+                            # TODO: If this test fails, no direct map back to source.  Check the ontology for other options       
                             if (OntologyReference in DataDictionary) :
                                 OntologyReferences[OntologyReference].extend(DataDictionary[OntologyReference].keys())
                         else :
@@ -1011,7 +1010,7 @@ class SchemaParser(object) :
                                     
                                 NewValue = self._ConvertValueToTargetSchema(field, fieldDict, sourceDict, Value)
                                 if (NewValue is None) :
-                                    raise Exception('ValueNotConverted', 'Data could not be converted to the target schema')
+                                    raise Exception('ValueNotConverted', 'Data could not be converted to the target schema [{0}]'.format(Value))
                                  
                             newFieldDict['NewValue'] = NewValue
                             
@@ -1033,7 +1032,7 @@ class SchemaParser(object) :
                                             sourceDict = DataDictionary[OntologyReference][Value]
                                             NewValue = self._ConvertValueToTargetSchema(field, fieldDict, sourceDict, Value)
                                             if (NewValue is None) :
-                                                raise Exception('ValueNotConverted', 'Data could not be converted to the target schema')
+                                                raise Exception('ValueNotConverted', 'Data could not be converted to the target schema [{0}]'.format(Value))
                                         newDict[field]['Value'] = NewValue
                                     elif ('multiple' in fieldDict and fieldDict['multiple'] == True ) :
                                         # TODO: Handle fields with multiple values
@@ -1361,7 +1360,6 @@ class SchemaParser(object) :
                     self.logging.warning('Key %s already exists in data row, value %s, overwritten by DocumentMetaData key with value %s', k, CombinedDataRow[k], v)
                     
             CombinedDataRow.update(DocumentMetaData)
-                           
                 
         if (DataRow is not None) :
             # Check to see if the specific data overrides the document header data or document metadata
@@ -1370,7 +1368,6 @@ class SchemaParser(object) :
                     self.logging.warning('Key %s already exists in data row, value %s, overwritten by DataRow key with value %s', k, CombinedDataRow[k], v)
                     
             CombinedDataRow.update(DataRow)
-                
         for field, fieldDict in CombinedDataRow.items() :
             if ('Value' not in fieldDict) :
                 self.logging.warning("Field %s has no value", field)
@@ -1458,7 +1455,7 @@ class SchemaParser(object) :
                                 raise Exception('ontologyMappingEnumValues', 'ontologyMappingEnumValues missing from field %s' % field)
                         elif ('ontologyMappingEnumValues' in fieldDict and '' in fieldDict['ontologyMappingEnumValues']) :
                             OntologyReference = fieldDict['ontologyMappingEnumValues']['']['ontologyMapping']
-                                
+                     
                     else :
                         raise Exception('UnknownOntologyMappingType', 'The OntologyMappingType %s in field %s is undefined' % (fieldDict['ontologyMappingType'], field))
                     
