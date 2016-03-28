@@ -250,7 +250,7 @@ class SchemaParser(object) :
                         if (fieldDict['memberof'] not in FieldOrder or FieldOrder[fieldDict['memberof']] <= FieldOrder[field]) :
                             FieldOrder[fieldDict['memberof']] = FieldOrder[field] + 1
                 elif ('dependsOn' in fieldDict) :
-                     if (field not in FieldOrder or FieldOrder[field] < 6) :
+                    if (field not in FieldOrder or FieldOrder[field] < 6) :
                         FieldOrder[field] = 6
                 else :
                     if (field not in FieldOrder or FieldOrder[field] > 4) :
@@ -905,6 +905,8 @@ class SchemaParser(object) :
                                 OntologyReferences[OntologyReference].extend(DataDictionary[OntologyReference].keys())
                         else :
                             raise Exception('ontologyMappingEnumValues', 'ontologyMappingEnumValues missing from field %s' % field)
+                    elif ('ontologyMappingEnumValues' in fieldDict and '' in fieldDict['ontologyMappingEnumValues']) :
+-                        OntologyReference = fieldDict['ontologyMappingEnumValues']['']['ontologyMapping']
                 else :
                     raise Exception('UnknownOntologyMappingType', 'The OntologyMappingType %s in field %s is undefined' % (fieldDict['ontologyMappingType'], field))
                 
@@ -1008,7 +1010,7 @@ class SchemaParser(object) :
                                     
                                 NewValue = self._ConvertValueToTargetSchema(field, fieldDict, sourceDict, Value)
                                 if (NewValue is None) :
-                                    raise Exception('ValueNotConverted', 'Data could not be converted to the target schema [{0}]'.format(Value))
+                                    raise Exception('ValueNotConverted', 'Data could not be converted to the target schema [{0}]'.format(NewValue))
                                  
                             newFieldDict['NewValue'] = NewValue
                             
@@ -1030,7 +1032,7 @@ class SchemaParser(object) :
                                             sourceDict = DataDictionary[OntologyReference][Value]
                                             NewValue = self._ConvertValueToTargetSchema(field, fieldDict, sourceDict, Value)
                                             if (NewValue is None) :
-                                                raise Exception('ValueNotConverted', 'Data could not be converted to the target schema')
+                                                raise Exception('ValueNotConverted', 'Data could not be converted to the target schema [{0}]'.format(Value))
                                         newDict[field]['Value'] = NewValue
                                     elif ('multiple' in fieldDict and fieldDict['multiple'] == True ) :
                                         # TODO: Handle fields with multiple values
@@ -1451,6 +1453,9 @@ class SchemaParser(object) :
                                         OntologyReference = fieldDict['ontologyMappingEnumValues']['*']['ontologyMapping']
                             else :
                                 raise Exception('ontologyMappingEnumValues', 'ontologyMappingEnumValues missing from field %s' % field)
+                        elif ('ontologyMappingEnumValues' in fieldDict and '' in fieldDict['ontologyMappingEnumValues']) :
+                            OntologyReference = fieldDict['ontologyMappingEnumValues']['']['ontologyMapping']
+                     
                     else :
                         raise Exception('UnknownOntologyMappingType', 'The OntologyMappingType %s in field %s is undefined' % (fieldDict['ontologyMappingType'], field))
                     
