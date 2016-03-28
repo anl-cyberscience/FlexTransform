@@ -1010,7 +1010,7 @@ class SchemaParser(object) :
                                     
                                 NewValue = self._ConvertValueToTargetSchema(field, fieldDict, sourceDict, Value)
                                 if (NewValue is None) :
-                                    raise Exception('ValueNotConverted', 'Data could not be converted to the target schema [{0}]'.format(NewValue))
+                                    raise Exception('ValueNotConverted', 'Data could not be converted to the target schema [{0}]'.format(Value))
                                  
                             newFieldDict['NewValue'] = NewValue
                             
@@ -1052,7 +1052,7 @@ class SchemaParser(object) :
                                         sourceDict = DataDictionary[OntologyReference][Value]
                                         NewValue = self._ConvertValueToTargetSchema(field, fieldDict, sourceDict, Value)
                                         if (NewValue is None) :
-                                            raise Exception('ValueNotConverted', 'Data could not be converted to the target schema')
+                                            raise Exception('ValueNotConverted', 'Data could not be converted to the target schema [{0}]'.format(Value))
                                     newDict[field]['Value'] = NewValue
                                 elif ('multiple' in fieldDict and fieldDict['multiple'] == True ) :
                                     # TODO: Handle fields with multiple values
