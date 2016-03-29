@@ -9,8 +9,8 @@ import os
 import logging
 
 from FlexTransform import FlexTransform
-from .TestData import CFM13Data
-from .utils import deep_sort
+from FlexTransform.test.TestData import CFM13Data
+from FlexTransform.test.utils import deep_sort
 
 class CFM13Tests(unittest.TestCase):
 
@@ -37,7 +37,7 @@ class CFM13Tests(unittest.TestCase):
         
         ExpectedDataList  = [{"action1": "Block", 
                               "comment": "WEBattack", 
-                              "detectedTime": "1432998480", 
+                              "detectedTime": "1432994880", 
                               "directSource": "TEST", 
                               "duration1": "2592000", 
                               "fileHasMore": "0", 
@@ -47,14 +47,14 @@ class CFM13Tests(unittest.TestCase):
                               "reason1": "unknown", 
                               "reconAllowed": "1", 
                               "reference1": "unknown", 
-                              "reportedTime": "1432998645", 
+                              "reportedTime": "1432995045", 
                               "restriction": "AMBER", 
                               "secondaryIndicator": "badsite.example.int", 
                               "secondaryIndicatorType": "DNSDomainName", 
                               "sensitivity": "noSensitivity"},
                              {"action1": "Block", 
                               "comment": "Netflow port or host scan", 
-                              "detectedTime": "1432998540", 
+                              "detectedTime": "1432994940", 
                               "directSource": "TEST", 
                               "duration1": "36000", 
                               "fileHasMore": "0", 
@@ -65,14 +65,14 @@ class CFM13Tests(unittest.TestCase):
                               "reason1": "Netflow port or host scan", 
                               "reconAllowed": "1", 
                               "reference1": "user-specific", 
-                              "reportedTime": "1432998645", 
+                              "reportedTime": "1432995045", 
                               "restriction": "AMBER", 
                               "secondaryIndicator": "another.evil.site", 
                               "secondaryIndicatorType": "DNSDomainName", 
                               "sensitivity": "noSensitivity"},
                               {"action1": "Block",
                               "comment": "MSSQL scans against multiple hosts, direction:ingress, confidence:77, severity:medium",
-                              "detectedTime": "1432998560",
+                              "detectedTime": "1432994960",
                               "directSource": "TEST",
                               "duration1": "86400",
                               "fileHasMore": "0",
@@ -83,12 +83,12 @@ class CFM13Tests(unittest.TestCase):
                               "reason1": "Scanning",
                               "reconAllowed": "1",
                               "reference1": "user-specific",
-                              "reportedTime": "1432998645",
+                              "reportedTime": "1432995045",
                               "restriction": "AMBER",
                               "sensitivity": "noSensitivity"},
                              {"action1": "Notify",
                               "comment": "URL Block: Random String",
-                              "detectedTime": "1432998540",
+                              "detectedTime": "1432994940",
                               "directSource": "TEST",
                               "duration1": "0",
                               "fileHasMore": "0",
@@ -99,12 +99,12 @@ class CFM13Tests(unittest.TestCase):
                               "reason1": "target: bad.domain.url",
                               "reconAllowed": "0",
                               "reference1": "user-specific",
-                              "reportedTime": "1432998645",
+                              "reportedTime": "1432995045",
                               "restriction": "AMBER",
                               "sensitivity": "ouo"},
                              {"action1": "Notify",
                               "comment": "Domain Block: malicious",
-                              "detectedTime": "1432998360",
+                              "detectedTime": "1432994760",
                               "directSource": "TEST",
                               "duration1": "0",
                               "fileHasMore": "0",
@@ -114,13 +114,15 @@ class CFM13Tests(unittest.TestCase):
                               "reason1": "unknown",
                               "reconAllowed": "0",
                               "reference1": "unknown",
-                              "reportedTime": "1432998645",
+                              "reportedTime": "1432995045",
                               "restriction": "AMBER",
                               "sensitivity": "ouo"}]
 
         FinalizedData = self.Transform.TransformFile(sourceFileName=sample_cfm13_file, sourceParserName='Cfm13Alert', targetParserName='LQMTools')
          
         self.assertEqual(len(ExpectedDataList),len(FinalizedData))
+        
+        self.maxDiff = None
         
         for idx, val in enumerate(ExpectedDataList) :
             # The processedTime key changes with each run, so ignore it
@@ -276,6 +278,8 @@ class CFM13Tests(unittest.TestCase):
         self.assertDictEqual(deep_sort(ExpectedDataDict['DocumentHeaderData']),deep_sort(FinalizedData['DocumentHeaderData']))
         
         self.assertEqual(len(ExpectedDataDict['IndicatorData']),len(FinalizedData['IndicatorData']))
+        
+        self.maxDiff = None
         
         for idx, val in enumerate(ExpectedDataDict['IndicatorData']) :
             # The processedTime key changes with each run, so ignore it

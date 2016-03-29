@@ -6,7 +6,8 @@ Created on Aug 13, 2015
 
 import logging
 import csv
-from copy import deepcopy
+import os
+from builtins import str
 
 class CSVParser(object):
     '''
@@ -86,10 +87,6 @@ class CSVParser(object):
         
         for idx, field in enumerate(self.Fields):
             position[idx] = field
-            if idx > 0:
-                print(',', end='')
-            print(field, end='')
-        print('\n')
         
         content = file.readlines()
         for line in content:
@@ -98,9 +95,6 @@ class CSVParser(object):
             for idx, record in enumerate(records): 
                 record = record.rstrip(self.LineTerminator)
                 to_add.update({position[idx] : record})
-                if idx > 0:
-                    print(',', end='')
-                print(record, end='')
             self.ParsedData["IndicatorData"].append(to_add)
  
         return self.ParsedData
@@ -137,19 +131,26 @@ class CSVParser(object):
         '''
         Write the data as csv to the file.
         '''
-        
+        if isinstance(file, str):
+            if os.path.exists(file):
+                file = open(file, "w")
+            else:
+                self.logging.error("%s is not a valid filepath", file)
+            
         csv.register_dialect('flext', 
-                             delimiter=self.Delimiter, 
-                             quotechar=self.QuoteChar, 
-                             escapechar=self.EscapeChar, 
-                             doublequote=self.DoubleQuote, 
-                             lineterminator=self.LineTerminator,
-                             quoting=self.QuoteStyle)
-        
-        writer = csv.DictWriter(file, self.Fields, dialect='flext')
-        
+                            delimiter=self.Delimiter, 
+                            quotechar=self.QuoteChar, 
+                            escapechar=self.EscapeChar, 
+                            doublequote=self.DoubleQuote, 
+                            lineterminator=self.LineTerminator,
+                            quoting=self.QuoteStyle)     
+
+        writer = csv.DictWriter(file, fieldnames=self.Fields, dialect='flext')
+
         if (self.HeaderLine) :
             writer.writeheader()
-            
+
         writer.writerows(FinalizedData)
+        
+        file.close()
         

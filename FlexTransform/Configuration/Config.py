@@ -3,13 +3,12 @@ Created on Jul 27, 2014
 
 @author: ahoying
 '''
-
-import configparser
-from FlexTransform.SyntaxParser import Parser
-from FlexTransform.SchemaParser import SchemaParser
 import json
 import os
 import logging
+import configparser
+from FlexTransform.SyntaxParser import Parser
+from FlexTransform.SchemaParser import SchemaParser
 
 class Config(object):
     '''
@@ -75,6 +74,10 @@ class Config(object):
             
             for key in self.config['SCHEMA'] :
                 if (key == 'SchemaConfigurationType') :
+                    continue
+                
+                if (key == 'TypeMappings') :
+                    schemaConfiguration['TypeMapping'] = self.config['SCHEMA'][key]
                     continue
                 
                 if (key == 'SupportedIndicatorTypes') :
@@ -159,7 +162,6 @@ class Config(object):
         Fields and directives are defined using a field_directive format. Field names and directives are case sensitive. 
         
         Current accepted directives:
-        
             OntologyMapping
             OntologyMappingMultiple
             OntologyMappingEnum
@@ -249,6 +251,10 @@ class Config(object):
         else :
             raise Exception('RequiredOptionNotFound', 'Schema: SupportedIndicatorTypes is not defined')
         
+        if ('TypeMapping' in schemaConfiguration) :
+            TypeMapping = ast.literal_eval(schemaConfiguration.pop("TypeMapping"))
+            SchemaConfig['IndicatorData']['types'] = (TypeMapping)
+        
         fields = {}
         
         # TODO: add additional schema configuration directives
@@ -258,7 +264,7 @@ class Config(object):
             fields[field] = {}
             fields[field]["datatype"] = "string"
             fields[field]["required"] = True
-            
+                
             if ("OntologyMapping" in schemaConfiguration[field]) :
                 OntologyMapping = schemaConfiguration[field].pop("OntologyMapping")
                 fields[field]["ontologyMappingType"] = "simple"
