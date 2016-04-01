@@ -256,8 +256,9 @@ class TestSTIXTLPToCFM13Alert(unittest.TestCase):
         output1_object = io.StringIO()
 
         transform.TransformFile(io.StringIO(STIXTLP1), 'stix', 'cfm13alert', targetFileName=output1_object)
-        print(output1_object.getvalue())
-        cls.output1 = etree.XML(output1_object.getvalue())
+        output1_object.seek(0)
+        output1_object.readline()
+        cls.output1 = etree.parse(output1_object)
 
     def test_alert_analyzerid(self):
         self.assertEqual(self.output1.xpath("/IDMEF-Message/Alert/Analyzer/@analyzerid", namespaces=self.namespace)[0], "Fake")
