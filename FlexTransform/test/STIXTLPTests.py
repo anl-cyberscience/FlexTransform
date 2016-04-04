@@ -258,7 +258,10 @@ class TestSTIXTLPToCFM13Alert(unittest.TestCase):
         transform.TransformFile(io.StringIO(STIXTLP1), 'stix', 'cfm13alert', targetFileName=output1_object)
         output1_object.seek(0)
         output1_object.readline()
+        output1_object.readline()
+        # print(output1_object.getvalue()[38:])
         cls.output1 = etree.parse(output1_object)
+        print(etree.tostring(cls.output1))
 
     def test_alert_analyzerid(self):
         self.assertEqual(self.output1.xpath("/IDMEF-Message/Alert/Analyzer/@analyzerid", namespaces=self.namespace)[0], "Fake")
@@ -285,31 +288,32 @@ class TestSTIXTLPToCFM13Alert(unittest.TestCase):
         self.assertEqual(self.output1.xpath("/IDMEF-Message/Alert/AdditionalData[@meaning='report start time']", namespaces=self.namespace)[0], "2016-03-23T16:45:05+0000")
 
     def test_source_node_address_ipv4(self):
-        self.assertEqual(self.output1.xpath(set("/IDMEF-Message/Alert/Classification[text='CRISP Report Indicator']/../Source/Node/Address[@category='ipv4-addr']/address/text()"), namespaces=self.namespace)[0], set(["10.10.10.10", "11.11.11.11", "12.12.12.12", "13.13.13.13", "14.14.14.14"]))
+        self.assertEqual(set(self.output1.xpath("/IDMEF-Message/Alert/Classification[text='CRISP Report Indicator']/../Source/Node/Address[@category='ipv4-addr']/address/text()")), set(["10.10.10.10", "11.11.11.11", "12.12.12.12", "13.13.13.13", "14.14.14.14"]))
 
     def test_source_node_address_url(self):
-        self.assertEqual(self.output1.xpath(set("/IDMEF-Message/Alert/Classification[text='URL Block: CRISP Report Indicator']/../Source/Node/Address/address/text()"), namespaces=self.namespace)[0], set(["fake.site.com/malicious.js", "bad.domain.be/poor/path "]))
+        self.assertEqual(set(self.output1.xpath("/IDMEF-Message/Alert/Classification[text='URL Block: CRISP Report Indicator']/../Source/Node/Address/address/text()")), set(["fake.site.com/malicious.js", "bad.domain.be/poor/path "]))
 
     def test_alert_AD_OUO(self):
-        self.assertEqual(self.output1.xpath(set("/IDMEF-Message/Alert//AdditionalData[@meaning='OUO']"), namespaces=self.namespace)[0], set("0"))
+        print(self.output1.xpath("/IDMEF-Message/Alert[1]//AdditionalData[1]/text()"))
+        self.assertEqual(set(self.output1.xpath("/IDMEF-Message//Alert/AdditionalData[@meaning='OUO']/text()")), set("0"))
 
     def test_alert_AD_restriction(self):
-        self.assertEqual(self.output1.xpath(set("/IDMEF-Message/Alert//AdditionalData[@meaning='restriction']"), namespaces=self.namespace)[0], set("public"))
+        self.assertEqual(set(self.output1.xpath("/IDMEF-Message/Alert//AdditionalData[@meaning='restriction']")), set("public"))
 
     def test_alert_AD_duration(self):
-        self.assertEqual(self.output1.xpath(set("/IDMEF-Message/Alert//AdditionalData[@meaning='duration']"), namespaces=self.namespace)[0], set("86400"))
+        self.assertEqual(set(self.output1.xpath("/IDMEF-Message/Alert//AdditionalData[@meaning='duration']")), set("86400"))
 
     def test_alert_AD_recon(self):
-        self.assertEqual(self.output1.xpath(set("/IDMEF-Message/Alert//AdditionalData[@meaning='recon']"), namespaces=self.namespace)[0], set("0"))
+        self.assertEqual(set(self.output1.xpath("/IDMEF-Message/Alert//AdditionalData[@meaning='recon']")), set("0"))
 
     def test_alert_assessment_action(self):
-        self.assertEqual(self.output1.xpath(set("/IDMEF-Message/Alert/Assessment//Action/text()"), namespaces=self.namespace)[0], set("block-installed"))
+        self.assertEqual(set(self.output1.xpath("/IDMEF-Message/Alert/Assessment//Action/text()")), set("block-installed"))
 
     def test_alert_classification_reference_name(self):
-        self.assertEqual(self.output1.xpath(set("/IDMEF-Message/Alert/Classification[@text='CRISP Report Indicator']/Reference[@meaning='Unspecified', @origin='user-specific']//name/text()"), namespaces=self.namespace)[0], set("unknown"))
+        self.assertEqual(set(self.output1.xpath("/IDMEF-Message/Alert/Classification[@text='CRISP Report Indicator']/Reference[@meaning='Unspecified', @origin='user-specific']//name/text()")), set("unknown"))
 
     def test_alert_classification_reference_url_false(self):
-        self.assertEqual(self.output1.xpath(bool("/IDMEF-Message/Alert/Classification[@text='CRISP Report Indicator']/Reference[@meaning='Unspecified', @origin='user-specific']//url/text()"), namespaces=self.namespace)[0], False)
+        self.assertEqual(bool(self.output1.xpath("/IDMEF-Message/Alert/Classification[@text='CRISP Report Indicator']/Reference[@meaning='Unspecified', @origin='user-specific']//url/text()")), False)
 
 
 if __name__ == '__main__':
