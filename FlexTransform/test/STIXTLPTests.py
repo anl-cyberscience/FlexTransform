@@ -241,7 +241,8 @@ class TestSTIXTLPToCFM13Alert(unittest.TestCase):
 	    'FileObj'       : "http://cybox.mitre.org/objects#FileObject-2",
 	    'URIObj'        : "http://cybox.mitre.org/objects#URIObject-2",
 	    'tlpMarking'    : "http://data-marking.mitre.org/extensions/MarkingStructure#TLP-1",
-	    'CFM'           :"http://www.anl.gov/cfm/stix"
+	    'CFM'           : "http://www.anl.gov/cfm/stix",
+        'xmlns'         : "http://www.anl.gov/cfm/1.3/IDMEF-Message"
     }
 
     @classmethod
@@ -258,62 +259,60 @@ class TestSTIXTLPToCFM13Alert(unittest.TestCase):
         transform.TransformFile(io.StringIO(STIXTLP1), 'stix', 'cfm13alert', targetFileName=output1_object)
         output1_object.seek(0)
         output1_object.readline()
-        output1_object.readline()
-        # print(output1_object.getvalue()[38:])
         cls.output1 = etree.parse(output1_object)
-        print(etree.tostring(cls.output1))
+
+        print(output1_object.getvalue())
 
     def test_alert_analyzerid(self):
-        self.assertEqual(self.output1.xpath("/IDMEF-Message/Alert/Analyzer/@analyzerid", namespaces=self.namespace)[0], "Fake")
+        self.assertEqual(self.output1.xpath("/xmlns:IDMEF-Message/xmlns:Alert/xmlns:Analyzer/@analyzerid", namespaces=self.namespace)[0], "Fake")
 
     def test_alert_analyzer_node_location(self):
-        self.assertEqual(self.output1.xpath("/IDMEF-Message/Alert/Analyzer/Node/location/text()", namespaces=self.namespace)[0], "1600 Pennslyvania Ave, Washington DC 20005")
+        self.assertEqual(self.output1.xpath("/xmlns:IDMEF-Message/xmlns:Alert/xmlns:Analyzer/xmlns:Node/xmlns:location/text()", namespaces=self.namespace)[0], "1600 Pennslyvania Ave, Washington DC 20005")
 
     def test_alert_analyzer_node_name(self):
-        self.assertEqual(self.output1.xpath("/IDMEF-Message/Alert/Analyzer/Node/name/text()", namespaces=self.namespace)[0], "Nicholas Hendersen, 555-867-5309, nietzsche@doe.gov")
+        self.assertEqual(self.output1.xpath("/xmlns:IDMEF-Message/xmlns:Alert/xmlns:Analyzer/xmlns:Node/xmlns:name/text()", namespaces=self.namespace)[0], "Nicholas Hendersen, 555-867-5309, nietzsche@doe.gov")
 
     def test_alert_analyzer_time(self):
-        self.assertEqual(self.output1.xpath("/IDMEF-Message/Alert/AnalyzerTime", namespaces=self.namespace)[0], "2016-03-23T16:45:05+0000")
+        self.assertEqual(self.output1.xpath("/xmlns:IDMEF-Message/xmlns:Alert/xmlns:AnalyzerTime/text()", namespaces=self.namespace)[0], "2016-03-23T16:45:05+0000")
 
     def test_alert_AD_number_alerts(self):
-        self.assertEqual(self.output1.xpath("/IDMEF-Message/Alert/AdditionalData[@meaning='number of alerts in this report']", namespaces=self.namespace)[0], "7")
+        self.assertEqual(self.output1.xpath("/xmlns:IDMEF-Message/xmlns:Alert/xmlns:AdditionalData[@meaning='number of alerts in this report']/text()", namespaces=self.namespace)[0], "7")
 
     def test_alert_AD_report_schedule(self):
-        self.assertEqual(self.output1.xpath("/IDMEF-Message/Alert/AdditionalData[@meaning='report schedule']", namespaces=self.namespace)[0], "NoValue")
+        self.assertEqual(self.output1.xpath("/xmlns:IDMEF-Message/xmlns:Alert/xmlns:AdditionalData[@meaning='report schedule']/text()", namespaces=self.namespace)[0], "NoValue")
 
     def test_alert_AD_report_type(self):
-        self.assertEqual(self.output1.xpath("/IDMEF-Message/Alert/AdditionalData[@meaning='report type']", namespaces=self.namespace)[0], "alerts")
+        self.assertEqual(self.output1.xpath("/xmlns:IDMEF-Message/xmlns:Alert/xmlns:AdditionalData[@meaning='report type']/text()", namespaces=self.namespace)[0], "alerts")
 
     def test_alert_AD_start_time(self):
-        self.assertEqual(self.output1.xpath("/IDMEF-Message/Alert/AdditionalData[@meaning='report start time']", namespaces=self.namespace)[0], "2016-03-23T16:45:05+0000")
+        self.assertEqual(self.output1.xpath("/xmlns:IDMEF-Message/xmlns:Alert/xmlns:AdditionalData[@meaning='report start time']/text()", namespaces=self.namespace)[0], "2016-03-23T16:45:05+0000")
 
     def test_source_node_address_ipv4(self):
-        self.assertEqual(set(self.output1.xpath("/IDMEF-Message/Alert/Classification[text='CRISP Report Indicator']/../Source/Node/Address[@category='ipv4-addr']/address/text()")), set(["10.10.10.10", "11.11.11.11", "12.12.12.12", "13.13.13.13", "14.14.14.14"]))
+        self.assertEqual(set(self.output1.xpath("//xmlns:Address[@category='ipv4-addr']/xmlns:address/text()", namespaces=self.namespace)), set(["10.10.10.10", "11.11.11.11", "12.12.12.12", "13.13.13.13", "14.14.14.14"]))
 
     def test_source_node_address_url(self):
-        self.assertEqual(set(self.output1.xpath("/IDMEF-Message/Alert/Classification[text='URL Block: CRISP Report Indicator']/../Source/Node/Address/address/text()")), set(["fake.site.com/malicious.js", "bad.domain.be/poor/path "]))
+        self.assertEqual(set(self.output1.xpath("//xmlns:Address[not(@category='ipv4-addr')]/xmlns:address/text()", namespaces=self.namespace)),  set(["fake.site.com/malicious.js", "bad.domain.be/poor/path"]))
 
     def test_alert_AD_OUO(self):
-        print(self.output1.xpath("/IDMEF-Message/Alert[1]//AdditionalData[1]/text()"))
-        self.assertEqual(set(self.output1.xpath("/IDMEF-Message//Alert/AdditionalData[@meaning='OUO']/text()")), set("0"))
+        self.assertEqual(set(self.output1.xpath("//xmlns:AdditionalData[@meaning='OUO']/text()", namespaces=self.namespace)), set(['0']))
 
     def test_alert_AD_restriction(self):
-        self.assertEqual(set(self.output1.xpath("/IDMEF-Message/Alert//AdditionalData[@meaning='restriction']")), set("public"))
+        self.assertEqual(set(self.output1.xpath("//xmlns:AdditionalData[@meaning='restriction']/text()", namespaces=self.namespace)),set(['public']))
 
     def test_alert_AD_duration(self):
-        self.assertEqual(set(self.output1.xpath("/IDMEF-Message/Alert//AdditionalData[@meaning='duration']")), set("86400"))
+        self.assertEqual(set(self.output1.xpath("//xmlns:AdditionalData[@meaning='duration']/text()", namespaces=self.namespace)), set(['0']))
 
     def test_alert_AD_recon(self):
-        self.assertEqual(set(self.output1.xpath("/IDMEF-Message/Alert//AdditionalData[@meaning='recon']")), set("0"))
+        self.assertEqual(set(self.output1.xpath("//xmlns:AdditionalData[@meaning='recon']/text()", namespaces=self.namespace)), set(['0']))
 
     def test_alert_assessment_action(self):
-        self.assertEqual(set(self.output1.xpath("/IDMEF-Message/Alert/Assessment//Action/text()")), set("block-installed"))
+        self.assertEqual(set(self.output1.xpath("//xmlns:Action/@category", namespaces=self.namespace)), set(["block-installed"]))
 
     def test_alert_classification_reference_name(self):
-        self.assertEqual(set(self.output1.xpath("/IDMEF-Message/Alert/Classification[@text='CRISP Report Indicator']/Reference[@meaning='Unspecified', @origin='user-specific']//name/text()")), set("unknown"))
+        self.assertEqual(set(self.output1.xpath("//xmlns:Reference/xmlns:name/text()", namespaces=self.namespace)), set(["unknown"]))
 
     def test_alert_classification_reference_url_false(self):
-        self.assertEqual(bool(self.output1.xpath("/IDMEF-Message/Alert/Classification[@text='CRISP Report Indicator']/Reference[@meaning='Unspecified', @origin='user-specific']//url/text()")), False)
+        self.assertEqual(set(self.output1.xpath("//xmlns:url/text()", namespaces=self.namespace)), set([" "]))
 
 
 if __name__ == '__main__':
