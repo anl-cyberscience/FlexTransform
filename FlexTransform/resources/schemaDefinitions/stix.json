@@ -279,14 +279,17 @@
 				{ "observable_object_type": "Domain Name" },
 				{ "observable_object_type": "FQDN" }
 			],
+			"URL-Block": [
+				{ "observable_object_type": "URL" }
+			],
 			"IPv4-Address-Block": [
 				{ "observable_object_category": "ipv4-addr", "observable_object_xsitype": "AddressObjectType" }
 			],
 			"IPv6-Address-Block": [
 				{ "observable_object_category": "ipv6-addr", "observable_object_xsitype": "AddressObjectType" }
 			],
-			"URL-Block": [
-				{ "observable_object_type": "URL" }
+			"Email-Address": [
+				{ "observable_object_category": "e-mail", "observable_object_xsitype": "AddressObjectType" }
 			],
 			"Malicious-Email-Block": [ { "observable_object_xsitype": "EmailMessageObjectType" } ],
 			"Malicious-File-IOC": [ 
@@ -399,7 +402,10 @@
 						]
 					},
 					"Malicious E-mail": {
-						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#IndicatorCategoryMaliciousEmailSemanticConcept"
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#IndicatorCategoryMaliciousEmailSemanticConcept",
+						"reverseOntologyMappings": [
+							"http://www.anl.gov/cfm/transform.owl#EmailAddressIndicatorValueSemanticComponent"
+						]
 					},
 					"Host Characteristics": {
 						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#IndicatorCategoryHostCharacteristicsSemanticConcept"
@@ -480,6 +486,13 @@
 						"reverseOntologyMappings": [
 							"http://www.anl.gov/cfm/transform.owl#IPv6AddressIndicatorValueSemanticComponent"
 						]
+					},
+					"e-mail": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#EmailAddressIndicatorTypeSemanticConcept",
+						"reverseOntologyMappings": [
+							"http://www.anl.gov/cfm/transform.owl#EmailAddressIndicatorValueSemanticComponent"
+						]
+
 					}
 				}
 			},
@@ -526,7 +539,8 @@
 						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#AddressObjectSchemaTypeSpecification",
 						"reverseOntologyMappings": [
 							"http://www.anl.gov/cfm/transform.owl#IPv4AddressIndicatorValueSemanticComponent",
-							"http://www.anl.gov/cfm/transform.owl#IPv6AddressIndicatorValueSemanticComponent"
+							"http://www.anl.gov/cfm/transform.owl#IPv6AddressIndicatorValueSemanticComponent",
+							"http://www.anl.gov/cfm/transform.owl#EmailAddressIndicatorValueSemanticComponent"
 						]
 					},
 					"URIObjectType": {
@@ -587,6 +601,9 @@
 					},
 					"ipv6-addr": {
 						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#IPv6AddressIndicatorValueSemanticComponent"
+					},
+					"e-mail": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#EmailAddressIndicatorValueSemanticComponent"
 					}
 				}
 			},

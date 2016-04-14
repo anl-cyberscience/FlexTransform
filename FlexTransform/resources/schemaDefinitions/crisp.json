@@ -88,7 +88,8 @@
 			"Malicious-File-IOC": [	{ "md5hash": "*" }, { "filename": "*"}],
 			"URL-Block": [ { "uri": "*"} ],
 			"Artifact": [ { "source_file_base64_encoded": "*" } ],
-			"FilePath": [ { "filepath": "*" } ]
+			"FilePath": [ { "filepath": "*" } ],
+			"Email-Address": [ {"emailaddress": "*"}]
 		},
 		
 		"fields": {
@@ -107,6 +108,13 @@
 				"required": false,
 				"ontologyMappingType": "simple",
 				"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#IPv4AddressIndicatorValueSemanticComponent"
+			},
+			"emailaddress": {
+				"description": "Malicious Email Address",
+				"datatype": "string",
+				"required": false,
+				"ontologyMappingType": "simple",
+				"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#EmailAddressIndicatorValueSemanticComponent"
 			},
 			"fqdn": {
 				"description": "Fully qualified domain name of indicator",

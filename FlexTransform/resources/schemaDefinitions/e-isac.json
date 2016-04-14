@@ -85,11 +85,12 @@
 		"types": {
 			"IPv4-Address-Block": [ { "ipv4address": "*" } ],
 			"DNS-Hostname-Block": [ { "fqdn": "*" } ],
-			"Malicious-File-IOC": [	{ "md5hash": "*" } ],
-			"Malicious-File-IOC": [ { "filename": "*"} ],
-			"Artifact": [ { "source_file_base64_encoded": "*" } ]
+			"Malicious-File-IOC": [	{ "md5hash": "*" }, { "filename": "*"}],
+			"URL-Block": [ { "uri": "*"} ],
+			"Artifact": [ { "source_file_base64_encoded": "*" } ],
+			"FilePath": [ { "filepath": "*" } ],
+			"Email-Address": [ {"emailaddress": "*"}]
 		},
-		
 		"fields": {
 			"indicator_description": {
 				"description": "Description of indicator",
@@ -106,6 +107,13 @@
 				"required": false,
 				"ontologyMappingType": "simple",
 				"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#IPv4AddressIndicatorValueSemanticComponent"
+			},
+			"emailaddress": {
+				"description": "Malicious Email Address",
+				"datatype": "string",
+				"required": false,
+				"ontologyMappingType": "simple",
+				"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#EmailAddressIndicatorValueSemanticComponent"
 			},
 			"fqdn": {
 				"description": "Fully qualified domain name of indicator",
@@ -176,6 +184,20 @@
 				"datatype": "string",
 				"ontologyMappingType": "simple",
 				"ontologyMapping": "https://cfm.gss.anl.gov/transform.owl#FileNameIndicatorTypeSemanticComponent"
+			},
+			"uri": {
+				"description": "URI of malicious file",
+				"datatype": "string",
+				"required": "false",
+				"ontologyMappingType": "simple",
+				"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#URLIndicatorValueSemanticComponent"
+			},
+			"filepath": {
+				"description": "Path to malicious file",
+				"datatype": "string",
+				"required": "false",
+				"ontologyMappingType": "simple",
+				"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#FilePathIndicatorValueSemanticComponent"
 			}
 		}
 	}
