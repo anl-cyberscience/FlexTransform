@@ -669,7 +669,7 @@ class SchemaParser(object) :
                         fieldDict['ParsedValue'] = pytz.utc.localize(datetime.datetime.utcfromtimestamp(int(value)))
                     else :
                         # This is a very poor hack to force the weird STIX time format from the CISCP reports with timezone as [+-]xx:yy to the standard [+-]xxyy format.
-                        # TODO: Have something in the json config that forces this conversion, and can undo it on write if needed. Possibly use pytz to fix the issue 
+                        # TODO: Have something in the json config that forces this conversion, and can undo it on write if needed. Possibly use pytz to fix the issue
                         match = re.match(r"(.*)([+-]\d\d):(\d\d)$", value)
                         if (match) :
                             value = match.group(1) + match.group(2) + match.group(3)
@@ -1311,7 +1311,7 @@ class SchemaParser(object) :
         if (fieldDict['datatype'] == 'datetime') :
             if ('ParsedValue' in sourceDict) :
                 if (fieldDict['dateTimeFormat'] == 'unixtime') :
-                    NewValue = '%i' % time.mktime(sourceDict['ParsedValue'].timetuple())
+                    NewValue = '%i' % datetime.datetime.timestamp(sourceDict['ParsedValue'])
                 else :
                     NewValue = sourceDict['ParsedValue'].strftime(fieldDict['dateTimeFormat'])
             else :
