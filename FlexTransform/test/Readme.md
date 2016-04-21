@@ -1,12 +1,12 @@
 - [ ] CFM13Alert  
     - [ ] STIX  
-        - [ ] TLP  
-        - [ ] ACS  
+        - [X] TLP
+        - [X] ACS
         - [ ] AIS   
     - [ ] Key/Value Pairs  
 - [ ] STIX  
     - [ ] TLP
-        - [ ] CFM13Alert  
+        - [X] CFM13Alert
         - [ ] Key/Value Pairs  
         - [ ] ACS  
         - [ ] AIS  
