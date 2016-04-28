@@ -3,10 +3,10 @@ import os
 import unittest
 from lxml import etree
 
-from FlexTransform.test.SampleInputs import STIXTLP
+from FlexTransform.test.SampleInputs import CFM13ALERT, CFM13ALERT2
 from FlexTransform import FlexTransform
 
-class TestSTIXTLPToCFM13Alert(unittest.TestCase):
+class TestCFM13AlertToLQMT(unittest.TestCase):
     output1 = None
     namespace = {
         'cybox'         : "http://cybox.mitre.org/cybox-2",
@@ -34,16 +34,15 @@ class TestSTIXTLPToCFM13Alert(unittest.TestCase):
 
         with open(os.path.join(current_dir, '../resources/sampleConfigurations/cfm13.cfg'), 'r') as input_file:
             transform.AddParser('cfm13alert', input_file)
-        with open(os.path.join(current_dir, '../resources/sampleConfigurations/stix_tlp.cfg'), 'r') as input_file:
-            transform.AddParser('stix', input_file)
+        with open(os.path.join(current_dir, '../resources/sampleConfigurations/lqmtools.cfg'), 'r') as input_file:
+            transform.AddParser('lqmtools', input_file)
         output1_object = io.StringIO()
 
-        transform.TransformFile(io.StringIO(STIXTLP), 'stix', 'cfm13alert', targetFileName=output1_object)
+        transform.TransformFile(io.StringIO(CFM13ALERT2), 'cfm13alert', 'lqmtools', targetFileName=output1_object)
         output1_object.seek(0)
         output1_object.readline()
-        cls.output1 = etree.parse(output1_object)
-
         print(output1_object.getvalue())
+
 
     def test_alert_analyzerid(self):
         self.assertEqual(self.output1.xpath("/xmlns:IDMEF-Message/xmlns:Alert/xmlns:Analyzer/@analyzerid", namespaces=self.namespace)[0], "Fake")
@@ -95,7 +94,6 @@ class TestSTIXTLPToCFM13Alert(unittest.TestCase):
 
     def test_alert_classification_reference_url_false(self):
         self.assertEqual(set(self.output1.xpath("//xmlns:url/text()", namespaces=self.namespace)), set([" "]))
-
 
 if __name__ == '__main__':
     unittest.main()

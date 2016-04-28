@@ -276,8 +276,7 @@
 	"IndicatorData": {
 		"types": {
 			"DNS-Hostname-Block": [ 
-				{ "observable_object_type": "Domain Name" },
-				{ "observable_object_type": "FQDN" }
+				{ "observable_object_type": "Domain Name" }
 			],
 			"URL-Block": [
 				{ "observable_object_type": "URL" }

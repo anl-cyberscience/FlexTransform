@@ -42,7 +42,7 @@
 				"description": "The creation date and time of the associated resource.",
 				"valuemap": "handling;marking_structures;createdatetime", 
 				"datatype": "datetime",
-				"dateTimeFormat": "%Y-%m-%dT%H:%M:%SZ",
+				"dateTimeFormat": "%Y-%m-%dT%H:%M:%S%z",
 				"defaultValue": "&now()",
 				"required": "false",
 				"memberof": "handling_markingstructures",
@@ -128,7 +128,7 @@
 				}
 			},
 			"produced_time": {
-				"dateTimeFormat": "%Y-%m-%dT%H:%M:%SZ",
+				"dateTimeFormat": "%Y-%m-%dT%H:%M:%S%z",
 				"required": true,
 				"defaultValue": "&now()"
 			},

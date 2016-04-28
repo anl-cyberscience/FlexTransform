@@ -3,7 +3,7 @@ import os
 import unittest
 from lxml import etree
 
-from FlexTransform.test.SampleInputs  import CFM13ALERT
+from FlexTransform.test.SampleInputs  import CFM13ALERT, STIXACS
 from FlexTransform import FlexTransform
 
 class TestCFM13AlertToSTIXTLP(unittest.TestCase):
@@ -17,9 +17,9 @@ class TestCFM13AlertToSTIXTLP(unittest.TestCase):
         'stix': "http://stix.mitre.org/stix-1",
         'stixCommon': "http://stix.mitre.org/common-1",
         'stixVocabs': "http://stix.mitre.org/default_vocabularies-1",
-        'xsi': "http://www.w3.org/2001/XMLSchema-instance"
+        'xsi': "http://www.w3.org/2001/XMLSchema-instance",
+        'ArtifactObj': "http://cybox.mitre.org/objects#ArtifactObject-2"
     }
-
     @classmethod
     def setUpClass(cls):
         current_dir = os.path.dirname(__file__)
@@ -90,6 +90,96 @@ class TestCFM13AlertToSTIXTLP(unittest.TestCase):
 
     def test_indicator_properties_related_objects_properties_port_protocol_text(self):
         self.assertEqual(self.output1.xpath("/stix:STIX_Package/stix:Indicators/stix:Indicator/indicator:Observable/cybox:Object/cybox:Related_Objects/cybox:Related_Object/cybox:Properties/PortObj:Layer4_Protocol/text()", namespaces=self.namespace)[0], "TCP")
+
+class STIXACSToSTIXTLP(unittest.TestCase):
+    output1 = None
+
+    namespace = {
+        'AddressObj': "http://cybox.mitre.org/objects#AddressObject-2",
+        'cybox': "http://cybox.mitre.org/cybox-2",
+        'indicator': "http://stix.mitre.org/Indicator-2",
+        'marking': "http://data-marking.mitre.org/Marking-1",
+        'PortObj': "http://cybox.mitre.org/objects#PortObject-2",
+        'stix': "http://stix.mitre.org/stix-1",
+        'stixCommon': "http://stix.mitre.org/common-1",
+        'stixVocabs': "http://stix.mitre.org/default_vocabularies-1",
+        'cyboxCommon': "http://cybox.mitre.org/common-2",
+        'xsi': "http://www.w3.org/2001/XMLSchema-instance",
+        'ArtifactObj': "http://cybox.mitre.org/objects#ArtifactObject-2",
+        'DomainNameObj': "http://cybox.mitre.org/objects#DomainNameObject-1"
+    }
+
+    @classmethod
+    def setUpClass(cls):
+        current_dir = os.path.dirname(__file__)
+        transform = FlexTransform.FlexTransform()
+
+        with open(os.path.join(current_dir, '../resources/sampleConfigurations/stix_essa.cfg'), 'r') as input_file:
+            transform.AddParser('stixacs', input_file)
+        with open(os.path.join(current_dir, '../resources/sampleConfigurations/stix_tlp.cfg'), 'r') as input_file:
+            transform.AddParser('stix', input_file)
+        output1_object = io.StringIO()
+
+        transform.TransformFile(io.StringIO(STIXACS), 'stixacs', 'stix', targetFileName=output1_object)
+        cls.output1 = etree.XML(output1_object.getvalue())
+        print(output1_object.getvalue())
+
+    def test_package_title(self):
+        self.assertEqual(self.output1.xpath("/stix:STIX_Package/stix:STIX_Header/stix:Title/text()", namespaces=self.namespace)[0], "ACS-example.pdf")
+
+    def test_package_description(self):
+        self.assertEqual(self.output1.xpath("/stix:STIX_Package/stix:STIX_Header/stix:Description/text()", namespaces=self.namespace)[0], "Redirects to Malicious Websites")
+
+    def test_package_intent_type(self):
+        self.assertEqual(self.output1.xpath("/stix:STIX_Package/stix:STIX_Header/stix:Package_Intent/@xsi:type", namespaces=self.namespace)[0], "stixVocabs:PackageIntentVocab-1.0")
+
+    def test_package_intent_text(self):
+        self.assertEqual(self.output1.xpath("/stix:STIX_Package/stix:STIX_Header/stix:Package_Intent/text()", namespaces=self.namespace)[0], "Indicators")
+
+    def test_controlled_structure_text(self):
+        self.assertEqual(set(self.output1.xpath("//marking:Controlled_Structure/text()", namespaces=self.namespace)), set(["//node()", "//node() | //@*"]))
+
+    def test_tlp_type(self):
+        self.assertEqual(set(self.output1.xpath("//marking:Marking_Structure/@xsi:type", namespaces=self.namespace)), set(["tlpMarking:TLPMarkingStructureType"]))
+
+    def test_tlp_color(self):
+        self.assertEqual(set(self.output1.xpath("//marking:Marking_Structure/@color", namespaces=self.namespace)), set(["AMBER"]))
+
+    def test_information_time_produced_time(self):
+        self.assertEqual(self.output1.xpath("/stix:STIX_Package/stix:STIX_Header/stix:Information_Source/stixCommon:Time/cyboxCommon:Produced_Time/text()", namespaces=self.namespace)[0], "2015-11-25T01:45:05+00:00")
+
+    def test_indicator_timestamps(self):
+        self.assertEqual(set(self.output1.xpath("//stix:Indicator/@timestamp", namespaces=self.namespace)), set(["2015-11-26T00:35:06+00:00"]))
+
+    def test_indicator_types(self):
+        self.assertEqual(set(self.output1.xpath("//stix:Indicator/@xsi:type", namespaces=self.namespace)), set(["indicator:IndicatorType"]))
+
+    def test_indicator_version(self):
+        self.assertEqual(set(self.output1.xpath("//stix:Indicator/@version", namespaces=self.namespace)), set(["2.1.1"]))
+
+    def test_indicator_title(self):
+        self.assertEqual(set(self.output1.xpath("//indicator:Title/text()", namespaces=self.namespace)), set(["Original AAA Report Document"]))
+
+    def test_indicator_type(self):
+        self.assertEqual(set(self.output1.xpath("//indicator:Type[@xsi:type='stixVocabs:IndicatorTypeVocab-1.1']/text()", namespaces=self.namespace)), set(["Domain Watchlist"]))
+
+    def test_indicator_description(self):
+        self.assertEqual(set(self.output1.xpath("//indicator:Description/text()", namespaces=self.namespace)), set(["Sample.pdf", "AAA Report Indicator", "Domain Indicator", "Just Another Indicator"]))
+
+    def test_indicator_properties_xsitype(self):
+        self.assertEqual(set(self.output1.xpath("//indicator:Observable/cybox:Object/cybox:Properties/@xsi:type", namespaces=self.namespace)), set(["DomainNameObj:DomainNameObjectType", "ArtifactObj:ArtifactObjectType"]))
+
+    def test_indicator_properties_type(self):
+        self.assertEqual(set(self.output1.xpath("//indicator:Observable/cybox:Object/cybox:Properties/@type", namespaces=self.namespace)), set(["File", "Domain Name"]))
+
+    def test_indicator_properties_packaging_encoding(self):
+        self.assertEqual(set(self.output1.xpath("//ArtifactObj:Packaging/ArtifactObj:Encoding/@algorithm", namespaces=self.namespace)), set(["Base64"]))
+
+    def test_indicator_properties_rawartifact(self):
+        self.assertEqual(set(self.output1.xpath("//ArtifactObj:Raw_Artifact/text()", namespaces=self.namespace)), set(["FILLINRAWDATAHERE"]))
+
+    def test_indicator_properties_domainnames(self):
+        self.assertEqual(set(self.output1.xpath("//DomainNameObj:Value[@condition='Equals']/text()", namespaces=self.namespace)), set(["goo.gl/peter", "fake.com", "blog.website.net"]))
 
 if __name__ == '__main__':
     unittest.main()

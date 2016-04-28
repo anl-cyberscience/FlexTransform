@@ -1,29 +1,29 @@
-- [ ] CFM13Alert  
-    - [ ] STIX  
+- [ ] to CFM13Alert  
+    - [X] from STIX  
         - [X] TLP
         - [X] ACS
-        - [ ] AIS   
-    - [ ] Key/Value Pairs  
+        - [ ] AIS (N/A at this time)  
+    - [i] Key/Value Pairs  
 - [ ] STIX  
-    - [ ] TLP
-        - [X] CFM13Alert
-        - [ ] Key/Value Pairs  
-        - [ ] ACS  
-        - [ ] AIS  
-    - [ ] ACS  
-        - [ ] CFM13Alert  
-        - [ ] Key/Value Pairs  
-        - [ ] TLP  
-        - [ ] AIS  
-    - [ ] AIS  
-        - [ ] CFM13Alert  
-        - [ ] Key/Value Pairs  
-        - [ ] TLP  
-        - [ ] ACS  
-- [ ] Key/Value Pairs  
-    - [ ] STIX  
-        - [ ] TLP  
-        - [ ] ACS  
-        - [ ] AIS
-    - [ ] CFM13Alert  
-    - [ ] CFM20Alert  
+    - [ ] to TLP
+        - [X] from CFM13Alert
+        - [ ] from Key/Value Pairs  
+        - [X] from ACS  
+        - [ ] from AIS  
+    - [ ] to ACS  
+        - [ ] from CFM13Alert  
+        - [ ] from Key/Value Pairs  
+        - [ ] from TLP  
+        - [ ] from AIS  
+    - [ ] to AIS  
+        - [ ] from CFM13Alert  
+        - [ ] from Key/Value Pairs  
+        - [ ] from TLP  
+        - [ ] from ACS  
+- [ ]to Key/Value Pairs  
+    - [ ]to STIX  
+        - [ ] from TLP  
+        - [ ] from ACS  
+        - [ ] from AIS
+    - [ ] from CFM13Alert  
+    - [ ] from CFM20Alert  
