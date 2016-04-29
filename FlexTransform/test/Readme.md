@@ -2,24 +2,16 @@
     - [X] from STIX  
         - [X] TLP
         - [X] ACS
-        - [ ] AIS (N/A at this time)  
-    - [i] Key/Value Pairs  
+    - [] Key/Value Pairs *IP
 - [ ] STIX  
     - [ ] to TLP
         - [X] from CFM13Alert
-        - [ ] from Key/Value Pairs  
+        - [ ] from Key/Value Pairs  *IP
         - [X] from ACS  
-        - [ ] from AIS  
     - [ ] to ACS  
         - [ ] from CFM13Alert  
         - [ ] from Key/Value Pairs  
         - [ ] from TLP  
-        - [ ] from AIS  
-    - [ ] to AIS  
-        - [ ] from CFM13Alert  
-        - [ ] from Key/Value Pairs  
-        - [ ] from TLP  
-        - [ ] from ACS  
 - [ ]to Key/Value Pairs  
     - [ ]to STIX  
         - [ ] from TLP  
