@@ -9,9 +9,9 @@
         - [ ] from Key/Value Pairs  *IP
         - [X] from ACS  
     - [ ] to ACS  
-        - [ ] from CFM13Alert  
+        - [X] from CFM13Alert  
         - [ ] from Key/Value Pairs  
-        - [ ] from TLP  
+        - [X] from TLP  
 - [ ]to Key/Value Pairs  
     - [ ]to STIX  
         - [ ] from TLP  
