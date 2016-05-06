@@ -3,7 +3,7 @@ import os
 import unittest
 from lxml import etree
 
-from FlexTransform.test.SampleInputs  import CFM13ALERT, STIXACS
+from FlexTransform.test.SampleInputs  import CFM13ALERT, STIXACS,KEYVALUE
 from FlexTransform import FlexTransform
 
 class TestCFM13AlertToSTIXTLP(unittest.TestCase):
@@ -180,6 +180,96 @@ class STIXACSToSTIXTLP(unittest.TestCase):
 
     def test_indicator_properties_domainnames(self):
         self.assertEqual(set(self.output1.xpath("//DomainNameObj:Value[@condition='Equals']/text()", namespaces=self.namespace)), set(["goo.gl/peter", "fake.com", "blog.website.net"]))
+
+class KeyValueToSTIXTLP(unittest.TestCase):
+    output1 = None
+
+    namespace = {
+        'AddressObj': "http://cybox.mitre.org/objects#AddressObject-2",
+        'cybox': "http://cybox.mitre.org/cybox-2",
+        'indicator': "http://stix.mitre.org/Indicator-2",
+        'marking': "http://data-marking.mitre.org/Marking-1",
+        'PortObj': "http://cybox.mitre.org/objects#PortObject-2",
+        'stix': "http://stix.mitre.org/stix-1",
+        'stixCommon': "http://stix.mitre.org/common-1",
+        'stixVocabs': "http://stix.mitre.org/default_vocabularies-1",
+        'cyboxCommon': "http://cybox.mitre.org/common-2",
+        'xsi': "http://www.w3.org/2001/XMLSchema-instance",
+        'ArtifactObj': "http://cybox.mitre.org/objects#ArtifactObject-2",
+        'DomainNameObj': "http://cybox.mitre.org/objects#DomainNameObject-1"
+    }
+
+    @classmethod
+    def setUpClass(cls):
+        current_dir = os.path.dirname(__file__)
+        transform = FlexTransform.FlexTransform()
+
+        with open(os.path.join(current_dir, '../resources/sampleConfigurations/stix_tlp.cfg'), 'r') as input_file:
+            transform.AddParser('stix', input_file)
+        with open(os.path.join(current_dir, '../resources/sampleConfigurations/keyvalue_mbl.cfg'), 'r') as input_file:
+            transform.AddParser('keyvalue', input_file)
+        output1_object = io.StringIO()
+
+        transform.TransformFile(io.StringIO(KEYVALUE), 'keyvalue', 'stix', targetFileName=output1_object)
+        cls.output1 = etree.XML(output1_object.getvalue())
+        print(output1_object.getvalue())
+
+    def test_package_intent_type(self):
+        self.assertEqual(self.output1.xpath("/stix:STIX_Package/stix:STIX_Header/stix:Package_Intent/@xsi:type", namespaces=self.namespace)[0], "stixVocabs:PackageIntentVocab-1.0")
+
+    def test_package_intent_text(self):
+        self.assertEqual(self.output1.xpath("/stix:STIX_Package/stix:STIX_Header/stix:Package_Intent/text()", namespaces=self.namespace)[0], "Indicators")
+
+    def test_controlled_structure_text(self):
+        self.assertEqual(set(self.output1.xpath("//marking:Controlled_Structure/text()", namespaces=self.namespace)), set(["//node() | //@*"]))
+
+    def test_tlp_type(self):
+        self.assertEqual(set(self.output1.xpath("//marking:Marking_Structure/@xsi:type", namespaces=self.namespace)), set(["tlpMarking:TLPMarkingStructureType"]))
+
+    def test_tlp_color(self):
+        self.assertEqual(set(self.output1.xpath("//marking:Marking_Structure/@color", namespaces=self.namespace)), set(["GREEN"]))
+
+    def test_indicator_types(self):
+        self.assertEqual(set(self.output1.xpath("//stix:Indicator/@xsi:type", namespaces=self.namespace)), set(["indicator:IndicatorType"]))
+
+    def test_indicator_version(self):
+        self.assertEqual(set(self.output1.xpath("//stix:Indicator/@version", namespaces=self.namespace)), set(["2.1.1"]))
+
+    def test_indicator_type(self):
+        self.assertEqual(set(self.output1.xpath("//indicator:Type[@xsi:type='stixVocabs:IndicatorTypeVocab-1.1']/text()", namespaces=self.namespace)), set(["Domain Watchlist", "IP Watchlist"]))
+
+    def test_indicator_description(self):
+        self.assertEqual(set(self.output1.xpath("//indicator:Description/text()", namespaces=self.namespace)), set(['Attacker scanning for RDP, direction:ingress, confidence:0, severity:high', 'Malicious domain, direction:egress, confidence:0, severity:high', 'HTTP Response code 4xx, suspicious, direction:ingress, confidence:0, severity:low', 'Attacker scanning for SSH, direction:ingress, confidence:0, severity:high']))
+
+    def def_indicator_observable_keywords(self):
+        self.assertEqual(set(self.output1.xpath("//cybox:Keyword/text()", namespaces=self.namespace)), set(['Reconnaissance', 'Scanning', 'Malware Traffic']))
+
+    def test_indicator_properties_type(self):
+        self.assertEqual(set(self.output1.xpath("//indicator:Observable/cybox:Object/cybox:Properties/@type", namespaces=self.namespace)), set(["FQDN"]))
+
+    def test_indicator_properties_category(self):
+        self.assertEqual(set(self.output1.xpath("//indicator:Observable/cybox:Object/cybox:Properties/@category", namespaces=self.namespace)), set(["ipv4-addr", "ipv6-addr"]))
+
+    def test_indicator_properties_domainname(self):
+        self.assertEqual(set(self.output1.xpath("//DomainNameObj:Value/text()", namespaces=self.namespace)), set(["bad.domain"]))
+
+    def test_indicator_properties_address(self):
+        self.assertEqual(set(self.output1.xpath("//AddressObj:Address_Value/text()", namespaces=self.namespace)), set(["10.11.12.13", "10.11.12.14", "2001:db8:16::1"]))
+
+    def test_indicator_properties_port_value(self):
+        self.assertEqual(set(self.output1.xpath("//PortObj:Port_Value/text()", namespaces=self.namespace)), set(["3389", "22"]))
+
+    def test_indicator_properties_port_protocol(self):
+        self.assertEqual(set(self.output1.xpath("//PortObj:Layer4_Protocol/text()", namespaces=self.namespace)), set(["TCP"]))
+
+    def test_indicator_relatedobject_relationship(self):
+        self.assertEqual(set(self.output1.xpath("//cybox:Relationship/text()", namespaces=self.namespace)), set(["Connected_To"]))
+
+    def test_indicator_sightings(self):
+        self.assertEqual(set(self.output1.xpath("//indicator:Sighting/@timestamp", namespaces=self.namespace)), set(["2012-01-01T07:00:00"]))
+
+    def test_indicator_sighting_precision(self):
+        self.assertEqual(set(self.output1.xpath("//indicator:Sighting/@timestamp_precision", namespaces=self.namespace)), set(["second"]))
 
 if __name__ == '__main__':
     unittest.main()

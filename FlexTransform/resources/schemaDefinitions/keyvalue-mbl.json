@@ -1,9 +1,9 @@
 {
 	"IndicatorData": {
 		"types": {
-			"IPv4-Address-Block": [ { "ipv4": "*", "ipv6": "" } ],
-			"IPv6-Address-Block": [ { "ipv6": "*", "ipv4": "" } ],
-			"DNS-Hostname-Block": [ { "fqdn": "*", "ipv4": "", "ipv6": "" } ]
+			"IPv4-Address-Block": [ { "ipv4": "*"},{ "ipv6": "" } ],
+			"IPv6-Address-Block": [ { "ipv6": "*"},{ "ipv4": "" } ],
+			"DNS-Hostname-Block": [ { "fqdn": "*"},{"ipv4": ""},{ "ipv6": "" } ]
 		},
 		"fields": {
 			"timestamp": {
