@@ -23,6 +23,7 @@ class FlexTransform(object):
         '''
         self.Parsers = {}
         self.logging = logging.getLogger('FlexTransform')
+        self.oracle = None
         
     def AddParser(self, parserName, configFile) :
         '''
@@ -36,6 +37,14 @@ class FlexTransform(object):
         
         if (parserConfig) :
             self.Parsers[parserName] = parserConfig
+            
+    def AddOracle(self, tbox_loc, schema_IRI):
+        '''
+        Add oracle to the FlexTransform object"
+        '''
+        
+        #TODO add error checking for locations
+        self.oracle = Oracle(tbox_loc, rdflib.URIRef(schema_IRI))
         
     def TransformFile(self, sourceFileName, sourceParserName, targetParserName, targetFileName=None, sourceMetaData=None, oracle=None):
         '''
@@ -63,6 +72,9 @@ class FlexTransform(object):
         
         if (sourceMetaData is not None and not isinstance(sourceMetaData,dict)) :
             raise Exception('IncorrectFormat', 'sourceMetaData must be in dictionary format')
+        
+        if self.oracle:
+            oracle = self.oracle
         
         # Parse and validate configurations
         SourceConfig = self.Parsers[sourceParserName]

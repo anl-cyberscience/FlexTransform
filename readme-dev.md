@@ -442,11 +442,13 @@ Sample 12 : reverseOntologyMapping
 
 
 ## Code flow diagram - Direct vs Ontology Mapping
-<figure>
+
+<figure>
 <a href="FlexTransform/resources/images/figure2.png">
 <img src = "FlexTransform/resources/images/figure2.png" />
 </a>
 <figcaption>
 Figure 2 - Code flow diagram
 </figcaption>
-</figure>
+</figure>
+
