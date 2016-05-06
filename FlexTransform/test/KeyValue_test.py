@@ -23,7 +23,7 @@ class KeyValueTests(unittest.TestCase):
         Cfm13AlertConfig = open(os.path.join(currentdir,'../resources/sampleConfigurations/cfm13.cfg'), 'r')
         self.Transform.AddParser('Cfm13Alert', Cfm13AlertConfig)
         
-        KeyValueConfig = open(os.path.join(currentdir,'../resources/sampleConfigurations/keyvalue_mbl.cfg'), 'r')
+        KeyValueConfig = open(os.path.join(currentdir,'../resources/sampleConfigurations/keyvalue.cfg'), 'r')
         self.Transform.AddParser('KeyValue', KeyValueConfig)
         
         self.KeyValueData = KeyValueData()

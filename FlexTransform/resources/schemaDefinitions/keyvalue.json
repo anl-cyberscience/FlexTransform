@@ -1,0 +1,226 @@
+{
+	"IndicatorData": {
+		"types": {
+			"IPv4-Address-Block": [ { "ipv4": "*"}],
+			"IPv6-Address-Block": [ { "ipv6": "*" } ],
+			"DNS-Hostname-Block": [ { "fqdn": "*"}]
+		},
+		"fields": {
+			"timestamp": {
+				"description": "The timestamp when the block occured",
+				"datatype": "datetime",
+				"dateTimeFormat": "unixtime",
+				"required": true,
+				"ontologyMappingType": "simple",
+				"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#TimeOfDetectionSemanticConcept"
+			},
+			"ipv4": {
+				"description": "IPv4 address of indicator",
+				"datatype": "ipv4",
+				"required": false,
+				"ontologyMappingType": "simple",
+				"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#IPv4AddressIndicatorValueSemanticComponent"
+			},
+			"ipv6": {
+				"description": "IPv6 address of indicator",
+				"datatype": "ipv6",
+				"required": false,
+				"ontologyMappingType": "simple",
+				"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#IPv6AddressIndicatorValueSemanticComponent"
+			},
+			"fqdn": {
+				"description": "Fully qualified domain name of indicator",
+				"datatype": "string",
+				"required": false,
+				"ontologyMappingType": "simple",
+				"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#DNSIndicatorValueSemanticComponent"
+			},
+			"direction": {
+				"description": "Direction of traffic flow",
+				"datatype": "enum",
+				"required": true,
+				"ontologyMappingType": "enum",
+				"enumValues": {
+					"ingress": {
+						"ontologyMapping": ""
+					},
+					"egress": {
+						"ontologyMapping": ""
+					},
+					"bidirectional": {
+						"ontologyMapping": ""
+					}
+				}
+			},
+			"comment": {
+				"description": "Description of indicator",
+				"datatype": "string",
+				"required": true,
+				"ontologyMappingType": "simple",
+				"ontologyMapping": ""
+			},
+			"confidence": {
+				"description": "Confidence that the indicator is not a false positive",
+				"datatype": "int",
+				"dataRange": "0-100",
+				"required": true,
+				"defaultValue": "0",
+				"ontologyMappingType": "simple",
+				"ontologyMapping": ""
+			},
+			"severity": {
+				"description": "Severity of impact if detected indicator had been successful",
+				"datatype": "enum",
+				"required": true,
+				"defaultValue": "very-low",
+				"ontologyMappingType": "enum",
+				"enumValues": {
+					"very-low": {
+						"ontologyMapping": ""
+					},
+					"low": {
+						"ontologyMapping": ""
+					},
+					"medium": {
+						"ontologyMapping": ""
+					},
+					"high": {
+						"ontologyMapping": ""
+					},
+					"very-high": {
+						"ontologyMapping": ""
+					}
+				}
+			},
+			"combined_comment": {
+				"description": "Combination of comment, confidence and severity into single value, used for mapping to CFM 1.3 schema and others with no confidence or severity concepts",
+				"datatype": "string",
+				"required": true,
+				"fields": [ "comment", "direction", "confidence", "severity" ],
+				"outputFormat": "[comment], direction:[direction], confidence:[confidence], severity:[severity]",
+				"ontologyMappingType": "simple",
+				"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#IndicatorDescriptionSemanticConcept"
+			},
+			"category": {
+				"description": "The category for the alert",
+				"datatype": "enum",
+				"required": true,
+				"ontologyMappingType": "enum",
+				"enumValues": {
+					"DoS": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#DOSAlertBehaviorCharacterizationSemanticComponent"
+					},
+					"Scanning": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#ScanningAlertBehaviorCharacterizationSemanticComponent"
+					},
+					"Reconnaissance": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#ReconnaissanceAlertBehaviorCharacterizationSemanticComponent"
+					},
+					"Botnet": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#BotnetAlertBehaviorCharacterizationSemanticComponent"
+					},
+					"Malware Traffic": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#MalwareTrafficAlertBehaviorCharacterizationSemanticComponent"
+					},
+					"Exploit": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#ExploitAlertBehaviorCharacterizationSemanticComponent"
+					},
+					"Spam": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#SpamAlertBehaviorCharacterizationSemanticComponent"
+					},
+					"Phishing": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#PhishingAlertBehaviorCharacterizationSemanticComponent"
+					},
+					"Unauthorized Use": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#UnauthorizedUseAlertBehaviorCharacterizationSemanticComponent"
+					},
+					"Known Bad Actor": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#KnownBadActorAlertBehaviorCharacterizationSemanticComponent"
+					},
+					"Revocation": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#RevocationAlertBehaviorCharacterizationSemanticComponent"
+					},
+					"Unspecified": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#UnspecifiedAlertBehaviorCharacterizationSemanticComponent"
+					}
+				}
+			},
+			"category_description": {
+				"description": "A more detailed description for the category",
+				"datatype": "string",
+				"required": false,
+				"ontologyMappingType": "simple",
+				"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#AlertReferenceNameSemanticComponent"
+			},
+			"category_name": {
+				"description": "The category for the alert, used for mapping to CFM 1.3 schema",
+				"datatype": "string",
+				"requiredIfReferenceField": "category_description",
+				"requiredIfReferenceValues": [ "" ],
+				"fields": [ "category" ],
+				"outputFormat": "[category]",
+				"ontologyMappingType": "simple",
+				"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#AlertReferenceNameSemanticComponent"
+			},
+			"service": {
+				"description": "The target port and protocol of the attack",
+				"datatype": "string",
+				"required": false,
+				"ontologyMappingType": "none",
+				"regexSplit": "^(?:((?:\\d+[,-])+\\d+)|(\\d+))/([a-zA-Z]+)$",
+				"regexFields": "service_portlist, service_port, service_protocol"
+			},
+			"service_portlist": {
+				"description": "The list of target ports for the alert, can be comma seperated or use a - for a range",
+				"datatype": "string",
+				"required": false,
+				"ontologyMappingType": "simple",
+				"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#DestinationPortListIndicatorValueSemanticComponent"
+			},
+			"service_port": {
+				"description": "The target port for the alert",
+				"datatype": "int",
+				"dataRange": "0-65535",
+				"required": false,
+				"ontologyMappingType": "simple",
+				"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#DestinationPortNumberIndicatorValueSemanticComponent"
+			},
+			"service_protocol": {
+				"description": "The target protocol for the alert",
+				"datatype": "string",
+				"required": false,
+				"ontologyMappingType": "simple",
+				"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#ProtocolIndicatorValueSemanticComponent"
+			},
+			"cc": {
+				"description": "The country code for the DNS domain or IPv4 address",
+				"datatype": "string",
+				"required": false,
+				"ontologyMappingType": "simple",
+				"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#CountryCodeRemoteHostResourceLocationSpecification"
+			},
+			"country": {
+				"description": "The full country name for the DNS domain or IPv4 address",
+				"datatype": "string",
+				"required": false,
+				"ontologyMappingType": "simple",
+				"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#CountryNameRemoteHostResourceLocationSpecification"
+			},
+			"prior_offenses": {
+				"description": "Number of prior times an indicator has been alerted on",
+				"datatype": "int",
+				"defaultValue": "0",
+				"required": false,
+				"ontologyMappingType": "simple",
+				"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#PriorIndicatorReportsSemanticConcept"
+			},
+			"duration": {
+				"description": "Length of time in seconds the assessment_action should stay in effect",
+				"datatype": "int",
+				"required": false,
+				"ontologyMappingType": "simple",
+				"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#ActionDurationSemanticConcept"
+			}
+		}
+	}
+}

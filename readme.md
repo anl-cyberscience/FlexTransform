@@ -13,7 +13,7 @@ $ pip install FlexTransform
 Currently, FlexT supports Command-Line access as well as functioning as a Python Library, while future development will add a RESTful API with a local web server.   
 ### Command Line
 ```
-$ /home/cfm/FlexT/FlexTransform/FlexTransform.py --src inputFile.txt --src-config srcConfig.cfg --dst outputFile.xml --dst-config dstConfig.cfg
+$ FlexT --src inputFile.txt --src-config srcConfig.cfg --dst outputFile.xml --dst-config dstConfig.cfg
 ```
 + Required arguments 
     + src: Source file

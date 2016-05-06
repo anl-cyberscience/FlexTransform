@@ -615,7 +615,7 @@ class SchemaParser(object) :
         if (bestMatch is not None) :
             newDict["IndicatorType"] = bestMatch
         else :
-            raise Exception ("NoMatchingIndicatorType", "This indicator data row does not match any defined indicator types")
+            raise Exception ("NoMatchingIndicatorType", 'This "{}" indicator data row does not match any defined indicator types'.format(key))
 
     def _ValidateField(self, fieldDict, fieldName, rowType) :
         '''
@@ -677,6 +677,11 @@ class SchemaParser(object) :
                         if (match) :
                             value = match.group(1) + match.group(2)
                         fieldDict['ParsedValue'] = datetime.datetime.strptime(value, fieldDict['dateTimeFormat'])
+                        
+                        # TODO: replace this
+                        if fieldDict['ParsedValue'].tzinfo is None:
+                            fieldDict['ParsedValue'] = fieldDict['ParsedValue'].replace(tzinfo=pytz.UTC)
+                        print(fieldDict['ParsedValue'].tzinfo)
                 except Exception as inst :
                     self.logging.error(inst)
                     raise Exception('DataTypeInvalid', 'Value for field ' + fieldName + ' is not a valid date time value: ' + value)

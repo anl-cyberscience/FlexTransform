@@ -217,7 +217,7 @@ class TestKeyValueToCFM13Alert(unittest.TestCase):
 
         with open(os.path.join(current_dir, '../resources/sampleConfigurations/cfm13.cfg'), 'r') as input_file:
             transform.AddParser('cfm13alert', input_file)
-        with open(os.path.join(current_dir, '../resources/sampleConfigurations/keyvalue_mbl.cfg'), 'r') as input_file:
+        with open(os.path.join(current_dir, '../resources/sampleConfigurations/keyvalue.cfg'), 'r') as input_file:
             transform.AddParser('keyvalue', input_file)
         output1_object = io.StringIO()
 

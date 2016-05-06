@@ -206,7 +206,7 @@ class KeyValueToSTIXTLP(unittest.TestCase):
 
         with open(os.path.join(current_dir, '../resources/sampleConfigurations/stix_tlp.cfg'), 'r') as input_file:
             transform.AddParser('stix', input_file)
-        with open(os.path.join(current_dir, '../resources/sampleConfigurations/keyvalue_mbl.cfg'), 'r') as input_file:
+        with open(os.path.join(current_dir, '../resources/sampleConfigurations/keyvalue.cfg'), 'r') as input_file:
             transform.AddParser('keyvalue', input_file)
         output1_object = io.StringIO()
 
