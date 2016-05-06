@@ -3,7 +3,7 @@ import os
 import unittest
 from lxml import etree
 
-from FlexTransform.test.SampleInputs import STIXTLP, STIXACS, LQMTOOLS
+from FlexTransform.test.SampleInputs import STIXTLP, STIXACS, KEYVALUE
 from FlexTransform import FlexTransform
 
 class TestSTIXTLPToCFM13Alert(unittest.TestCase):
@@ -189,7 +189,7 @@ class TestSTIXACSToCFM13Alert(unittest.TestCase):
     def test_alert_classification_reference_url_false(self):
         self.assertEqual(set(self.output1.xpath("//xmlns:url/text()", namespaces=self.namespace)), set([" "]))
 
-class TestLQMTToCFM13Alert(unittest.TestCase):
+class TestKeyValueToCFM13Alert(unittest.TestCase):
     output1 = None
     namespace = {
         'cybox'         : "http://cybox.mitre.org/cybox-2",
@@ -217,16 +217,16 @@ class TestLQMTToCFM13Alert(unittest.TestCase):
 
         with open(os.path.join(current_dir, '../resources/sampleConfigurations/cfm13.cfg'), 'r') as input_file:
             transform.AddParser('cfm13alert', input_file)
-        with open(os.path.join(current_dir, '../resources/sampleConfigurations/lqmtools.cfg'), 'r') as input_file:
-            transform.AddParser('lqmt', input_file)
+        with open(os.path.join(current_dir, '../resources/sampleConfigurations/keyvalue_mbl.cfg'), 'r') as input_file:
+            transform.AddParser('keyvalue', input_file)
         output1_object = io.StringIO()
 
-        transform.TransformFile(io.StringIO(LQMTOOLS), 'lqmt', 'cfm13alert', targetFileName=output1_object)
+        transform.TransformFile(io.StringIO(KEYVALUE), 'keyvalue', 'cfm13alert', targetFileName=output1_object)
         output1_object.seek(0)
         output1_object.readline()
         cls.output1 = etree.parse(output1_object)
-
         print(output1_object.getvalue())
+
 
     def test_alert_analyzerid(self):
         self.assertEqual(self.output1.xpath("/xmlns:IDMEF-Message/xmlns:Alert/xmlns:Analyzer/@analyzerid", namespaces=self.namespace)[0], "TEST")
@@ -236,9 +236,6 @@ class TestLQMTToCFM13Alert(unittest.TestCase):
 
     def test_alert_analyzer_node_name(self):
         self.assertEqual(self.output1.xpath("/xmlns:IDMEF-Message/xmlns:Alert/xmlns:Analyzer/xmlns:Node/xmlns:name/text()", namespaces=self.namespace)[0], "Test User, 555-555-1212, test@test.int")
-
-    def test_alert_analyzer_time(self):
-        self.assertEqual(self.output1.xpath("/xmlns:IDMEF-Message/xmlns:Alert/xmlns:AnalyzerTime/text()", namespaces=self.namespace)[0], "2015-11-25T01:45:05+0000")
 
     def test_alert_AD_number_alerts(self):
         self.assertEqual(self.output1.xpath("/xmlns:IDMEF-Message/xmlns:Alert/xmlns:AdditionalData[@meaning='number of alerts in this report']/text()", namespaces=self.namespace)[0], "3")
@@ -250,10 +247,10 @@ class TestLQMTToCFM13Alert(unittest.TestCase):
         self.assertEqual(self.output1.xpath("/xmlns:IDMEF-Message/xmlns:Alert/xmlns:AdditionalData[@meaning='report type']/text()", namespaces=self.namespace)[0], "alerts")
 
     def test_alert_AD_start_time(self):
-        self.assertEqual(self.output1.xpath("/xmlns:IDMEF-Message/xmlns:Alert/xmlns:AdditionalData[@meaning='report start time']/text()", namespaces=self.namespace)[0], "2015-11-25T01:45:05+0000")
+        self.assertEqual(self.output1.xpath("/xmlns:IDMEF-Message/xmlns:Alert/xmlns:AdditionalData[@meaning='report start time']/text()", namespaces=self.namespace)[0], "2012-01-01T07:00:00+0000")
 
     def test_source_node_name_dns(self):
-        self.assertEqual(set(self.output1.xpath("//xmlns:Node[@category='dns']/xmlns:name/text()", namespaces=self.namespace)), set(["blog.website.net", "fake.com", "goo.gl/peter"]))
+        self.assertEqual(set(self.output1.xpath("//xmlns:Node[@category='dns']/xmlns:name/text()", namespaces=self.namespace)), set(['bad.domain','bad.scanning.dom']))
 
     def test_alert_AD_OUO(self):
         self.assertEqual(set(self.output1.xpath("//xmlns:AdditionalData[@meaning='OUO']/text()", namespaces=self.namespace)), set(['0']))
@@ -274,13 +271,13 @@ class TestLQMTToCFM13Alert(unittest.TestCase):
         self.assertEqual(set(self.output1.xpath("//xmlns:Classification/@text", namespaces=self.namespace)), set(["Domain Block: AAA Report Indicator", "Domain Block: Domain Indicator", "Domain Block: Just Another Indicator",]))
 
     def test_alert_classification_reference_meaning(self):
-        self.assertEqual(set(self.output1.xpath("//xmlns:Reference/@meaning", namespaces=self.namespace)), set(["Unspecified"]))
+        self.assertEqual(set(self.output1.xpath("//xmlns:Reference/@meaning", namespaces=self.namespace)), set(["Scanning", "Malware Traffic"]))
 
     def test_alert_classification_reference_origin(self):
         self.assertEqual(set(self.output1.xpath("//xmlns:Reference/@origin", namespaces=self.namespace)), set(["unknown"]))
 
     def test_alert_classification_reference_name(self):
-        self.assertEqual(set(self.output1.xpath("//xmlns:Reference/xmlns:name/text()", namespaces=self.namespace)), set(["unknown"]))
+        self.assertEqual(set(self.output1.xpath("//xmlns:Reference/xmlns:name/text()", namespaces=self.namespace)), set(["Scanning", "Malware Traffic"]))
 
     def test_alert_classification_reference_url_false(self):
         self.assertEqual(set(self.output1.xpath("//xmlns:url/text()", namespaces=self.namespace)), set([" "]))
