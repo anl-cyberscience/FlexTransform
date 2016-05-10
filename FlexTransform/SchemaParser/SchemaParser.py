@@ -681,7 +681,6 @@ class SchemaParser(object) :
                         # TODO: replace this
                         if fieldDict['ParsedValue'].tzinfo is None:
                             fieldDict['ParsedValue'] = fieldDict['ParsedValue'].replace(tzinfo=pytz.UTC)
-                        print(fieldDict['ParsedValue'].tzinfo)
                 except Exception as inst :
                     self.logging.error(inst)
                     raise Exception('DataTypeInvalid', 'Value for field ' + fieldName + ' is not a valid date time value: ' + value)
