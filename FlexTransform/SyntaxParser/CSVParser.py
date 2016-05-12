@@ -152,5 +152,3 @@ class CSVParser(object):
 
         writer.writerows(FinalizedData)
         
-        file.close()
-        

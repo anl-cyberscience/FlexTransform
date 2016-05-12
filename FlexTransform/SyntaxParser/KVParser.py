@@ -6,6 +6,7 @@ Created on Oct 15, 2014
 
 import re
 import logging
+import os
 
 class KVParser(object):
     '''
@@ -67,3 +68,59 @@ class KVParser(object):
                 self.logging.warning("Line could not be parsed: %s", line)
             
         return self.ParsedData
+
+    def Finalize(self, MappedData):
+        '''
+        Finalize the formatting of the data before being returned to the caller
+        '''
+
+        if ('IndicatorData' not in MappedData or MappedData['IndicatorData'].__len__() == 0) :
+            raise Exception('NoIndicatorData', 'Transformed data has no indicators, nothing to write')
+
+        FinalizedData = []
+        for row in MappedData['IndicatorData'] :
+
+            indicatorRow = []
+            # Keep passing the IndicatorType forward with the data. This is somewhat messy, but that way we can use it on write
+            # DataRow['IndicatorType'] = indicator['IndicatorType']
+
+            for field in row:
+                DataRow = {}
+                if ('Value' in row[field]) :
+                    if 'datatype' in row[field]:
+                        if (row[field]['datatype'] == 'enum' or row[field]['datatype'] == 'string'):
+                            DataRow[field] = self.QuoteChar.strip("[]") + row[field]['Value'] + self.QuoteChar.strip("[]")
+                        else:
+                            DataRow[field] = row[field]['Value']
+                    else:
+                        DataRow[field] = row[field]['Value']
+                    indicatorRow.append(DataRow)
+                else :
+                    self.logging.warning("Field %s does not contain a Value entry", field)
+
+            FinalizedData.append(indicatorRow)
+        return FinalizedData
+
+    def Write(self, file, FinalizedData):
+        '''
+        Write the data as csv to the file.
+        '''
+        if isinstance(file, str):
+            if os.path.exists(file):
+                file = open(file, "w")
+            else:
+                self.logging.error("%s is not a valid filepath", file)
+
+        if self.SeparatorChar == r"\s":
+            separator = " "
+        else:
+            separator = self.SeparatorChar
+
+        toWrite = ""
+        for indicator in FinalizedData:
+            for row in indicator:
+                for key, value in row.items():
+                    if value:
+                        toWrite += key + self.KVSeparator.strip("[]") + value + separator
+            toWrite += '\n'
+            file.write(toWrite)
