@@ -1,31 +1,12 @@
 import io
 import os
 import unittest
-from lxml import etree
 
 from FlexTransform.test.SampleInputs import STIXTLP, STIXACS, CFM13ALERT
 from FlexTransform import FlexTransform
 
 class TestCFM13AlertToKeyValue(unittest.TestCase):
     output1 = None
-    namespace = {
-        'cybox'         : "http://cybox.mitre.org/cybox-2",
-        'indicator'     : "http://stix.mitre.org/Indicator-2",
-        'marking'       : "http://data-marking.mitre.org/Marking-1",
-        'PortObj'       : "http://cybox.mitre.org/objects#PortObject-2",
-        'stix'          : "http://stix.mitre.org/stix-1",
-        'stixCommon'    : "http://stix.mitre.org/common-1",
-        'stixVocabs'    : "http://stix.mitre.org/default_vocabularies-1",
-        'xsi'           : "http://www.w3.org/2001/XMLSchema-instance",
-        'cyboxVocabs'   : "http://cybox.mitre.org/default_vocabularies-2",
-	    'AddressObj'    : "http://cybox.mitre.org/objects#AddressObject-2",
-	    'ArtifactObj'   : "http://cybox.mitre.org/objects#ArtifactObject-2",
-	    'FileObj'       : "http://cybox.mitre.org/objects#FileObject-2",
-	    'URIObj'        : "http://cybox.mitre.org/objects#URIObject-2",
-	    'tlpMarking'    : "http://data-marking.mitre.org/extensions/MarkingStructure#TLP-1",
-	    'CFM'           : "http://www.anl.gov/cfm/stix",
-        'xmlns'         : "http://www.anl.gov/cfm/1.3/IDMEF-Message"
-    }
 
     @classmethod
     def setUpClass(cls):
@@ -39,62 +20,147 @@ class TestCFM13AlertToKeyValue(unittest.TestCase):
         output1_object = io.StringIO()
 
         transform.TransformFile(io.StringIO(CFM13ALERT), 'cfm13alert', 'keyvalue', targetFileName=output1_object)
-        print(output1_object.getvalue())
+        cls.output1 = []
+        output1_object.seek(0)
+        for line in output1_object.read().splitlines():
+            cls.output1.append(line.split('&'))
 
+    def test_duration(self):
+        self.assertIn('duration=86400', self.output1[0])
 
-    def test_alert_analyzerid(self):
-        self.assertEqual(self.output1.xpath("/xmlns:IDMEF-Message/xmlns:Alert/xmlns:Analyzer/@analyzerid", namespaces=self.namespace)[0], "TEST")
+    def test_serviceport(self):
+        self.assertIn('service_port=22', self.output1[0])
 
-    def test_alert_analyzer_node_location(self):
-        self.assertEqual(self.output1.xpath("/xmlns:IDMEF-Message/xmlns:Alert/xmlns:Analyzer/xmlns:Node/xmlns:location/text()", namespaces=self.namespace)[0], "TEST")
+    def test_category_name(self):
+        self.assertIn("category_name='SSH Attack'", self.output1[0])
 
-    def test_alert_analyzer_node_name(self):
-        self.assertEqual(self.output1.xpath("/xmlns:IDMEF-Message/xmlns:Alert/xmlns:Analyzer/xmlns:Node/xmlns:name/text()", namespaces=self.namespace)[0], "Test User, 555-555-1212, test@test.int")
+    def test_category(self):
+        self.assertIn("category='Scanning'", self.output1[0])
 
-    def test_alert_AD_number_alerts(self):
-        self.assertEqual(self.output1.xpath("/xmlns:IDMEF-Message/xmlns:Alert/xmlns:AdditionalData[@meaning='number of alerts in this report']/text()", namespaces=self.namespace)[0], "3")
+    def test_severity(self):
+        self.assertIn("severity='very-low'", self.output1[0])
 
-    def test_alert_AD_report_schedule(self):
-        self.assertEqual(self.output1.xpath("/xmlns:IDMEF-Message/xmlns:Alert/xmlns:AdditionalData[@meaning='report schedule']/text()", namespaces=self.namespace)[0], "NoValue")
+    def test_prior_offenses(self):
+        self.assertIn('prior_offenses=11', self.output1[0])
 
-    def test_alert_AD_report_type(self):
-        self.assertEqual(self.output1.xpath("/xmlns:IDMEF-Message/xmlns:Alert/xmlns:AdditionalData[@meaning='report type']/text()", namespaces=self.namespace)[0], "alerts")
+    def test_category_description(self):
+        self.assertIn("category_description='SSH Attack'", self.output1[0])
 
-    def test_alert_AD_start_time(self):
-        self.assertEqual(self.output1.xpath("/xmlns:IDMEF-Message/xmlns:Alert/xmlns:AdditionalData[@meaning='report start time']/text()", namespaces=self.namespace)[0], "2012-01-01T07:00:00+0000")
+    def test_serviceprotocol(self):
+        self.assertIn("service_protocol='TCP'", self.output1[0])
 
-    def test_source_node_name_dns(self):
-        self.assertEqual(set(self.output1.xpath("//xmlns:Node[@category='dns']/xmlns:name/text()", namespaces=self.namespace)), set(['bad.domain','bad.scanning.dom']))
+    def test_comment(self):
+        self.assertIn("comment='SSH scans against multiple hosts, direction:ingress, confidence:87, severity:high'", self.output1[0])
 
-    def test_alert_AD_OUO(self):
-        self.assertEqual(set(self.output1.xpath("//xmlns:AdditionalData[@meaning='OUO']/text()", namespaces=self.namespace)), set(['0']))
+    def test_confidence(self):
+        self.assertIn('confidence=0', self.output1[0])
 
-    def test_alert_AD_restriction(self):
-        self.assertEqual(set(self.output1.xpath("//xmlns:AdditionalData[@meaning='restriction']/text()", namespaces=self.namespace)),set(['public']))
+    def test_direction(self):
+        self.assertIn("direction='ingress'", self.output1[0])
 
-    def test_alert_AD_duration(self):
-        self.assertEqual(set(self.output1.xpath("//xmlns:AdditionalData[@meaning='duration']/text()", namespaces=self.namespace)), set(['0']))
+    def test_ipv4(self):
+        self.assertIn('ipv4=10.10.10.10', self.output1[0])
 
-    def test_alert_AD_recon(self):
-        self.assertEqual(set(self.output1.xpath("//xmlns:AdditionalData[@meaning='recon']/text()", namespaces=self.namespace)), set(['0']))
+    def test_combined_comment(self):
+        self.assertIn("combined_comment='SSH scans against multiple hosts, direction:ingress, confidence:87, severity:high'", self.output1[0])
 
-    def test_alert_assessment_action(self):
-        self.assertEqual(set(self.output1.xpath("//xmlns:Action/@category", namespaces=self.namespace)), set(["block-installed"]))
+class TestSTIXTLPToKeyValue(unittest.TestCase):
+    output1 = None
 
-    def test_alert_classification_reference_name(self):
-        self.assertEqual(set(self.output1.xpath("//xmlns:Classification/@text", namespaces=self.namespace)), set(["Domain Block: AAA Report Indicator", "Domain Block: Domain Indicator", "Domain Block: Just Another Indicator",]))
+    @classmethod
+    def setUpClass(cls):
+        current_dir = os.path.dirname(__file__)
+        transform = FlexTransform.FlexTransform()
 
-    def test_alert_classification_reference_meaning(self):
-        self.assertEqual(set(self.output1.xpath("//xmlns:Reference/@meaning", namespaces=self.namespace)), set(["Scanning", "Malware Traffic"]))
+        with open(os.path.join(current_dir, '../resources/sampleConfigurations/stix_tlp.cfg'), 'r') as input_file:
+            transform.AddParser('stixtlp', input_file)
+        with open(os.path.join(current_dir, '../resources/sampleConfigurations/keyvalue.cfg'), 'r') as input_file:
+            transform.AddParser('keyvalue', input_file)
+        output1_object = io.StringIO()
 
-    def test_alert_classification_reference_origin(self):
-        self.assertEqual(set(self.output1.xpath("//xmlns:Reference/@origin", namespaces=self.namespace)), set(["unknown"]))
+        transform.TransformFile(io.StringIO(STIXTLP), 'stixtlp', 'keyvalue', targetFileName=output1_object)
+        cls.output1 = []
+        output1_object.seek(0)
+        for line in output1_object.read().splitlines():
+            cls.output1 += line.split('&')
 
-    def test_alert_classification_reference_name(self):
-        self.assertEqual(set(self.output1.xpath("//xmlns:Reference/xmlns:name/text()", namespaces=self.namespace)), set(["Scanning", "Malware Traffic"]))
+    def test_category(self):
+        self.assertIs(5, self.output1.count("category='Unspecified'"))
 
-    def test_alert_classification_reference_url_false(self):
-        self.assertEqual(set(self.output1.xpath("//xmlns:url/text()", namespaces=self.namespace)), set([" "]))
+    def test_category_name(self):
+        self.assertIs(5, self.output1.count("category_name='Unspecified'"))
+
+    def test_severity(self):
+        self.assertIs(5, self.output1.count("severity='very-low'"))
+
+    def test_comment(self):
+        self.assertIs(5, self.output1.count("comment='CRISP Report Indicator'"))
+
+    def test_confidence(self):
+        self.assertIs(5, self.output1.count('confidence=0'))
+
+    def test_direction(self):
+        self.assertIs(5, self.output1.count("direction='ingress'"))
+
+    def test_ipv4(self):
+        self.assertIn('ipv4=10.10.10.10', self.output1)
+        self.assertIn('ipv4=11.11.11.11', self.output1)
+        self.assertIn('ipv4=12.12.12.12', self.output1)
+        self.assertIn('ipv4=13.13.13.13', self.output1)
+        self.assertIn('ipv4=14.14.14.14', self.output1)
+
+    def test_combined_comment(self):
+        self.assertIs(5, self.output1.count("combined_comment='CRISP Report Indicator'"))
+
+class TestSTIXACSToKeyValue(unittest.TestCase):
+    output1 = None
+
+    @classmethod
+    def setUpClass(cls):
+        current_dir = os.path.dirname(__file__)
+        transform = FlexTransform.FlexTransform()
+
+        with open(os.path.join(current_dir, '../resources/sampleConfigurations/stix_essa.cfg'), 'r') as input_file:
+            transform.AddParser('stixacs', input_file)
+        with open(os.path.join(current_dir, '../resources/sampleConfigurations/keyvalue.cfg'), 'r') as input_file:
+            transform.AddParser('keyvalue', input_file)
+        output1_object = io.StringIO()
+
+        transform.TransformFile(io.StringIO(STIXACS), 'stixacs', 'keyvalue', targetFileName=output1_object)
+        cls.output1 = []
+        output1_object.seek(0)
+        for line in output1_object.read().splitlines():
+            cls.output1 += line.split('&')
+
+    def test_category(self):
+        self.assertIs(3, self.output1.count("category='Unspecified'"))
+
+    def test_category_name(self):
+        self.assertIs(3, self.output1.count("category_name='Unspecified'"))
+
+    def test_severity(self):
+        self.assertIs(3, self.output1.count("severity='very-low'"))
+
+    def test_comment(self):
+        self.assertIn("comment='AAA Report Indicator'", self.output1)
+        self.assertIn("comment='Domain Indicator'", self.output1)
+        self.assertIn("comment='Just Another Indicator'", self.output1)
+
+    def test_confidence(self):
+        self.assertIs(3, self.output1.count('confidence=0'))
+
+    def test_direction(self):
+        self.assertIs(3, self.output1.count("direction='ingress'"))
+
+    def test_fqdn(self):
+        self.assertIn("fqdn='blog.website.net'", self.output1)
+        self.assertIn("fqdn='fake.com'", self.output1)
+        self.assertIn("fqdn='goo.gl/peter'", self.output1)
+
+    def test_combined_comment(self):
+        self.assertIn("combined_comment='AAA Report Indicator'", self.output1)
+        self.assertIn("combined_comment='Domain Indicator'", self.output1)
+        self.assertIn("combined_comment='Just Another Indicator'", self.output1)
 
 if __name__ == '__main__':
     unittest.main()

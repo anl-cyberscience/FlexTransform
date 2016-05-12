@@ -11,6 +11,7 @@
 				"datatype": "datetime",
 				"dateTimeFormat": "unixtime",
 				"required": true,
+				"defaultValue": "&now()",
 				"ontologyMappingType": "simple",
 				"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#TimeOfDetectionSemanticConcept"
 			},
@@ -106,6 +107,7 @@
 				"description": "The category for the alert",
 				"datatype": "enum",
 				"required": true,
+				"defaultValue" : "Unspecified",
 				"ontologyMappingType": "enum",
 				"enumValues": {
 					"DoS": {

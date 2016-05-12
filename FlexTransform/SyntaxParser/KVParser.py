@@ -122,5 +122,6 @@ class KVParser(object):
                 for key, value in row.items():
                     if value:
                         toWrite += key + self.KVSeparator.strip("[]") + value + separator
+            toWrite = toWrite[:-1]
             toWrite += '\n'
-            file.write(toWrite)
+        file.write(toWrite)
