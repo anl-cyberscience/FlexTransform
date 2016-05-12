@@ -121,7 +121,6 @@ class STIXTLPToSTIXACS(unittest.TestCase):
 
         transform.TransformFile(io.StringIO(STIXTLP), 'stix', 'stixacs', targetFileName=output1_object)
         cls.output1 = etree.XML(output1_object.getvalue())
-        print(output1_object.getvalue())
 
     def test_title(self):
         self.assertEqual(self.output1.xpath("/stix:STIX_Package/stix:STIX_Header/stix:Title/text()", namespaces=self.namespace)[0], "Test PDF")
@@ -222,7 +221,6 @@ class KeyValueToSTIXACS(unittest.TestCase):
 
         transform.TransformFile(io.StringIO(KEYVALUE), 'keyvalue', 'stixacs', targetFileName=output1_object)
         cls.output1 = etree.XML(output1_object.getvalue())
-        print(output1_object.getvalue())
 
     def test_profile(self):
         self.assertEqual(self.output1.xpath("/stix:STIX_Package/stix:STIX_Header/stix:Profiles/stixCommon:Profile/text()", namespaces=self.namespace)[0], "Ransomware Update")
@@ -288,7 +286,7 @@ class KeyValueToSTIXACS(unittest.TestCase):
         self.assertEqual(set(self.output1.xpath("//cybox:Relationship/text()", namespaces=self.namespace)), set(["Connected_To"]))
 
     def test_indicator_sightings(self):
-        self.assertEqual(set(self.output1.xpath("//indicator:Sighting/@timestamp", namespaces=self.namespace)), set(["2012-01-01T07:00:00"]))
+        self.assertEqual(set(self.output1.xpath("//indicator:Sighting/@timestamp", namespaces=self.namespace)), set(["2012-01-01T07:00:00+00:00"]))
 
     def test_indicator_sighting_precision(self):
         self.assertEqual(set(self.output1.xpath("//indicator:Sighting/@timestamp_precision", namespaces=self.namespace)), set(["second"]))
