@@ -45,7 +45,7 @@
 				"description": "Time the report was generated",
 				"valuemap": "information_source;time;produced_time", 
 				"datatype": "datetime",
-				"dateTimeFormat": "%Y-%m-%dT%H:%M:%S",
+				"dateTimeFormat": "%Y-%m-%dT%H:%M:%S%z",
 				"required": false,
 				"ontologyMappingType": "multiple",
 				"ontologyMappings": [
