@@ -79,7 +79,7 @@ STIXTLP = """<stix:STIX_Package
                 <indicator:Observable id="CFM:Observable-03e0bab9-a13e-55cf-93d4-cf707aeb831d">
                     <cybox:Object id="CFM:Object-9eb91b53-603a-53e5-9228-958e81c24949">
                         <cybox:Properties xsi:type="AddressObj:AddressObjectType" category="ipv4-addr">
-                            <AddressObj:Address_Value condition="Equals">149.202.206.107</AddressObj:Address_Value>
+                            <AddressObj:Address_Value condition="Equals">13.13.13.13</AddressObj:Address_Value>
                         </cybox:Properties>
                     </cybox:Object>
                 </indicator:Observable>
@@ -90,7 +90,7 @@ STIXTLP = """<stix:STIX_Package
                 <indicator:Observable id="CFM:Observable-691072b3-c6a4-5615-9c78-cb5977864bb5">
                     <cybox:Object id="CFM:Object-44b996e6-7769-54e0-b5c7-bab92fc8791e">
                         <cybox:Properties xsi:type="AddressObj:AddressObjectType" category="ipv4-addr">
-                            <AddressObj:Address_Value condition="Equals">212.47.223.19</AddressObj:Address_Value>
+                            <AddressObj:Address_Value condition="Equals">12.12.12.12</AddressObj:Address_Value>
                         </cybox:Properties>
                     </cybox:Object>
                 </indicator:Observable>
@@ -101,7 +101,7 @@ STIXTLP = """<stix:STIX_Package
                 <indicator:Observable id="CFM:Observable-1680f55e-8cd8-5d28-8d33-8488ee747581">
                     <cybox:Object id="CFM:Object-4fa49509-2f5c-5c66-a86f-0babf49a0e33">
                         <cybox:Properties xsi:type="AddressObj:AddressObjectType" category="ipv4-addr">
-                            <AddressObj:Address_Value condition="Equals">37.235.53.18</AddressObj:Address_Value>
+                            <AddressObj:Address_Value condition="Equals">11.11.11.11</AddressObj:Address_Value>
                         </cybox:Properties>
                     </cybox:Object>
                 </indicator:Observable>
@@ -112,7 +112,7 @@ STIXTLP = """<stix:STIX_Package
                 <indicator:Observable id="CFM:Observable-686ec0d4-59a0-5909-bfbc-eb31c37becd5">
                     <cybox:Object id="CFM:Object-1f397c22-5d3d-50eb-98e9-6acd82fa329c">
                         <cybox:Properties xsi:type="AddressObj:AddressObjectType" category="ipv4-addr">
-                            <AddressObj:Address_Value condition="Equals">89.108.85.163</AddressObj:Address_Value>
+                            <AddressObj:Address_Value condition="Equals">14.14.14.14</AddressObj:Address_Value>
                         </cybox:Properties>
                     </cybox:Object>
                 </indicator:Observable>

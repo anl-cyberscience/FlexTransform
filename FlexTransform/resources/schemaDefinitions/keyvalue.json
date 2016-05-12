@@ -1,9 +1,9 @@
 {
 	"IndicatorData": {
 		"types": {
-			"IPv4-Address-Block": [ { "ipv4": "*"}],
-			"IPv6-Address-Block": [ { "ipv6": "*" } ],
-			"DNS-Hostname-Block": [ { "fqdn": "*"}]
+			"IPv4-Address-Block": [ { "ipv4": "*"} ],
+			"IPv6-Address-Block": [ { "ipv6": "*"} ],
+			"DNS-Hostname-Block": [ { "fqdn": "*"} ]
 		},
 		"fields": {
 			"timestamp": {
@@ -39,16 +39,17 @@
 				"description": "Direction of traffic flow",
 				"datatype": "enum",
 				"required": true,
+				"defaultValue": "ingress",
 				"ontologyMappingType": "enum",
 				"enumValues": {
 					"ingress": {
-						"ontologyMapping": ""
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#IndicatorDirectionIngressValueSemanticComponent"
 					},
 					"egress": {
-						"ontologyMapping": ""
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#IndicatorDirectionIngressValueSemanticComponent"
 					},
 					"bidirectional": {
-						"ontologyMapping": ""
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#IndicatorDirectionBidirectionalValueSemanticComponent"
 					}
 				}
 			},
@@ -57,7 +58,7 @@
 				"datatype": "string",
 				"required": true,
 				"ontologyMappingType": "simple",
-				"ontologyMapping": ""
+				"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#IndicatorDescriptionSemanticConcept"
 			},
 			"confidence": {
 				"description": "Confidence that the indicator is not a false positive",
@@ -66,7 +67,7 @@
 				"required": true,
 				"defaultValue": "0",
 				"ontologyMappingType": "simple",
-				"ontologyMapping": ""
+				"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#IndicatorConfidenceSemanticConcept"
 			},
 			"severity": {
 				"description": "Severity of impact if detected indicator had been successful",
@@ -76,19 +77,19 @@
 				"ontologyMappingType": "enum",
 				"enumValues": {
 					"very-low": {
-						"ontologyMapping": ""
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#IndicatorSeverityVeryLowValueSemanticComponent"
 					},
 					"low": {
-						"ontologyMapping": ""
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#IndicatorSeverityLowValueSemanticComponent"
 					},
 					"medium": {
-						"ontologyMapping": ""
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#IndicatorSeverityMediumValueSemanticComponent"
 					},
 					"high": {
-						"ontologyMapping": ""
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#IndicatorSeverityHighValueSemanticComponent"
 					},
 					"very-high": {
-						"ontologyMapping": ""
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#IndicatorSeverityVeryHighValueSemanticComponent"
 					}
 				}
 			},
