@@ -256,7 +256,7 @@ class KeyValueToSTIXACS(unittest.TestCase):
         self.assertEqual(set(self.output1.xpath("//indicator:Type[@xsi:type='stixVocabs:IndicatorTypeVocab-1.1']/text()", namespaces=self.namespace)), set(['IP Watchlist', 'Domain Watchlist']))
 
     def test_indicator_description(self):
-        self.assertEqual(set(self.output1.xpath("//indicator:Description/text()", namespaces=self.namespace)), set(['Attacker scanning for RDP, direction:ingress, confidence:0, severity:high', 'Malicious domain, direction:egress, confidence:0, severity:high', 'HTTP Response code 4xx, suspicious, direction:ingress, confidence:0, severity:low', 'Attacker scanning for SSH, direction:ingress, confidence:0, severity:high']))
+        self.assertEqual(set(self.output1.xpath("//indicator:Description/text()", namespaces=self.namespace)), set(['Malicious domain, direction:egress, confidence:0, severity:high', 'HTTP Response code 4xx, suspicious, direction:ingress, confidence:0, severity:low','Attacker scanning for SSH, direction:ingress, confidence:0, severity:high','Attacker scanning for RDP, direction:ingress, confidence:0, severity:high']))
 
     def def_indicator_observable_keywords(self):
         self.assertEqual(set(self.output1.xpath("//cybox:Keyword/text()", namespaces=self.namespace)), set(['Reconnaissance', 'Scanning', 'Malware Traffic']))
@@ -271,10 +271,16 @@ class KeyValueToSTIXACS(unittest.TestCase):
         self.assertEqual(set(self.output1.xpath("//indicator:Observable/cybox:Object/cybox:Properties/@category", namespaces=self.namespace)), set(["ipv4-addr", "ipv6-addr"]))
 
     def test_indicator_properties_domainname(self):
-        self.assertEqual(set(self.output1.xpath("//DomainNameObj:Value/text()", namespaces=self.namespace)), set(["bad.domain"]))
+        if "bad.scanning.dom"in self.output1.xpath("//DomainNameObj:Value/text()", namespaces=self.namespace):
+            self.assertEqual(set(self.output1.xpath("//DomainNameObj:Value/text()", namespaces=self.namespace)), set(["bad.scanning.dom","bad.domain"]))
+        else:
+            self.assertEqual(set(self.output1.xpath("//DomainNameObj:Value/text()", namespaces=self.namespace)), set(["bad.domain"]))
 
     def test_indicator_properties_address(self):
-        self.assertEqual(set(self.output1.xpath("//AddressObj:Address_Value/text()", namespaces=self.namespace)), set(["10.11.12.13", "10.11.12.14", "2001:db8:16::1"]))
+        if "10.11.12.14" in self.output1.xpath("//AddressObj:Address_Value/text()", namespaces=self.namespace):
+            self.assertEqual(set(self.output1.xpath("//AddressObj:Address_Value/text()", namespaces=self.namespace)), set(["10.11.12.13", "10.11.12.14", "2001:db8:16::1"]))
+        else:
+            self.assertEqual(set(self.output1.xpath("//AddressObj:Address_Value/text()", namespaces=self.namespace)), set(["10.11.12.13", "2001:db8:16::1"]))
 
     def test_indicator_properties_port_value(self):
         self.assertEqual(set(self.output1.xpath("//PortObj:Port_Value/text()", namespaces=self.namespace)), set(["3389", "22"]))
