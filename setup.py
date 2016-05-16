@@ -2,12 +2,12 @@ from setuptools import setup, find_packages
 
 setup(
     name='FlexTransform',
-    version='1.0.0',
+    version='1.1.0',
     description='Flexible Transform is a tool that enables dynamic translation between formats',
     url='https://github.com/anl-cyberscience/FlexTransform/',
     author='The CFM Team',
     author_email='fedhelp@anl.gov',
-    classifiers = [
+    classifiers=[
         # See: https://pypi.python.org/pypi?%3Aaction=list_classifiers
 
         # How mature is this project? Common values are
@@ -33,6 +33,7 @@ setup(
         'Programming Language :: Python :: 3.2',
         'Programming Language :: Python :: 3.3',
         'Programming Language :: Python :: 3.4',
+        'Programming Language :: Python :: 3.5',
     ],
     keywords='',
     packages=find_packages(exclude=['contrib', 'doc', 'tests*']),
@@ -44,20 +45,20 @@ setup(
         'rdflib',
     ],
     entry_points={
-	'console_scripts': [
-	    'flext = FlexTransform.FlexTransform:main'
-	]
+        'console_scripts': [
+            'flext = FlexTransform.FlexT:main'
+        ]
     },
     include_package_data=True,
     package_data={
         'FlexTransform': [
-	    'resources/*.xml',
-	    'resources/*.owl',
-	    'resources/*.zip',
-	    'resources/*.rdf',
-	    'resources/sampleConfigurations/*',
-	    'resources/schemaDefinitions/*',
-	    'resources/schemas/*'
-	]
+            'resources/*.xml',
+            'resources/*.owl',
+            'resources/*.zip',
+            'resources/*.rdf',
+            'resources/sampleConfigurations/*',
+            'resources/schemaDefinitions/*',
+            'resources/schemas/*'
+        ]
     }
 )
