@@ -38,7 +38,7 @@ class TestCFM13AlertToKeyValue(unittest.TestCase):
         self.assertIn("category='Scanning'", self.output1[0])
 
     def test_severity(self):
-        self.assertIn("severity='very-low'", self.output1[0])
+        self.assertIn("severity='unknown'", self.output1[0])
 
     def test_prior_offenses(self):
         self.assertIn('prior_offenses=11', self.output1[0])
@@ -50,13 +50,13 @@ class TestCFM13AlertToKeyValue(unittest.TestCase):
         self.assertIn("service_protocol='TCP'", self.output1[0])
 
     def test_comment(self):
-        self.assertIn("comment='SSH scans against multiple hosts, direction:ingress, confidence:87, severity:high'", self.output1[0])
+        self.assertIn("comment='No Comment'", self.output1[0])
 
     def test_confidence(self):
         self.assertIn('confidence=0', self.output1[0])
 
     def test_direction(self):
-        self.assertIn("direction='ingress'", self.output1[0])
+        self.assertIn("direction='unknown'", self.output1[0])
 
     def test_ipv4(self):
         self.assertIn('ipv4=10.10.10.10', self.output1[0])
@@ -91,16 +91,16 @@ class TestSTIXTLPToKeyValue(unittest.TestCase):
         self.assertIs(5, self.output1.count("category_name='Unspecified'"))
 
     def test_severity(self):
-        self.assertIs(5, self.output1.count("severity='very-low'"))
+        self.assertIs(5, self.output1.count("severity='unknown'"))
 
     def test_comment(self):
-        self.assertIs(5, self.output1.count("comment='CRISP Report Indicator'"))
+        self.assertIs(5, self.output1.count("comment='No Comment'"))
 
     def test_confidence(self):
         self.assertIs(5, self.output1.count('confidence=0'))
 
     def test_direction(self):
-        self.assertIs(5, self.output1.count("direction='ingress'"))
+        self.assertIs(5, self.output1.count("direction='unknown'"))
 
     def test_ipv4(self):
         self.assertIn('ipv4=10.10.10.10', self.output1)
@@ -139,18 +139,16 @@ class TestSTIXACSToKeyValue(unittest.TestCase):
         self.assertIs(3, self.output1.count("category_name='Unspecified'"))
 
     def test_severity(self):
-        self.assertIs(3, self.output1.count("severity='very-low'"))
+        self.assertIs(3, self.output1.count("severity='unknown'"))
 
     def test_comment(self):
-        self.assertIn("comment='AAA Report Indicator'", self.output1)
-        self.assertIn("comment='Domain Indicator'", self.output1)
-        self.assertIn("comment='Just Another Indicator'", self.output1)
+        self.assertIs(3, self.output1.count("comment='No Comment'"))
 
     def test_confidence(self):
         self.assertIs(3, self.output1.count('confidence=0'))
 
     def test_direction(self):
-        self.assertIs(3, self.output1.count("direction='ingress'"))
+        self.assertIs(3, self.output1.count("direction='unknown'"))
 
     def test_fqdn(self):
         self.assertIn("fqdn='blog.website.net'", self.output1)

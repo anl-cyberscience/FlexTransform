@@ -1,9 +1,9 @@
 {
 	"IndicatorData": {
 		"types": {
-			"IPv4-Address-Block": [ { "ipv4": "*"} ],
-			"IPv6-Address-Block": [ { "ipv6": "*"} ],
-			"DNS-Hostname-Block": [ { "fqdn": "*"} ]
+			"IPv4-Address-Block": [ { "ipv4": "*", "ipv6": "" } ],
+			"IPv6-Address-Block": [ { "ipv6": "*", "ipv4": "" } ],
+			"DNS-Hostname-Block": [ { "fqdn": "*", "ipv4": "", "ipv6": "" } ]
 		},
 		"fields": {
 			"timestamp": {
@@ -40,17 +40,20 @@
 				"description": "Direction of traffic flow",
 				"datatype": "enum",
 				"required": true,
-				"defaultValue": "ingress",
+				"defaultValue" : "unknown",
 				"ontologyMappingType": "enum",
 				"enumValues": {
 					"ingress": {
-						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#IndicatorDirectionIngressValueSemanticComponent"
+						"ontologyMapping": ""
 					},
 					"egress": {
-						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#IndicatorDirectionIngressValueSemanticComponent"
+						"ontologyMapping": ""
 					},
 					"bidirectional": {
-						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#IndicatorDirectionBidirectionalValueSemanticComponent"
+						"ontologyMapping": ""
+					},
+					"unknown": {
+						"ontologyMapping": ""
 					}
 				}
 			},
@@ -58,8 +61,9 @@
 				"description": "Description of indicator",
 				"datatype": "string",
 				"required": true,
+				"defaultValue": "No Comment",
 				"ontologyMappingType": "simple",
-				"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#IndicatorDescriptionSemanticConcept"
+				"ontologyMapping": ""
 			},
 			"confidence": {
 				"description": "Confidence that the indicator is not a false positive",
@@ -68,29 +72,32 @@
 				"required": true,
 				"defaultValue": "0",
 				"ontologyMappingType": "simple",
-				"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#IndicatorConfidenceSemanticConcept"
+				"ontologyMapping": ""
 			},
 			"severity": {
 				"description": "Severity of impact if detected indicator had been successful",
 				"datatype": "enum",
 				"required": true,
-				"defaultValue": "very-low",
+				"defaultValue": "unknown",
 				"ontologyMappingType": "enum",
 				"enumValues": {
 					"very-low": {
-						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#IndicatorSeverityVeryLowValueSemanticComponent"
+						"ontologyMapping": ""
 					},
 					"low": {
-						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#IndicatorSeverityLowValueSemanticComponent"
+						"ontologyMapping": ""
 					},
 					"medium": {
-						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#IndicatorSeverityMediumValueSemanticComponent"
+						"ontologyMapping": ""
 					},
 					"high": {
-						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#IndicatorSeverityHighValueSemanticComponent"
+						"ontologyMapping": ""
 					},
 					"very-high": {
-						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#IndicatorSeverityVeryHighValueSemanticComponent"
+						"ontologyMapping": ""
+					},
+					"unknown": {
+						"ontologyMapping": ""
 					}
 				}
 			},
@@ -107,7 +114,7 @@
 				"description": "The category for the alert",
 				"datatype": "enum",
 				"required": true,
-				"defaultValue" : "Unspecified",
+				"defaultValue": "Unspecified",
 				"ontologyMappingType": "enum",
 				"enumValues": {
 					"DoS": {
