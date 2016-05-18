@@ -3,7 +3,7 @@ import os
 import unittest
 from lxml import etree
 
-from FlexTransform.test.SampleInputs import CFM13ALERT, CFM13ALERT2
+from FlexTransform.test.SampleInputs import CFM13ALERT2
 from FlexTransform import FlexTransform
 
 class TestCFM13AlertToLQMT(unittest.TestCase):
