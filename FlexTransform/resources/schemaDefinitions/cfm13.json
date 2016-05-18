@@ -140,16 +140,16 @@
 				"ontologyMappingType": "enum",
 				"enumValues": {
 					"WHITE": {
-						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#TLPWhiteSemanticConcept"
-					},					
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#HeaderTLPWhiteSemanticConcept"
+					},
 					"GREEN": {
-						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#TLPGreenSemanticConcept"
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#HeaderTLPGreenSemanticConcept"
 					},
 					"AMBER": {
-						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#TLPAmberSemanticConcept"
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#HeaderTLPAmberSemanticConcept"
 					},
 					"RED": {
-						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#TLPRedSemanticConcept"
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#HeaderTLPRedSemanticConcept"
 					}
 				}
 			}
@@ -622,6 +622,24 @@
 				"multiple": true,
 				"ontologyMappingType": "simple",
 				"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#ProtocolIndicatorValueSemanticComponent"
+			},
+			"indicator_tlp": {
+				"description": "The TLP restriction for this document",
+				"valuemap": "AdditionalData;restriction",
+				"datatype": "string",
+				"required": false,
+				"ontologyMappingType": "enum",
+				"enumValues": {
+					"public": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#TLPWhiteSemanticConcept"
+					},
+					"need-to-know": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#TLPGreenSemanticConcept"
+					},
+					"private": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#TLPAmberSemanticConcept"
+					}
+				}
 			}
 		}
 	}

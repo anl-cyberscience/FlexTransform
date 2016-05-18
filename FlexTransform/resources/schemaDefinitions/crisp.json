@@ -66,16 +66,16 @@
 				"ontologyMappingType": "enum",
 				"enumValues": {
 					"WHITE": {
-						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#TLPWhiteSemanticConcept"
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#HeaderTLPWhiteSemanticConcept"
 					},					
 					"GREEN": {
-						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#TLPGreenSemanticConcept"
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#HeaderTLPGreenSemanticConcept"
 					},
 					"AMBER": {
-						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#TLPAmberSemanticConcept"
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#HeaderTLPAmberSemanticConcept"
 					},
 					"RED": {
-						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#TLPRedSemanticConcept"
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#HeaderTLPRedSemanticConcept"
 					}
 				}
 			}
