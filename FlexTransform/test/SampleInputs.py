@@ -266,6 +266,89 @@ CFM13ALERT = """
     </IDMEF-Message>
     """
 
+CFM13ALERT2 = """
+    <!DOCTYPE IDMEF-Message PUBLIC "-//IETF//DTD RFC XXXX IDMEF v1.0//EN" "idmef-message.dtd">
+    <IDMEF-Message xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.anl.gov/cfm/1.3/IDMEF-Message" xsi:schemaLocation="http://www.anl.gov/cfm/1.3/IDMEF-Message/../../../resources/schemas/CFMMessage13.xsd">
+      <Alert>
+        <Analyzer analyzerid="Fake">
+          <Node>
+            <location>Fake National Lab</location>
+            <name>Fake Name</name>
+          </Node>
+        </Analyzer>
+        <AnalyzerTime>2016-02-21T22:50:02+0600</AnalyzerTime>
+        <AdditionalData meaning="report schedule" type="string">5 minutes</AdditionalData>
+        <AdditionalData meaning="number of alerts in this report" type="integer">2</AdditionalData>
+        <AdditionalData meaning="report type" type="string">alerts</AdditionalData>
+        <AdditionalData meaning="report start time" type="date-time">2016-02-21T22:45:53+0700</AdditionalData>
+      </Alert>
+      <Alert>
+        <CreateTime>2016-02-21T22:45:53-0400</CreateTime>
+        <Source>
+          <Node>
+            <Address category="ipv4-addr">
+              <address>5.5.5.5</address>
+            </Address>
+          </Node>
+        </Source>
+        <Target>
+          <Service>
+            <port>22</port>
+            <protocol>TCP</protocol>
+          </Service>
+        </Target>
+        <Classification text="SSH scans against multiple hosts, direction:ingress, confidence:87, severity:high">
+          <Reference meaning="Scanning" origin="user-specific">
+            <name>SSH Attack</name>
+            <url> </url>
+          </Reference>
+        </Classification>
+        <Assessment>
+          <Action category="block-installed"/>
+        </Assessment>
+        <AdditionalData meaning="restriction" type="string">public</AdditionalData>
+        <AdditionalData meaning="recon" type="integer">1</AdditionalData>
+        <AdditionalData meaning="prior offenses" type="integer">11</AdditionalData>
+        <AdditionalData meaning="duration" type="integer">86400</AdditionalData>
+        <AdditionalData meaning="alert threshold" type="integer">0</AdditionalData>
+        <AdditionalData meaning="OUO" type="integer">0</AdditionalData>
+        <AdditionalData meaning="top level domain owner" type="string">The Republic of Fake</AdditionalData>
+      </Alert>
+      <Alert>
+        <CreateTime>2016-02-21T22:45:53-0400</CreateTime>
+        <Source>
+          <Node>
+            <Address category="ipv4-addr">
+              <address>10.10.10.10</address>
+            </Address>
+          </Node>
+        </Source>
+        <Target>
+          <Service>
+            <port>22</port>
+            <protocol>TCP</protocol>
+          </Service>
+        </Target>
+        <Classification text="SSH scans against multiple hosts, direction:ingress, confidence:87, severity:high">
+          <Reference meaning="Scanning" origin="user-specific">
+            <name>SSH Attack</name>
+            <url> </url>
+          </Reference>
+        </Classification>
+        <Assessment>
+          <Action category="block-installed"/>
+        </Assessment>
+        <AdditionalData meaning="restriction" type="string">private</AdditionalData>
+        <AdditionalData meaning="recon" type="integer">0</AdditionalData>
+        <AdditionalData meaning="prior offenses" type="integer">11</AdditionalData>
+        <AdditionalData meaning="duration" type="integer">86400</AdditionalData>
+        <AdditionalData meaning="alert threshold" type="integer">0</AdditionalData>
+        <AdditionalData meaning="OUO" type="integer">0</AdditionalData>
+        <AdditionalData meaning="top level domain owner" type="string">The Republic of Fake</AdditionalData>
+      </Alert>
+    </IDMEF-Message>
+    """
+
 STIXACS = """<stix:STIX_Package
 	xmlns:cyboxCommon="http://cybox.mitre.org/common-2"
 	xmlns:cybox="http://cybox.mitre.org/cybox-2"
