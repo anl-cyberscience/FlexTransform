@@ -622,6 +622,28 @@
 				"multiple": true,
 				"ontologyMappingType": "simple",
 				"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#ProtocolIndicatorValueSemanticComponent"
+			},
+			"indicator_tlp": {
+				"description": "The TLP restriction for this document",
+				"valuemap": "AdditionalData;restriction",
+				"datatype": "string",
+				"defaultValue": "RED",
+				"required": true,
+				"ontologyMappingType": "enum",
+				"enumValues": {
+					"WHITE": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#TLPWhiteSemanticConcept"
+					},
+					"public": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#TLPGreenSemanticConcept"
+					},
+					"private": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#TLPAmberSemanticConcept"
+					},
+					"RED": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#TLPRedSemanticConcept"
+					}
+				}
 			}
 		}
 	}
