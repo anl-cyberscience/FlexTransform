@@ -96,7 +96,7 @@ class CFM13Functions(object):
                 value += "SharingRestrictions=%s" % args['currentRow']['restriction']['Value']
 
         elif FunctionName == 'CFM13_determineTLP':
-            value = 'GREEN'
+            value = 'WHITE'
             for subrow in args['transformedData']['IndicatorData']:
                 if 'restriction' in subrow:
                     if subrow['restriction']['Value'] == 'private' or subrow['restriction']['Value'] == 'need-to-know':
