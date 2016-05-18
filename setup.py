@@ -49,6 +49,8 @@ setup(
             'flext = FlexTransform.FlexT:main'
         ]
     },
+    test_suite='nose.collector',
+    tests_require=['nose'],
     include_package_data=True,
     package_data={
         'FlexTransform': [
