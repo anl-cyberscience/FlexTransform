@@ -82,6 +82,15 @@ class TestCFM13Alert1ToSTIXACS(unittest.TestCase):
     def test_indicator_properties_related_objects_properties_port_protocol_text(self):
         self.assertEqual(self.output1.xpath("/stix:STIX_Package/stix:Indicators/stix:Indicator/indicator:Observable/cybox:Object/cybox:Related_Objects/cybox:Related_Object/cybox:Properties/PortObj:Layer4_Protocol/text()", namespaces=self.namespace)[0], "TCP")
 
+    def test_indicator_sightings_count(self):
+        self.assertEqual(self.output1.xpath("//indicator:Sightings/@sightings_count", namespaces=self.namespace)[0], "12")
+
+    def test_indicator_sightings_sighting_timestamp(self):
+        self.assertEqual(self.output1.xpath("//indicator:Sighting/@timestamp", namespaces=self.namespace)[0], "2016-02-21T22:45:53-04:00")
+
+    def test_indicator_sightings_sighting_timestamp(self):
+        self.assertEqual(self.output1.xpath("//indicator:Sighting/@timestamp_precision", namespaces=self.namespace)[0], "second")
+
 class STIXTLPToSTIXACS(unittest.TestCase):
     output1 = None
 
