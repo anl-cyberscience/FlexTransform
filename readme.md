@@ -1,5 +1,5 @@
 # Flexible Transform
-[![Build Status](https://travis-ci.org/anl-cyberscience/FlexTransform.svg?branch=master)](https://travis-ci.org/anl-cyberscience/FlexTransform)[![PyPI version](https://badge.fury.io/py/flextransform.svg)](https://badge.fury.io/py/flextransform)
+[![Build Status](https://travis-ci.org/anl-cyberscience/FlexTransform.svg?branch=master)] (https://travis-ci.org/anl-cyberscience/FlexTransform)[![PyPI version](https://badge.fury.io/py/flextransform.svg)](https://badge.fury.io/py/flextransform)
 
 Flexible Transform (FlexT) enables dynamic translation between formats, accomplishing this by digesting CTI data down to its semantic roots (meaning and context).  
 ## Install
@@ -14,7 +14,7 @@ $ pip install FlexTransform
 ## Usage
 Currently, FlexT supports Command-Line access as well as functioning as a Python Library, while future development will add a RESTful API with a local web server.   
 ### Command Line
-```
+```shell
 $ FlexT --src inputFile.txt --src-config srcConfig.cfg --dst outputFile.xml --dst-config dstConfig.cfg
 ```
 + Required arguments 
