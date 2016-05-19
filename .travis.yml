@@ -14,5 +14,3 @@ install:
   - "pip install ."
 script:
   - "nosetests"
-git:
-  depth: 3
