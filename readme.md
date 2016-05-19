@@ -1,4 +1,6 @@
 # Flexible Transform
+[![Build Status](https://travis-ci.org/anl-cyberscience/FlexTransform.svg?branch=master)](https://travis-ci.org/anl-cyberscience/FlexTransform)[![PyPI version](https://badge.fury.io/py/flextransform.svg)](https://badge.fury.io/py/flextransform)
+
 Flexible Transform (FlexT) enables dynamic translation between formats, accomplishing this by digesting CTI data down to its semantic roots (meaning and context).  
 ## Install
 FlexT requires **Python3** & is available via *pip*, but it requires the python package [*lxml*](http://lxml.de/) which has unix dependencies such as *libxml2* and *libxslt* (as well as associated development packages).  For systems that employ ```apt-get``` such as Debian & Ubuntu, the following command can be used.
