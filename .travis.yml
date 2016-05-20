@@ -1,16 +1,20 @@
 language: python
 python:
-  - "3.2"
-  - "3.3"
-  - "3.4"
-  - "3.5"
-
+- '3.2'
+- '3.3'
+- '3.4'
+- '3.5'
 before_install:
-  - "sudo apt-get -qq update"
-# Dependencies for LXML
-  - "sudo apt-get install -y -qq libxml2-dev libxslt-dev python-dev"
-
+- sudo apt-get -qq update
+- sudo apt-get install -y -qq libxml2-dev libxslt-dev python-dev
 install:
-  - "pip install ."
+- pip install .
 script:
-  - "nosetests"
+- nosetests
+deploy:
+  provider: pypi
+  user: anl-cyberscience
+  password:
+    secure: HgtKQyGDlTHrhlaH+Cr6F56MTNJ2lwkAjKod7ifUy+dBqZ/FHHqPmLgAbGTlIG9si0dvG1IgOz8de/Vr1+AO3w/J18zmop5xPyv1PreqOCSwbRWK76dJG4vsUB7nW+eRwg29YcPVUmtw+z6qHYEAiR6/GQNKi3ubw5RRO4Oily3QxkOr48pGStiW8f8hHGI8mgLw16saVxAV+yFiaXFikmUHBro1G33W78ZOJhpgxEAMXzPCZHeIepnDZNDmCERX7YZdy9q5uV07WmRqEjLSNpfvdyJSS2T66ZKZ7mcB/2M3sFtz7t5datqAudlNuy9o5JAsPavkxJNz0u6A0V8Ee7ETeRwDKhhuhgBtVStEZHNas7XZaiJzM4TbFTJvgL7lU5mPXzo3cxjuSdlz8Px7Heq3jp5vdE94locYEjd1iQ8KFMIxjQIA15WHKYcDGy9iG4M7iQl7Up3JCCQC+Dsj5v1eHm3YITDd7P8g2c9/xeGcvpWx6zYaukSS2oBuBEuwfQz0JCuVSZkajWg9IETb6iQFml+IZg8uoLP+jOKjDTY4S4a/jiRqHa132q6+bZ5QQWCl8b+fyX+VcPLIAl8BtA/bwQ6cJW1Gni69RSjLxbGe5neUsjfZL4fKO+QnunfxDviRnt4lBqG4Cce2n2YNW40DydaGRXfDR+gUqhDO3IM=
+  on:
+    tags: true
