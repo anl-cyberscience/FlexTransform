@@ -19,6 +19,3 @@ deploy:
   on:
     tags: true
   distributions: "sdist bdist_wheel"
-  notifications:
-    email:
-      - "mhend@ameslab.gov"
