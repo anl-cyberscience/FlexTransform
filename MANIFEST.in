@@ -1,0 +1,7 @@
+include FlexTransform/resources/*.xml
+include FlexTransform/resources/*.owl
+include FlexTransform/resources/*.zip
+include FlexTransform/resources/*.rdf
+include FlexTransform/resources/sampleConfigurations/*
+include FlexTransform/resources/schemaDefinitions/*
+include FlexTransform/resources/schemas/*
