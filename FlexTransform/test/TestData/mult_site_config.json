@@ -1,0 +1,29 @@
+{
+	"DocumentHeaderData": {
+		"fields": {
+			"analyzerid": {
+				"defaultValue": "LeoAtriedes"
+			},
+			"location": {
+				"defaultValue": "Sand Worm Dave, Arrakeen, Dune 54321"
+			},
+			"contact_phone": {
+				"defaultValue": "555-867-5309",
+				"required": true
+			},
+			"report_schedule": {
+				"defaultValue": "5 minutes"
+			}
+		}
+	},
+	"IndicatorData": {
+		"fields": {
+			"reference_origin": {
+				"defaultValue": "user-specific"
+			},
+			"action_duration": {
+				"defaultValue": "86400"
+			}
+		}
+	}
+}

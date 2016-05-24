@@ -3,7 +3,7 @@ import os
 import unittest
 from lxml import etree
 
-from FlexTransform.test.SampleInputs  import CFM13ALERT, STIXACS,KEYVALUE
+from FlexTransform.test.SampleInputs import CFM13ALERT, STIXACS,KEYVALUE
 from FlexTransform import FlexTransform
 
 class TestCFM13AlertToSTIXTLP(unittest.TestCase):
