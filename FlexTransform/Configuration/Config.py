@@ -107,8 +107,10 @@ class Config(object):
                 raise Exception('RequiredOptionNotFound', 'Schema: PrimarySchemaConfiguration')
     
             if (self.config.has_option('SCHEMA', 'SiteSchemaConfiguration')) :
-                NewSchemaConfig = self._ReadSchemaConfig(self.config['SCHEMA']['SiteSchemaConfiguration'])
-                self._MergeDictionaries(self.SchemaConfig, NewSchemaConfig)
+                site_configs = self.config['SCHEMA']['SiteSchemaConfiguration'].split(";")
+                for config in site_configs:
+                    NewSchemaConfig = self._ReadSchemaConfig(config)
+                    self._MergeDictionaries(self.SchemaConfig, NewSchemaConfig)
                 
             if (self.config.has_option('SCHEMA', 'MetadataSchemaConfiguration')) :
                 MetadataSchemaConfig = self._ReadSchemaConfig(self.config['SCHEMA']['MetadataSchemaConfiguration'])
