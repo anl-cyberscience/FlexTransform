@@ -621,6 +621,21 @@
 					}
 				}
 			},
+			"observable_object_properties_is_spoofed": {
+				"description": "Specifies whether the address is forged to conceal its identity or true source",
+				"valuemap": "observable;object;properties;is_spoofed",
+				"datatype": "enum",
+				"required": false,
+				"ontologyMappingType": "enum",
+				"enumValues": {
+					"true": {
+						"ontologyMapping": ""
+					},
+					"false": {
+						"ontologyMapping": ""
+					}
+				}
+			},
 			"observable_object_filename_value": {
 				"description": "The file name to match",
 				"valuemap": "observable;object;properties;file_name;value", 
@@ -1410,7 +1425,7 @@
 				"ontologyMappingType": "none",
 				"subfields": {
 								"killchain_phases_chain_id": {"required": true},
-								"killchain_phases_chain_name": {"required": true}, 
+								"killchain_phases_chain_name": {"required": true},
 								"killchain_phases_phase_id": {"required": true}, 
 								"killchain_phases_phase_name": {"required": true, "primaryKey": true}, 
 								"killchain_phases_phase_ordinality": {"required": true}
@@ -1430,6 +1445,7 @@
 				"valuemap": "kill_chain_phases;kill_chain_phases;kill_chain_name", 
 				"datatype": "string",
 				"required": false,
+				"defaultValue": "Command and Control",
 				"memberof": "killchain_phases",
 				"ontologyMappingType": "simple",
 				"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#KillChainNameSemanticConcept"
