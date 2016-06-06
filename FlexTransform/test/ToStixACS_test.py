@@ -3,10 +3,11 @@ import os
 import unittest
 from lxml import etree
 
-from FlexTransform.test.SampleInputs  import CFM13ALERT, STIXTLP, KEYVALUE
+from FlexTransform.test.SampleInputs import CFM13ALERT, STIXTLP, KEYVALUE
 from FlexTransform import FlexTransform
 
-class TestCFM13Alert1ToSTIXACS(unittest.TestCase):
+
+class CFM13Alert1ToSTIXACS(unittest.TestCase):
     output1 = None
     namespace = {
         'AddressObj': "http://cybox.mitre.org/objects#AddressObject-2",
@@ -20,6 +21,7 @@ class TestCFM13Alert1ToSTIXACS(unittest.TestCase):
         'xsi': "http://www.w3.org/2001/XMLSchema-instance",
         'ArtifactObj': "http://cybox.mitre.org/objects#ArtifactObject-2"
     }
+
     @classmethod
     def setUpClass(cls):
         current_dir = os.path.dirname(__file__)
@@ -90,6 +92,7 @@ class TestCFM13Alert1ToSTIXACS(unittest.TestCase):
 
     def test_indicator_sightings_sighting_timestamp(self):
         self.assertEqual(self.output1.xpath("//indicator:Sighting/@timestamp_precision", namespaces=self.namespace)[0], "second")
+
 
 class STIXTLPToSTIXACS(unittest.TestCase):
     output1 = None
@@ -267,7 +270,7 @@ class KeyValueToSTIXACS(unittest.TestCase):
     def test_indicator_description(self):
         self.assertEqual(set(self.output1.xpath("//indicator:Description/text()", namespaces=self.namespace)), set(['Malicious domain, direction:egress, confidence:0, severity:high', 'HTTP Response code 4xx, suspicious, direction:ingress, confidence:0, severity:low','Attacker scanning for SSH, direction:ingress, confidence:0, severity:high','Attacker scanning for RDP, direction:ingress, confidence:0, severity:high']))
 
-    def def_indicator_observable_keywords(self):
+    def test_indicator_observable_keywords(self):
         self.assertEqual(set(self.output1.xpath("//cybox:Keyword/text()", namespaces=self.namespace)), set(['Reconnaissance', 'Scanning', 'Malware Traffic']))
 
     def test_indicator_properties_xsitype(self):
