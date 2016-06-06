@@ -350,36 +350,36 @@ CFM13ALERT2 = """
     """
 
 STIXACS = """<stix:STIX_Package
-	xmlns:cyboxCommon="http://cybox.mitre.org/common-2"
-	xmlns:cybox="http://cybox.mitre.org/cybox-2"
-	xmlns:cyboxVocabs="http://cybox.mitre.org/default_vocabularies-2"
-	xmlns:ArtifactObj="http://cybox.mitre.org/objects#ArtifactObject-2"
-	xmlns:DomainNameObj="http://cybox.mitre.org/objects#DomainNameObject-1"
-	xmlns:marking="http://data-marking.mitre.org/Marking-1"
-	xmlns:indicator="http://stix.mitre.org/Indicator-2"
-	xmlns:stixCommon="http://stix.mitre.org/common-1"
-	xmlns:stixVocabs="http://stix.mitre.org/default_vocabularies-1"
-	xmlns:stix="http://stix.mitre.org/stix-1"
-	xmlns:isa="http://www.us-cert.gov/essa"
-	xmlns:isaa="http://www.us-cert.gov/essa/Markings/ISAMarkingAssertions"
-	xmlns:edh2cyberMarkingAssert="http://www.us-cert.gov/essa/Markings/ISAMarkingAssertions"
-	xmlns:edh2cyberMarking="http://www.us-cert.gov/essa/Markings/ISAMarkings"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xmlns:edh2="urn:edm:edh:v2"
-	xsi:schemaLocation="
-	http://cybox.mitre.org/common-2 http://cybox.mitre.org/XMLSchema/common/2.1/cybox_common.xsd
-	http://cybox.mitre.org/cybox-2 http://cybox.mitre.org/XMLSchema/core/2.1/cybox_core.xsd
-	http://cybox.mitre.org/default_vocabularies-2 http://cybox.mitre.org/XMLSchema/default_vocabularies/2.1/cybox_default_vocabularies.xsd
-	http://cybox.mitre.org/objects#ArtifactObject-2 http://cybox.mitre.org/XMLSchema/objects/Artifact/2.1/Artifact_Object.xsd
-	http://cybox.mitre.org/objects#DomainNameObject-1 http://cybox.mitre.org/XMLSchema/objects/Domain_Name/1.0/Domain_Name_Object.xsd
-	http://data-marking.mitre.org/Marking-1 http://stix.mitre.org/XMLSchema/data_marking/1.1.1/data_marking.xsd
-	http://stix.mitre.org/Indicator-2 http://stix.mitre.org/XMLSchema/indicator/2.1.1/indicator.xsd
-	http://stix.mitre.org/common-1 http://stix.mitre.org/XMLSchema/common/1.1.1/stix_common.xsd
-	http://stix.mitre.org/default_vocabularies-1 http://stix.mitre.org/XMLSchema/default_vocabularies/1.1.1/stix_default_vocabularies.xsd
-	http://stix.mitre.org/stix-1 http://stix.mitre.org/XMLSchema/core/1.1.1/stix_core.xsd
-	http://www.us-cert.gov/essa/Markings/ISAMarkingAssertions ISAMarkingsAssertionsType.xsd
-	http://www.us-cert.gov/essa/Markings/ISAMarkings ISAMarkingsType.xsd
-	urn:edm:edh:v2 SD-EDH_Profile_Cyber.xsd" id="isa:guide.999191.STIXPackage-96f564e1-e1b1-5625-b41c-506e231fbd53" version="1.1.1" timestamp="2015-11-26T00:35:06Z">
+    xmlns:cyboxCommon="http://cybox.mitre.org/common-2"
+    xmlns:cybox="http://cybox.mitre.org/cybox-2"
+    xmlns:cyboxVocabs="http://cybox.mitre.org/default_vocabularies-2"
+    xmlns:ArtifactObj="http://cybox.mitre.org/objects#ArtifactObject-2"
+    xmlns:DomainNameObj="http://cybox.mitre.org/objects#DomainNameObject-1"
+    xmlns:marking="http://data-marking.mitre.org/Marking-1"
+    xmlns:indicator="http://stix.mitre.org/Indicator-2"
+    xmlns:stixCommon="http://stix.mitre.org/common-1"
+    xmlns:stixVocabs="http://stix.mitre.org/default_vocabularies-1"
+    xmlns:stix="http://stix.mitre.org/stix-1"
+    xmlns:isa="http://www.us-cert.gov/essa"
+    xmlns:isaa="http://www.us-cert.gov/essa/Markings/ISAMarkingAssertions"
+    xmlns:edh2cyberMarkingAssert="http://www.us-cert.gov/essa/Markings/ISAMarkingAssertions"
+    xmlns:edh2cyberMarking="http://www.us-cert.gov/essa/Markings/ISAMarkings"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:edh2="urn:edm:edh:v2"
+    xsi:schemaLocation="
+    http://cybox.mitre.org/common-2 http://cybox.mitre.org/XMLSchema/common/2.1/cybox_common.xsd
+    http://cybox.mitre.org/cybox-2 http://cybox.mitre.org/XMLSchema/core/2.1/cybox_core.xsd
+    http://cybox.mitre.org/default_vocabularies-2 http://cybox.mitre.org/XMLSchema/default_vocabularies/2.1/cybox_default_vocabularies.xsd
+    http://cybox.mitre.org/objects#ArtifactObject-2 http://cybox.mitre.org/XMLSchema/objects/Artifact/2.1/Artifact_Object.xsd
+    http://cybox.mitre.org/objects#DomainNameObject-1 http://cybox.mitre.org/XMLSchema/objects/Domain_Name/1.0/Domain_Name_Object.xsd
+    http://data-marking.mitre.org/Marking-1 http://stix.mitre.org/XMLSchema/data_marking/1.1.1/data_marking.xsd
+    http://stix.mitre.org/Indicator-2 http://stix.mitre.org/XMLSchema/indicator/2.1.1/indicator.xsd
+    http://stix.mitre.org/common-1 http://stix.mitre.org/XMLSchema/common/1.1.1/stix_common.xsd
+    http://stix.mitre.org/default_vocabularies-1 http://stix.mitre.org/XMLSchema/default_vocabularies/1.1.1/stix_default_vocabularies.xsd
+    http://stix.mitre.org/stix-1 http://stix.mitre.org/XMLSchema/core/1.1.1/stix_core.xsd
+    http://www.us-cert.gov/essa/Markings/ISAMarkingAssertions ISAMarkingsAssertionsType.xsd
+    http://www.us-cert.gov/essa/Markings/ISAMarkings ISAMarkingsType.xsd
+    urn:edm:edh:v2 SD-EDH_Profile_Cyber.xsd" id="isa:guide.999191.STIXPackage-96f564e1-e1b1-5625-b41c-506e231fbd53" version="1.1.1" timestamp="2015-11-26T00:35:06Z">
     <stix:STIX_Header>
         <stix:Title>ACS-example.pdf</stix:Title>
         <stix:Package_Intent xsi:type="stixVocabs:PackageIntentVocab-1.0">Indicators</stix:Package_Intent>
@@ -420,7 +420,7 @@ STIXACS = """<stix:STIX_Package
             <indicator:Description>AAA Report Indicator</indicator:Description>
             <indicator:Observable id="isa:guide.999191.Observable-0d467d4f-7392-52d5-ae0b-9d14664b53a">
                 <cybox:Object id="isa:guide.999191.Object-c72322f9-95c9-598f-aee7-55380e796bb2">
-                    <cybox:Properties xsi:type="DomainNameObj:DomainNameObjectType" type="Domain Name">
+                    <cybox:Properties xsi:type="DomainNameObj:DomainNameObjectType" type="FQDN">
                         <DomainNameObj:Value condition="Equals">blog.website.net</DomainNameObj:Value>
                     </cybox:Properties>
                 </cybox:Object>
@@ -458,7 +458,7 @@ STIXACS = """<stix:STIX_Package
             <indicator:Description>Domain Indicator</indicator:Description>
             <indicator:Observable id="isa:guide.999191.Observable-33f02a-5f43-b3f3-9e97f0d4dea2">
                 <cybox:Object id="isa:guide.999191.Object-42189588-5f9d-5273-e84f51fa5b">
-                    <cybox:Properties xsi:type="DomainNameObj:DomainNameObjectType" type="Domain Name">
+                    <cybox:Properties xsi:type="DomainNameObj:DomainNameObjectType" type="FQDN">
                         <DomainNameObj:Value condition="Equals">fake.com</DomainNameObj:Value>
                     </cybox:Properties>
                 </cybox:Object>
@@ -520,7 +520,7 @@ STIXACS = """<stix:STIX_Package
             <indicator:Description>Just Another Indicator</indicator:Description>
             <indicator:Observable id="isa:guide.999191.Observable-969c84fe-5798-5456-8510-f537aa5a1391">
                 <cybox:Object id="isa:guide.999191.Object-1b0b3ff5-58a7-506c-8757-1c5b8add8685">
-                    <cybox:Properties xsi:type="DomainNameObj:DomainNameObjectType" type="Domain Name">
+                    <cybox:Properties xsi:type="DomainNameObj:DomainNameObjectType" type="FQDN">
                         <DomainNameObj:Value condition="Equals">goo.gl/peter</DomainNameObj:Value>
                     </cybox:Properties>
                 </cybox:Object>
