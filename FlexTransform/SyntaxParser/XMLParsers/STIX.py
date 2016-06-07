@@ -214,7 +214,7 @@ class STIX(object):
                     # TODO: use a better regular express here to match a URL or a domain
                     if (re.match(r'.*/', urlvalue) is None) :
                         self.logging.warning('Indicator type changed from URL to Domain Name for indicator %s', urlvalue)
-                        row['observable']['object']['properties']['type'] = "Domain Name"
+                        row['observable']['object']['properties']['type'] = "FQDN"
     
     def _ExtractRelatedObjects(self, row):
         '''
