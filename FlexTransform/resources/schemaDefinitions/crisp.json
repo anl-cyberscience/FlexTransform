@@ -85,10 +85,11 @@
 		"types": {
 			"IPv4-Address-Block": [ { "ipv4address": "*" } ],
 			"DNS-Hostname-Block": [ { "fqdn": "*" } ],
-			"Malicious-File-IOC": [	{ "md5hash": "*" }, { "filename": "*"}],
+			"Malicious-File-IOC": [	{ "md5hash": "*" } ],
 			"URL-Block": [ { "uri": "*"} ],
 			"Artifact": [ { "source_file_base64_encoded": "*" } ],
 			"FilePath": [ { "filepath": "*" } ],
+			"Filename": [ { "filename": "*" } ],
 			"Email-Address": [ {"emailaddress": "*"}]
 		},
 		
@@ -184,7 +185,7 @@
 				"description": "Filename of a an artifact",
 				"datatype": "string",
 				"ontologyMappingType": "simple",
-				"ontologyMapping": "https://cfm.anl.gov/transform.owl#FileNameIndicatorTypeSemanticComponent"
+				"ontologyMapping": "https://cfm.anl.gov/transform.owl#FileNameIndicatorValueSemanticComponent"
 			},
 			"uri": {
 				"description": "URI of malicious file",
