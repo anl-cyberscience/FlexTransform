@@ -110,11 +110,16 @@ class STIX(object):
             ParsedData['DocumentHeaderData'] = copy.deepcopy(stix_dict['stix_header'])
         else :
             ParsedData['DocumentHeaderData'] = {}
-            
+
+        if 'profiles' in stix_dict['stix_header'] and stix_dict['stix_header']['profiles']:
+            ParsedData['DocumentHeaderData']['profiles'] = []
+            for row in stix_dict['stix_header']['profiles']:
+                ParsedData['DocumentHeaderData']['profiles'].append(dict(value=row))
+
         if ('id' in stix_dict) :
             ParsedData['DocumentHeaderData']['id'] = stix_dict['id']
             
-        if  ('version' in stix_dict) :
+        if ('version' in stix_dict) :
             ParsedData['DocumentHeaderData']['version'] = stix_dict['version']
             
         if ('observables' in stix_dict) :
@@ -178,7 +183,13 @@ class STIX(object):
         for indicator in ParsedData['IndicatorData'] :
             if ("IndicatorType" in indicator) :
                 indicator.pop("IndicatorType")
-        
+
+        if 'profiles' in ParsedData['DocumentHeaderData'] and ParsedData['DocumentHeaderData']['profiles']:
+            newList = []
+            for profile in ParsedData['DocumentHeaderData']['profiles']:
+                newList.append(profile['value'])
+            ParsedData['DocumentHeaderData']['profiles'] = newList
+
         if (self.OutputSyntax == "XML") :
             stix_package = STIXPackage.from_dict({'id': ParsedData['DocumentHeaderData'].pop('id'),
                                                   'version': ParsedData['DocumentHeaderData'].pop('version'),
