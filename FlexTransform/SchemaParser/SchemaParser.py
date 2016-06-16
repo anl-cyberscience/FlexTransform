@@ -1406,7 +1406,7 @@ class SchemaParser(object):
         if (fieldDict['datatype'] == 'datetime'):
             if ('ParsedValue' in sourceDict):
                 if (fieldDict['dateTimeFormat'] == 'unixtime'):
-                    NewValue = '%i' % datetime.datetime.timestamp(sourceDict['ParsedValue'])
+                    NewValue = time.mktime(sourceDict['ParsedValue'].timetuple())
                 else:
                     NewValue = sourceDict['ParsedValue'].strftime(fieldDict['dateTimeFormat'])
             else:
