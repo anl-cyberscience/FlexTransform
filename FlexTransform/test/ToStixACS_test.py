@@ -147,7 +147,7 @@ class STIXTLPToSTIXACS(unittest.TestCase):
         self.assertEqual(self.output1.xpath("/stix:STIX_Package/stix:STIX_Header/stix:Package_Intent/text()", namespaces=self.namespace)[0], "Indicators")
 
     def test_profile(self):
-        self.assertEqual(self.output1.xpath("/stix:STIX_Package/stix:STIX_Header/stix:Profiles/stixCommon:Profile/text()", namespaces=self.namespace)[0], "ISA Parent Threat Sharing Profile version 9")
+        self.assertEqual(self.output1.xpath("/stix:STIX_Package/stix:STIX_Header/stix:Profiles/stixCommon:Profile/text()", namespaces=self.namespace)[0], "ISA Profile v1.0")
 
     def test_controlled_structure_text(self):
         self.assertEqual(set(self.output1.xpath("//marking:Controlled_Structure/text()", namespaces=self.namespace)), set(["//node() | //@*", "//node()"]))
@@ -244,7 +244,7 @@ class KeyValueToSTIXACS(unittest.TestCase):
         self.assertEqual(self.output1.xpath("/stix:STIX_Package/stix:STIX_Header/stix:Package_Intent/text()", namespaces=self.namespace)[0], "Indicators")
 
     def test_profile(self):
-        self.assertEqual(self.output1.xpath("/stix:STIX_Package/stix:STIX_Header/stix:Profiles/stixCommon:Profile/text()", namespaces=self.namespace)[0], "ISA Parent Threat Sharing Profile version 9")
+        self.assertEqual(self.output1.xpath("/stix:STIX_Package/stix:STIX_Header/stix:Profiles/stixCommon:Profile/text()", namespaces=self.namespace)[0], "ISA Profile v1.0")
 
     def test_controlled_structure_text(self):
         self.assertEqual(set(self.output1.xpath("//marking:Controlled_Structure/text()", namespaces=self.namespace)), set(["//node() | //@*"]))
