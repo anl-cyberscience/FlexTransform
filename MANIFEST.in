@@ -5,3 +5,4 @@ include FlexTransform/resources/*.rdf
 include FlexTransform/resources/sampleConfigurations/*
 include FlexTransform/resources/schemaDefinitions/*
 include FlexTransform/resources/schemas/*
+include FlexTransform/test/TestData/*

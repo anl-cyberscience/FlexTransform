@@ -201,16 +201,24 @@
 				"ontologyMappingType": "enum",
 				"enumValues": {
 					"WHITE": {
-						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#HeaderTLPWhiteSemanticConcept"
-					},					
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#HeaderTLPWhiteSemanticConcept",
+						"reverseOntologyMappings": [
+							"http://www.anl.gov/cfm/transform.owl#TLPWhiteSemanticConcept" ]
+					},
 					"GREEN": {
-						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#HeaderTLPGreenSemanticConcept"
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#HeaderTLPGreenSemanticConcept",
+						"reverseOntologyMappings": [
+							"http://www.anl.gov/cfm/transform.owl#TLPGreenSemanticConcept" ]
 					},
 					"AMBER": {
-						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#HeaderTLPAmberSemanticConcept"
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#HeaderTLPAmberSemanticConcept",
+						"reverseOntologyMappings": [
+							"http://www.anl.gov/cfm/transform.owl#TLPAmberSemanticConcept" ]
 					},
 					"RED": {
-						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#HeaderTLPRedSemanticConcept"
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#HeaderTLPRedSemanticConcept",
+						"reverseOntologyMappings": [
+							"http://www.anl.gov/cfm/transform.owl#TLPRedSemanticConcept" ]
 					}
 				}
 			},
@@ -264,23 +272,26 @@
 			},
 			"profiles_profile": {
 				"description": "profile for the document",
-				"valuemap": "",
+				"valuemap": "profiles;value",
 				"datatype": "string",
 				"required": false,
 				"memberof": "profiles",
 				"ontologyMappingType": "simple",
-				"ontologyMapping": ""
+				"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#STIXprofileSemanticConcept"
 			}
 		}
 	},
 	"IndicatorData": {
 		"types": {
-			"DNS-Hostname-Block": [ 
-				{ "observable_object_type": "Domain Name" }
+			"DNS-Hostname-Block": [
+				{ "observable_object_type": "FQDN"}
 			],
 			"URL-Block": [
 				{ "observable_object_type": "URL" }
 			],
+            "Link": [
+                { "observable_object_xsitype": "LinkObjectType"}
+            ],
 			"IPv4-Address-Block": [
 				{ "observable_object_category": "ipv4-addr", "observable_object_xsitype": "AddressObjectType" }
 			],
@@ -291,14 +302,13 @@
 				{ "observable_object_category": "e-mail", "observable_object_xsitype": "AddressObjectType" }
 			],
 			"Malicious-Email-Block": [ { "observable_object_xsitype": "EmailMessageObjectType" } ],
-			"Malicious-File-IOC": [ 
-				{ "indicator_type": "File Hash Watchlist" }, 
-				{ "observable_object_xsitype": "FileObjectType" }  
-			],
+			"Malicious-File-Hash": [
+				{ "indicator_type": "File Hash Watchlist", "observable_object_xsitype": "FileObjectType" } ],
+			"Filename": [ { "observable_object_xsitype": "FileObjectType" } ],
 			"Registry-Key-IOC": [ { "observable_object_xsitype": "WindowsRegistryKeyObjectType" } ],
 			"Mutex-IOC": [ { "observable_object_xsitype": "MutexObjectType" } ],
 			"Artifact": [ { "observable_object_xsitype": "ArtifactObjectType" } ],
-			"FilePath": [ { "indicator_type": "FilePath Watchlist"}, {"observable_object_xsitype": "FileObjectType"} ]
+			"FilePath": [ { "observable_object_xsitype": "FileObjectType"} ]
 		},
 		"fields": {
 			"description": {
@@ -390,7 +400,10 @@
 						]
 					},
 					"Malware Artifacts": {
-						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#IndicatorCategoryMalwareArtifactsSemanticConcept"
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#IndicatorCategoryMalwareArtifactsSemanticConcept",
+                        "reverseOntologyMappings": [
+                            "https://cfm.anl.gov/transform.owl#FileNameIndicatorTypeSemanticComponent"
+                        ]
 					},
 					"File Hash Watchlist": {
 						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#IndicatorCategoryFileHashWatchlistSemanticConcept",
@@ -414,12 +427,6 @@
 					},
 					"Unknown": {
 						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#IndicatorCategoryUnknownSemanticConcept"
-					},
-					"FilePath Watchlist": {
-						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#IndicatorCategoryFilePathWatchlistSemanticConcept",
-						"reverseOntologyMapping": [
-							"http://www.anl.gov/cfm/transform.owl#FilePathIndicatorValueSemanticComponent"
-						]
 					}
 				}
 			},
@@ -497,11 +504,11 @@
 			},
 			"observable_object_type": {
 				"description": "The type of the indicator object",
-				"valuemap": "observable;object;properties;type", 
+				"valuemap": "observable;object;properties;type",
 				"datatype": "enum",
 				"defaultValue": "URL",
 				"requiredIfReferenceField": "observable_object_xsitype",
-				"requiredIfReferenceValues": [ "URIObjectType" ], 
+				"requiredIfReferenceValues": [ "URIObjectType" ],
 				"ontologyMappingType": "enum",
 				"enumValues": {
 					"URL": {
@@ -509,9 +516,6 @@
 						"reverseOntologyMappings": [
 							"http://www.anl.gov/cfm/transform.owl#URLIndicatorValueSemanticComponent"
 						]
-					},
-					"Domain Name": {
-						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#DNSDomainNameIndicatorTypeSemanticComponent"
 					},
 					"FQDN": {
 						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#DNSDomainNameIndicatorTypeSemanticComponent",
@@ -529,7 +533,7 @@
 			},
 			"observable_object_xsitype": {
 				"description": "The schema type of the indicator object",
-				"valuemap": "observable;object;properties;xsi:type", 
+				"valuemap": "observable;object;properties;xsi:type",
 				"datatype": "enum",
 				"required": true,
 				"ontologyMappingType": "enum",
@@ -560,7 +564,8 @@
 							"http://www.anl.gov/cfm/transform.owl#MD5FilehashIndicatorValueSemanticComponent",
 							"http://www.anl.gov/cfm/transform.owl#SHA1FilehashIndicatorValueSemanticComponent",
 							"http://www.anl.gov/cfm/transform.owl#SHA256FilehashIndicatorValueSemanticComponent",
-							"http://www.anl.gov/cfm/transform.owl#FilePathIndicatorValueSemanticComponent"
+							"http://www.anl.gov/cfm/transform.owl#FilePathIndicatorValueSemanticComponent",
+							"http://www.anl.gov/cfm/transform.owl#FileNameIndicatorTypeSemanticComponent"
 						]
 					},
 					"EmailMessageObjectType": {
@@ -588,7 +593,7 @@
 			},
 			"observable_object_addressvalue_value": {
 				"description": "The value of the IP address object",
-				"valuemap": "observable;object;properties;address_value;value", 
+				"valuemap": "observable;object;properties;address_value;value",
 				"datatype": "string",
 				"requiredIfReferenceField": "observable_object_xsitype",
 				"requiredIfReferenceValuesMatch": [ "AddressObjectType" ],
@@ -608,11 +613,11 @@
 			},
 			"observable_object_addressvalue_condition": {
 				"description": "The match condition for the IP address object",
-				"valuemap": "observable;object;properties;address_value;condition", 
+				"valuemap": "observable;object;properties;address_value;condition",
 				"datatype": "enum",
 				"defaultValue": "Equals",
 				"requiredIfReferenceField": "observable_object_category",
-				"requiredIfReferenceValuesMatch": [ "*" ], 
+				"requiredIfReferenceValuesMatch": [ "*" ],
 				"ontologyMappingType": "enum",
 				"enumValues": {
 					"Equals": {
@@ -621,49 +626,66 @@
 					}
 				}
 			},
-			"observable_object_filename_value": {
-				"description": "The file name to match",
-				"valuemap": "observable;object;properties;file_name;value", 
-				"datatype": "string",
-				"required": false,
-				"ontologyMappingType": "simple",
-				"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#FilenameIndicatorValueSemanticConcept"
-			},
-			"observable_object_filename_condition": {
-				"description": "The match condition for the filename object",
-				"valuemap": "observable;object;properties;file_name;condition", 
+			"observable_object_properties_is_spoofed": {
+				"description": "Specifies whether the address is forged to conceal its identity or true source",
+				"valuemap": "observable;object;properties;is_spoofed",
 				"datatype": "enum",
-				"defaultValue": "Equals",
-				"requiredIfReferenceField": "observable_object_filename_value",
-				"requiredIfReferenceValuesMatch": [ "*" ], 
+				"required": false,
 				"ontologyMappingType": "enum",
 				"enumValues": {
-					"Equals": {
-						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#FilenameMatchConstraintSemanticConcept"
+					"true": {
+						"ontologyMapping": ""
+					},
+					"false": {
+						"ontologyMapping": ""
 					}
 				}
 			},
+			"observable_object_filename_value": {
+				"description": "The file name to match",
+				"valuemap": "observable;object;properties;file_name;value",
+				"datatype": "string",
+				"required": false,
+				"ontologyMappingType": "simple",
+				"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#FileNameIndicatorTypeSemanticComponent"
+			},
+			"observable_object_filename_condition": {
+				"description": "The match condition for the filename object",
+				"valuemap": "observable;object;properties;file_name;condition",
+				"datatype": "string",
+				"defaultValue": "Equals",
+				"requiredIfReferenceField": "observable_object_filename_value",
+				"requiredIfReferenceValuesMatch": [ "*" ],
+				"ontologyMappingType": "simple",
+				"ontologyMapping": ""
+			},
 			"observable_object_filepath_value": {
 				"description": "The file path to match",
-				"valuemap": "observable;object;properties;file_path;value", 
+				"valuemap": "observable;object;properties;file_path;value",
 				"datatype": "string",
-				"required": false, 
+				"required": false,
 				"ontologyMappingType": "simple",
 				"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#FilePathIndicatorValueSemanticComponent"
 			},
 			"observable_object_filepath_condition": {
 				"description": "The match condition for the filepath object",
-				"valuemap": "observable;object;properties;file_path;condition", 
-				"datatype": "enum",
+				"valuemap": "observable;object;properties;file_path;condition",
+				"datatype": "string",
 				"defaultValue": "Equals",
 				"requiredIfReferenceField": "observable_object_filepath_value",
-				"requiredIfReferenceValuesMatch": [ "*" ], 
-				"ontologyMappingType": "enum",
-				"enumValues": {
-					"Equals": {
-						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#FilepathMatchConstraintSemanticConcept"
-					}
-				}
+				"requiredIfReferenceValuesMatch": [ "*" ],
+				"ontologyMappingType": "simple",
+				"ontologyMapping": ""
+			},
+			"observable_object_link_value": {
+				"description": "The malicious link object information",
+				"valuemap": "observable;object;properties;value;value",
+				"datatype": "string",
+				"required": false,
+				"requiredIfReferenceField": "observable_object_xsitype",
+				"requiredIfReferenceValuesMatch": [ "LinkObjectType" ],
+				"ontologyMappingType": "simple",
+				"ontologyMapping": ""
 			},
 			"observable_object_sizeinbytes_value": {
 				"description": "The file size in bytes to match",
@@ -1410,7 +1432,7 @@
 				"ontologyMappingType": "none",
 				"subfields": {
 								"killchain_phases_chain_id": {"required": true},
-								"killchain_phases_chain_name": {"required": true}, 
+								"killchain_phases_chain_name": {"required": true},
 								"killchain_phases_phase_id": {"required": true}, 
 								"killchain_phases_phase_name": {"required": true, "primaryKey": true}, 
 								"killchain_phases_phase_ordinality": {"required": true}
@@ -1430,6 +1452,7 @@
 				"valuemap": "kill_chain_phases;kill_chain_phases;kill_chain_name", 
 				"datatype": "string",
 				"required": false,
+				"defaultValue": "Command and Control",
 				"memberof": "killchain_phases",
 				"ontologyMappingType": "simple",
 				"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#KillChainNameSemanticConcept"

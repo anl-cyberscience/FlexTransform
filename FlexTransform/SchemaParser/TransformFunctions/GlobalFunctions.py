@@ -12,10 +12,11 @@ import uuid
 
 from FlexTransform.SchemaParser.TransformFunctions import TransformFunctionManager
 
+
 class GlobalFunctions(object):
-    '''
+    """
     Contains Transform functions that multiple schemas utilize
-    '''
+    """
 
     '''
     The _FunctionNames dictionary should contain each function name understood by this class for with a scope of indicator data or header data
@@ -50,43 +51,42 @@ class GlobalFunctions(object):
                       }
 
     def __init__(self):
-        '''
+        """
         Constructor
-        '''
+        """
         self.logging = logging.getLogger('FlexTransform.SchemaParser.GlobalFunctions')
         
     @classmethod
     def RegisterFunctions(cls):
-        for Scope, Functions in cls.__FunctionNames.items() :
-            for FunctionName, RequiredArgs in Functions.items() :
+        for Scope, Functions in cls.__FunctionNames.items():
+            for FunctionName, RequiredArgs in Functions.items():
                 TransformFunctionManager.RegisterFunction(Scope, FunctionName, RequiredArgs, 'GlobalFunctions')
         
-    def Execute(self, Scope, FunctionName, args):
-        '''
+    def Execute(self, scope, function_name, args):
+        """
         Execute the specific called function with the supplied args
-        '''
+        """
         
-        Value = None
+        value = None
          
-        if (FunctionName not in self.__FunctionNames[Scope]) :
-            raise Exception('FunctionNotDefined','Function %s is not defined in GlobalFunctions for document scope %s' % (FunctionName, Scope))
+        if function_name not in self.__FunctionNames[scope]:
+            raise Exception('FunctionNotDefined',
+                            'Function %s is not defined in GlobalFunctions for document scope %s' % (function_name, scope))
         
-        if (FunctionName == 'now'):
-            if ('dateTimeFormat' in args['fieldDict']) :
-                if (args['fieldDict']['dateTimeFormat'] == 'unixtime') :
-                    Value = '%i' % time.mktime(datetime.datetime.now(tz=pytz.utc).timetuple())
-                else :
-                    Value = datetime.datetime.now(tz=pytz.utc).strftime(args['fieldDict']['dateTimeFormat'])
-
+        if function_name == 'now':
+            if 'dateTimeFormat' in args['fieldDict']:
+                if args['fieldDict']['dateTimeFormat'] == 'unixtime':
+                    value = '%i' % time.mktime(datetime.datetime.utcnow().timetuple())
+                else:
+                    value = datetime.datetime.now(tz=pytz.utc).strftime(args['fieldDict']['dateTimeFormat'])
             
-        elif (FunctionName == 'countOfIndicators') :
-            if ('IndicatorData' in args['transformedData']):
-                Value = str(len(args['transformedData']['IndicatorData']))
-            else :
-                Value = '0'
+        elif function_name == 'countOfIndicators':
+            if 'IndicatorData' in args['transformedData']:
+                value = str(len(args['transformedData']['IndicatorData']))
+            else:
+                value = '0'
             
-        elif (FunctionName == 'generate_uuid') :
-            Value = str(uuid.uuid4())
+        elif function_name == 'generate_uuid':
+            value = str(uuid.uuid4())
             
-        return Value
-        
+        return value
