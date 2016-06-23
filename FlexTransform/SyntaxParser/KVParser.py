@@ -1,22 +1,23 @@
-'''
+"""
 Created on Oct 15, 2014
 
 @author: ahoying
-'''
+"""
 
 import re
 import logging
 import os
 
+
 class KVParser(object):
-    '''
+    """
     Key/Value Syntax Parser
-    '''
+    """
 
     def __init__(self):
-        '''
+        """
         Constructor
-        '''
+        """
         self.SeparatorChar = r"\s"
         self.QuoteChar = r"[']"
         self.KVSeparator = r"[=]"
@@ -26,28 +27,29 @@ class KVParser(object):
         self.logging = logging.getLogger('FlexTransform.KVParser')
         
     def ValidateConfig(self,config):
-        '''
+        """
         Validate KV Parser specific configuration options
-        '''
-        if (config.has_section('KEYVALUE')) :
-            if (config.has_option('KEYVALUE', 'SeparatorChar')) :
+        """
+        if config.has_section('KEYVALUE'):
+            if config.has_option('KEYVALUE', 'SeparatorChar'):
                 self.SeparatorChar = config['KEYVALUE']['SeparatorChar']
-            if (config.has_option('KEYVALUE', 'QuoteChar')) :
+            if config.has_option('KEYVALUE', 'QuoteChar'):
                 self.QuoteChar = config['KEYVALUE']['QuoteChar']
-            if (config.has_option('KEYVALUE', 'KVSeparator')) :
+            if config.has_option('KEYVALUE', 'KVSeparator'):
                 self.KVSeparator = config['KEYVALUE']['KVSeparator']
                 
-    def Read(self,file):
-        '''
+    def Read(self, file):
+        """
         Read file and parse into Transform object
-        '''
+        """
         
         self.ParsedData = {}
         
         # TODO: Make it clearer what I'm doing here
-        KVRegex = re.compile("([^"+self.KVSeparator.strip("[]")+"]+)"+ \
-                                self.KVSeparator+"("+self.QuoteChar+"[^"+self.QuoteChar.strip("[]")+"]+"+self.QuoteChar+ \
-                                "|[^"+self.SeparatorChar.strip("[]")+"]+)(?:"+self.SeparatorChar+"|$)")
+        KVRegex = re.compile(
+            "([^"+self.KVSeparator.strip("[]")+"]+)"+
+            self.KVSeparator+"("+self.QuoteChar+"[^"+self.QuoteChar.strip("[]")+"]+"+self.QuoteChar+
+            "|[^"+self.SeparatorChar.strip("[]")+"]+)(?:"+self.SeparatorChar+"|$)")
         
         self.ParsedData['IndicatorData'] = []
         
@@ -70,41 +72,45 @@ class KVParser(object):
         return self.ParsedData
 
     def Finalize(self, MappedData):
-        '''
+        """
         Finalize the formatting of the data before being returned to the caller
-        '''
+        """
 
-        if ('IndicatorData' not in MappedData or MappedData['IndicatorData'].__len__() == 0) :
+        if 'IndicatorData' not in MappedData or MappedData['IndicatorData'].__len__() == 0:
             raise Exception('NoIndicatorData', 'Transformed data has no indicators, nothing to write')
 
         FinalizedData = []
         for row in MappedData['IndicatorData'] :
 
             indicatorRow = []
-            # Keep passing the IndicatorType forward with the data. This is somewhat messy, but that way we can use it on write
+            # Keep passing the IndicatorType forward with the data. This is somewhat messy,
+            # but that way we can use it on write
             # DataRow['IndicatorType'] = indicator['IndicatorType']
 
             for field in row:
                 DataRow = {}
                 if ('Value' in row[field]) :
                     if 'datatype' in row[field]:
-                        if (row[field]['datatype'] == 'enum' or row[field]['datatype'] == 'string'):
+                        if row[field]['datatype'] == 'enum' or row[field]['datatype'] == 'string':
                             DataRow[field] = self.QuoteChar.strip("[]") + row[field]['Value'] + self.QuoteChar.strip("[]")
                         else:
                             DataRow[field] = row[field]['Value']
                     else:
                         DataRow[field] = row[field]['Value']
                     indicatorRow.append(DataRow)
-                else :
-                    self.logging.warning("Field %s does not contain a Value entry", field)
+                else:
+                    if field == 'IndicatorType':
+                        self.logging.info("Field IndicatorType does not contain a Value entry")
+                    else:
+                        self.logging.warning("Field %s does not contain a Value entry", field)
 
             FinalizedData.append(indicatorRow)
         return FinalizedData
 
     def Write(self, file, FinalizedData):
-        '''
+        """
         Write the data as csv to the file.
-        '''
+        """
         if isinstance(file, str):
             if os.path.exists(file):
                 file = open(file, "w")

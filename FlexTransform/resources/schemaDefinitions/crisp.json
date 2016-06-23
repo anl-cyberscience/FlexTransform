@@ -182,7 +182,7 @@
 				"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#IndicatorTitleSemanticConcept"
 			},
 			"filename": {
-				"description": "Filename of a an artifact",
+				"description": "Filename of an artifact",
 				"datatype": "string",
 				"ontologyMappingType": "simple",
 				"ontologyMapping": "https://cfm.anl.gov/transform.owl#FileNameIndicatorValueSemanticComponent"
@@ -199,7 +199,7 @@
 				"datatype": "string",
 				"required": "false",
 				"ontologyMappingType": "simple",
-				"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#FilePathIndicatorValueSemanticComponent"
+				"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#FilePathSemanticComponent"
 			}
 		}
 	}

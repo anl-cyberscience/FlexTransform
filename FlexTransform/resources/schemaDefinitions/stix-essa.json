@@ -154,7 +154,7 @@
 				"required": true
 			},
 			"profiles_profile": {
-				"defaultValue": "ISA Parent Threat Sharing Profile version 9"
+				"defaultValue": "ISA Profile v1.0"
 			}
 		}
 	},
