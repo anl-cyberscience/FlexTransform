@@ -685,7 +685,7 @@
 				"requiredIfReferenceField": "observable_object_xsitype",
 				"requiredIfReferenceValuesMatch": [ "LinkObjectType" ],
 				"ontologyMappingType": "simple",
-				"ontologyMapping": ""
+				"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#LinkObjectIndicatorValueSemanticComponent"
 			},
 			"observable_object_sizeinbytes_value": {
 				"description": "The file size in bytes to match",
