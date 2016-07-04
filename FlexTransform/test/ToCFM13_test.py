@@ -6,6 +6,7 @@ from lxml import etree
 from FlexTransform.test.SampleInputs import STIXTLP, STIXACS, KEYVALUE
 from FlexTransform import FlexTransform
 
+
 class TestSTIXTLPToCFM13Alert(unittest.TestCase):
     output1 = None
     namespace = {
@@ -94,6 +95,7 @@ class TestSTIXTLPToCFM13Alert(unittest.TestCase):
     def test_alert_classification_reference_url_false(self):
         self.assertEqual(set(self.output1.xpath("//xmlns:url/text()", namespaces=self.namespace)), set([" "]))
 
+
 class TestSTIXACSToCFM13Alert(unittest.TestCase):
     output1 = None
     namespace = {
@@ -106,12 +108,12 @@ class TestSTIXACSToCFM13Alert(unittest.TestCase):
         'stixVocabs'    : "http://stix.mitre.org/default_vocabularies-1",
         'xsi'           : "http://www.w3.org/2001/XMLSchema-instance",
         'cyboxVocabs'   : "http://cybox.mitre.org/default_vocabularies-2",
-	    'AddressObj'    : "http://cybox.mitre.org/objects#AddressObject-2",
-	    'ArtifactObj'   : "http://cybox.mitre.org/objects#ArtifactObject-2",
-	    'FileObj'       : "http://cybox.mitre.org/objects#FileObject-2",
-	    'URIObj'        : "http://cybox.mitre.org/objects#URIObject-2",
-	    'tlpMarking'    : "http://data-marking.mitre.org/extensions/MarkingStructure#TLP-1",
-	    'CFM'           : "http://www.anl.gov/cfm/stix",
+        'AddressObj'    : "http://cybox.mitre.org/objects#AddressObject-2",
+        'ArtifactObj'   : "http://cybox.mitre.org/objects#ArtifactObject-2",
+        'FileObj'       : "http://cybox.mitre.org/objects#FileObject-2",
+        'URIObj'        : "http://cybox.mitre.org/objects#URIObject-2",
+        'tlpMarking'    : "http://data-marking.mitre.org/extensions/MarkingStructure#TLP-1",
+        'CFM'           : "http://www.anl.gov/cfm/stix",
         'xmlns'         : "http://www.anl.gov/cfm/1.3/IDMEF-Message"
     }
 
