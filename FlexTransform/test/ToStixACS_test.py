@@ -150,7 +150,7 @@ class STIXTLPToSTIXACS(unittest.TestCase):
         self.assertEqual(self.output1.xpath("/stix:STIX_Package/stix:STIX_Header/stix:Profiles/stixCommon:Profile/text()", namespaces=self.namespace)[0], "ISA Profile v1.0")
 
     def test_controlled_structure_text(self):
-        self.assertEqual(set(self.output1.xpath("//marking:Controlled_Structure/text()", namespaces=self.namespace)), set(["//node() | //@*", "//node()"]))
+        self.assertEqual(set(self.output1.xpath("//marking:Controlled_Structure/text()", namespaces=self.namespace)), set(["//node() | //@*", "//node()", "//node() | @*"]))
 
     def test_marking_type(self):
         self.assertEqual(set(self.output1.xpath("//marking:Marking_Structure/@xsi:type", namespaces=self.namespace)), set(['edh2cyberMarking:ISAMarkingsType', 'edh2cyberMarkingAssert:ISAMarkingsAssertionType']))

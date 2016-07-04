@@ -5,6 +5,7 @@ import unittest
 from FlexTransform.test.SampleInputs import STIXTLP, STIXACS, CFM13ALERT
 from FlexTransform import FlexTransform
 
+
 class TestCFM13AlertToKeyValue(unittest.TestCase):
     output1 = None
 
