@@ -85,7 +85,7 @@
 		"types": {
 			"IPv4-Address-Block": [ { "ipv4address": "*" } ],
 			"DNS-Hostname-Block": [ { "fqdn": "*" } ],
-			"Malicious-File-IOC": [	{ "md5hash": "*" } ],
+			"Malicious-File-Hash":[	{ "md5hash": "*" } ],
 			"URL-Block": [ { "uri": "*"} ],
 			"Artifact": [ { "source_file_base64_encoded": "*" } ],
 			"FilePath": [ { "filepath": "*" } ],
