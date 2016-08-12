@@ -29,7 +29,7 @@ class SchemaParser(object):
                       it (or items)
     * self._FieldOrder - Ordered list of field names used to process the fields in the schema based on their relationship to each other.
     * self._outputFormatRE -  Regex used to parse the outputFormat field
-                              Example outputFormat: "[comment], direction:[direction], 
+                              Example outputFormat: "[comment], direction:[direction],
                                                      confidence:[confidence], severity:[severity]"
     * self.logging - The logging object
     '''
@@ -61,28 +61,29 @@ class SchemaParser(object):
 
         TODO: Create an ABOX (using the Ontology Oracle) to represent the source file; this will also inform the
               target production, as data will be requested from the ABOX.
-              
+
               Essentially this will consist of creating instances of the appropriate subclasses in an ABOX.
         '''
 
-        # The value map is only used by the _MapRowToSchema function, so it isn't calculated until this method is called and not under __init__()
+        # The value map is only used by the _MapRowToSchema function, so it isn't calculated
+        # until this method is called and not under __init__()
         self._ValueMap = self._ValuemapToField()
 
         self.MappedData = {}
 
         rowTypes = []
 
-        if ('IndicatorData' in SourceData):
+        if 'IndicatorData' in SourceData:
             rowTypes.append('IndicatorData')
-        if ('DocumentHeaderData' in SourceData):
+        if 'DocumentHeaderData' in SourceData:
             rowTypes.append('DocumentHeaderData')
 
         for rowType in rowTypes:
-            if (rowType in self.SchemaConfig):
-                if (isinstance(SourceData[rowType], list)):
+            if rowType in self.SchemaConfig:
+                if isinstance(SourceData[rowType], list):
                     self.MappedData[rowType] = []
                     for row in SourceData[rowType]:
-                        if (isinstance(row, dict)):
+                        if isinstance(row, dict):
                             try:
                                 DataRow = self._MapRowToSchema(SchemaParser.FlattenDict(row), rowType)
                                 self.MappedData[rowType].append(DataRow)
@@ -91,7 +92,7 @@ class SchemaParser(object):
                                 # self.logging.debug(str(SchemaParser.FlattenDict(row)))
                         else:
                             raise Exception('NoParsableDataFound', "Data isn't in a parsable dictionary format")
-                elif (isinstance(SourceData[rowType], dict)):
+                elif isinstance(SourceData[rowType], dict):
                     DataRow = self._MapRowToSchema(SchemaParser.FlattenDict(SourceData[rowType]), rowType)
                     self.MappedData[rowType] = DataRow
                 else:
@@ -99,7 +100,7 @@ class SchemaParser(object):
             else:
                 raise Exception('SchemaConfigNotFound', 'Data Type: ' + rowType)
 
-        ## Let's start here.  Build an ABOX:
+        # Let's start here.  Build an ABOX:
         '''
         if not oracle is None:
             for dataType in self.MappedData:
@@ -121,7 +122,7 @@ class SchemaParser(object):
                             continue
                         if not toProcess[key]["ontologyMappingType"] == "simple":
                             logging.warning("Found non-simple ontology mapping: {0} :: {1}".format(
-                                            key, 
+                                            key,
                                             dumper.dump(toProcess[key])))
                             continue
                         oracle.addSemanticComponentIndividual(
@@ -133,12 +134,12 @@ class SchemaParser(object):
         return self.MappedData
 
     def MapMetadataToSchema(self, sourceMetaData):
-        '''
+        """
         Add meta data to the MappedData
-        '''
+        """
 
-        if ('DocumentMetaData' in self.SchemaConfig):
-            if (isinstance(sourceMetaData, dict)):
+        if 'DocumentMetaData' in self.SchemaConfig:
+            if isinstance(sourceMetaData, dict):
                 DataRow = self._MapRowToSchema(SchemaParser.FlattenDict(sourceMetaData), 'DocumentMetaData')
                 self.MappedData['DocumentMetaData'] = DataRow
             else:
@@ -147,13 +148,13 @@ class SchemaParser(object):
             raise Exception('SchemaConfigNotFound', 'Data Type: DocumentMetaData')
 
     def TransformData(self, MappedData, oracle=None):
-        '''
+        """
         Takes the data that was mapped to the source schema and transform it using the target schema
         Parameters:
         * MappedData - The data mapped from the source document
         * oracle - An instance of the OntologyOracle class which encapsulates the target schema ontology
                    If 'None', will not be used.
-        '''
+        """
         self.TransformedData = {}
 
         # If the oracle is set, initialize it:
@@ -166,23 +167,23 @@ class SchemaParser(object):
         DocumentHeaderData = None
         DocumentMetaData = None
 
-        if ('IndicatorData' in self.SchemaConfig.keys()):
+        if 'IndicatorData' in self.SchemaConfig.keys():
             rowTypes.append('IndicatorData')
-        if ('DocumentHeaderData' in self.SchemaConfig.keys()):
+        if 'DocumentHeaderData' in self.SchemaConfig.keys():
             rowTypes.append('DocumentHeaderData')
 
-        if ('DocumentHeaderData' in MappedData):
+        if 'DocumentHeaderData' in MappedData:
             DocumentHeaderData = MappedData['DocumentHeaderData']
 
-        if ('DocumentMetaData' in MappedData):
+        if 'DocumentMetaData' in MappedData:
             DocumentMetaData = MappedData['DocumentMetaData']
 
         for rowType in rowTypes:
-            if (rowType in MappedData):
-                if (isinstance(MappedData[rowType], list)):
+            if rowType in MappedData:
+                if isinstance(MappedData[rowType], list):
                     self.TransformedData[rowType] = []
                     for row in MappedData[rowType]:
-                        if (isinstance(row, dict)):
+                        if isinstance(row, dict):
                             try:
                                 self.TransformedData[rowType].append(
                                     self._TransformDataToNewSchema(rowType, row, DocumentHeaderData, DocumentMetaData,
@@ -192,7 +193,7 @@ class SchemaParser(object):
                         else:
                             raise Exception('NoParsableDataFound', "Data isn't in a parsable dictionary format")
 
-                elif (isinstance(MappedData[rowType], dict)):
+                elif isinstance(MappedData[rowType], dict):
                     self.TransformedData[rowType] = self._TransformDataToNewSchema(rowType, MappedData[rowType], None,
                                                                                    DocumentMetaData, oracle)
                 else:
@@ -204,31 +205,31 @@ class SchemaParser(object):
         return self.TransformedData
 
     def _ValuemapToField(self):
-        '''
+        """
         Create a fast lookup dictionary for mapping values from flattened dictionaries back to the schema field
-        '''
+        """
 
         ValueMap = {}
 
         for rowType in self.SchemaConfig:
             ValueMap[rowType] = {}
-            if ('fields' in self.SchemaConfig[rowType] and isinstance(self.SchemaConfig[rowType]['fields'], dict)):
+            if 'fields' in self.SchemaConfig[rowType] and isinstance(self.SchemaConfig[rowType]['fields'], dict):
                 for fieldName, fieldDict in self.SchemaConfig[rowType]['fields'].items():
-                    if ('valuemap' in fieldDict):
+                    if 'valuemap' in fieldDict:
                         ValueMap[rowType][fieldDict['valuemap']] = fieldName
-                    if ('additionalValuemaps' in fieldDict):
+                    if 'additionalValuemaps' in fieldDict:
                         for valuemap in fieldDict['additionalValuemaps']:
                             ValueMap[rowType][valuemap] = fieldName
 
         return ValueMap
 
     def _CalculateSchemaFieldOrder(self):
-        '''
+        """
         Sorts the schema fields from the first fields that must be processed to the last based on the relationships between the fields.
         Caches the data so that this only has to be determined the first time.
-        
+
         Returns a list with the fields in order.
-        '''
+        """
         # TODO: Can this be cached offline so it is loaded between runs so long as the schema .json files don't change?
         SchemaFieldOrder = {}
 
@@ -238,38 +239,37 @@ class SchemaParser(object):
             FieldOrder = {}
 
             for field, fieldDict in self.SchemaConfig[rowType]['fields'].items():
-                if ('datatype' in fieldDict and fieldDict['datatype'] == "group"):
+                if 'datatype' in fieldDict and fieldDict['datatype'] == "group":
                     # Groups need to be processed last by the transform engine
-                    if (field not in FieldOrder or FieldOrder[field] < 10):
+                    if field not in FieldOrder or FieldOrder[field] < 10:
                         FieldOrder[field] = 10
 
                     # Handle subgroups, parent group needs to be processed after all child groups
-                    if ('memberof' in fieldDict):
-                        if (fieldDict['memberof'] not in FieldOrder or FieldOrder[fieldDict['memberof']] <= FieldOrder[
-                            field]):
+                    if 'memberof' in fieldDict:
+                        if fieldDict['memberof'] not in FieldOrder or FieldOrder[fieldDict['memberof']] <= FieldOrder[field]:
                             FieldOrder[fieldDict['memberof']] = FieldOrder[field] + 1
 
-                elif ('required' in fieldDict and fieldDict['required'] == True):
-                    if (field not in FieldOrder or FieldOrder[field] > 1):
+                elif 'required' in fieldDict and fieldDict['required'] == True:
+                    if field not in FieldOrder or FieldOrder[field] > 1:
                         FieldOrder[field] = 1
-                elif ('memberof' in fieldDict):
-                    if (field not in FieldOrder or FieldOrder[field] > 5):
+                elif 'memberof' in fieldDict:
+                    if field not in FieldOrder or FieldOrder[field] > 5:
                         FieldOrder[field] = 5
                         if (fieldDict['memberof'] not in FieldOrder or FieldOrder[fieldDict['memberof']] <= FieldOrder[
                             field]):
                             FieldOrder[fieldDict['memberof']] = FieldOrder[field] + 1
-                elif ('dependsOn' in fieldDict):
-                    if (field not in FieldOrder or FieldOrder[field] < 6):
+                elif 'dependsOn' in fieldDict:
+                    if field not in FieldOrder or FieldOrder[field] < 6:
                         FieldOrder[field] = 6
                 else:
-                    if (field not in FieldOrder or FieldOrder[field] > 4):
+                    if field not in FieldOrder or FieldOrder[field] > 4:
                         FieldOrder[field] = 4
 
-            # Run through all the fields again and re-order based on references        
+            # Run through all the fields again and re-order based on references
             for field, fieldDict in self.SchemaConfig[rowType]['fields'].items():
-                if ('defaultValue' in fieldDict and fieldDict['defaultValue'].startswith('&')):
+                if 'defaultValue' in fieldDict and fieldDict['defaultValue'].startswith('&'):
                     match = re.match(r'&([^\(]+)\(([^\)]*)\)', fieldDict['defaultValue'])
-                    if (match):
+                    if match:
                         args = match.group(2)
                         if (args and args in self.SchemaConfig[rowType]['fields']):
                             if (field in FieldOrder and (
@@ -368,20 +368,33 @@ class SchemaParser(object):
 
                 processedFields[mappedField] = True
 
-                if ('ignore' in fieldDict and fieldDict['ignore'] == True):
+                if 'ignore' in fieldDict and fieldDict['ignore'] == True:
+                    # TODO - Add logging of ignore flag processed
                     continue
 
-                elif ('error' in fieldDict):
+                elif 'error' in fieldDict:
                     raise Exception("InvalidSchemaMapping", fieldDict['error'])
 
-                if ('dependsOn' in fieldDict):
+                if 'dependsOn' in fieldDict:
                     # If the field this field depends on does not exist, then don't add to new dictionary
                     dependsOn = fieldDict['dependsOn']
-                    if (dependsOn not in newDict or 'Value' not in newDict[dependsOn]):
+                    if dependsOn not in newDict or 'Value' not in newDict[dependsOn]:
+                        # TODO - Add logging of skipping this element
                         continue
 
                 newDict[field] = fieldDict.copy()
                 Value = DataRow[mappedField]
+
+                if 'mapOntologyToElement' in fieldDict:
+                    # TODO - Add logging & additional error checking
+                    map_onto = fieldDict['mapOntologyToElement']
+                    if map_onto in newDict and not newDict[map_onto]['ontologyMapping']:
+                        newDict[map_onto]['ontologyMapping'] = \
+                            fieldDict['enumValues'][DataRow[mappedField]]['ontologyMapping']
+                        newDict[field]["discardBeforeTranslation"] = True
+                    else:
+                        # TODO - Throw error and remove pass command
+                        pass
 
                 if (isinstance(Value, list) and
                             'multiple' in fieldDict and
@@ -568,20 +581,23 @@ class SchemaParser(object):
         return subDict
 
     def _AddIndicatorType(self, newDict):
-        '''
+        """
         Determine the indicator type from the data and add a new field IndicatorType to the data row
-        '''
-        if ("types" not in self.SchemaConfig["IndicatorData"]):
+        """
+        if "types" not in self.SchemaConfig["IndicatorData"]:
             raise Exception("NoIndicatorTypes", "Indicator Types not defined in schema")
 
         '''
-        The layout of the indicator types in the schema is a dictionary of indicator Types, which have a list of possible indicator matches, 
-        which have one or more required fields and values in a dictionary. The best match (based on weight, more exact matches have a higher weight) wins.
-        In the case of a tie, the first match wins. Running through every possible type is a little slower, but it makes sure the best possible indicator types are chosen
-                        
+        The layout of the indicator types in the schema is a dictionary of indicator Types, which have a list of
+        possible indicator matches, which have one or more required fields and values in a dictionary. The best match
+        (based on weight, more exact matches have a higher weight) wins. In the case of a tie, the first match wins.
+        Running through every possible type is a little slower, but it makes sure the best possible indicator
+        types are chosen
+
         Example: "DNS-Hostname-Block": [ { "classification_text": "Domain Block:*" } ],
-                If the classification_text field has a value of Domain Blocks:<anything> then the indicator type is determined to be a DNS-Hostname-Block.
-                Multiple fields can be required for a single match, and multiple possible matches can be tried for a single indicator type
+                If the classification_text field has a value of Domain Blocks:<anything> then the indicator type
+                is determined to be a DNS-Hostname-Block. Multiple fields can be required for a single match, and
+                multiple possible matches can be tried for a single indicator type
         '''
 
         bestMatch = None
@@ -850,7 +866,7 @@ class SchemaParser(object):
                             # Lookup Ontology reference from the oracle instead:
                             if (OntologyReference != ''):
                                 if (OntologyReference in DataDictionary):
-                                    # If the semantic value exists exactly in the data dictionary, we can use it 
+                                    # If the semantic value exists exactly in the data dictionary, we can use it
                                     # directly; no oracle call is required.
                                     OntologyReferences[OntologyReference].extend(
                                         DataDictionary[OntologyReference].keys())
@@ -871,7 +887,7 @@ class SchemaParser(object):
                 elif (fieldDict['ontologyMappingType'] == 'enum'):
                     # If the destination field type is an enum, we need to determine what value to use for it
                     # based on the source's data values.  An enum ontology mapping type indicates that the value
-                    # of the field carries a semantic significance, not just the field itself.                    
+                    # of the field carries a semantic significance, not just the field itself.
                     if ('enumValues' in fieldDict):
                         for k, v in fieldDict['enumValues'].items():
                             if (v['ontologyMapping'] != ''):
@@ -905,7 +921,7 @@ class SchemaParser(object):
                                     continue
 
                                 if ('reverseOntologyMappings' in v and isinstance(v['reverseOntologyMappings'], list)):
-                                    # If the source only has a single concept, but the target requires several other 
+                                    # If the source only has a single concept, but the target requires several other
                                     # schema elements to represent the concept:
                                     # Builds out a larger ontology on the target side; accommodate one-to-many
                                     for reverseMapping in v['reverseOntologyMappings']:
@@ -959,7 +975,7 @@ class SchemaParser(object):
                                 if (fieldDict['ontologyMappingEnumValues']['*']['ontologyMapping'] != ''):
                                     OntologyReference = fieldDict['ontologyMappingEnumValues']['*']['ontologyMapping']
 
-                            # TODO: If this test fails, no direct map back to source.  Check the ontology for other options       
+                            # TODO: If this test fails, no direct map back to source.  Check the ontology for other options
                             if (OntologyReference in DataDictionary):
                                 OntologyReferences[OntologyReference].extend(DataDictionary[OntologyReference].keys())
                         else:
@@ -1160,7 +1176,7 @@ class SchemaParser(object):
         '''
         TODO: This function is still messy and needs a lot more work. It works okay for most of the common use cases
         but will likely be broken for more complex groups
-        
+
         ** Where does the group association need to be preserved to ensure that related indicators are still related on
            output?
         '''
@@ -1177,9 +1193,9 @@ class SchemaParser(object):
 
         '''
         subfields should be a dictionary like the following:
-        
-        "subfields": { 
-                        "reasonList_reasonCategory": {"required":true, "primaryKey":true}, 
+
+        "subfields": {
+                        "reasonList_reasonCategory": {"required":true, "primaryKey":true},
                         "reasonList_reasonDescription": {"required":false}
         }
         '''
@@ -1342,7 +1358,7 @@ class SchemaParser(object):
                                              requiredField)
                         return
 
-                    # Don't validate fields that are set to function names until after the function is processed 
+                    # Don't validate fields that are set to function names until after the function is processed
                     if (fieldGroup[requiredField]['Value'].startswith('&')):
                         fieldGroup[requiredField]['Value'] = self._CalculateFunctionValue(
                                 fieldGroup[requiredField]['Value'], requiredField, fieldGroup, rowType, fieldGroup,
@@ -1398,7 +1414,7 @@ class SchemaParser(object):
         fieldDict - the target schema field description dictionary
         sourceDict - the source schema field description dictionary
         Value - the source value that needs to be converted
-        
+
         Convert data formats between source and target schemas
         '''
         NewValue = None
@@ -1434,7 +1450,7 @@ class SchemaParser(object):
         '''
         Builds a dictionary that maps each ontology concept to all the values in the source data, and their associated schema field configuration dictionary
         Combines the all the data from the data row, optional document header data and optional document meta data
-        
+
         Example:
         {
             OntologyConcept = { 'Value': { field: dictionary, field2: data, ... } }
@@ -1470,34 +1486,37 @@ class SchemaParser(object):
 
             CombinedDataRow.update(DataRow)
         for field, fieldDict in CombinedDataRow.items():
-            if ('Value' not in fieldDict):
+            if 'Value' not in fieldDict:
                 self.logging.warning("Field %s has no value", field)
+                continue
+            if 'discardBeforeTranslation' in fieldDict and fieldDict['discardBeforeTranslation'] == True:
+                # TODO - Add logging of ignore flag processed
                 continue
 
             Values = []
 
             Values.append(fieldDict['Value'])
 
-            if ('AdditionalValues' in fieldDict):
+            if 'AdditionalValues' in fieldDict:
                 Values.extend(fieldDict['AdditionalValues'])
 
             for Value in Values:
                 OntologyReference = None
                 AdditionalOntologyReferences = []
 
-                if ('ontologyMappingType' in fieldDict):
-                    if (fieldDict['ontologyMappingType'] == 'none'):
+                if 'ontologyMappingType' in fieldDict:
+                    if fieldDict['ontologyMappingType'] == 'none':
                         continue
 
-                    elif (fieldDict['ontologyMappingType'] == 'simple'):
-                        if (fieldDict['ontologyMapping'] != ''):
+                    elif fieldDict['ontologyMappingType'] == 'simple':
+                        if fieldDict['ontologyMapping'] != '':
                             OntologyReference = fieldDict['ontologyMapping']
 
-                    elif (fieldDict['ontologyMappingType'] == 'multiple'):
-                        if ('ontologyMappings' in fieldDict):
+                    elif fieldDict['ontologyMappingType'] == 'multiple':
+                        if 'ontologyMappings' in fieldDict:
                             for mapping in fieldDict['ontologyMappings']:
-                                if (mapping != ''):
-                                    if (OntologyReference is None):
+                                if mapping != '':
+                                    if OntologyReference is None:
                                         OntologyReference = mapping
                                     else:
                                         AdditionalOntologyReferences.append(mapping)
