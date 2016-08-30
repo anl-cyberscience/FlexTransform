@@ -134,10 +134,10 @@ Sample 1 : When datatype = enum
 				"ontologyMappingType": "enum",
 				"enumValues": {
 					"ingress": {
-						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#IngressSemanticComponent"
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#IngressDirectionSemanticConcept"
 					},
 					"egress": {
-						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#EgressSemanticComponent"
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#EgressDirectionSemanticConcept"
 					},
 				}
 			}
@@ -225,10 +225,10 @@ Sample 5 : When ontologyMappingType = referencedEnum
 				"ontologyEnumField" : "field2"
 				"ontologyMappingEnumValues": {
 					"ingress": {
-						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#IngressSemanticComponent"
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#IngressDirectionSemanticConcept"
 					},
 					"egress": {
-						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#EgressSemanticComponent"
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#EgressDirectionSemanticConcept"
 					},
 				}
 			}
