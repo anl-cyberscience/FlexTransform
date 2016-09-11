@@ -11,9 +11,9 @@
 
 <rdf:RDF xmlns="http://www.w3.org/2002/07/owl#"
      xml:base="http://www.w3.org/2002/07/owl"
-     xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-     xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
      xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+     xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+     xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
      xmlns:cfmft="http://www.anl.gov/cfm/transform.owl#">
     <Ontology rdf:about="http://www.anl.gov/cfm/transform.owl">
         <rdfs:comment xml:lang="en">This ontology will capture the concepts and relations necessar to perform flexible transformations of indicator and other cyber threat data.  That is, it will provide representational structure in a semantically rich and syntactically neutral way such that parsing and producing data in a variety of formats is automatable.</rdfs:comment>
@@ -250,6 +250,7 @@
 
     <Class rdf:about="http://www.anl.gov/cfm/transform.owlassessment_action-Bag">
         <rdfs:subClassOf rdf:resource="&cfmft;SemanticComponent"/>
+        <rdfs:comment xml:lang="en">Action taken by the submitting site on this alert</rdfs:comment>
     </Class>
     
 
@@ -258,6 +259,7 @@
 
     <Class rdf:about="http://www.anl.gov/cfm/transform.owlassessment_description-Bag">
         <rdfs:subClassOf rdf:resource="http://www.anl.gov/cfm/transform.owlassessment_action-Bag"/>
+        <rdfs:comment xml:lang="en">Site description of action taken on this alert</rdfs:comment>
     </Class>
     
 
@@ -266,6 +268,7 @@
 
     <Class rdf:about="http://www.anl.gov/cfm/transform.owlouo-Bag">
         <rdfs:subClassOf rdf:resource="&cfmft;SemanticComponent"/>
+        <rdfs:comment xml:lang="en">Is this document ouo (0 means no, 1 means yes)</rdfs:comment>
     </Class>
     
 
@@ -274,6 +277,7 @@
 
     <Class rdf:about="http://www.anl.gov/cfm/transform.owlrecon-Bag">
         <rdfs:subClassOf rdf:resource="&cfmft;SemanticComponent"/>
+        <rdfs:comment xml:lang="en">Is recon allowed (0 means yes, 1 means no)</rdfs:comment>
     </Class>
     
 
@@ -282,6 +286,7 @@
 
     <Class rdf:about="http://www.anl.gov/cfm/transform.owlreference_meaning-Bag">
         <rdfs:subClassOf rdf:resource="&cfmft;SemanticComponent"/>
+        <rdfs:comment xml:lang="en">The category for the alert</rdfs:comment>
     </Class>
     
 
@@ -290,6 +295,7 @@
 
     <Class rdf:about="http://www.anl.gov/cfm/transform.owlreference_origin-Bag">
         <rdfs:subClassOf rdf:resource="&cfmft;SemanticComponent"/>
+        <rdfs:comment xml:lang="en">Origin of the alert</rdfs:comment>
     </Class>
     
 
@@ -298,6 +304,7 @@
 
     <Class rdf:about="http://www.anl.gov/cfm/transform.owlreport_tlp-Bag">
         <rdfs:subClassOf rdf:resource="&cfmft;SemanticComponent"/>
+        <rdfs:comment xml:lang="en">The TLP restriction for this document</rdfs:comment>
     </Class>
     
 
@@ -306,6 +313,7 @@
 
     <Class rdf:about="http://www.anl.gov/cfm/transform.owlreport_type-Bag">
         <rdfs:subClassOf rdf:resource="&cfmft;SemanticComponent"/>
+        <rdfs:comment xml:lang="en">The type of report</rdfs:comment>
     </Class>
     
 
@@ -314,6 +322,7 @@
 
     <Class rdf:about="http://www.anl.gov/cfm/transform.owlrestriction-Bag">
         <rdfs:subClassOf rdf:resource="&cfmft;SemanticComponent"/>
+        <rdfs:comment xml:lang="en">Restriction for use of data</rdfs:comment>
     </Class>
     
 
@@ -322,6 +331,7 @@
 
     <Class rdf:about="http://www.anl.gov/cfm/transform.owlsource_address_type-Bag">
         <rdfs:subClassOf rdf:resource="&cfmft;SemanticComponent"/>
+        <rdfs:comment xml:lang="en">The type for the alert source</rdfs:comment>
     </Class>
     
 
@@ -330,6 +340,7 @@
 
     <Class rdf:about="&cfmft;ActionDescriptionSemanticConcept">
         <rdfs:subClassOf rdf:resource="&cfmft;SemanticComponent"/>
+        <rdfs:comment xml:lang="en">A description of the action associated with a reported indicator.</rdfs:comment>
     </Class>
     
 
@@ -379,6 +390,7 @@
 
     <Class rdf:about="&cfmft;ActionThresholdSemanticConcept">
         <rdfs:subClassOf rdf:resource="&cfmft;SemanticComponent"/>
+        <rdfs:comment xml:lang="en">Number of times seen before action was taken</rdfs:comment>
     </Class>
     
 
@@ -420,6 +432,7 @@
 
     <Class rdf:about="&cfmft;AlertReferenceURLSemanticComponent">
         <rdfs:subClassOf rdf:resource="&cfmft;SemanticComponent"/>
+        <rdfs:comment xml:lang="en">A URL at which the manager (or the human operator of the manager) can find additional information about the alert. The document pointed to by the URL may include an in-depth description of the attack, appropriate countermeasures, or other information deemed relevant by the vendor.</rdfs:comment>
     </Class>
     
 
@@ -784,10 +797,29 @@ The DocumentComponentValue is actually comprised of both a value type and a valu
     
 
 
+    <!-- http://www.anl.gov/cfm/transform.owl#DocumentFileCreatedTimestampSemanticConcept -->
+
+    <Class rdf:about="&cfmft;DocumentFileCreatedTimestampSemanticConcept">
+        <rdfs:subClassOf rdf:resource="&cfmft;DocumentGeneratedTimeSemanticConcept"/>
+        <rdfs:comment>The timestamp as determined by examining the metadata of the file itself.</rdfs:comment>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#DocumentGeneratedExplicitDeclarationTimestampSemanticConcept -->
+
+    <Class rdf:about="&cfmft;DocumentGeneratedExplicitDeclarationTimestampSemanticConcept">
+        <rdfs:subClassOf rdf:resource="&cfmft;DocumentGeneratedTimeSemanticConcept"/>
+        <rdfs:comment>An explicit declaration within a report of when the document was created.</rdfs:comment>
+    </Class>
+    
+
+
     <!-- http://www.anl.gov/cfm/transform.owl#DocumentGeneratedTimeSemanticConcept -->
 
     <Class rdf:about="&cfmft;DocumentGeneratedTimeSemanticConcept">
         <rdfs:subClassOf rdf:resource="&cfmft;ReportProducedTimeSemanticConcept"/>
+        <rdfs:comment>When the report document was actually generated. Could be, for instance, an explicit declaration within the document, or taken from the file creation timestamp.</rdfs:comment>
     </Class>
     
 
@@ -1464,6 +1496,7 @@ indicator, or a Phishing indicator. </rdfs:comment>
 
     <Class rdf:about="&cfmft;IndicatorDescriptionSemanticConcept">
         <rdfs:subClassOf rdf:resource="&cfmft;SemanticComponent"/>
+        <rdfs:comment xml:lang="en">User defined description of the alert</rdfs:comment>
     </Class>
     
 
@@ -1472,6 +1505,7 @@ indicator, or a Phishing indicator. </rdfs:comment>
 
     <Class rdf:about="&cfmft;IndicatorGeneratedTimeSemanticConcept">
         <rdfs:subClassOf rdf:resource="&cfmft;ReportProducedTimeSemanticConcept"/>
+        <rdfs:comment>The time when a specific Indicator was generated.</rdfs:comment>
     </Class>
     
 
@@ -1515,6 +1549,7 @@ Indicates the specific origin or source of a submitted indicator.  For example, 
 
     <Class rdf:about="&cfmft;IndicatorSightingsSemanticConcept">
         <rdfs:subClassOf rdf:resource="&cfmft;SemanticComponent"/>
+        <rdfs:comment xml:lang="en">Number of times an indicator has been seen</rdfs:comment>
     </Class>
     
 
@@ -1523,6 +1558,7 @@ Indicates the specific origin or source of a submitted indicator.  For example, 
 
     <Class rdf:about="&cfmft;IndicatorSimpleSharingRestrictionSemanticConcept">
         <rdfs:subClassOf rdf:resource="&cfmft;SemanticComponent"/>
+        <rdfs:comment xml:lang="en">A human readable description of the restrictions for this indicator</rdfs:comment>
     </Class>
     
 
@@ -2224,6 +2260,7 @@ Indicates the specific origin or source of a submitted indicator.  For example, 
 
     <Class rdf:about="&cfmft;ReportAlertCountSemanticConcept">
         <rdfs:subClassOf rdf:resource="&cfmft;SemanticComponent"/>
+        <rdfs:comment xml:lang="en">The number of indicators present in an alert-style upload.</rdfs:comment>
     </Class>
     
 
@@ -2232,6 +2269,7 @@ Indicates the specific origin or source of a submitted indicator.  For example, 
 
     <Class rdf:about="&cfmft;ReportDescriptionSemanticComponent">
         <rdfs:subClassOf rdf:resource="&cfmft;SemanticComponent"/>
+        <rdfs:comment xml:lang="en">A human-consumable description of the data within a given report.  For example, the description element in a STIX document.</rdfs:comment>
     </Class>
     
 
@@ -2282,6 +2320,7 @@ Indicates the specific origin or source of a submitted indicator.  For example, 
 
     <Class rdf:about="&cfmft;ReportScheduleSemanticConcept">
         <rdfs:subClassOf rdf:resource="&cfmft;SemanticComponent"/>
+        <rdfs:comment xml:lang="en">Indicates the schedule on which reports are submitted by an automated uploader.  For example, legacy CFM reports were often submitted on a 15 minute schedule.</rdfs:comment>
     </Class>
     
 
@@ -2290,6 +2329,7 @@ Indicates the specific origin or source of a submitted indicator.  For example, 
 
     <Class rdf:about="&cfmft;ReportStartTimeSemanticConcept">
         <rdfs:subClassOf rdf:resource="&cfmft;SemanticComponent"/>
+        <rdfs:comment xml:lang="en">Indicates the earliest time an event could have been included in the report.</rdfs:comment>
     </Class>
     
 
@@ -2298,6 +2338,7 @@ Indicates the specific origin or source of a submitted indicator.  For example, 
 
     <Class rdf:about="&cfmft;ReportSubmittedTimeSemanticConcept">
         <rdfs:subClassOf rdf:resource="&cfmft;ReportProducedTimeSemanticConcept"/>
+        <rdfs:comment>The time when the report was submitted to the recipient.</rdfs:comment>
     </Class>
     
 
@@ -2306,6 +2347,7 @@ Indicates the specific origin or source of a submitted indicator.  For example, 
 
     <Class rdf:about="&cfmft;ReportTitleSemanticComponent">
         <rdfs:subClassOf rdf:resource="&cfmft;SemanticComponent"/>
+        <rdfs:comment xml:lang="en">A human-readable title for the given report.  E.g. the title of a STIX document.</rdfs:comment>
     </Class>
     
 
@@ -2627,6 +2669,7 @@ Indicates the specific origin or source of a submitted indicator.  For example, 
 
     <Class rdf:about="&cfmft;SimpleSharingRestrictionSemanticConcept">
         <rdfs:subClassOf rdf:resource="&cfmft;SharingRestrictionSemanticConcept"/>
+        <rdfs:comment xml:lang="en">Indicates a &apos;simple&apos;, human-readable, specification of a restriction marking.</rdfs:comment>
     </Class>
     
 
@@ -2635,6 +2678,7 @@ Indicates the specific origin or source of a submitted indicator.  For example, 
 
     <Class rdf:about="&cfmft;SiteAbbreviationSemanticConcept">
         <rdfs:subClassOf rdf:resource="&cfmft;InformationSourceSemanticConcept"/>
+        <rdfs:comment xml:lang="en">An Analyzer identifier, such as a CFM site ID (e.g. AMES)</rdfs:comment>
     </Class>
     
 
@@ -2667,6 +2711,7 @@ Indicates the specific origin or source of a submitted indicator.  For example, 
 
     <Class rdf:about="&cfmft;SiteNameSemanticConcept">
         <rdfs:subClassOf rdf:resource="&cfmft;InformationSourceSemanticConcept"/>
+        <rdfs:comment xml:lang="en">Long site name</rdfs:comment>
     </Class>
     
 
@@ -3459,6 +3504,7 @@ Indicates the specific origin or source of a submitted indicator.  For example, 
 
     <Class rdf:about="&cfmft;XMLNodeControlledStructureSemanticConcept">
         <rdfs:subClassOf rdf:resource="&cfmft;SemanticComponent"/>
+        <rdfs:comment xml:lang="en">Indicator has specific handling instructions</rdfs:comment>
     </Class>
     
 
@@ -5090,137 +5136,11 @@ Indicates the specific origin or source of a submitted indicator.  For example, 
     <!-- 
     ///////////////////////////////////////////////////////////////////////////////////////
     //
-    // Annotations
-    //
-    ///////////////////////////////////////////////////////////////////////////////////////
-     -->
-
-    <rdf:Description rdf:about="http://www.anl.gov/cfm/transform.owlrecon-Bag">
-        <rdfs:comment xml:lang="en">Is recon allowed (0 means yes, 1 means no)</rdfs:comment>
-    </rdf:Description>
-    <rdf:Description rdf:about="http://www.anl.gov/cfm/transform.owlouo-Bag">
-        <rdfs:comment xml:lang="en">Is this document ouo (0 means no, 1 means yes)</rdfs:comment>
-    </rdf:Description>
-    <rdf:Description rdf:about="http://www.anl.gov/cfm/transform.owlreference_origin-Bag">
-        <rdfs:comment xml:lang="en">Origin of the alert</rdfs:comment>
-    </rdf:Description>
-    <rdf:Description rdf:about="&cfmft;IndicatorSightingsSemanticConcept">
-        <rdfs:comment xml:lang="en">Number of times an indicator has been seen</rdfs:comment>
-    </rdf:Description>
-    <rdf:Description rdf:about="&cfmft;SiteNameSemanticConcept">
-        <rdfs:comment xml:lang="en">Long site name</rdfs:comment>
-    </rdf:Description>
-    <rdf:Description rdf:about="&cfmft;SimpleSharingRestrictionSemanticConcept">
-        <rdfs:comment xml:lang="en">Indicates a &apos;simple&apos;, human-readable, specification of a restriction marking.</rdfs:comment>
-    </rdf:Description>
-    <rdf:Description rdf:about="http://www.anl.gov/cfm/transform.owlrestriction-Bag">
-        <rdfs:comment xml:lang="en">Restriction for use of data</rdfs:comment>
-    </rdf:Description>
-    <rdf:Description rdf:about="&cfmft;ReportDescriptionSemanticComponent">
-        <rdfs:comment xml:lang="en">A human-consumable description of the data within a given report.  For example, the description element in a STIX document.</rdfs:comment>
-    </rdf:Description>
-    <rdf:Description rdf:about="&cfmft;ReportStartTimeSemanticConcept">
-        <rdfs:comment xml:lang="en">Indicates the earliest time an event could have been included in the report.</rdfs:comment>
-    </rdf:Description>
-    <rdf:Description rdf:about="&cfmft;IndicatorSimpleSharingRestrictionSemanticConcept">
-        <rdfs:comment xml:lang="en">A human readable description of the restrictions for this indicator</rdfs:comment>
-    </rdf:Description>
-    <rdf:Description rdf:about="http://www.anl.gov/cfm/transform.owlassessment_action-Bag">
-        <rdfs:comment xml:lang="en">Action taken by the submitting site on this alert</rdfs:comment>
-    </rdf:Description>
-    <rdf:Description rdf:about="&cfmft;IndicatorDescriptionSemanticConcept">
-        <rdfs:comment xml:lang="en">User defined description of the alert</rdfs:comment>
-    </rdf:Description>
-    <rdf:Description rdf:about="http://www.anl.gov/cfm/transform.owlassessment_description-Bag">
-        <rdfs:comment xml:lang="en">Site description of action taken on this alert</rdfs:comment>
-    </rdf:Description>
-    <rdf:Description rdf:about="http://www.anl.gov/cfm/transform.owlreport_tlp-Bag">
-        <rdfs:comment xml:lang="en">The TLP restriction for this document</rdfs:comment>
-    </rdf:Description>
-    <rdf:Description rdf:about="&cfmft;ActionDescriptionSemanticConcept">
-        <rdfs:comment xml:lang="en">A description of the action associated with a reported indicator.</rdfs:comment>
-    </rdf:Description>
-    <rdf:Description rdf:about="&cfmft;SiteAbbreviationSemanticConcept">
-        <rdfs:comment xml:lang="en">An Analyzer identifier, such as a CFM site ID (e.g. AMES)</rdfs:comment>
-    </rdf:Description>
-    <rdf:Description rdf:about="&cfmft;ReportScheduleSemanticConcept">
-        <rdfs:comment xml:lang="en">Indicates the schedule on which reports are submitted by an automated uploader.  For example, legacy CFM reports were often submitted on a 15 minute schedule.</rdfs:comment>
-    </rdf:Description>
-    <rdf:Description rdf:about="&cfmft;XMLNodeControlledStructureSemanticConcept">
-        <rdfs:comment xml:lang="en">Indicator has specific handling instructions</rdfs:comment>
-    </rdf:Description>
-    <rdf:Description rdf:about="http://www.anl.gov/cfm/transform.owlreport_type-Bag">
-        <rdfs:comment xml:lang="en">The type of report</rdfs:comment>
-    </rdf:Description>
-    <rdf:Description rdf:about="&cfmft;ReportAlertCountSemanticConcept">
-        <rdfs:comment xml:lang="en">The number of indicators present in an alert-style upload.</rdfs:comment>
-    </rdf:Description>
-    <rdf:Description rdf:about="&cfmft;AlertReferenceURLSemanticComponent">
-        <rdfs:comment xml:lang="en">A URL at which the manager (or the human operator of the manager) can find additional information about the alert. The document pointed to by the URL may include an in-depth description of the attack, appropriate countermeasures, or other information deemed relevant by the vendor.</rdfs:comment>
-    </rdf:Description>
-    <rdf:Description rdf:about="&cfmft;ReportTitleSemanticComponent">
-        <rdfs:comment xml:lang="en">A human-readable title for the given report.  E.g. the title of a STIX document.</rdfs:comment>
-    </rdf:Description>
-    <rdf:Description rdf:about="http://www.anl.gov/cfm/transform.owlsource_address_type-Bag">
-        <rdfs:comment xml:lang="en">The type for the alert source</rdfs:comment>
-    </rdf:Description>
-    <rdf:Description rdf:about="&cfmft;ActionThresholdSemanticConcept">
-        <rdfs:comment xml:lang="en">Number of times seen before action was taken</rdfs:comment>
-    </rdf:Description>
-    <rdf:Description rdf:about="http://www.anl.gov/cfm/transform.owlreference_meaning-Bag">
-        <rdfs:comment xml:lang="en">The category for the alert</rdfs:comment>
-    </rdf:Description>
-    
-
-
-    <!-- 
-    ///////////////////////////////////////////////////////////////////////////////////////
-    //
     // General axioms
     //
     ///////////////////////////////////////////////////////////////////////////////////////
      -->
 
-    <rdf:Description>
-        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AllDisjointClasses"/>
-        <members rdf:parseType="Collection">
-            <rdf:Description rdf:about="&cfmft;BlockInstalledResponseActionTakenSemanticConcept"/>
-            <rdf:Description rdf:about="&cfmft;NotificationSentResponseActionTakenSemanticConcept"/>
-            <rdf:Description rdf:about="&cfmft;OtherResponseActionTakenSemanticConcept"/>
-            <rdf:Description rdf:about="&cfmft;TakenOfflineResponseActionTakenSemanticConcept"/>
-        </members>
-    </rdf:Description>
-    <rdf:Description>
-        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AllDisjointClasses"/>
-        <members rdf:parseType="Collection">
-            <rdf:Description rdf:about="&cfmft;ToStarAction1"/>
-            <rdf:Description rdf:about="&cfmft;ToStarAction2"/>
-            <rdf:Description rdf:about="&cfmft;ToStarConfidence"/>
-            <rdf:Description rdf:about="&cfmft;ToStarDirectSource"/>
-            <rdf:Description rdf:about="&cfmft;ToStarDuration1"/>
-            <rdf:Description rdf:about="&cfmft;ToStarDuration2"/>
-            <rdf:Description rdf:about="&cfmft;ToStarFileHasMore"/>
-            <rdf:Description rdf:about="&cfmft;ToStarIndicator"/>
-            <rdf:Description rdf:about="&cfmft;ToStarIndicatorType"/>
-            <rdf:Description rdf:about="&cfmft;ToStarPriors"/>
-            <rdf:Description rdf:about="&cfmft;ToStarProcessedTime"/>
-            <rdf:Description rdf:about="&cfmft;ToStarReason1"/>
-            <rdf:Description rdf:about="&cfmft;ToStarReason2"/>
-            <rdf:Description rdf:about="&cfmft;ToStarReconAllowed"/>
-            <rdf:Description rdf:about="&cfmft;ToStarReference1"/>
-            <rdf:Description rdf:about="&cfmft;ToStarReference2"/>
-            <rdf:Description rdf:about="&cfmft;ToStarRelatedID"/>
-            <rdf:Description rdf:about="&cfmft;ToStarRelationType"/>
-            <rdf:Description rdf:about="&cfmft;ToStarRelevancy"/>
-            <rdf:Description rdf:about="&cfmft;ToStarReportedTime"/>
-            <rdf:Description rdf:about="&cfmft;ToStarRestriction"/>
-            <rdf:Description rdf:about="&cfmft;ToStarSecondaryIndicator"/>
-            <rdf:Description rdf:about="&cfmft;ToStarSecondaryIndicatorType"/>
-            <rdf:Description rdf:about="&cfmft;ToStarSecondarySource"/>
-            <rdf:Description rdf:about="&cfmft;ToStarSensitivity"/>
-            <rdf:Description rdf:about="&cfmft;ToStarSeverity"/>
-        </members>
-    </rdf:Description>
     <rdf:Description>
         <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AllDisjointClasses"/>
         <members rdf:parseType="Collection">
@@ -5240,19 +5160,18 @@ Indicates the specific origin or source of a submitted indicator.  For example, 
     <rdf:Description>
         <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AllDisjointClasses"/>
         <members rdf:parseType="Collection">
-            <rdf:Description rdf:about="&cfmft;DocumentComponent"/>
-            <rdf:Description rdf:about="&cfmft;DocumentSchema"/>
-            <rdf:Description rdf:about="&cfmft;DocumentSyntax"/>
+            <rdf:Description rdf:about="&cfmft;NeedToKnowCFM13SharingRestrictionSemanticConcept"/>
+            <rdf:Description rdf:about="&cfmft;PrivateCFM13SharingRestrictionSemanticConcept"/>
+            <rdf:Description rdf:about="&cfmft;PublicCFM13SharingRestrictionSemanticConcept"/>
         </members>
     </rdf:Description>
     <rdf:Description>
         <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AllDisjointClasses"/>
         <members rdf:parseType="Collection">
-            <rdf:Description rdf:about="&cfmft;IndicatorCategoryEndpointCharacteristicsSemanticConcept"/>
-            <rdf:Description rdf:about="&cfmft;IndicatorCategoryMalwareArtifactsSemanticConcept"/>
-            <rdf:Description rdf:about="&cfmft;IndicatorCategoryNetworkActivitySemanticConcept"/>
-            <rdf:Description rdf:about="&cfmft;IndicatorCategoryPhishingSemanticConcept"/>
-            <rdf:Description rdf:about="&cfmft;IndicatorCategoryWatchlistSemanticConcept"/>
+            <rdf:Description rdf:about="&cfmft;TLPAmberSemanticConcept"/>
+            <rdf:Description rdf:about="&cfmft;TLPGreenSemanticConcept"/>
+            <rdf:Description rdf:about="&cfmft;TLPRedSemanticConcept"/>
+            <rdf:Description rdf:about="&cfmft;TLPWhiteSemanticConcept"/>
         </members>
     </rdf:Description>
     <rdf:Description>
@@ -5291,18 +5210,28 @@ Indicates the specific origin or source of a submitted indicator.  For example, 
     <rdf:Description>
         <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AllDisjointClasses"/>
         <members rdf:parseType="Collection">
-            <rdf:Description rdf:about="&cfmft;TLPAmberSemanticConcept"/>
-            <rdf:Description rdf:about="&cfmft;TLPGreenSemanticConcept"/>
-            <rdf:Description rdf:about="&cfmft;TLPRedSemanticConcept"/>
-            <rdf:Description rdf:about="&cfmft;TLPWhiteSemanticConcept"/>
+            <rdf:Description rdf:about="&cfmft;DocumentComponent"/>
+            <rdf:Description rdf:about="&cfmft;DocumentSchema"/>
+            <rdf:Description rdf:about="&cfmft;DocumentSyntax"/>
         </members>
     </rdf:Description>
     <rdf:Description>
         <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AllDisjointClasses"/>
         <members rdf:parseType="Collection">
-            <rdf:Description rdf:about="&cfmft;NeedToKnowCFM13SharingRestrictionSemanticConcept"/>
-            <rdf:Description rdf:about="&cfmft;PrivateCFM13SharingRestrictionSemanticConcept"/>
-            <rdf:Description rdf:about="&cfmft;PublicCFM13SharingRestrictionSemanticConcept"/>
+            <rdf:Description rdf:about="&cfmft;BlockInstalledResponseActionTakenSemanticConcept"/>
+            <rdf:Description rdf:about="&cfmft;NotificationSentResponseActionTakenSemanticConcept"/>
+            <rdf:Description rdf:about="&cfmft;OtherResponseActionTakenSemanticConcept"/>
+            <rdf:Description rdf:about="&cfmft;TakenOfflineResponseActionTakenSemanticConcept"/>
+        </members>
+    </rdf:Description>
+    <rdf:Description>
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AllDisjointClasses"/>
+        <members rdf:parseType="Collection">
+            <rdf:Description rdf:about="&cfmft;IndicatorCategoryEndpointCharacteristicsSemanticConcept"/>
+            <rdf:Description rdf:about="&cfmft;IndicatorCategoryMalwareArtifactsSemanticConcept"/>
+            <rdf:Description rdf:about="&cfmft;IndicatorCategoryNetworkActivitySemanticConcept"/>
+            <rdf:Description rdf:about="&cfmft;IndicatorCategoryPhishingSemanticConcept"/>
+            <rdf:Description rdf:about="&cfmft;IndicatorCategoryWatchlistSemanticConcept"/>
         </members>
     </rdf:Description>
     <rdf:Description>
@@ -5316,9 +5245,40 @@ Indicates the specific origin or source of a submitted indicator.  For example, 
             <rdf:Description rdf:about="&cfmft;WindowsRegistryKeyObjectSchemaTypeSpecification"/>
         </members>
     </rdf:Description>
+    <rdf:Description>
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AllDisjointClasses"/>
+        <members rdf:parseType="Collection">
+            <rdf:Description rdf:about="&cfmft;ToStarAction1"/>
+            <rdf:Description rdf:about="&cfmft;ToStarAction2"/>
+            <rdf:Description rdf:about="&cfmft;ToStarConfidence"/>
+            <rdf:Description rdf:about="&cfmft;ToStarDirectSource"/>
+            <rdf:Description rdf:about="&cfmft;ToStarDuration1"/>
+            <rdf:Description rdf:about="&cfmft;ToStarDuration2"/>
+            <rdf:Description rdf:about="&cfmft;ToStarFileHasMore"/>
+            <rdf:Description rdf:about="&cfmft;ToStarIndicator"/>
+            <rdf:Description rdf:about="&cfmft;ToStarIndicatorType"/>
+            <rdf:Description rdf:about="&cfmft;ToStarPriors"/>
+            <rdf:Description rdf:about="&cfmft;ToStarProcessedTime"/>
+            <rdf:Description rdf:about="&cfmft;ToStarReason1"/>
+            <rdf:Description rdf:about="&cfmft;ToStarReason2"/>
+            <rdf:Description rdf:about="&cfmft;ToStarReconAllowed"/>
+            <rdf:Description rdf:about="&cfmft;ToStarReference1"/>
+            <rdf:Description rdf:about="&cfmft;ToStarReference2"/>
+            <rdf:Description rdf:about="&cfmft;ToStarRelatedID"/>
+            <rdf:Description rdf:about="&cfmft;ToStarRelationType"/>
+            <rdf:Description rdf:about="&cfmft;ToStarRelevancy"/>
+            <rdf:Description rdf:about="&cfmft;ToStarReportedTime"/>
+            <rdf:Description rdf:about="&cfmft;ToStarRestriction"/>
+            <rdf:Description rdf:about="&cfmft;ToStarSecondaryIndicator"/>
+            <rdf:Description rdf:about="&cfmft;ToStarSecondaryIndicatorType"/>
+            <rdf:Description rdf:about="&cfmft;ToStarSecondarySource"/>
+            <rdf:Description rdf:about="&cfmft;ToStarSensitivity"/>
+            <rdf:Description rdf:about="&cfmft;ToStarSeverity"/>
+        </members>
+    </rdf:Description>
 </rdf:RDF>
 
 
 
-<!-- Generated by the OWL API (version 3.5.1) http://owlapi.sourceforge.net -->
+<!-- Generated by the OWL API (version 3.4.2) http://owlapi.sourceforge.net -->
 

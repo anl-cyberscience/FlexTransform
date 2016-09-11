@@ -9,6 +9,7 @@ import datetime
 import logging
 import re
 import socket
+import pprint
 
 import pytz
 import time
@@ -46,8 +47,9 @@ class SchemaParser(object):
         self._FieldOrder = self._CalculateSchemaFieldOrder()
 
         self.FunctionManager = TransformFunctionManager()
-
+        
         # TODO: Create a JSON schema document and validate the config against the schema. Worst case, define accepted tags and validate there are no unknown tags.
+        self.pprint = pprint.PrettyPrinter()
 
         self.logging = logging.getLogger('FlexTransform.SchemaParser')
 
@@ -76,6 +78,10 @@ class SchemaParser(object):
             rowTypes.append('IndicatorData')
         if ('DocumentHeaderData' in SourceData):
             rowTypes.append('DocumentHeaderData')
+        #TODO: Need to generalize this to deal elegantly with environment-derived data:
+        ''' Get data about the environment '''
+        if ('DerivedData' in SourceData):
+            rowTypes.append('DerivedData')
 
         for rowType in rowTypes:
             if (rowType in self.SchemaConfig):
@@ -165,11 +171,20 @@ class SchemaParser(object):
 
         DocumentHeaderData = None
         DocumentMetaData = None
+        DerivedData = None
 
+        ''' self.SchemaConfig is the dictionary representation of the destination schema '''
         if ('IndicatorData' in self.SchemaConfig.keys()):
             rowTypes.append('IndicatorData')
         if ('DocumentHeaderData' in self.SchemaConfig.keys()):
             rowTypes.append('DocumentHeaderData')
+
+        ''' MappedData is the dictionary representation of the source data mapped to the source schema '''
+        if ('DerivedData' in MappedData):
+            DerivedData = MappedData['DerivedData']
+        else:
+            print("Row type DerivedData not in MappedData")
+            self.pprint.pprint(MappedData)
 
         if ('DocumentHeaderData' in MappedData):
             DocumentHeaderData = MappedData['DocumentHeaderData']
@@ -186,7 +201,7 @@ class SchemaParser(object):
                             try:
                                 self.TransformedData[rowType].append(
                                     self._TransformDataToNewSchema(rowType, row, DocumentHeaderData, DocumentMetaData,
-                                                                   oracle))
+                                                                   DerivedData, oracle))
                             except Exception as inst:
                                 self.logging.error(inst)
                         else:
@@ -194,12 +209,13 @@ class SchemaParser(object):
 
                 elif (isinstance(MappedData[rowType], dict)):
                     self.TransformedData[rowType] = self._TransformDataToNewSchema(rowType, MappedData[rowType], None,
-                                                                                   DocumentMetaData, oracle)
+                                                                                   DocumentMetaData, DerivedData, oracle)
                 else:
                     raise Exception('NoParsableDataFound', "Data isn't in a parsable dictionary format")
             else:
+                print("Row type {} *not* in MappedData".format(rowType))
                 self.TransformedData[rowType] = self._TransformDataToNewSchema(rowType, None, None, DocumentMetaData,
-                                                                               oracle)
+                                                                               DerivedData, oracle)
 
         return self.TransformedData
 
@@ -334,6 +350,8 @@ class SchemaParser(object):
           * DataRow - The specification of data which will be the source for this mapping
           * rowType - Either DocumentHeaderData, DocumentMetaData or IndicatorData.
           * SubGroupedRow - Set to true if this is processing a subgrouped row and not the primary data row
+          
+          TODO: Add processing for derived data rowType
         '''
 
         newDict = {}
@@ -348,6 +366,10 @@ class SchemaParser(object):
         FieldOrder = self._FieldOrder[rowType]
 
         for field in FieldOrder:
+            if rowType == 'DerivedData':
+                print("Processing field {} from DerivedData".format(field))
+                print("Data row is:")
+                self.pprint.pprint(DataRow)
             fieldDict = self.SchemaConfig[rowType]['fields'][field]
             mappedField = None
 
@@ -658,7 +680,11 @@ class SchemaParser(object):
 
         values = []
         if ('Value' in fieldDict):
-            if (fieldDict['Value'].startswith('&')):
+            if (fieldDict['Value'] is None):
+                raise Exception('FieldValueIsNone',
+                                'Value for field %s is None' % (
+                                fieldName))
+            elif (fieldDict['Value'].startswith('&')):
                 raise Exception('ValueIsFunction',
                                 'Value for field %s maps to a function which should already have been processed: %s' % (
                                 fieldName, fieldDict['Value']))
@@ -750,7 +776,7 @@ class SchemaParser(object):
 
         return
 
-    def _TransformDataToNewSchema(self, rowType, DataRow, DocumentHeaderData, DocumentMetaData, oracle=None):
+    def _TransformDataToNewSchema(self, rowType, DataRow, DocumentHeaderData, DocumentMetaData, DerivedData, oracle=None):
         '''
         Transform the data row using the underlying ontology mappings to the new schema
         Parameters:
@@ -758,6 +784,7 @@ class SchemaParser(object):
         * DataRow
         * DocumentHeader
         * DocumentMetadata
+        * DerivedData
         * oracle - An instance of the OntologyOracle class which encapsulates the target schema ontology
                    If 'None', will not be used.
 
@@ -796,7 +823,9 @@ class SchemaParser(object):
                 newDict['IndicatorType'] = IndicatorType
 
         # Build a quick lookup dictionary of Ontology concepts to data from the source document
-        DataDictionary = self._MapDataToOntology(DataRow, DocumentHeaderData, DocumentMetaData)
+        DataDictionary = self._MapDataToOntology(DataRow, DocumentHeaderData, DocumentMetaData, DerivedData)
+        print("Mapping ontology data dictionary for row type {}".format(rowType))
+        self.pprint.pprint(DataDictionary)
 
         # Build the dependency order for processing the target schema
         FieldOrder = self._FieldOrder[rowType]
@@ -1430,7 +1459,7 @@ class SchemaParser(object):
 
         return NewValue
 
-    def _MapDataToOntology(self, DataRow, DocumentHeaderData, DocumentMetaData):
+    def _MapDataToOntology(self, DataRow, DocumentHeaderData, DocumentMetaData, DerivedData):
         '''
         Builds a dictionary that maps each ontology concept to all the values in the source data, and their associated schema field configuration dictionary
         Combines the all the data from the data row, optional document header data and optional document meta data
@@ -1446,8 +1475,17 @@ class SchemaParser(object):
         # CombinedDataRow aggregates the data from the document header, metadata and the specific data row into one dictionary
         CombinedDataRow = {}
 
-        # Start with the least specific data, which is the document header data
+        # Start with the least specific data, which is the derived data
+        if (DerivedData is not None):
+            CombinedDataRow.update(DerivedData)
+        
+        # Next, add in the document header data
         if (DocumentHeaderData is not None):
+            for k, v in DocumentHeaderData.items():
+                if (k in CombinedDataRow):
+                    self.logging.warning(
+                        'Key %s already exists in data row, value %s, overwritten by DocumentHeaderData key with value %s',
+                        k, CombinedDataRow[k], v)
             CombinedDataRow.update(DocumentHeaderData)
 
         # Check to see if any of the header data is overridden by the document metadata.
@@ -1650,7 +1688,7 @@ class SchemaParser(object):
         '''
         '''
         if (value.startswith('&')):
-            match = re.match(r'&([^\(]+)\(([^\)]*)\)', value)
+            match = re.match(r'&([^\(]+)\((.*)\)$', value)
             if (match):
                 function = match.group(1)
                 functionarg = match.group(2)

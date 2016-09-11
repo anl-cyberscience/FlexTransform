@@ -6,6 +6,8 @@ Created on Jul 27, 2014
 
 import logging
 import rdflib
+import pprint
+import sys
 from .Configuration import Config
 from .OntologyOracle import Oracle
 
@@ -21,16 +23,17 @@ class FlexTransform(object):
         '''
         Constructor
         '''
+        self.pprint = pprint.PrettyPrinter()
         self.Parsers = {}
         self.logging = logging.getLogger('FlexTransform')
         self.oracle = None
         
-    def AddParser(self, parserName, configFile) :
+    def AddParser(self, parserName, configFile, sourceFileName = None, destFileName = None) :
         '''
         Add parsers to the FlexTransform object
         '''
         
-        parserConfig = Config(configFile)
+        parserConfig = Config(configFile, sourceFileName, destFileName)
         
         if (parserName in self.Parsers) :
             self.logging.warn('Parser %s already configured, configuration will be overwritten', parserName)
@@ -81,22 +84,37 @@ class FlexTransform(object):
         DestinationConfig = self.Parsers[targetParserName]
     
         # Parse source file into dictionary object
-        SourceData = SourceConfig.Parser.Read(sourceFileName)
+        SourceData = SourceConfig.Parser.Read(sourceFileName, SourceConfig)
+        
+        '''
+        print("FlexTransform.Transform(): SourceData Dictionary: ")
+        self.pprint.pprint(SourceData)
+        '''
         
         if (SourceData is None) :
             raise Exception('NoSourceData', 'Source data file could not be parsed, no data')
         
         # Map source file data to source schema
         MappedData = SourceConfig.SchemaParser.MapDataToSchema(SourceData, oracle)
+
+        '''
+        print("FlexTransform.Transform(): MappedData Dictionary: ")
+        self.pprint.pprint(MappedData)
+        '''
         
         if (sourceMetaData is not None) :
             SourceConfig.SchemaParser.MapMetadataToSchema(sourceMetaData)
         
         # Map source data to destination schema
         TransformedData = DestinationConfig.SchemaParser.TransformData(MappedData, oracle)
+
+        print("FlexTransform.Transform(): TransformedData Dictionary: ")
+        self.pprint.pprint(TransformedData)
         
         # Finalize data to be written
         FinalizedData = DestinationConfig.Parser.Finalize(TransformedData)
+        print("FlexTransform.Transform(): FinalizedData Dictionary: ")
+        self.pprint.pprint(FinalizedData)
         
         if (targetFileName is not None) :
             DestinationConfig.Parser.Write(targetFileName, FinalizedData)

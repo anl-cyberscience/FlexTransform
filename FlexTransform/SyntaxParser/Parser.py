@@ -8,6 +8,9 @@ import inspect
 import FlexTransform.SyntaxParser
 import logging
 
+''' Debugging only '''
+import pprint
+
 class Parser(object):
     '''
     Base class for Syntax Parsers
@@ -23,6 +26,7 @@ class Parser(object):
         Constructor
         '''
         self.logging = logging.getLogger('FlexTransform.Parser')
+        self.pprint = pprint.PrettyPrinter(indent=2)
         
     @classmethod
     def UpdateKnownParsers(cls, ParserName, ParserClass):
@@ -46,11 +50,21 @@ class Parser(object):
         '''
         raise Exception("MethodNotDefined","ValidateConfig")
 
-    def Read(self,file):
+    def Read(self,file,configurationfile):
         '''
         Base document read method, must be implemented in subclasses
+        TODO: need proper subclassing: All subclasses should call this Read method as well, as it contains 
+        code common to all parsers.
         '''
-        raise Exception("MethodNotDefined","Read")
+        
+        ''' Ensure the derived data is available to all parsers, e.g. to extract information from the file
+            name or metadata 
+        '''
+        self.ParsedData = {}
+        if 'DerivedData' in configurationfile.SchemaConfig:
+            self.ParsedData['DerivedData'] = {}
+            for field in configurationfile.SchemaConfig['DerivedData']['fields']:
+                self.ParsedData['DerivedData'][field] = configurationfile.SchemaConfig['DerivedData']['fields'][field]['value']
     
     def Write(self,file):
         '''

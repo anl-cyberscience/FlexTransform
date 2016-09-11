@@ -9,6 +9,9 @@ import FlexTransform.SyntaxParser
 import logging
 from FlexTransform.SchemaParser.TransformFunctions import CFM13Functions
 
+''' Debug '''
+import pprint
+
 class CFM13(object):
     '''
     Parser for CFM version 1.3 XML documents
@@ -37,6 +40,8 @@ class CFM13(object):
         self.logging = logging.getLogger('FlexTransform.XMLParser.CFM13')
         
         CFM13Functions.RegisterFunctions()
+
+        self.pprint = pprint.PrettyPrinter()
     
     def Read(self, cfm13file, xmlparser = None):
         '''

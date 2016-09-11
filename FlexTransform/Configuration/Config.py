@@ -6,10 +6,14 @@ Created on Jul 27, 2014
 import ast
 import json
 import os
+import re
 import logging
 import configparser
+import pprint
 from FlexTransform.SyntaxParser import Parser
 from FlexTransform.SchemaParser import SchemaParser
+from FlexTransform.Configuration.ConfigFunctions.ConfigFunctionManager import ConfigFunctionManager
+from _csv import field_size_limit
 
 class Config(object):
     '''
@@ -17,18 +21,33 @@ class Config(object):
     a source or destination file
     '''
 
-    def __init__(self, config_file):
+    def __init__(self, config_file, sourceFile=None, destFile= None):
         '''
         Constructor
         '''
 
+        ''' Debug '''
+        self.pprint = pprint.PrettyPrinter()
+
         self.SchemaConfig = None
         self.MetadataSchemaConfig = None
+        self.ConfigFunctionManager = ConfigFunctionManager()
+        
+        if sourceFile is not None:
+            self.sourceFileName = sourceFile.name
+        else:
+            self.sourceFileName = None
+
+        if destFile is not None:
+            self.destFileName = destFile.name
+        else:
+            self.destFileName = None
 
         self.config_file = config_file
         self._ReadConfig()
         
         self.logging = logging.getLogger('FlexTransform.Config')
+        
 
     def _ReadConfig(self):
         '''
@@ -115,12 +134,45 @@ class Config(object):
             if (self.config.has_option('SCHEMA', 'MetadataSchemaConfiguration')) :
                 MetadataSchemaConfig = self._ReadSchemaConfig(self.config['SCHEMA']['MetadataSchemaConfiguration'])
                 self._MergeDictionaries(self.SchemaConfig, MetadataSchemaConfig)
-        
+                
         self.SchemaParser = SchemaParser(self.SchemaConfig)
         
         # TODO: Validate that the syntax and schema is read only, write only or read/write and throw an error if necessary
 
-    def _ReadSchemaConfig(self, jsonFile):
+    def _CalculateFunctionValue(self, value, fieldName, fieldDict, SchemaConfig=None, fileName=None):
+        '''
+        '''
+        if (value.startswith('&')):
+            match = re.match(r'&([^\(]+)\((.*)\)$', value)
+            if (match):
+                function = match.group(1)
+                functionarg = match.group(2)
+
+                FunctionValid = self.ConfigFunctionManager.GetFunction(function)
+
+                if (FunctionValid):
+
+                    args = {
+                        'fieldName': fieldName,
+                        'fieldDict': fieldDict,
+                        'functionArg': functionarg,
+                        'fileName': fileName
+                    }
+
+                    value = self.ConfigFunctionManager.ExecuteConfigFunction(function, args)
+
+                else:
+                    self.logging.warning('Function %s in field %s is not valid', function,
+                                         fieldName)
+            else:
+                raise Exception('InvalidFunctionFormat',
+                                'The function reference for field %s, %s, is not valid' % (fieldName, value))
+        else:
+            self.logging.warning('Value %s is not a function reference', value)
+
+        return value
+
+    def _ReadSchemaConfig(self, jsonFile, fileName = None):
         '''
         Read the Schema configuration file in JSON format
         '''
@@ -132,6 +184,21 @@ class Config(object):
         f = open(jsonFile, 'r')
         SchemaConfig = json.load(f)
         f.close()
+        
+        ''' We should populate the derived values here '''
+        if "DerivedData" in SchemaConfig:
+            for field in SchemaConfig["DerivedData"]["fields"]:
+                ''' Call the appropriate function, assuming the required data is available: '''
+                if "valueFunction" in SchemaConfig["DerivedData"]["fields"][field]:
+
+                    value = SchemaConfig["DerivedData"]["fields"][field]["valueFunction"]
+                    fieldName = field
+                    fieldDict = SchemaConfig["DerivedData"]["fields"][field]
+                    SchemaConfigData = SchemaConfig
+                    
+                    print("Calculating function value ({}, {}, ... )".format(value, fieldName))
+                    value = self._CalculateFunctionValue(value, fieldName, fieldDict, SchemaConfigData, self.sourceFileName)
+                    SchemaConfig["DerivedData"]["fields"][field]["value"] = value
         
         return SchemaConfig
         

@@ -13,6 +13,7 @@ import argparse
 import os
 import sys
 import json
+import traceback
 
 
 # Configure logging to send INFO, DEGUB and TRACE messages to stdout and all other logs to stderr
@@ -81,8 +82,8 @@ def main():
 
     try:
         Transform = FlexTransform.FlexTransform()
-        Transform.AddParser('src', args.src_config)
-        Transform.AddParser('dst', args.dst_config)
+        Transform.AddParser('src', args.src_config, args.src, args.dst)
+        Transform.AddParser('dst', args.dst_config, args.src, args.dst)
 
         metadata = None
 
@@ -109,6 +110,8 @@ def main():
 
     except Exception as inst:
         log.error(inst)
+        ''' For debugging - capture to log.debug instead? '''
+        traceback.print_exc()
         args.dst.close()
         os.remove(args.dst.name)
         exit(1)

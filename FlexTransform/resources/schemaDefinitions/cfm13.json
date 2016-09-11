@@ -1,4 +1,28 @@
 {
+	"DerivedData": {
+		"fields": {
+			"create_time_filectime": {
+				"description": "File created timestamp for the time the report was created (not standard)",
+				"valuemap": "None", 
+				"datatype": "datetime",
+				"dateTimeFormat": "%Y-%m-%dT%H:%M:%S%z",
+				"valueFunction": "&getFileCreationDate()",
+				"required": false,
+				"ontologyMappingType": "simple",
+				"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#DocumentFileCreatedTimestampSemanticConcept",
+				"nonStandard": true
+			},
+			"file_uuid": {
+				"description": "File created timestamp for the time the report was created (not standard)",
+				"datatype": "string",
+				"valueFunction": "&getFileUUID(([A-F0-9-]+)_)",
+				"required": false,
+				"ontologyMappingType": "simple",
+				"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#UUIDv4DocumentIdentifierSemanticConcept",
+				"nonStandard": true
+			}
+		}
+	},
 	"DocumentHeaderData": {
 		"fields": {
 			"analyzerid": {

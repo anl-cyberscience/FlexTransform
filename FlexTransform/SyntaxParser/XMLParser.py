@@ -15,6 +15,9 @@ from FlexTransform.SyntaxParser.Parser import Parser
 import FlexTransform.SyntaxParser.XMLParsers
 from FlexTransform.SchemaParser import SchemaParser
 
+''' Temp'''
+import pprint
+
 class XMLParser(Parser):
     '''
     XML Syntax Parsers
@@ -24,6 +27,7 @@ class XMLParser(Parser):
         '''
         Constructor
         '''
+        super(XMLParser, self).__init__()
         self.XMLParser = None
         self.AdvancedParser = None
         self.ParsedData = None
@@ -70,15 +74,17 @@ class XMLParser(Parser):
                 if (config.has_section(CustomParser)) :
                     self.AdvancedParser.ValidateConfig(config)
                 
-    def Read(self, file):
+    def Read(self, file, config):
         '''
         Read file and parse into Transform object
         '''
-        
-        self.ParsedData = None
+        super(XMLParser, self).Read(file, config)
                
         if (self.AdvancedParser) :
-            self.ParsedData = self.AdvancedParser.Read(file, self.XMLParser)
+            partialParsedData = self.ParsedData
+            tempParsedData = self.AdvancedParser.Read(file, self.XMLParser)
+            self.ParsedData = partialParsedData.copy()
+            self.ParsedData.update(tempParsedData)
         else :
             self.ParsedData = self._ParseXMLData(file)
             

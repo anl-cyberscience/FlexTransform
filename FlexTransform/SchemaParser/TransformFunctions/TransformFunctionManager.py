@@ -7,6 +7,7 @@ Created on Mar 13, 2015
 from collections import defaultdict
 import logging
 import inspect
+import pprint
 
 import FlexTransform.SchemaParser.TransformFunctions
 
@@ -24,6 +25,7 @@ class TransformFunctionManager(object):
         self.logging = logging.getLogger('FlexTransform.SchemaParser.TransformFunctionManager')
         
         self._FunctionClasses = {}
+        self.pprint = pprint.PrettyPrinter()
                 
     @classmethod
     def RegisterFunction(cls, Scope, FunctionName, RequiredArgs, FunctionClass):
@@ -87,7 +89,7 @@ class TransformFunctionManager(object):
         indicatorType   - Optional - The indicator type for the current row
             
         transformedData - Optional - The dictionary of all current transformed data
-    
+        
         '''
         AllowedFields = set(['functionArg', 'fieldName', 'fieldDict', 'currentRow', 'indicatorType', 'transformedData'])
         RequiredFields = set(['fieldName', 'fieldDict'])

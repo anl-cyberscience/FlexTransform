@@ -9,6 +9,8 @@ import time
 import datetime
 import logging
 import uuid
+import os.path
+import re
 
 from FlexTransform.SchemaParser.TransformFunctions import TransformFunctionManager
 
@@ -46,7 +48,7 @@ class GlobalFunctions(object):
                                              },
                        'IndicatorData':      {
                                               'now': ['fieldDict'],
-                                              'generate_uuid': None
+                                              'generate_uuid': None,
                                              }
                       }
 

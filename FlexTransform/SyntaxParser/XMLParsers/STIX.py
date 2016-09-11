@@ -11,8 +11,13 @@ import re
 import copy
 import uuid
 import json
+''' DEBUG '''
+import inspect
+import pprint
 
 from FlexTransform.SchemaParser.TransformFunctions import STIXFunctions  
+#from ..XMLParser import XMLParser
+#import XMLParser
 
 currentdir = os.path.dirname(__file__)
             
@@ -28,12 +33,19 @@ from stix.utils import set_id_namespace # @UnresolvedImport
 from stix.utils.parser import UnsupportedVersionError  # @UnresolvedImport
 from stix.utils.idgen import IDGenerator # @UnresolvedImport
 
-# Load special STIX extensions if module is present
+# Load special STIX extensions if module is present; used by STIXPackage.from_dict(...) to add header elements
 try :
     from ISAMarkingExtension.isamarkings import ISAMarkingStructure  # @UnusedImport
 except ImportError :
     pass
 
+try :
+    from ISAMarkingExtension.isamarkings import ISAMarkingStructure30  # @UnusedImport
+except ImportError as e:
+    print("Couldn't import ISAMarkingStructure30: {}".format(e))
+    pass
+
+''' TODO: This should inherit from parents. '''
 class STIX(object):
     '''
     Parser for STIX XML documents
@@ -45,7 +57,6 @@ class STIX(object):
         '''
         Constructor
         '''
-        
         self.logging = logging.getLogger('FlexTransform.XMLParser.STIX')
         self.STIXNamespace = "http://www.example.com"
         self.STIXAlias = "example"
@@ -78,7 +89,7 @@ class STIX(object):
                 if (self.OutputSyntax != "XML" and self.OutputSyntax != "JSON") :
                     raise Exception('InvalidConfigurationValue', 'OutputSyntax must be JSON or XML, not ' + self.OutputSyntax)
         
-    def Read(self, stixfile, xmlparser = None):
+    def Read(self, stixfile, config, xmlparser = None):
         '''
         Parse STIX XML document. Return a dictionary object with the data from the document.
         '''
@@ -104,7 +115,6 @@ class STIX(object):
             
         stix_dict = stix_package.to_dict() # parse to dictionary
                         
-        ParsedData = {};
         
         if ('stix_header' in stix_dict) :
             ParsedData['DocumentHeaderData'] = copy.deepcopy(stix_dict['stix_header'])
@@ -300,6 +310,8 @@ class STIX(object):
                                 and marking['xsi:type'] == 'edh2cyberMarking:ISAMarkingsType'):
                                 
                                 # Fix issue #9
+                                # Determine if the marking Identifier was provided by the source, or should be 
+                                # generated:
                                 markingid = docid.replace("STIXPackage-","")
                                 marking['identifier'] = markingid
                         
