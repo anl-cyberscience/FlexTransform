@@ -19,7 +19,7 @@ class FlexTransform(object):
     API for accessing performing Flexible Transform of source documents to target documents based on syntax and schema mappings against the ontology
     '''
     
-    def __init__(self):
+    def __init__(self, tracelist=[]):
         '''
         Constructor
         '''
@@ -27,13 +27,14 @@ class FlexTransform(object):
         self.Parsers = {}
         self.logging = logging.getLogger('FlexTransform')
         self.oracle = None
+        self.tracelist = tracelist
         
     def AddParser(self, parserName, configFile, sourceFileName = None, destFileName = None) :
         '''
         Add parsers to the FlexTransform object
         '''
         
-        parserConfig = Config(configFile, sourceFileName, destFileName)
+        parserConfig = Config(configFile, sourceFileName, destFileName, tracelist = self.tracelist)
         
         if (parserName in self.Parsers) :
             self.logging.warn('Parser %s already configured, configuration will be overwritten', parserName)
@@ -47,7 +48,7 @@ class FlexTransform(object):
         '''
         
         #TODO add error checking for locations
-        self.oracle = Oracle(tbox_loc, rdflib.URIRef(schema_IRI))
+        self.oracle = Oracle(tbox_loc, rdflib.URIRef(schema_IRI), tracelist=self.tracelist)
         
     def TransformFile(self, sourceFileName, sourceParserName, targetParserName, targetFileName=None, sourceMetaData=None, oracle=None):
         '''
@@ -62,6 +63,7 @@ class FlexTransform(object):
         * sourceMetaData
         * oracle - An instance of the OntologyOracle, initialized with the TBOX URI.  If NONE, the ontology
           will not be used.
+        * tracelist - A list of source schema elements to trace through the program execution.
         '''
         
         if (sourceFileName is None or sourceParserName is None or targetParserName is None) :

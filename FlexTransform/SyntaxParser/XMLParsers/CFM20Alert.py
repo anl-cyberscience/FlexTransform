@@ -15,12 +15,14 @@ class CFM20Alert(object):
     Parser for CFM version 2.0 Alert XML documents
     '''
 
-    def __init__(self):
+    def __init__(self, tracelist=[]):
         '''
         Constructor
         '''
         
         self.logging = logging.getLogger('FlexTransform.XMLParser.CFM20Alert')
+        self.tracelist = tracelist
+        self.logging.debug("Initialized CFM20 XMLParser with tracelist of {} elements.".format(len(tracelist)))
         
         CFM20Functions.RegisterFunctions()
     

@@ -21,17 +21,30 @@ class Config(object):
     a source or destination file
     '''
 
-    def __init__(self, config_file, sourceFile=None, destFile= None):
+    def __init__(self, config_file, sourceFile=None, destFile= None, tracelist = []):
         '''
         Constructor
         '''
+        self.logging = logging.getLogger('FlexTransform.Config')
+        
+        self.traceindex={}
+        self.tracelist = tracelist
+        for x in self.tracelist:
+            self.traceindex[x["src_field"]] = x
+            for y in x["dst_fields"]:
+                self.traceindex[y] = x
+            for w in x["src_IRIs"]:
+                self.traceindex[w] = x
+            for z in x["dst_IRIs"]:
+                self.traceindex[z] = x
+        self.logging.debug("Initializing Config with tracelist of {} elements".format(len(tracelist)))
 
         ''' Debug '''
         self.pprint = pprint.PrettyPrinter()
 
         self.SchemaConfig = None
         self.MetadataSchemaConfig = None
-        self.ConfigFunctionManager = ConfigFunctionManager()
+        self.ConfigFunctionManager = ConfigFunctionManager(tracelist=tracelist)
         
         if sourceFile is not None:
             self.sourceFileName = sourceFile.name
@@ -46,7 +59,6 @@ class Config(object):
         self.config_file = config_file
         self._ReadConfig()
         
-        self.logging = logging.getLogger('FlexTransform.Config')
         
 
     def _ReadConfig(self):
@@ -81,7 +93,7 @@ class Config(object):
             Parsers = Parser.GetParsers()
             if (FileParser in Parsers) :  # @UndefinedVariable
                 ParserName = Parsers[FileParser]
-                self.Parser = Parser.GetParser(ParserName)  # @UndefinedVariable
+                self.Parser = Parser.GetParser(ParserName, tracelist=self.tracelist)  # @UndefinedVariable
                 self.Parser.ValidateConfig(self.config)
             else :
                 raise Exception('UndefinedParserType', FileParser)
@@ -135,7 +147,7 @@ class Config(object):
                 MetadataSchemaConfig = self._ReadSchemaConfig(self.config['SCHEMA']['MetadataSchemaConfiguration'])
                 self._MergeDictionaries(self.SchemaConfig, MetadataSchemaConfig)
                 
-        self.SchemaParser = SchemaParser(self.SchemaConfig)
+        self.SchemaParser = SchemaParser(self.SchemaConfig, tracelist=self.tracelist)
         
         # TODO: Validate that the syntax and schema is read only, write only or read/write and throw an error if necessary
 
@@ -189,16 +201,28 @@ class Config(object):
         if "DerivedData" in SchemaConfig:
             for field in SchemaConfig["DerivedData"]["fields"]:
                 ''' Call the appropriate function, assuming the required data is available: '''
+                if field in self.traceindex.keys():
+                    if "ontologyMapping" in SchemaConfig["DerivedData"]["fields"][field] and \
+                        not SchemaConfig["DerivedData"]["fields"][field]["ontologyMapping"] == None:
+                        self.logging.debug("[TRACE {}]: Found source IRI: {}".format(
+                                                    field, 
+                                                    SchemaConfig["DerivedData"]["fields"][field]["ontologyMapping"]
+                                                    ))
+                        self.traceindex[field]["src_IRIs"].append(SchemaConfig["DerivedData"]["fields"][field]["ontologyMapping"])
+                    else:
+                        self.logging.debug("[TRACE {}]: No ontologyMapping found".format(field))
                 if "valueFunction" in SchemaConfig["DerivedData"]["fields"][field]:
-
                     value = SchemaConfig["DerivedData"]["fields"][field]["valueFunction"]
+                    if field in self.traceindex.keys():
+                        self.logging.debug("[TRACE {}]: Calculating function value {}...".format(field, value))
                     fieldName = field
                     fieldDict = SchemaConfig["DerivedData"]["fields"][field]
                     SchemaConfigData = SchemaConfig
                     
-                    print("Calculating function value ({}, {}, ... )".format(value, fieldName))
                     value = self._CalculateFunctionValue(value, fieldName, fieldDict, SchemaConfigData, self.sourceFileName)
                     SchemaConfig["DerivedData"]["fields"][field]["value"] = value
+                    if field in self.traceindex.keys():
+                        self.logging.debug("[TRACE {}]: Calculated function value = {}".format(field, value))
         
         return SchemaConfig
         
@@ -331,6 +355,7 @@ class Config(object):
         # TODO: integrate with Ontology to get default schema configurations for specific ontology objects
         
         for field in schemaConfiguration :
+            fieldtrace = (field in self.traceindex.keys())
             fields[field] = {}
             fields[field]["datatype"] = "string"
             fields[field]["required"] = True
@@ -339,6 +364,10 @@ class Config(object):
                 OntologyMapping = schemaConfiguration[field].pop("OntologyMapping")
                 fields[field]["ontologyMappingType"] = "simple"
                 fields[field]["ontologyMapping"] = "http://www.anl.gov/cfm/transform.owl#" + OntologyMapping
+                if fieldtrace:
+                    self.logging.debug("[TRACE {}]: Found simple ontology mapping: {}".format(
+                                                 field, 
+                                                 fields[field]["ontologyMapping"]))
                 
             elif ("OntologyMappingMultiple" in schemaConfiguration[field]) :
                 OntologyMappings = schemaConfiguration[field].pop("OntologyMappingMultiple")
@@ -346,6 +375,12 @@ class Config(object):
                 fields[field]["ontologyMappings"] = []
                 for mapping in OntologyMappings.split("|") :
                     fields[field]["ontologyMappings"].append("http://www.anl.gov/cfm/transform.owl#" + mapping)
+                    if fieldtrace:
+                        self.logging.debug("[TRACE {}]: Adding multiple ontology mappings: {}".format(
+                                                 field, 
+                                                 fields[field]["ontologyMappings"][-1]))
+                        self.traceindex[field]["dst_IRIs"].append(fields[field]["ontologyMappings"][-1])
+                
                     
             elif ("OntologyMappingEnum" in schemaConfiguration[field]) :
                 OntologyMappings = schemaConfiguration[field].pop("OntologyMappingEnum")
@@ -356,11 +391,20 @@ class Config(object):
                     kv = mapping.split(":")
                     fields[field]["enumValues"][kv[0]] = {}
                     fields[field]["enumValues"][kv[0]]["ontologyMapping"] = "http://www.anl.gov/cfm/transform.owl#" + kv[1]
+                    if fieldtrace:
+                        self.logging.debug("[TRACE {}]: Adding enumerated ontology mappings: {}".format(
+                                                 field, 
+                                                 fields[field]["enumValues"][kv[0]]["ontologyMappings"]))
+                        self.traceindex[field]["dst_IRIs"].append(fields[field]["enumValues"][kv[0]]["ontologyMappings"])
                     
             else :
                 fields[field]["ontologyMappingType"] = "none"
+                if fieldtrace:
+                    self.logging.debug("[TRACE {}]: Found no ontology mapping".format(field))
             
             for Directive in schemaConfiguration[field] :
+                if fieldtrace:
+                    self.logging.debug("[TRACE {}]: Setting special directive {}".format(field, Directive))
                 if (Directive == "DefaultValue") :
                     fields[field]["defaultValue"] = schemaConfiguration[field][Directive]
                 elif (Directive == "DataType") :

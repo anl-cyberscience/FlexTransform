@@ -15,13 +15,17 @@ class DictionaryParser(object):
     Key/Value Syntax Parser
     '''
 
-    def __init__(self):
+    def __init__(self, tracelist=[]):
         '''
         Constructor
         '''
         
+        super(DictionaryParser, self).__init__(tracelist)
         self.ParsedData = {}
         self.logging = logging.getLogger('FlexTransform.DictionaryParser')
+        self.tracelist = tracelist
+        self.logging.debug("Initialized DictionaryParser with tracelist of {} elements.".format(len(tracelist)))
+
         
         self.indicatorsKey = ""
         self.AdvancedParser = None

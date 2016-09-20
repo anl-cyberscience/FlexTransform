@@ -38,10 +38,25 @@ class SchemaParser(object):
     # Class global variables
     _outputFormatRE = re.compile(r"([^\[]+)?(?:\[([^\]]+)\])?")
 
-    def __init__(self, config):
+    def __init__(self, config, tracelist=[]):
         '''
         Constructor
         '''
+        self.logging = logging.getLogger('FlexTransform.SchemaParser')
+        self.tracelist = tracelist
+        self.traceindex = {}
+        for x in self.tracelist:
+            self.traceindex[x["src_field"]] = x
+            for y in x["dst_fields"]:
+                self.traceindex[y] = x
+            for w in x["src_IRIs"]:
+                self.traceindex[w] = x
+            for z in x["dst_IRIs"]:
+                self.traceindex[z] = x
+        if len(self.traceindex) > 0:
+            self.logging.debug("[TRACE __init__] - Monitoring the following elements: {}".format(",".join(self.traceindex.keys()))) 
+        self.logging.debug("Initialized SchemaParser with tracelist of {} elements.".format(len(tracelist)))
+
         self.SchemaConfig = config
 
         self._FieldOrder = self._CalculateSchemaFieldOrder()
@@ -51,7 +66,6 @@ class SchemaParser(object):
         # TODO: Create a JSON schema document and validate the config against the schema. Worst case, define accepted tags and validate there are no unknown tags.
         self.pprint = pprint.PrettyPrinter()
 
-        self.logging = logging.getLogger('FlexTransform.SchemaParser')
 
     def MapDataToSchema(self, SourceData, oracle=None):
         '''
@@ -66,6 +80,8 @@ class SchemaParser(object):
               
               Essentially this will consist of creating instances of the appropriate subclasses in an ABOX.
         '''
+        if len(self.traceindex) > 0:
+            self.logging.debug("[TRACE MapDataToSchema] - Monitoring the following elements: {}".format(",".join(self.traceindex.keys()))) 
 
         # The value map is only used by the _MapRowToSchema function, so it isn't calculated until this method is called and not under __init__()
         self._ValueMap = self._ValuemapToField()
@@ -142,6 +158,8 @@ class SchemaParser(object):
         '''
         Add meta data to the MappedData
         '''
+        if len(self.traceindex) > 0:
+            self.logging.debug("[TRACE MapMetadataToSchema] - Monitoring the following elements: {}".format(",".join(self.traceindex.keys()))) 
 
         if ('DocumentMetaData' in self.SchemaConfig):
             if (isinstance(sourceMetaData, dict)):
@@ -160,6 +178,9 @@ class SchemaParser(object):
         * oracle - An instance of the OntologyOracle class which encapsulates the target schema ontology
                    If 'None', will not be used.
         '''
+        self.logging.debug("Begin TransformData(...)")
+        if len(self.traceindex) > 0:
+            self.logging.debug("[TRACE TransformData] - Monitoring the following elements: {}".format(",".join(self.traceindex.keys()))) 
         self.TransformedData = {}
 
         # If the oracle is set, initialize it:
@@ -223,6 +244,9 @@ class SchemaParser(object):
         '''
         Create a fast lookup dictionary for mapping values from flattened dictionaries back to the schema field
         '''
+        if len(self.traceindex) > 0:
+            self.logging.debug("[TRACE _ValuemapToField] - Monitoring the following elements: {}".format(",".join(self.traceindex.keys()))) 
+
 
         ValueMap = {}
 
@@ -232,9 +256,13 @@ class SchemaParser(object):
                 for fieldName, fieldDict in self.SchemaConfig[rowType]['fields'].items():
                     if ('valuemap' in fieldDict):
                         ValueMap[rowType][fieldDict['valuemap']] = fieldName
+                        if fieldName in self.traceindex:
+                            self.logging.debug("[TRACE {}] - Added to ValueMap[{}][{}]".format(fieldName, rowType, fieldDict['valuemap']))
                     if ('additionalValuemaps' in fieldDict):
                         for valuemap in fieldDict['additionalValuemaps']:
                             ValueMap[rowType][valuemap] = fieldName
+                            if fieldName in self.traceindex:
+                                self.logging.debug("[TRACE {}] - Added to ValueMap[{}][{}]".format(fieldName, rowType, valuemap))
 
         return ValueMap
 
@@ -245,6 +273,9 @@ class SchemaParser(object):
         
         Returns a list with the fields in order.
         '''
+        if len(self.traceindex) > 0:
+            self.logging.debug("[TRACE _CalculateSchemaFieldOrder] - Monitoring the following elements: {}".format(",".join(self.traceindex.keys()))) 
+
         # TODO: Can this be cached offline so it is loaded between runs so long as the schema .json files don't change?
         SchemaFieldOrder = {}
 
@@ -258,59 +289,95 @@ class SchemaParser(object):
                     # Groups need to be processed last by the transform engine
                     if (field not in FieldOrder or FieldOrder[field] < 10):
                         FieldOrder[field] = 10
+                        if field in self.traceindex:
+                            self.logging.debug("[TRACE {}] - Group data type - FieldOrder set to {}".format(field, FieldOrder[field]))
 
                     # Handle subgroups, parent group needs to be processed after all child groups
                     if ('memberof' in fieldDict):
                         if (fieldDict['memberof'] not in FieldOrder or FieldOrder[fieldDict['memberof']] <= FieldOrder[
                             field]):
                             FieldOrder[fieldDict['memberof']] = FieldOrder[field] + 1
-
+                            if fieldDict['memberof'] in self.traceindex:
+                                self.logging.debug("[TRACE {}] - memberof {}, incrementing FieldOrder to {}".format(fieldDict['memberof'], 
+                                                                                                                    field,
+                                                                                                                    FieldOrder[fieldDict['memberof']]))
                 elif ('required' in fieldDict and fieldDict['required'] == True):
                     if (field not in FieldOrder or FieldOrder[field] > 1):
                         FieldOrder[field] = 1
+                        if field in self.traceindex:
+                            self.logging.debug("[TRACE {}] - Required; FieldOrder set to {}".format(field, FieldOrder[field]))
                 elif ('memberof' in fieldDict):
                     if (field not in FieldOrder or FieldOrder[field] > 5):
                         FieldOrder[field] = 5
+                        if field in self.traceindex:
+                            self.logging.debug("[TRACE {}] - memberof {}; FieldOrder set to {}".format(field, fieldDict['memberof'], FieldOrder[field]))
                         if (fieldDict['memberof'] not in FieldOrder or FieldOrder[fieldDict['memberof']] <= FieldOrder[
                             field]):
                             FieldOrder[fieldDict['memberof']] = FieldOrder[field] + 1
+                            if fieldDict['memberof'] in self.traceindex:
+                                self.logging.debug("[TRACE {}] - Incremented parent {}; FieldOrder set to {}".format(fieldDict['memberof'], 
+                                                                                                                     field, 
+                                                                                                                     FieldOrder[fieldDict['memberof']]))
                 elif ('dependsOn' in fieldDict):
                     if (field not in FieldOrder or FieldOrder[field] < 6):
                         FieldOrder[field] = 6
+                        if field in self.traceindex:
+                            self.logging.debug("[TRACE {}] - dependsOn {}; FieldOrder set to {}".format(field, 
+                                                                                                        fieldDict['dependsOn'], 
+                                                                                                        FieldOrder[field]))
                 else:
                     if (field not in FieldOrder or FieldOrder[field] > 4):
                         FieldOrder[field] = 4
+                        if field in self.traceindex:
+                            self.logging.debug("[TRACE {}] - no conditions apply; FieldOrder set to {}".format(field, 
+                                                                                                               FieldOrder[field]))
 
             # Run through all the fields again and re-order based on references        
             for field, fieldDict in self.SchemaConfig[rowType]['fields'].items():
                 if ('defaultValue' in fieldDict and fieldDict['defaultValue'].startswith('&')):
+                    if field in self.traceindex:
+                        self.logging.debug("[TRACE {}] - defaultValue is a function, evaluating args to see if order needs revision.".format(field))
                     match = re.match(r'&([^\(]+)\(([^\)]*)\)', fieldDict['defaultValue'])
                     if (match):
                         args = match.group(2)
                         if (args and args in self.SchemaConfig[rowType]['fields']):
+                            if field in self.traceindex:
+                                self.logging.debug("[TRACE {}] - function argument {} found.".format(field, args))
                             if (field in FieldOrder and (
                                     args not in FieldOrder or FieldOrder[args] >= FieldOrder[field])):
                                 FieldOrder[field] = FieldOrder[args] + 1
-
+                                if field in self.traceindex:
+                                    self.logging.debug("[TRACE {}] - Updated order based on argument {} - FieldOrder set to {}".format(
+                                                                                                                                       field, 
+                                                                                                                                       args,
+                                                                                                                                       FieldOrder[field]))
                 elif ('outputFormat' in fieldDict):
                     match = self._outputFormatRE.findall(fieldDict['outputFormat'])
                     if (match):
                         for m in match:
                             if (m[1] != ''):
+                                if m[1] in self.traceindex:
+                                    self.logging.debug("[TRACE {}] - Found in outputFormat for {}; evaluating field order".format(m[1], field))
                                 if (m[1] in self.SchemaConfig[rowType]['fields']):
                                     if (field in FieldOrder and (
                                             m[1] not in FieldOrder or FieldOrder[m[1]] >= FieldOrder[field])):
                                         FieldOrder[m[1]] = FieldOrder[field] - 1
+                                        if m[1] in self.traceindex:
+                                            self.logging.debug("[TRACE {}] - FieldOrder set to {}".format(m[1], FieldOrder[m[1]]))
 
                     if ('outputFormatCondition' in fieldDict):
                         match = self._outputFormatRE.findall(fieldDict['outputFormatCondition'])
                         if (match):
                             for m in match:
                                 if (m[1] != ''):
+                                    if m[1] in self.traceindex:
+                                        self.logging.debug("[TRACE {}] - Found in outputFormat for {}; evaluating field order".format(m[1], field))
                                     if (m[1] in self.SchemaConfig[rowType]['fields']):
                                         if (field in FieldOrder and (
                                                 m[1] not in FieldOrder or FieldOrder[m[1]] >= FieldOrder[field])):
                                             FieldOrder[m[1]] = FieldOrder[field] - 1
+                                            if m[1] in self.traceindex:
+                                                self.logging.debug("[TRACE {}] - Found in outputFormat for {}; evaluating field order".format(m[1], field))
 
                 if (field in FieldOrder):
                     if ('requiredIfReferenceField' in fieldDict):
@@ -318,18 +385,30 @@ class SchemaParser(object):
                             FieldOrder[fieldDict['requiredIfReferenceField']] = FieldOrder[field] - 1
                         elif (FieldOrder[fieldDict['requiredIfReferenceField']] >= FieldOrder[field]):
                             FieldOrder[field] = FieldOrder[fieldDict['requiredIfReferenceField']] + 1
+                        tfield = fieldDict['requiredIfReferenceField']
+                        if tfield in self.traceindex:
+                            self.logging.debug("[TRACE {}] - Found in requiredIfReferenceField for {}; FieldOrder set to {}".format(
+                                                                 tfield, field, FieldOrder[tfield]))
 
                     if ('ontologyMappingType' in fieldDict and fieldDict['ontologyMappingType'] == 'referencedEnum'):
                         if (fieldDict['ontologyEnumField'] not in FieldOrder):
                             FieldOrder[fieldDict['ontologyEnumField']] = FieldOrder[field] - 1
                         elif (FieldOrder[fieldDict['ontologyEnumField']] >= FieldOrder[field]):
                             FieldOrder[field] = FieldOrder[fieldDict['ontologyEnumField']] + 1
+                        tfield = fieldDict['ontologyEnumField']
+                        if tfield in self.traceindex:
+                            self.logging.debug("[TRACE {}] - Found in ontologyEnumField for {}; FieldOrder set to {}".format(
+                                                                 tfield, field, FieldOrder[tfield]))
 
                     if ('dependsOn' in fieldDict):
                         if (fieldDict['dependsOn'] not in FieldOrder):
                             FieldOrder[fieldDict['dependsOn']] = FieldOrder[field] - 1
                         elif (FieldOrder[fieldDict['dependsOn']] >= FieldOrder[field]):
                             FieldOrder[field] = FieldOrder[fieldDict['dependsOn']] + 1
+                        tfield = fieldDict['dependsOn']
+                        if tfield in self.traceindex:
+                            self.logging.debug("[TRACE {}] - Found in dependsOn for {}; FieldOrder set to {}".format(
+                                                                 tfield, field, FieldOrder[tfield]))
 
                     if ('fields' in fieldDict):
                         requiredFields = fieldDict['fields']
@@ -338,6 +417,10 @@ class SchemaParser(object):
                                 FieldOrder[requiredField] = FieldOrder[field] - 1
                             elif (FieldOrder[requiredField] >= FieldOrder[field]):
                                 FieldOrder[field] = FieldOrder[requiredField] + 1
+                            tfield = requiredField
+                            if tfield in self.traceindex:
+                                self.logging.debug("[TRACE {}] - Found in requiredFields for {}; FieldOrder set to {}".format(
+                                                                 tfield, field, FieldOrder[tfield]))
 
             SchemaFieldOrder[rowType].extend(sorted(FieldOrder, key=FieldOrder.get))
 
@@ -352,7 +435,16 @@ class SchemaParser(object):
           * SubGroupedRow - Set to true if this is processing a subgrouped row and not the primary data row
           
           TODO: Add processing for derived data rowType
+          
+          Data structures used:
+          * newDict - Dictionary to hold the mapping of data to new schema that we return.
+          * processedFields - Keep track of the fields we've already processed; important to ensure that dependent values are taken from the
+                              source data, or are defined before they are referenced.
+          * fieldDict - The dictionary of metadata related to the field from the source schema.
         '''
+        if len(self.traceindex) > 0:
+            self.logging.debug("[TRACE _MapRowToSchema] - Monitoring the following elements: {}".format(",".join(self.traceindex.keys()))) 
+
 
         newDict = {}
         processedFields = {}
@@ -366,50 +458,77 @@ class SchemaParser(object):
         FieldOrder = self._FieldOrder[rowType]
 
         for field in FieldOrder:
-            if rowType == 'DerivedData':
-                print("Processing field {} from DerivedData".format(field))
-                print("Data row is:")
-                self.pprint.pprint(DataRow)
             fieldDict = self.SchemaConfig[rowType]['fields'][field]
             mappedField = None
+            if field in self.traceindex:
+                self.logging.debug("[TRACE {}] - Mapping row to schema:".format(field))
 
             if (field in DataRow):
                 mappedField = field
+                if field in self.traceindex:
+                    self.logging.debug("[TRACE {}] - Field found in DataRow; setting mappedField.".format(field))
 
             if (not mappedField and 'valuemap' in fieldDict):
                 if (fieldDict['valuemap'] in DataRow):
                     mappedField = fieldDict['valuemap']
+                    if field in self.traceindex:
+                        self.logging.debug("[TRACE {}] - Field not found in DataRow, mapping to found valuemap ({})".format(
+                                                                field, fieldDict['valuemap']))
 
             if (not mappedField and 'additionalValuemaps' in fieldDict):
                 for valuemap in fieldDict['additionalValuemaps']:
                     if (valuemap in DataRow):
                         mappedField = valuemap
+                        if field in self.traceindex:
+                            self.logging.debug("[TRACE {}] - Field not found in DataRow, mapping to found additionalValuemap ({})".format(
+                                                                field, valuemap))
                         break
 
             if (mappedField is not None):
-
                 processedFields[mappedField] = True
+                if field in self.traceindex:
+                    self.logging.debug("[TRACE {}] - Setting prcessedFields to True".format(
+                                                                field))
 
                 if ('ignore' in fieldDict and fieldDict['ignore'] == True):
+                    if field in self.traceindex:
+                        self.logging.debug("[TRACE {}] - Field ignored, not mapping to schema.".format(
+                                                                field))
                     continue
 
                 elif ('error' in fieldDict):
+                    if field in self.traceindex:
+                        self.logging.debug("[TRACE {}] - Field error flagged, not mapping to schema.".format(
+                                                                field))
                     raise Exception("InvalidSchemaMapping", fieldDict['error'])
 
                 if ('dependsOn' in fieldDict):
                     # If the field this field depends on does not exist, then don't add to new dictionary
                     dependsOn = fieldDict['dependsOn']
                     if (dependsOn not in newDict or 'Value' not in newDict[dependsOn]):
+                        if field in self.traceindex:
+                            self.logging.debug("[TRACE {}] - Field depends on another that does not exist {}, not mapping to schema.".format(
+                                                                field, dependsOn))
+                        if dependsOn in self.traceindex:
+                            self.logging.debug("[TRACE {}] - Field does not exist for dependent field {}; not mapping dependent to schema.".format(
+                                                                dependsOn, field))
                         continue
 
                 newDict[field] = fieldDict.copy()
                 Value = DataRow[mappedField]
 
+                if field in self.traceindex:
+                    self.logging.debug("[TRACE {}] - Using DataRow for {} as Value".format(field, mappedField))
+
                 if (isinstance(Value, list) and
                             'multiple' in fieldDict and
                             fieldDict['multiple'] == True):
+                    if field in self.traceindex:
+                        self.logging.debug("[TRACE {}] - List of values found, and this is a multiple value field".format(field))
 
                     if (fieldDict['datatype'] == 'group'):
+                        if field in self.traceindex:
+                            self.logging.debug("[TRACE {}] - Group datatype found; processing".format(field))
 
                         # This processes instances where the same field grouping may exist multiple times in a single indicator
 
@@ -423,6 +542,8 @@ class SchemaParser(object):
                         for row in Value:
                             if (isinstance(row, dict)):
                                 subRow = SchemaParser.FlattenDict(row, ParentKey=mappedField)
+                                if field in self.traceindex:
+                                    self.logging.debug("[TRACE {}] - Processing subRow as flattened dict".format(field))
 
                                 for (subkey, subvalue) in subRow.items():
                                     if (subkey in ValueMap and ValueMap[subkey] not in subfields):
@@ -431,6 +552,8 @@ class SchemaParser(object):
                                                         ValueMap[subkey], field))
 
                                     newDataRow[subkey] = subvalue
+                                    if field in self.traceindex:
+                                        self.logging.debug("[TRACE {}] - Set value for subkey {}, GroupID {}".format(field, subkey, GroupID))
 
                                 subDict = self._MapRowToSchema(newDataRow, rowType, SubGroupedRow=True)
                                 newDict.update(self._UpdateFieldReferences(subDict, GroupID, subfields))
@@ -445,6 +568,8 @@ class SchemaParser(object):
                     else:
                         if (Value.__len__() > 1):
                             newDict[field]['AdditionalValues'] = []
+                            if field in self.traceindex:
+                                self.logging.debug("[TRACE {}] - Field has multiple values; setting...".format(field))
                         for d in Value:
                             if (isinstance(d, (list, dict))):
                                 self.logging.warning(
@@ -455,8 +580,12 @@ class SchemaParser(object):
                             if ('Value' not in newDict[field]):
                                 # Put the first value in Value and the rest into AdditionalValues
                                 newDict[field]['Value'] = str(d)
+                                if field in self.traceindex:
+                                    self.logging.debug("[TRACE {}] - Setting Value to {}".format(field, str(d)))
                             else:
                                 newDict[field]['AdditionalValues'].append(str(d))
+                                if field in self.traceindex:
+                                    self.logging.debug("[TRACE {}] - Appending AdditionalValue {}".format(field, str(d)))
 
                 elif (isinstance(Value, (list, dict))):
                     self.logging.warning('%s value is a list or dictionary, not currently supported: %s', mappedField,
@@ -465,13 +594,23 @@ class SchemaParser(object):
                 elif (isinstance(Value, str)):
                     # The rstrip is to get rid of rogue tabs and white space at the end of a value, a frequent problem with STIX formated documents in testing
                     newDict[field]['Value'] = str.rstrip(Value)
+                    if field in self.traceindex:
+                        self.logging.debug("[TRACE {}] - Setting (rstripped) string value to {}".format(field, newDict[field]['Value']))
                 else:
                     newDict[field]['Value'] = str(Value)
+                    if field in self.traceindex:
+                        self.logging.debug("[TRACE {}] - Setting string value to {}".format(field, newDict[field]['Value']))
 
                 # Process the regexSplit directive
                 if ('regexSplit' in fieldDict):
                     match = re.match(fieldDict['regexSplit'], newDict[field]['Value'])
+                    if field in self.traceindex:
+                        self.logging.debug("[TRACE {}] - Identified as regex field, processing {} with {}".format(
+                                                field, fieldDict['regexSplit'], newDict[field]['Value']))
                     if match:
+                        if field in self.traceindex:
+                            self.logging.debug("[TRACE {}] - Regex matched, pulling out comma-delimeted fields from ".format(
+                                                field, fieldDict['regexFields']))
                         regexFields = re.split(',\s+', fieldDict['regexFields'])
                         i = 0
                         while (i < regexFields.__len__()):
@@ -480,6 +619,9 @@ class SchemaParser(object):
                                 newFieldValue = match.group(i + 1)
                                 newDict[newFieldName] = self.SchemaConfig[rowType]['fields'][newFieldName].copy()
                                 newDict[newFieldName]['Value'] = newFieldValue
+                                if newFieldName in self.traceindex:
+                                    self.logging.debug("[TRACE {}] - Extracted value {} from regex for field {}.".format(
+                                                newFieldName, newFieldValue, field))
 
                                 self._ValidateField(newDict[newFieldName], newFieldName, rowType)
                             i += 1
@@ -488,6 +630,8 @@ class SchemaParser(object):
 
             elif (not SubGroupedRow):
                 # Check if there is a default value
+                if field in self.traceindex:
+                    self.logging.debug("[TRACE {}] - No mapped data found; looking for default value.".format(field))
 
                 # No mapped data found, check if the field is required and if so if there is a default value
                 # Raise an exception if a required field has no data
@@ -496,6 +640,8 @@ class SchemaParser(object):
 
                 if ('requiredIfReferenceField' in fieldDict):
                     ReferenceField = fieldDict['requiredIfReferenceField']
+                    if field in self.traceindex:
+                        self.logging.debug("[TRACE {}] - requiredIfReferenceField {}".format(field, ReferenceField))
                     if ('requiredIfReferenceValues' in fieldDict):
                         ReferenceValues = fieldDict['requiredIfReferenceValues']
                         for val in ReferenceValues:
@@ -503,6 +649,11 @@ class SchemaParser(object):
                                         (ReferenceField in newDict and val == newDict[ReferenceField]['Value']) or
                                         (val == '' and (
                                             not ReferenceField in newDict or not newDict[ReferenceField]['Value']))):
+                                if field in self.traceindex:
+                                    self.logging.debug("[TRACE {}] - requiredIfReferenceValue {}; setting to true".format(field, val))
+                                if ReferenceField in self.traceindex:
+                                    self.logging.debug("[TRACE {}] - Value {} forcing required unmapped field {}".format(
+                                                                        ReferenceField, val, field))
                                 required = True
                                 break
 
@@ -512,32 +663,54 @@ class SchemaParser(object):
                             for val in ReferenceValuesMatch:
                                 if (val == '*'):
                                     if ('Value' in newDict[ReferenceField]):
+                                        if field in self.traceindex:
+                                            self.logging.debug("[TRACE {}] - requiredIfReferenceValuesMatch {}; setting to true".format(field, val))
+                                        if ReferenceField in self.traceindex:
+                                            self.logging.debug("[TRACE {}] - Value {} forcing required unmapped field {}".format(
+                                                                                ReferenceField, val, field))
                                         required = True
                                         break
                                 elif (val.endswith('*')):
                                     if ('Value' in newDict[ReferenceField] and newDict[ReferenceField][
                                         'Value'].startswith(val.strip('*'))):
+                                        if field in self.traceindex:
+                                            self.logging.debug("[TRACE {}] - requiredIfReferenceValuesMatch {}; setting to true".format(field, val))
+                                        if ReferenceField in self.traceindex:
+                                            self.logging.debug("[TRACE {}] - Value {} forcing required unmapped field {}".format(
+                                                                                ReferenceField, val, field))
                                         required = True
                                         break
 
                 if (required == True or ('required' in fieldDict and fieldDict['required'] == True)):
+                    if field in self.traceindex:
+                        self.logging.debug("[TRACE {}] - Required flag is set; checking default value:".format(field, val))
                     if ('defaultValue' in fieldDict):
                         newDict[field] = fieldDict.copy()
                         newDict[field]['Value'] = fieldDict['defaultValue']
+                        if field in self.traceindex:
+                            self.logging.debug("[TRACE {}] - Using default value {}".format(field, newDict[field]['Value']))
 
                         if (newDict[field]['Value'].startswith('&')):
+                            if field in self.traceindex:
+                                self.logging.debug("[TRACE {}] - Default value is a function; calculating result...".format(field, newDict[field]['Value']))
                             newDict[field]['Value'] = self._CalculateFunctionValue(newDict[field]['Value'], field,
                                                                                    newDict[field], rowType, newDict,
                                                                                    IndicatorType=None,
                                                                                    TransformedData=self.MappedData)
+                            if field in self.traceindex:
+                                self.logging.debug("[TRACE {}] - Function returned result {}".format(field, newDict[field]['Value']))
 
                         self._ValidateField(newDict[field], field, rowType)
 
                     elif ('outputFormat' in fieldDict):
                         Value = self._BuildOutputFormatText(fieldDict, newDict)
+                        if field in self.traceindex:
+                            self.logging.debug("[TRACE {}] - Output format specified, building".format(field))
                         if (Value):
                             newDict[field] = fieldDict.copy()
                             newDict[field]['Value'] = Value
+                            if field in self.traceindex:
+                                self.logging.debug("[TRACE {}] - Value set to {}".format(field, Value))
 
                         self._ValidateField(newDict[field], field, rowType)
 
@@ -546,6 +719,8 @@ class SchemaParser(object):
                             self.logging.warning(
                                 "Sub-groups should not have 'required' set to true, processing skipped: %s", field)
                         else:
+                            if field in self.traceindex:
+                                self.logging.debug("[TRACE {}] - Required group, building group row".format(field))
                             groupRow = {'fields': {}}
                             self._BuildFieldGroup(None, newDict, rowType, field, groupRow, None)
 
@@ -561,6 +736,8 @@ class SchemaParser(object):
 
             if (rowType == "IndicatorData"):
                 self._AddIndicatorType(newDict)
+                if field in self.traceindex:
+                    self.logging.debug("[TRACE {}] - Field processed, adding Indicator Type".format(field))
 
         return newDict
 
@@ -661,6 +838,7 @@ class SchemaParser(object):
 
         if (bestMatch is not None):
             newDict["IndicatorType"] = bestMatch
+            self.logging.debug("Determined best indictor type match of {}.".format(bestMatch))
         else:
             raise Exception("NoMatchingIndicatorType",
                             'This "{}" indicator data row does not match any defined indicator types'.format(key))
@@ -677,6 +855,8 @@ class SchemaParser(object):
 
         # Validate the dataType matches the value
         dataType = fieldDict['datatype']
+        if fieldName in self.traceindex:
+            self.logging.debug("[TRACE {}] - Validating field with type {}".format(fieldName, dataType))
 
         values = []
         if ('Value' in fieldDict):
@@ -690,9 +870,13 @@ class SchemaParser(object):
                                 fieldName, fieldDict['Value']))
 
             values.append(fieldDict['Value'])
+            if fieldName in self.traceindex:
+                self.logging.debug("[TRACE {}] - Appended value {}".format(fieldName, fieldDict['Value']))
 
         if ('AdditionalValues' in fieldDict):
             values.extend(fieldDict['AdditionalValues'])
+            if fieldName in self.traceindex:
+                self.logging.debug("[TRACE {}] - Appended additional values".format(fieldName))
 
         if (values.__len__() == 0):
             raise Exception('NoValue', 'Field %s has no value' % fieldName)
@@ -702,9 +886,13 @@ class SchemaParser(object):
         for value in values:
             if (dataType == 'string'):
                 # String data type is always valid, pass
+                if fieldName in self.traceindex:
+                    self.logging.debug("[TRACE {}] - String data type; valid value {}.".format(fieldName, value))
                 pass
             elif (dataType == 'group'):
                 # Group data type is always valid, pass
+                if fieldName in self.traceindex:
+                    self.logging.debug("[TRACE {}] - Group data type; valid value {}.".format(fieldName, value))
                 pass
             elif (dataType == 'int'):
                 fieldDict['ParsedValue'] = int(value)
@@ -716,6 +904,9 @@ class SchemaParser(object):
                         raise Exception('DataOutOfRange',
                                         'The value for field ' + fieldName + ' is outside of the allowed range(' +
                                         fieldDict['dataRange'] + '): ' + value)
+                if fieldName in self.traceindex:
+                    self.logging.debug("[TRACE {}] - int data type; valid value {}".format(fieldName, value))
+
             elif (dataType == 'datetime'):
                 # TODO: Support multiple date time formats
                 if ('dateTimeFormat' not in fieldDict):
@@ -742,6 +933,8 @@ class SchemaParser(object):
                     self.logging.error(inst)
                     raise Exception('DataTypeInvalid',
                                     'Value for field ' + fieldName + ' is not a valid date time value: ' + value)
+                if fieldName in self.traceindex:
+                    self.logging.debug("[TRACE {}] - datetime data type; valid value {}.".format(fieldName, value))
             elif (dataType == 'enum'):
                 if (value not in fieldDict['enumValues']):
                     # Check if there is a case mismatch, update the value to the correct case if there is.
@@ -755,22 +948,30 @@ class SchemaParser(object):
                     if (not caseUpdated):
                         raise Exception('DataTypeInvalid',
                                         'Value for field ' + fieldName + ' is not listed in the enum values: ' + value)
+                if fieldName in self.traceindex:
+                    self.logging.debug("[TRACE {}] - enum data type; valid value {}.".format(fieldName, value))
             elif (dataType == 'emailAddress'):
                 if (EMAIL_REGEX.match(value) is None):
                     raise Exception('DataTypeInvalid',
                                     'Value for field ' + fieldName + ' is not a valid email address: ' + value)
+                if fieldName in self.traceindex:
+                    self.logging.debug("[TRACE {}] - emailAddress data type; valid value {}.".format(fieldName, value))
             elif (dataType == 'ipv4'):
                 try:
                     fieldDict['ParsedValue'] = socket.inet_aton(value)
                 except:
                     raise Exception('DataTypeInvalid',
                                     'Value for field ' + fieldName + ' is not a valid ipv4 address: ' + value)
+                if fieldName in self.traceindex:
+                    self.logging.debug("[TRACE {}] - ipv4 data type; valid value {}.".format(fieldName, value))
             elif (dataType == 'ipv6'):
                 try:
                     fieldDict['ParsedValue'] = socket.inet_pton(socket.AF_INET6, value)
                 except:
                     raise Exception('DataTypeInvalid',
                                     'Value for field ' + fieldName + ' is not a valid ipv6 address: ' + value)
+                if fieldName in self.traceindex:
+                    self.logging.debug("[TRACE {}] - ipv6 data type; valid value {}.".format(fieldName, value))
             else:
                 self.logging.error("No validation written for dataType: %s", dataType)
 
@@ -790,6 +991,9 @@ class SchemaParser(object):
 
         TODO: Update to query ontology directly
         '''
+        if len(self.traceindex) > 0:
+            self.logging.debug("[TRACE _TransformDataToNewSchema] - Monitoring the following elements: {}".format(",".join(self.traceindex.keys()))) 
+
 
         # newDict stores the transformed data mapped into the target schema for this row
         newDict = {}
@@ -824,7 +1028,10 @@ class SchemaParser(object):
 
         # Build a quick lookup dictionary of Ontology concepts to data from the source document
         DataDictionary = self._MapDataToOntology(DataRow, DocumentHeaderData, DocumentMetaData, DerivedData)
-        print("Mapping ontology data dictionary for row type {}".format(rowType))
+        # Populate implied ontology values:
+        self._PopulateImpliedOntologyValues(DataDictionary)
+
+        self.logging.debug("SchemaParser._TransformDataToNewSchema(): Mapping ontology data dictionary for row type {}".format(rowType))
         self.pprint.pprint(DataDictionary)
 
         # Build the dependency order for processing the target schema
@@ -835,18 +1042,24 @@ class SchemaParser(object):
         for field in FieldOrder:
             # Iterate over each field in the target file schema, copying in data from the source as it is available.
             fieldDict = self.SchemaConfig[rowType]['fields'][field].copy()
+            if field in self.traceindex:
+                self.logging.debug("[TRACE {}] - Processing field mapping to target schema.".format(field))
 
             OntologyReferences = collections.defaultdict(list)
             OntologyReference = None
 
             # TODO: Chris - this is the code that should be replaced or supplemented with the Ontology Oracle
             if ('ontologyMappingType' in fieldDict):
+                if field in self.traceindex:
+                    self.logging.debug("[TRACE {}] - Field has ontologyMappingType {}".format(field, fieldDict['ontologyMappingType']))
                 if (fieldDict['ontologyMappingType'] == 'none'):
                     if ('datatype' in fieldDict and fieldDict['datatype'] == 'group'):
                         if (field in GroupRows):
                             groupRow = GroupRows.pop(field)
                             #  -- Modifies 'newDict'[group] to contain values from source document
                             #     depending on mapping.
+                            if field in self.traceindex:
+                                self.logging.debug("[TRACE {}] - Building group row for field without ontologyMapping.".format(field))
                             self._BuildFieldGroup(DataDictionary, newDict, rowType, field, groupRow, IndicatorType)
                             continue
 
@@ -854,20 +1067,34 @@ class SchemaParser(object):
                     if (fieldDict['ontologyMapping'] != ''):
                         # Get the ontology reference we need in the destination schema:
                         OntologyReference = fieldDict['ontologyMapping']
+                        if field in self.traceindex:
+                            self.logging.debug("[TRACE {}] - Found ontology mapping {}".format(field, OntologyReference))
+                            self.traceindex[field]["dst_IRIs"].append(OntologyReference)
                         if OntologyReference in DataDictionary:
                             # If the semantic value exists exactly in the data dictionary, we can use it
                             # directly; no oracle call is required.
                             OntologyReferences[OntologyReference].extend(DataDictionary[OntologyReference].keys())
+                            if field in self.traceindex:
+                                self.logging.debug("[TRACE {}] - Adding DataDictionary keys to OntologyReferences.".format(field, OntologyReference))
                         elif oracle is not None:
                             # If we have a semantic mismatch, check the DataDictionary for ontology references which are
                             # either specializations (prefered) or generalizations of the concept.
                             # Lookup Ontology reference from the oracle instead:
+                            if field in self.traceindex:
+                                self.logging.debug("[TRACE {}] - Using the oracle to get compatible concepts".format(field, OntologyReference))
                             oRefList = oracle.getCompatibleConcepts(OntologyReference)
                             for altOntologyReference in oRefList:
                                 # For each possible value returned in oRefList, see if we have it in the data dictionary:
+                                if field in self.traceindex:
+                                    self.logging.debug("[TRACE {}] - Checking alternative ontology reference {} in DataDictionary".format(
+                                                                        field, altOntologyReference))
                                 if altOntologyReference.IRI.__str__() in DataDictionary:
                                     OntologyReferences[OntologyReference].extend(
                                         DataDictionary[altOntologyReference.IRI.__str__()].keys())
+                                    if field in self.traceindex:
+                                        self.traceindex[field]["dst_IRIs"].append(OntologyReference)
+                                        self.logging.debug("[TRACE {}] - Alternate reference found in DataDictionary for {}".format(
+                                                                        field, altOntologyReference))
                                     # TODO: Re-enable this when we start checking supported vs. required
                                     # else:
                                     # logging.warn("Semantic match attempt found an ontology reference not in Data Dictionary (%s)"%altOntologyReference.IRI)
@@ -876,16 +1103,26 @@ class SchemaParser(object):
                     # In the case of multiple possible fields, look up which one(s) are present:
                     if ('ontologyMappings' in fieldDict):
                         for OntologyReference in fieldDict['ontologyMappings']:
-                            # Lookup Ontology reference from the oracle instead:
+                            # TODO: Lookup Ontology reference from the oracle instead:
+                            if field in self.traceindex:
+                                self.logging.debug("[TRACE {}] - Processing reference {} in multiple mappings list.".format(
+                                                                field, OntologyReference))
+                                self.traceindex[field]["dst_IRIs"].append(OntologyReference)
                             if (OntologyReference != ''):
                                 if (OntologyReference in DataDictionary):
                                     # If the semantic value exists exactly in the data dictionary, we can use it 
                                     # directly; no oracle call is required.
                                     OntologyReferences[OntologyReference].extend(
                                         DataDictionary[OntologyReference].keys())
+                                    if field in self.traceindex:
+                                        self.logging.debug("[TRACE {}] - Reference {} found in DataDictionary.".format(
+                                                                field, OntologyReference))
                                 else:
                                     # If we have a semantic mismatch, check the DataDictionary for ontology references which are
                                     # either specializations (prefered) or generalizations of the concept.
+                                    if field in self.traceindex:
+                                        self.logging.debug("[TRACE {}] - Reference {} NOT found in DataDictionary.".format(
+                                                                field, OntologyReference))
                                     if oracle is not None:
                                         oRefList = oracle.getCompatibleConcepts(OntologyReference)
                                         for altOntologyReference in oRefList:
@@ -905,6 +1142,9 @@ class SchemaParser(object):
                         for k, v in fieldDict['enumValues'].items():
                             if (v['ontologyMapping'] != ''):
                                 OntologyReference = v['ontologyMapping']
+                                if field in self.traceindex:
+                                    self.logging.debug("[TRACE {}] - Using ontology mapping from enum value {}: {}.".format(
+                                                                field, k, OntologyReference))
                                 # if oracle is not None:
                                 # oRefList = oracle.getCompatibleConcepts(OntologyReference)
                                 # if len(oRefList) > 0 and OntologyReference in DataDictionary:
@@ -912,6 +1152,9 @@ class SchemaParser(object):
                                 # else:
                                 if not OntologyReference in DataDictionary:
                                     # We don't have an exact match, so check the ontology for one:
+                                    if field in self.traceindex:
+                                        self.logging.debug("[TRACE {}] - Ontology reference not found, checking oracle for alternative".format(
+                                                                field, k, OntologyReference))
                                     if oracle is not None and False:
                                         oRefList = oracle.getCompatibleConcepts(OntologyReference)
                                         for altOntologyReference in oRefList:
@@ -927,39 +1170,74 @@ class SchemaParser(object):
                                     if (fieldDict['datatype'] == 'enum'):
                                         # If the target file also represents this concept as an enum:
                                         OntologyReferences[OntologyReference].append(k)
+                                        if field in self.traceindex:
+                                            self.logging.debug("[TRACE {}] - Adding ontology reference as an enum value".format(
+                                                                field))
                                     else:
                                         # If the target file represents this concept as direct value:
                                         OntologyReferences[OntologyReference].extend(
                                             DataDictionary[OntologyReference].keys())
+                                        if field in self.traceindex:
+                                            self.logging.debug("[TRACE {}] - Enum values not supported, adding ontology references to list.".format(
+                                                                field))
                                     continue
 
                                 if ('reverseOntologyMappings' in v and isinstance(v['reverseOntologyMappings'], list)):
                                     # If the source only has a single concept, but the target requires several other 
                                     # schema elements to represent the concept:
                                     # Builds out a larger ontology on the target side; accommodate one-to-many
+                                    if field in self.traceindex:
+                                        self.logging.debug("[TRACE {}] - Enum value {} defines reverse ontology mappings; processing.".format(
+                                                                field, k))
                                     for reverseMapping in v['reverseOntologyMappings']:
                                         if (reverseMapping in DataDictionary):
                                             if (fieldDict['datatype'] == 'enum'):
                                                 OntologyReferences[OntologyReference].append(k)
+                                                if field in self.traceindex:
+                                                    self.logging.debug("[TRACE {}] - Added reverse mapping {}->{} for enum value {}".format(
+                                                                field, reverseMapping, OntologyReference, k))
                                             else:
                                                 self.logging.warning(
                                                     'reverseOntologyMappings in field %s not supported because datatype is not enum',
                                                     k)
                                             break
+                    else:
+                        self.logging.warn("Field {} has type {}, but no enumValues are defined.".format(field,fieldDict['ontologyMappingType']))
 
                 elif (fieldDict['ontologyMappingType'] == 'referencedEnum'):
                     referencedField = fieldDict['ontologyEnumField']
                     referencedValue = None
+                    if field in self.traceindex:
+                        self.logging.debug("[TRACE {}] - Processing referenced field {} for enum value.".format(
+                                                                field, referencedField))
+                    if referencedField in self.traceindex:
+                        self.logging.debug("[TRACE {}] - Referenced in enum of field {}".format(
+                                                                referencedField, field))
 
                     if ('memberof' in fieldDict):
                         # TODO: This needs to be expanded to support adding GroupIDs and mapping each referenced value if multiples exist
                         memberof = fieldDict['memberof']
+                        if field in self.traceindex:
+                            self.logging.debug("[TRACE {}] - Field is a memberof group {}".format(
+                                                                field, memberof))
                         if (memberof in GroupRows and 'fields' in GroupRows[memberof] and referencedField in
                             GroupRows[memberof]['fields']):
                             referencedValue = GroupRows[memberof]['fields'][referencedField][0]['NewValue']
+                            if field in self.traceindex:
+                                self.logging.debug("[TRACE {}] - Found referencedValue {} for referencedField{} in parent group {}".format(
+                                                                field, referencedValue, referencedField, memberof))
+                            if referencedField in self.traceindex:
+                                self.logging.debug("[TRACE {}] - Field referenced by {}, providing value {} due to reference by parent".format(
+                                                                referencedField, field, referencedValue, memberof))
 
                     elif (referencedField in newDict and 'Value' in newDict[referencedField]):
                         referencedValue = newDict[referencedField]['Value']
+                        if field in self.traceindex:
+                            self.logging.debug("[TRACE {}] - Found referencedValue {} for referencedField{}".format(
+                                                                field, referencedValue, referencedField, memberof))
+                        if referencedField in self.traceindex:
+                            self.logging.debug("[TRACE {}] - Field referenced by {}, providing value {}".format(
+                                                                referencedField, field, referencedValue))
 
                     if (referencedValue):
                         if ('ontologyMappingEnumValues' in fieldDict):
@@ -967,35 +1245,59 @@ class SchemaParser(object):
                                 if (fieldDict['ontologyMappingEnumValues'][referencedValue]['ontologyMapping'] != ''):
                                     OntologyReference = fieldDict['ontologyMappingEnumValues'][referencedValue][
                                         'ontologyMapping']
+                                    if field in self.traceindex:
+                                        self.logging.debug("[TRACE {}] - Using ontology mapping {} from ontologyMappingEnumValues".format(
+                                                                field, OntologyReference))
 
                             else:
                                 for eValue in fieldDict['ontologyMappingEnumValues']:
                                     if ('*' in eValue and eValue != '*' and
                                                 fieldDict['ontologyMappingEnumValues'][eValue][
                                                     'ontologyMapping'] != ''):
+                                        if field in self.traceindex:
+                                            self.logging.debug("[TRACE {}] - Checking for wildcard matches for enum value {}".format(
+                                                                field, eValue))
                                         if (eValue.startswith('*')):
                                             if (referencedValue.endswith(eValue.strip('*'))):
                                                 OntologyReference = fieldDict['ontologyMappingEnumValues'][eValue][
                                                     'ontologyMapping']
+                                                if field in self.traceindex:
+                                                    self.logging.debug("[TRACE {}] - Wildcard prefix matched for {}".format(
+                                                                field, OntologyReference))
                                                 break
                                         elif (eValue.endswith('*')):
                                             if (referencedValue.startswith(eValue.strip('*'))):
                                                 OntologyReference = fieldDict['ontologyMappingEnumValues'][eValue][
                                                     'ontologyMapping']
+                                                if field in self.traceindex:
+                                                    self.logging.debug("[TRACE {}] - Wildcard postfix matched for {}".format(
+                                                                field, OntologyReference))
                                                 break
 
                             if (OntologyReference is None and "*" in fieldDict['ontologyMappingEnumValues']):
+                                if field in self.traceindex:
+                                    self.logging.debug("[TRACE {}] - fieldDict ontology mapping enum value has a wildcard".format(
+                                                                field))
                                 if (fieldDict['ontologyMappingEnumValues']['*']['ontologyMapping'] != ''):
                                     OntologyReference = fieldDict['ontologyMappingEnumValues']['*']['ontologyMapping']
+                                    if field in self.traceindex:
+                                        self.logging.debug("[TRACE {}] - Setting wildcard ontology reference {}".format(
+                                                                field, OntologyReference))
 
                             # TODO: If this test fails, no direct map back to source.  Check the ontology for other options       
                             if (OntologyReference in DataDictionary):
                                 OntologyReferences[OntologyReference].extend(DataDictionary[OntologyReference].keys())
+                                if field in self.traceindex:
+                                    self.logging.debug("[TRACE {}] - Found ontology reference {} in source Data Dictionary".format(
+                                                                field, OntologyReference))
                         else:
                             raise Exception('ontologyMappingEnumValues',
                                             'ontologyMappingEnumValues missing from field %s' % field)
                     elif ('ontologyMappingEnumValues' in fieldDict and '' in fieldDict['ontologyMappingEnumValues']):
                         OntologyReference = fieldDict['ontologyMappingEnumValues']['']['ontologyMapping']
+                        if field in self.traceindex:
+                            self.logging.debug("[TRACE {}] - Enum values contains empty string; using match {}".format(
+                                                                field, OntologyReference))
                 else:
                     raise Exception('UnknownOntologyMappingType',
                                     'The OntologyMappingType %s in field %s is undefined' % (
@@ -1006,15 +1308,27 @@ class SchemaParser(object):
                                 'The OntologyMappingType is missing from field %s' % field)
 
             if (len(OntologyReferences) == 0 and 'reverseOntologyMappings' in fieldDict):
+                if field in self.traceindex:
+                    self.logging.debug("[TRACE {}] - No ontology mappings found; processing reverse mappings.".format(
+                                                                field))
                 for reverseMapping in fieldDict['reverseOntologyMappings']:
+                    if field in self.traceindex:
+                        self.logging.debug("[TRACE {}] - Checking reverse mapping {}".format(
+                                                                field, reverseMapping))
                     if (reverseMapping in DataDictionary):
                         OntologyReference = reverseMapping
                         OntologyReferences[OntologyReference].extend(DataDictionary[OntologyReference].keys())
+                        if field in self.traceindex:
+                            self.logging.debug("[TRACE {}] - Found reverse mapping in data dictionary; using reference {}".format(
+                                                                field, OntologyReference))
                         break
 
             if (len(OntologyReferences) == 0):
                 # No mapped data found, check if the field is required and if so if there is a default value
                 # Raise an exception if a required field has no data
+                if field in self.traceindex:
+                    self.logging.debug("[TRACE {}] - No mapped data found; checking requirement for output.".format(
+                                                                field))
                 required = False
 
                 if ('requiredIfReferenceField' in fieldDict):
@@ -1049,15 +1363,24 @@ class SchemaParser(object):
                                             break
 
                 if (required == True or ('required' in fieldDict and fieldDict['required'] == True)):
+                    if field in self.traceindex:
+                        self.logging.debug("[TRACE {}] - Required; checking default value".format(
+                                                                field))
                     if ('defaultValue' in fieldDict):
                         newDict[field] = fieldDict.copy()
                         newDict[field]['Value'] = fieldDict['defaultValue']
+                        if field in self.traceindex:
+                            self.logging.debug("[TRACE {}] - Default value found {}.".format(
+                                                                field, newDict[field]['Value']))
 
                         if (newDict[field]['Value'].startswith('&')):
                             newDict[field]['Value'] = self._CalculateFunctionValue(newDict[field]['Value'], field,
                                                                                    newDict[field], rowType, newDict,
                                                                                    IndicatorType,
                                                                                    TransformedData=self.TransformedData)
+                            if field in self.traceindex:
+                                self.logging.debug("[TRACE {}] - Default value was a function reference, computed new value {}".format(
+                                                                field, newDict[field]['Value']))
 
                         self._ValidateField(newDict[field], field, rowType)
 
@@ -1075,6 +1398,9 @@ class SchemaParser(object):
                                 "Sub-groups should not have 'required' set to true, processing skipped: %s", field)
                         else:
                             groupRow = {'fields': {}}
+                            if field in self.traceindex:
+                                self.logging.debug("[TRACE {}] - Processing subfields of group.".format(
+                                                                field))
                             self._BuildFieldGroup(DataDictionary, newDict, rowType, field, groupRow, IndicatorType)
                     else:
                         raise Exception('NoDefaultValue',
@@ -1085,10 +1411,19 @@ class SchemaParser(object):
                 if ('memberof' in fieldDict):
                     # Field is part of a group, handle using special group processing code
                     memberof = fieldDict['memberof']
+                    if field in self.traceindex:
+                        self.logging.debug("[TRACE {}] - Field is part of a group {}; processing value".format(
+                                                                field, memberof))
 
                     while ('memberof' in self.SchemaConfig[rowType]['fields'][memberof]):
                         # This is a subgroup, add to the parent group
                         memberof = self.SchemaConfig[rowType]['fields'][memberof]['memberof']
+                        if field in self.traceindex:
+                            self.logging.debug("[TRACE {}] - We are a subgroup; adding to parent group {}".format(
+                                                                field, memberof))
+                        if memberof in self.traceindex:
+                            self.logging.debug("[TRACE {}] - Member field {} is adding data to us.".format(
+                                                                memberof, field))
 
                     if (memberof not in GroupRows):
                         GroupRows[memberof] = {'fields': {}}
@@ -1100,6 +1435,9 @@ class SchemaParser(object):
                             newFieldDict = fieldDict.copy()
                             newFieldDict['matchedOntology'] = OntologyReference
                             NewValue = Value
+                            if field in self.traceindex:
+                                self.logging.debug("[TRACE {}] - Set ontology reference to {}, and value to {}".format(
+                                                                field, OntologyReference, Value))
                             if (OntologyReference in DataDictionary and Value in DataDictionary[OntologyReference]):
                                 sourceDict = DataDictionary[OntologyReference][Value]
 
@@ -1112,6 +1450,9 @@ class SchemaParser(object):
                                                     'Data could not be converted to the target schema [{0}]'.format(
                                                         Value))
 
+                            if field in self.traceindex:
+                                self.logging.debug("[TRACE {}] - Got new value {}".format(
+                                                                field, NewValue))
                             newFieldDict['NewValue'] = NewValue
 
                             GroupRows[memberof]['fields'][field].append(newFieldDict)
@@ -1122,9 +1463,15 @@ class SchemaParser(object):
                         # This finds the best possible match and uses that in the translation
 
                         for OntologyReference in fieldDict['ontologyMappings']:
+                            if field in self.traceindex:
+                                self.logging.debug("[TRACE {}] - Multiple type, processing ontology reference {}".format(
+                                                                field, OntologyReference))
                             if (OntologyReference in OntologyReferences):
                                 for Value in OntologyReferences[OntologyReference]:
                                     if (field not in newDict):
+                                        if field in self.traceindex:
+                                            self.logging.debug("[TRACE {}] - Field matched ontology reference {}; creating newDict with value {}".format(
+                                                                field, OntologyReference, Value))
                                         newDict[field] = fieldDict.copy()
                                         newDict[field]['matchedOntology'] = OntologyReference
                                         NewValue = Value
@@ -1132,6 +1479,9 @@ class SchemaParser(object):
                                             sourceDict = DataDictionary[OntologyReference][Value]
                                             NewValue = self._ConvertValueToTargetSchema(field, fieldDict, sourceDict,
                                                                                         Value)
+                                            if field in self.traceindex:
+                                                self.logging.debug("[TRACE {}] - Created NewValue {} from Value {}".format(
+                                                                field, NewValue, Value))
                                             if (NewValue is None):
                                                 raise Exception('ValueNotConverted',
                                                                 'Data could not be converted to the target schema [{0}]'.format(
@@ -1139,6 +1489,10 @@ class SchemaParser(object):
                                         newDict[field]['Value'] = NewValue
                                     elif ('multiple' in fieldDict and fieldDict['multiple'] == True):
                                         # TODO: Handle fields with multiple values
+                                        if field in self.traceindex:
+                                            self.logging.debug("[TRACE {}] - Handling fields with multiple values not yet supported; skipping.".format(
+                                                                field, NewValue, Value))
+                                        self.logging.warning("Fields with multiple values for the destination not yet supported; skipping {}".format(field))
                                         pass
                                     else:
                                         break
@@ -1147,12 +1501,18 @@ class SchemaParser(object):
                     else:
                         for OntologyReference in OntologyReferences:
                             for Value in OntologyReferences[OntologyReference]:
+                                if field in self.traceindex:
+                                    self.logging.debug("[TRACE {}] - Processing OntologyReference {} Value {}".format(
+                                                                field, OntologyReference, Value))
                                 if (field not in newDict):
                                     newDict[field] = fieldDict.copy()
                                     newDict[field]['matchedOntology'] = OntologyReference
                                     NewValue = Value
                                     if (OntologyReference in DataDictionary and Value in DataDictionary[
                                         OntologyReference]):
+                                        if field in self.traceindex:
+                                            self.logging.debug("[TRACE {}] - Both ontology reference and value are in the data dictionary.".format(
+                                                                field))
                                         sourceDict = DataDictionary[OntologyReference][Value]
                                         NewValue = self._ConvertValueToTargetSchema(field, fieldDict, sourceDict, Value)
                                         if (NewValue is None):
@@ -1160,13 +1520,19 @@ class SchemaParser(object):
                                                             'Data could not be converted to the target schema [{0}]'.format(
                                                                 Value))
                                     newDict[field]['Value'] = NewValue
+                                    if field in self.traceindex:
+                                        self.logging.debug("[TRACE {}] - Produced NewValue for field {}".format(
+                                                                field, NewValue))
                                 elif ('multiple' in fieldDict and fieldDict['multiple'] == True):
                                     # TODO: Handle fields with multiple values
+                                    self.logging.warning("Fields with multiple values for the destination not yet supported; skipping {}".format(field))
                                     pass
                                 else:
                                     break
 
                             if ('multiple' not in fieldDict or fieldDict['multiple'] == False):
+                                if field in self.traceindex:
+                                    self.logging.debug("[TRACE {}] - Not a multiple value field.".format(field))
                                 break
 
                         try:
@@ -1194,6 +1560,9 @@ class SchemaParser(object):
            output?
         '''
 
+        if group in self.traceindex:
+            self.logging.debug("[TRACE {}] - BuildFieldGroup".format(group))
+
         if (group not in groupDict):
             groupDict[group] = self.SchemaConfig[rowType]['fields'][group].copy()
             groupDict[group]['Value'] = 'True'
@@ -1217,7 +1586,11 @@ class SchemaParser(object):
 
         if ('defaultFields' in self.SchemaConfig[rowType]['fields'][group]):
             defaultFields = self.SchemaConfig[rowType]['fields'][group]['defaultFields']
+            if group in self.traceindex:
+                self.logging.debug("[TRACE {}] - Processing default fields".format(group))
             for k, v in defaultFields.items():
+                if k in self.traceindex:
+                    self.logging.debug("[TRACE {}] - Processing as one of the fields for group {}".format(k, group))
                 if (k not in groupRow['fields']):
                     groupRow['fields'][k] = []
 
@@ -1228,10 +1601,14 @@ class SchemaParser(object):
                             fieldDict['ReferencedValue'] = None
                             fieldDict['matchedOntology'] = None
 
+                            if k in self.traceindex:
+                                self.logging.debug("[TRACE {}] - Got value {}".format(k, v2))
                             if (v2.startswith('&')):
                                 v2 = self._CalculateFunctionValue(v2, k, self.SchemaConfig[rowType]['fields'][k],
                                                                   rowType, groupDict, IndicatorType,
                                                                   TransformedData=self.TransformedData)
+                                if k in self.traceindex:
+                                    self.logging.debug("[TRACE {}] - Value was a function reference; computed value {}".format(k, v2))
 
                             fieldDict['NewValue'] = v2
                             groupRow['fields'][k].append(fieldDict)
@@ -1241,10 +1618,15 @@ class SchemaParser(object):
                         fieldDict['ReferencedValue'] = None
                         fieldDict['matchedOntology'] = None
 
+                        if k in self.traceindex:
+                            self.logging.debug("[TRACE {}] - Got value {}".format(k, v2))
+
                         if (v.startswith('&')):
                             v = self._CalculateFunctionValue(v, k, self.SchemaConfig[rowType]['fields'][k], rowType,
                                                              groupDict, IndicatorType,
                                                              TransformedData=self.TransformedData)
+                            if k in self.traceindex:
+                                self.logging.debug("[TRACE {}] - Value was a function reference; computed value {}".format(k, v))
 
                         fieldDict['NewValue'] = v
                         groupRow['fields'][k].append(fieldDict)
@@ -1264,15 +1646,27 @@ class SchemaParser(object):
             if ('primaryKey' in v and v['primaryKey'] == True):
                 if (primaryKey is None):
                     primaryKey = k
+                    if group in self.traceindex:
+                        self.logging.debug("[TRACE {}] - Set primary key to {}".format(group, k))
+                    if k in self.traceindex:
+                        self.logging.debug("[TRACE {}] - Processing as primary key to group {}".format(k, group))
                 else:
                     raise Exception('MultiplePrimaryKeys',
                                     'Group %s has multiple primaryKeys defined, that is not supported' % group)
 
             elif ('required' in v and v['required'] == True):
                 requiredFields.append(k)
+                if group in self.traceindex:
+                    self.logging.debug("[TRACE {}] - Added required field {} to required list.".format(group, k))
+                if k in self.traceindex:
+                    self.logging.debug("[TRACE {}] - Added as a required field for group {}".format(k, group))
 
             else:
                 otherFields.append(k)
+                if group in self.traceindex:
+                    self.logging.debug("[TRACE {}] - Added other field {} to required list.".format(group, k))
+                if k in self.traceindex:
+                    self.logging.debug("[TRACE {}] - Added as other field for group {}".format(k, group))
 
         if (primaryKey is None):
             raise Exception('primaryKeyNotDefined', 'primaryKey not defined for group %s' % group)
@@ -1283,9 +1677,15 @@ class SchemaParser(object):
                 fieldDict['matchedOntology'] = None
                 fieldDict['NewValue'] = self.SchemaConfig[rowType]['fields'][primaryKey]['defaultValue']
                 groupRow['fields'][primaryKey] = [fieldDict]
+                if group in self.traceindex:
+                    self.logging.debug("[TRACE {}] - Primary key {} not defined; using default value {}.".format(group, primaryKey, fieldDict['NewValue']))
+                if primaryKey in self.traceindex:
+                    self.logging.debug("[TRACE {}] - Not found in available fields; using default value {}".format(k, fieldDict['NewValue']))
             else:
                 self.logging.info('primaryKey not found for group %s and no defaultValue defined', group)
                 return
+
+        ''' TODO: CONTINUE TRACING FROM HERE '''
 
         for fieldDict in groupRow['fields'][primaryKey]:
             # Create one group for each unique primary key
@@ -1431,6 +1831,8 @@ class SchemaParser(object):
         Convert data formats between source and target schemas
         '''
         NewValue = None
+        if field in self.traceindex:
+            self.logging.debug("[TRACE {}] - Converting value {} to target schema".format(field, Value))
 
         if (fieldDict['datatype'] == 'datetime'):
             if ('ParsedValue' in sourceDict):
@@ -1438,12 +1840,16 @@ class SchemaParser(object):
                     NewValue = time.mktime(sourceDict['ParsedValue'].timetuple())
                 else:
                     NewValue = sourceDict['ParsedValue'].strftime(fieldDict['dateTimeFormat'])
+                if field in self.traceindex:
+                    self.logging.debug("[TRACE {}] - Datetime value converted to {}".format(field, NewValue))
             else:
                 # TODO: ParsedValue should always exist, but I got errors when testing some CISCP STIX documents, need to test further
                 self.logging.error('DateTime data type did not have a ParsedValue defined for field %s (%s)', field,
                                    fieldDict)
 
         elif (fieldDict['datatype'] != sourceDict['datatype']):
+            if field in self.traceindex:
+                self.logging.debug("[TRACE {}] - source datatype {} != destination ({})".format(field, sourceDict['datatype'], fieldDict['datatype']))
             if (fieldDict['datatype'] == 'string' or fieldDict['datatype'] == 'enum'):
                 NewValue = Value
             else:
@@ -1453,9 +1859,13 @@ class SchemaParser(object):
                     # FIXME: Process value to appropriate type for target schema
                     self.logging.warning("Cannot convert between data types for field %s (%s, %s)", field,
                                          fieldDict['datatype'], sourceDict['datatype'])
+            if field in self.traceindex:
+                self.logging.debug("[TRACE {}] - Converted to new datatype: {} -> {}".format(field, Value, NewValue))
 
         else:
             NewValue = Value
+            if field in self.traceindex:
+                self.logging.debug("[TRACE {}] - No conversion necessary; using value {}".format(field, NewValue))
 
         return NewValue
 
@@ -1469,6 +1879,9 @@ class SchemaParser(object):
             OntologyConcept = { 'Value': { field: dictionary, field2: data, ... } }
         }
         '''
+        if len(self.traceindex) > 0:
+            self.logging.debug("[TRACE _MapDataToOntology] - Monitoring the following elements: {}".format(",".join(self.traceindex.keys()))) 
+
         # Result data dictionary
         DataDictionary = {}
 
@@ -1482,6 +1895,8 @@ class SchemaParser(object):
         # Next, add in the document header data
         if (DocumentHeaderData is not None):
             for k, v in DocumentHeaderData.items():
+                if k in self.traceindex:
+                    self.logging.debug("[TRACE {}] - Mapping ontology reference from DocumentHeaderData".format(k))
                 if (k in CombinedDataRow):
                     self.logging.warning(
                         'Key %s already exists in data row, value %s, overwritten by DocumentHeaderData key with value %s',
@@ -1491,6 +1906,8 @@ class SchemaParser(object):
         # Check to see if any of the header data is overridden by the document metadata.
         if (DocumentMetaData is not None):
             for k, v in DocumentMetaData.items():
+                if k in self.traceindex:
+                    self.logging.debug("[TRACE {}] - Mapping ontology reference from DocumentMetaData".format(k))
                 if (k in CombinedDataRow):
                     self.logging.warning(
                         'Key %s already exists in data row, value %s, overwritten by DocumentMetaData key with value %s',
@@ -1501,6 +1918,8 @@ class SchemaParser(object):
         if (DataRow is not None):
             # Check to see if the specific data overrides the document header data or document metadata
             for k, v in DataRow.items():
+                if k in self.traceindex:
+                    self.logging.debug("[TRACE {}] - Mapping ontology reference from source DataRow".format(k))
                 if (k in CombinedDataRow):
                     self.logging.warning(
                         'Key %s already exists in data row, value %s, overwritten by DataRow key with value %s', k,
@@ -1508,6 +1927,8 @@ class SchemaParser(object):
 
             CombinedDataRow.update(DataRow)
         for field, fieldDict in CombinedDataRow.items():
+            if k in self.traceindex:
+                self.logging.debug("[TRACE {}] - Mapping ontology reference from source DataRow".format(k))
             if ('Value' not in fieldDict):
                 self.logging.warning("Field %s has no value", field)
                 continue
@@ -1515,21 +1936,31 @@ class SchemaParser(object):
             Values = []
 
             Values.append(fieldDict['Value'])
+            if k in self.traceindex:
+                self.logging.debug("[TRACE {}] - Appended value {}".format(k, fieldDict['Value']))
 
             if ('AdditionalValues' in fieldDict):
                 Values.extend(fieldDict['AdditionalValues'])
+                if k in self.traceindex:
+                    self.logging.debug("[TRACE {}] - Appended values from AdditionalValues".format(k))
 
             for Value in Values:
+                if k in self.traceindex:
+                    self.logging.debug("[TRACE {}] - Getting ontologyMapping for value {}".format(k, Value))
                 OntologyReference = None
                 AdditionalOntologyReferences = []
 
                 if ('ontologyMappingType' in fieldDict):
                     if (fieldDict['ontologyMappingType'] == 'none'):
+                        if k in self.traceindex:
+                            self.logging.debug("[TRACE {}] - No ontology mapping for value {}; skipping.".format(k, Value))
                         continue
 
                     elif (fieldDict['ontologyMappingType'] == 'simple'):
                         if (fieldDict['ontologyMapping'] != ''):
                             OntologyReference = fieldDict['ontologyMapping']
+                            if k in self.traceindex:
+                                self.logging.debug("[TRACE {}] - {} -> {}".format(k, Value, OntologyReference))
 
                     elif (fieldDict['ontologyMappingType'] == 'multiple'):
                         if ('ontologyMappings' in fieldDict):
@@ -1537,14 +1968,22 @@ class SchemaParser(object):
                                 if (mapping != ''):
                                     if (OntologyReference is None):
                                         OntologyReference = mapping
+                                        if k in self.traceindex:
+                                            self.logging.debug("[TRACE {}] - {} -> {}".format(k, Value, OntologyReference))
                                     else:
                                         AdditionalOntologyReferences.append(mapping)
+                                        if k in self.traceindex:
+                                            self.logging.debug("[TRACE {}] - {} -> AdditionalOntologyReferences.append({})".format(k, Value, OntologyReference))
 
+                    #TODO: We should add an 'enumMultiple' mapping type
                     elif (fieldDict['ontologyMappingType'] == 'enum'):
                         if ('enumValues' in fieldDict):
                             if (Value in fieldDict['enumValues']):
                                 if (fieldDict['enumValues'][Value]['ontologyMapping'] != ''):
                                     OntologyReference = fieldDict['enumValues'][Value]['ontologyMapping']
+                                    if k in self.traceindex:
+                                        self.logging.debug("[TRACE {}] - {} -> {} from enumValue match".format(
+                                                                                k, Value, OntologyReference))
 
                             else:
                                 for eValue in fieldDict['enumValues']:
@@ -1553,21 +1992,36 @@ class SchemaParser(object):
                                         if (eValue.startswith('*')):
                                             if (Value.endswith(eValue.strip('*'))):
                                                 OntologyReference = fieldDict['enumValues'][eValue]['ontologyMapping']
+                                                if k in self.traceindex:
+                                                    self.logging.debug("[TRACE {}] - {} -> {} from enumValue suffix match {}".format(
+                                                                                k, Value, OntologyReference, eValue))
                                                 break
                                         elif (eValue.endswith('*')):
                                             if (Value.startswith(eValue.strip('*'))):
                                                 OntologyReference = fieldDict['enumValues'][eValue]['ontologyMapping']
+                                                if k in self.traceindex:
+                                                    self.logging.debug("[TRACE {}] - {} -> {} from enumValue prefix match {}".format(
+                                                                                k, Value, OntologyReference, eValue))
                                                 break
 
                             if (OntologyReference is None and "*" in fieldDict['enumValues']):
                                 if (fieldDict['enumValues']['*']['ontologyMapping'] != ''):
                                     OntologyReference = fieldDict['enumValues']['*']['ontologyMapping']
+                                    if k in self.traceindex:
+                                        self.logging.debug("[TRACE {}] - {} -> {} from enumValue wildcard match *".format(
+                                                                                k, Value, OntologyReference))
 
                         else:
                             raise Exception('MissingEnumValues', 'enumValues missing from field %s' % field)
 
                     elif (fieldDict['ontologyMappingType'] == 'referencedEnum'):
                         referencedField = fieldDict['ontologyEnumField']
+                        if k in self.traceindex:
+                            self.logging.debug("[TRACE {}] - References field {} for ontology reference".format(
+                                                                                k, referencedField))
+                        if referencedField in self.traceindex:
+                            self.logging.debug("[TRACE {}] - Referenced by field {} for ontology reference".format(
+                                                                                referencedField, k))
                         if (referencedField in DataRow and 'Value' in DataRow[referencedField]):
                             # TODO: Will this ever need to use ParsedValue?
                             referencedValue = DataRow[referencedField]['Value']
@@ -1577,6 +2031,12 @@ class SchemaParser(object):
                                             'ontologyMapping'] != ''):
                                         OntologyReference = fieldDict['ontologyMappingEnumValues'][referencedValue][
                                             'ontologyMapping']
+                                        if k in self.traceindex:
+                                            self.logging.debug("[TRACE {}] - Mapping to ontology from referenced field: {}({}) -> {}".format(
+                                                                                k, referencedField, referencedValue, OntologyReference))
+                                        if referencedField in self.traceindex:
+                                            self.logging.debug("[TRACE {}] - Referenced by {} -> {}".format(
+                                                                                referencedField, k, OntologyReference))
 
                                 else:
                                     for eValue in fieldDict['ontologyMappingEnumValues']:
@@ -1587,23 +2047,47 @@ class SchemaParser(object):
                                                 if (referencedValue.endswith(eValue.strip('*'))):
                                                     OntologyReference = fieldDict['ontologyMappingEnumValues'][eValue][
                                                         'ontologyMapping']
+                                                    if k in self.traceindex:
+                                                        self.logging.debug("[TRACE {}] - Taking value from enum suffix match in referenced field {}({}): {} -> {}".format(
+                                                                                k, referencedField, eValue, referencedValue, OntologyReference))
+                                                    if referencedField in self.traceindex:
+                                                        self.logging.debug("[TRACE {}] - Providing value from enum suffix match for field {}".format(
+                                                                                referencedField, k))
                                                     break
                                             elif (eValue.endswith('*')):
                                                 if (referencedValue.startswith(eValue.strip('*'))):
                                                     OntologyReference = fieldDict['ontologyMappingEnumValues'][eValue][
                                                         'ontologyMapping']
+                                                    if k in self.traceindex:
+                                                        self.logging.debug("[TRACE {}] - Taking value from enum prefix match in referenced field {}({}): {} -> {}".format(
+                                                                                k, referencedField, eValue, referencedValue, OntologyReference))
+                                                    if referencedField in self.traceindex:
+                                                        self.logging.debug("[TRACE {}] - Providing value from enum prefix match for field {}".format(
+                                                                                referencedField, k))
                                                     break
 
                                 if (OntologyReference is None and "*" in fieldDict['ontologyMappingEnumValues']):
                                     if (fieldDict['ontologyMappingEnumValues']['*']['ontologyMapping'] != ''):
                                         OntologyReference = fieldDict['ontologyMappingEnumValues']['*'][
                                             'ontologyMapping']
+                                        if k in self.traceindex:
+                                            self.logging.debug("[TRACE {}] - Taking value from wildcard match in referenced field {}(*): {} -> {}".format(
+                                                                                k, referencedField, referencedValue, OntologyReference))
+                                        if referencedField in self.traceindex:
+                                            self.logging.debug("[TRACE {}] - Providing value from wildcard match for field {}".format(
+                                                                                referencedField, k))
                             else:
                                 raise Exception('ontologyMappingEnumValues',
                                                 'ontologyMappingEnumValues missing from field %s' % field)
                         elif ('ontologyMappingEnumValues' in fieldDict and '' in fieldDict[
                             'ontologyMappingEnumValues']):
                             OntologyReference = fieldDict['ontologyMappingEnumValues']['']['ontologyMapping']
+                            if k in self.traceindex:
+                                self.logging.debug("[TRACE {}] - Referenced field {} not defined; taking value from blank match".format(
+                                                                                k, referencedField))
+                            if referencedField in self.traceindex:
+                                self.logging.debug("[TRACE {}] - Not defined in DataRow even though referenced by {}".format(
+                                                                                referencedField, k))
 
                     else:
                         raise Exception('UnknownOntologyMappingType',
@@ -1620,18 +2104,89 @@ class SchemaParser(object):
                     # to the target schema.
                     if ('stripNamespace' in fieldDict):
                         Value = Value.replace(fieldDict['stripNamespace'], '')
+                        if k in self.traceindex:
+                            self.logging.debug("[TRACE {}] - Stripped namespace from value {}".format(
+                                                                                k, Value))
 
                     AdditionalOntologyReferences.insert(0, OntologyReference)
                     for Reference in AdditionalOntologyReferences:
+                        if k in self.traceindex:
+                            self.logging.debug("[TRACE {}] - Checking additional ontology reference {}".format(
+                                                                                k, Reference))
                         if (Reference not in DataDictionary):
                             DataDictionary[Reference] = {}
                         elif (Value in DataDictionary[Reference]):
                             # self.logging.debug("Value %s is already mapped to Ontology concept %s, skipping new mapping from field %s" % (Value, Reference, field))
+                            if k in self.traceindex:
+                                self.logging.debug("[TRACE {}] - Additional ontology reference {} already mapped to value {}".format(
+                                                                                k, Reference, Value))
                             continue
 
+                        if k in self.traceindex:
+                            self.logging.debug("[TRACE {}] - Setting target ontology reference value: DataDictionary[{}][{}]".format(
+                                                                                k, Reference, Value))
                         DataDictionary[Reference][Value] = fieldDict
 
         return DataDictionary
+
+    def _PopulateImpliedOntologyValues(self, DataMapping):
+        '''
+        Given a dictionary keyed on ontology concepts, will also include concepts which are implied (according to the
+        ontology) but not explicitly defined in the source document. For example, mapping TLP:AMBER to the set of restrictions
+        implied by the AMBER value.
+        
+        TODO: Eventually this needs to be done in the ontology.
+        
+        Example:
+        {
+            OntologyConcept = { 'Value': { field: dictionary, field2: data, ... } }
+            ImpliedConcept  = { 'Value': { field: dictionary, field2: data, ... } }
+        }
+        '''
+        # TODO: Move this to the ontology:
+        ImplicationMap = { 'http://www.anl.gov/cfm/transform.owl#HeaderTLPWhiteSemanticConcept':
+                            [
+                                "http://www.anl.gov/cfm/transform.owl#PublicCFM13SharingRestrictionSemanticConcept",
+                                "http://www.anl.gov/cfm/transform.owl#AnonymousAccessSemanticConcept",
+                                "http://www.anl.gov/cfm/transform.owl#EntireDocumentSemanticConcept",
+                                "http://www.anl.gov/cfm/transform.owl#PrivilegePermittedSemanticConcept"
+                            ],
+                        'http://www.anl.gov/cfm/transform.owl#HeaderTLPGreenSemanticConcept':
+                            [
+                                "http://www.anl.gov/cfm/transform.owl#NeedToKnowCFM13SharingRestrictionSemanticConcept",
+                                "http://www.anl.gov/cfm/transform.owl#AnonymousAccessSemanticConcept",
+                                "http://www.anl.gov/cfm/transform.owl#EntireDocumentSemanticConcept",
+                                "http://www.anl.gov/cfm/transform.owl#PrivilegeDeniedSemanticConcept"
+                            ],
+                        'http://www.anl.gov/cfm/transform.owl#HeaderTLPAmberSemanticConcept':
+                            [
+                                "http://www.anl.gov/cfm/transform.owl#PrivateCFM13SharingRestrictionSemanticConcept",
+                                "http://www.anl.gov/cfm/transform.owl#AnonymousAccessSemanticConcept",
+                                "http://www.anl.gov/cfm/transform.owl#EntireDocumentSemanticConcept",
+                                "http://www.anl.gov/cfm/transform.owl#PrivilegeDeniedSemanticConcept"
+                            ],
+                        'http://www.anl.gov/cfm/transform.owl#HeaderTLPRedSemanticConcept':
+                            [
+                                "http://www.anl.gov/cfm/transform.owl#AnonymousAccessSemanticConcept",
+                                "http://www.anl.gov/cfm/transform.owl#EntireDocumentSemanticConcept",
+                                "http://www.anl.gov/cfm/transform.owl#PrivilegeDeniedSemanticConcept"
+                            ],
+                          'http://www.anl.gov/cfm/transform.owl#ReconNotAllowedSemanticConcept':
+                            [
+                                "http://www.anl.gov/cfm/transform.owl#DocumentDefaultPrivilegeDeny"
+                            ],
+                          'http://www.anl.gov/cfm/transform.owl#ReconAllowedSemanticConcept':
+                            [
+                                "http://www.anl.gov/cfm/transform.owl#DocumentDefaultPrivilegePermit"
+                            ]
+                        }
+
+        for concept in ImplicationMap:
+            if concept in DataMapping:
+                for impliedConcept in ImplicationMap[concept]:
+                    if impliedConcept not in DataMapping:
+                        self.logging.warn("Adding implied concept: {} (from source concept {})".format(impliedConcept, concept))
+                        DataMapping[impliedConcept] = DataMapping[concept]
 
     def _BuildOutputFormatText(self, fieldDict, newDict):
 
@@ -1688,12 +2243,18 @@ class SchemaParser(object):
         '''
         '''
         if (value.startswith('&')):
+            if fieldName in self.traceindex:
+                self.logging.debug("[TRACE {}]: Evaluating function value: {}".format(fieldName, value))
             match = re.match(r'&([^\(]+)\((.*)\)$', value)
             if (match):
                 function = match.group(1)
                 functionarg = match.group(2)
 
                 FunctionScopeValid = self.FunctionManager.GetFunctionScope(rowType, function)
+
+                if fieldName in self.traceindex:
+                    self.logging.debug("[TRACE {}]: Extracted function name {}, args {} with scope validity {}".format(
+                                                        fieldName, function, functionarg, FunctionScopeValid))
 
                 if (FunctionScopeValid):
 
@@ -1717,6 +2278,9 @@ class SchemaParser(object):
         else:
             self.logging.warning('Value %s is not a function reference', value)
 
+        if fieldName in self.traceindex:
+            self.logging.debug("[TRACE {}]: Function {}({}) produced value {}".format(
+                                                        fieldName, function, functionarg, value))
         return value
 
     @classmethod
@@ -1746,6 +2310,12 @@ class SchemaParser(object):
             context = ud
             for sub_key in k.split(Sep)[:-1]:
                 if sub_key not in context:
+                    if isinstance(sub_key, str) and sub_key == "marking_structures":
+                        print("Using sub_key {} for key {}".format(sub_key, k))
+                        print("Context is now: ")
+                        pprint.PrettyPrinter().pprint(context)
+                        print("Return value is now: ")
+                        pprint.PrettyPrinter().pprint(ud)
                     context[sub_key] = {}
                 context = context[sub_key]
             context[k.split(Sep)[-1]] = v

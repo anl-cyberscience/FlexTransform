@@ -10,6 +10,7 @@ from collections import defaultdict
 import inspect
 import logging
 import os
+import pprint
 
 from FlexTransform.SyntaxParser.Parser import Parser
 import FlexTransform.SyntaxParser.XMLParsers
@@ -23,15 +24,18 @@ class XMLParser(Parser):
     XML Syntax Parsers
     '''
 
-    def __init__(self):
+    def __init__(self, tracelist=[]):
         '''
         Constructor
         '''
-        super(XMLParser, self).__init__()
+        super(XMLParser, self).__init__(tracelist)
         self.XMLParser = None
         self.AdvancedParser = None
         self.ParsedData = None
         self.logging = logging.getLogger('FlexTransform.XMLParser')
+        self.tracelist = tracelist
+        self.logging.debug("Initialized XMLParser with tracelist of {} elements.".format(len(tracelist)))
+        self.pprint = pprint.PrettyPrinter()
 
     def LoadAdvancedParser(self,CustomParser):
         '''
@@ -39,7 +43,7 @@ class XMLParser(Parser):
         '''
         for name, obj in inspect.getmembers(FlexTransform.SyntaxParser.XMLParsers, inspect.isclass) :
             if (name == CustomParser) :
-                return obj();
+                return obj(tracelist=self.tracelist);
 
     def ValidateConfig(self,config):
         '''
@@ -162,9 +166,12 @@ class XMLParser(Parser):
                 # Keep passing the IndicatorType forward with the data. This is somewhat messy, but that way we can use it on write
                 DataRow[k] = v
             elif ('groupedFields' in v) :
+                self.logging.debug("Value contains a groupedField for key {}".format(k))
                 if ('valuemap' in v) :
+                    self.logging.debug("Grouped field contains a value map; creating new list for {}".format(v['valuemap']))
                     DataRow[v['valuemap']] = []
                     for group in v['groupedFields'] :
+                        self.logging.debug("Adding xmlDict for group {}".format(group))
                         DataRow[v['valuemap']].append(self._BuildXMLDictRow(group, parentValueMap=parentValueMap+v['valuemap']+';'))
             elif ('Value' in v) :
                 if ('valuemap' in v) :
@@ -173,12 +180,13 @@ class XMLParser(Parser):
                     else :
                         return v['Value']
             else :
-                self.logging.warning("Field %s does not contain a Value entry", k)
+                self.logging.warning("Field %s is neither a groupedField nor contains a Value entry", k)
         
         try :
             return SchemaParser.UnflattenDict(DataRow)
         except Exception as e:
             self.logging.error('Could not processes %s', DataRow)
+            self.pprint.pprint(DataRow)
             raise e 
 
     @classmethod

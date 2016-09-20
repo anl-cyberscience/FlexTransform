@@ -88,25 +88,144 @@
 					}
 				}
 			},
+			"policyref_privdefault": {
+				"description": "The default privilege permission for the document. Can be one of 'deny' or 'permit'",
+				"datatype": "enum",
+				"defaultValue": "permit",
+				"required": false,
+				"ontologyMappingType": "enum",
+				"enumValues": {
+					"permit": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#DocumentDefaultPrivilegePermit"
+					},
+					"deny": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#DocumentDefaultPrivilegeDeny"
+					}
+				}
+			},
+			"policyref_sharedefault": {
+				"description": "The default sharing policy for the document. Can be one of 'deny' or 'permit'",
+				"datatype": "enum",
+				"defaultValue": "permit",
+				"required": false,
+				"ontologyMappingType": "enum",
+				"enumValues": {
+					"permit": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#PublicCFM13SharingRestrictionSemanticConcept"
+					},
+					"deny": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#PrivateCFM13SharingRestrictionSemanticConcept"
+					}
+				}
+			},
 			"handling_markingstructures_policyref": {
 				"description": "If multiple policy refs apply, they are provided as space delimited URNs.",
 				"valuemap": "handling;marking_structures;policyref", 
 				"datatype": "string",
 				"defaultValue": "",
-				"required": "false",
+				"required": false,
 				"memberof": "handling_markingstructures",
-				"ontologyMappingType": "simple",
-				"ontologyMapping": ""
+				"ontologyMappingType": "none",
+				"regexSplit": "\\?privdefault=([^?]+)\\?(sharedefault=([^?]+))$",
+				"regexFields": "policyref_privdefault, policyref_sharedefault",
+				"outputFormat": "urn:isa:policy:acs:ns:v3.0?privdefault=[policyref_privdefault]?sharedefault=[policyref_sharedefault]"
+			},
+			"controlset_clearance": {
+				"description": "The clearance level of this document. Values include 'U' for unclass",
+				"datatype": "enum",
+				"defaultValue": "U",
+				"required": true,
+				"ontologyMappingType": "enum",
+				"enumValues": {
+					"U": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#DocumentClassificationLevelUnclassified"
+					}
+				}
+			},
+			"controlset_cui": {
+				"description": "The type (if any) of Controlled Unclassified Information (CUI) in this document. Values include FOUO and None",
+				"datatype": "enum",
+				"defaultValue": "None",
+				"required": true,
+				"ontologyMappingType": "enum",
+				"enumValues": {
+					"FOUO": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#OUOSemanticConcept"
+					},
+					"None": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#NotOUOSemanticConcept"
+					}
+				}
 			},
 			"handling_markingstructures_controlset": {
 				"description": "Group of data tags that are used to inform automated access control decisions.",
 				"valuemap": "handling;marking_structures;controlset", 
 				"datatype": "string",
 				"defaultValue": "",
-				"required": "false",
+				"required": false,
 				"memberof": "handling_markingstructures",
-				"ontologyMappingType": "simple",
-				"ontologyMapping": ""
+				"ontologyMappingType": "none",
+				"regexSplit": "^CLS:([^\\s]+)\\sCUI:([^\\s]+)$",
+				"regexFields": "controlset_clearance, controlset_cui",
+				"outputFormat": "CLS:[controlset_clearance] CUI:[controlset_cui]"
+			},
+			"handling_markingstructures_accessprivilege": {
+				"description": "The overall grouping of access privilege tuples applied to this document",
+				"valuemap": "handling;markingstructures;accessprivilege",
+				"datatype": "group",
+				"required": false,
+				"multiple": true,
+				"ontologyMappingType": "none",
+				"subfields": { 
+								"handling_markingstructures_accessprivilege_privilegeaction": {"required": true, "primaryKey": true},
+								"handling_markingstructures_accessprivilege_privilegescope": {"required": true, "primaryKey": false},
+								"handling_markingstructures_accessprivilege_privilegevalue": {"required": true, "primaryKey": false}
+				}
+			},
+			"handling_markingstructures_accessprivilege_privilegeaction": {
+				"description": "The action that we are specifically permitting or denying w.r.t. this document.",
+				"valuemap": "privilegeaction", 
+				"datatype": "enum",
+				"defaultValue": "ANONYMOUSACCESS",
+				"required": true,
+				"ontologyMappingType": "enum",
+				"memberof": "handling_markingstructures_accessprivilege",
+				"enumValues": {
+					"ANONYMOUSACCESS": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#AnonymousAccessSemanticConcept"
+					}
+				}
+			},
+			"handling_markingstructures_accessprivilege_privilegescope": {
+				"description": "The scope that this action restriction applies to. Currently assumed to be 'ALL'",
+				"valuemap": "privilegescope", 
+				"datatype": "enum",
+				"defaultValue": "ALL",
+				"required": true,
+				"ontologyMappingType": "enum",
+				"memberof": "handling_markingstructures_accessprivilege",
+				"enumValues": {
+					"ALL": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#EntireDocumentSemanticConcept"
+					}
+				}
+			},
+			"handling_markingstructures_accessprivilege_privilegevalue": {
+				"description": "The value of the action privilege, can be either 'permit' or 'deny'",
+				"valuemap": "privilegevalue", 
+				"datatype": "enum",
+				"defaultValue": "deny",
+				"required": true,
+				"ontologyMappingType": "enum",
+				"memberof": "handling_markingstructures_accessprivilege",
+				"enumValues": {
+					"permit": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#PrivilegePermittedSemanticConcept"
+					},
+					"deny": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#PrivilegeDeniedSemanticConcept"
+					}
+				}
 			},
 			"handling_markingstructures_mostrestrictive": {
 				"description": "Indicates whether or not this marking structure denotes the most restrictive applied to this structure.  Only used in STIX header. Can only be used if the Controlled_Structure is set to //node()",

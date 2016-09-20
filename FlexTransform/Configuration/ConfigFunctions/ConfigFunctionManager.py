@@ -18,7 +18,7 @@ class ConfigFunctionManager(object):
 
     __KnownFunctions = defaultdict(dict)
 
-    def __init__(self):
+    def __init__(self, tracelist=[]):
         '''
         Constructor
         '''
@@ -26,6 +26,18 @@ class ConfigFunctionManager(object):
         
         self._FunctionClasses = {}
         self.pprint = pprint.PrettyPrinter()
+        self.tracelist = tracelist
+        self.traceindex = {}
+        for x in self.tracelist:
+            self.traceindex[x["src_field"]] = x
+            for y in x["dst_fields"]:
+                self.traceindex[y] = x
+            for w in x["src_IRIs"]:
+                self.traceindex[w] = x
+            for z in x["dst_IRIs"]:
+                self.traceindex[z] = x
+
+        self.logging.debug("Initialized ConfigFunctionManager with tracelist of {} elements".format(len(tracelist)))
                 
     @classmethod
     def RegisterFunction(cls, FunctionName, RequiredArgs, FunctionClass):

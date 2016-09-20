@@ -14,10 +14,11 @@ class KVParser(object):
     Key/Value Syntax Parser
     """
 
-    def __init__(self):
+    def __init__(self, tracelist=[]):
         """
         Constructor
         """
+        super(KVParser, self).__init__(tracelist)
         self.SeparatorChar = r"\s"
         self.QuoteChar = r"[']"
         self.KVSeparator = r"[=]"
@@ -25,6 +26,8 @@ class KVParser(object):
         self.ParsedData = {}
         
         self.logging = logging.getLogger('FlexTransform.KVParser')
+        self.tracelist = tracelist
+        self.logging.debug("Initialized KVParser with tracelist of {} elements.".format(len(tracelist)))
         
     def ValidateConfig(self,config):
         """

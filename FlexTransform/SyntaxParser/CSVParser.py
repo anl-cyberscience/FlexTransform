@@ -14,13 +14,16 @@ class CSVParser(object):
     Key/Value Syntax Parser
     '''
 
-    def __init__(self):
+    def __init__(self, tracelist=[]):
         '''
         Constructor
         '''
+        super(CSVParser, self).__init__(tracelist)
         
         self.ParsedData = {}
         self.logging = logging.getLogger('FlexTransform.CSVParser')
+        self.tracelist = tracelist
+        self.logging.debug("Initialized CSVParser with tracelist of {} elements.".format(len(tracelist)))
         
         self.Fields = [];
         self.Delimiter = ','

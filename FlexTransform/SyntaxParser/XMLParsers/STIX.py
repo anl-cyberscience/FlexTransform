@@ -39,11 +39,13 @@ try :
 except ImportError :
     pass
 
+'''
 try :
     from ISAMarkingExtension.isamarkings import ISAMarkingStructure30  # @UnusedImport
 except ImportError as e:
     print("Couldn't import ISAMarkingStructure30: {}".format(e))
     pass
+'''
 
 ''' TODO: This should inherit from parents. '''
 class STIX(object):
@@ -53,11 +55,14 @@ class STIX(object):
     Upgrades STIX documents version 1.0 through 1.1 to the latest version, 1.1.1, using the ramrod module before parsing
     '''
 
-    def __init__(self):
+    def __init__(self, tracelist=[]):
         '''
         Constructor
         '''
         self.logging = logging.getLogger('FlexTransform.XMLParser.STIX')
+        self.tracelist = tracelist
+        self.logging.debug("Initialized STIX XMLParser with tracelist of {} elements.".format(len(tracelist)))
+        self.pprint = pprint.PrettyPrinter()
         self.STIXNamespace = "http://www.example.com"
         self.STIXAlias = "example"
         self.STIXReplaceNamespace = False
@@ -201,11 +206,14 @@ class STIX(object):
             ParsedData['DocumentHeaderData']['profiles'] = newList
 
         if (self.OutputSyntax == "XML") :
-            stix_package = STIXPackage.from_dict({'id': ParsedData['DocumentHeaderData'].pop('id'),
-                                                  'version': ParsedData['DocumentHeaderData'].pop('version'),
-                                                  'timestamp': ParsedData['DocumentHeaderData'].pop('timestamp'),
-                                                  'stix_header': ParsedData['DocumentHeaderData'],
-                                                  'indicators': ParsedData['IndicatorData']})
+            towrite = {'id': ParsedData['DocumentHeaderData'].pop('id'),
+                       'version': ParsedData['DocumentHeaderData'].pop('version'),
+                       'timestamp': ParsedData['DocumentHeaderData'].pop('timestamp'),
+                       'stix_header': ParsedData['DocumentHeaderData'],
+                       'indicators': ParsedData['IndicatorData']}
+            self.logging.debug("Writing stix package to XML:")
+            self.pprint.pprint(towrite)
+            stix_package = STIXPackage.from_dict(towrite)
             stixfile.write(stix_package.to_xml())
             
         elif (self.OutputSyntax == "JSON") :

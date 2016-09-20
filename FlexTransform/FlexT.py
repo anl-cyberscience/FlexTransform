@@ -77,11 +77,25 @@ def main():
     parser.add_argument('--destination-schema-IRI',
                         help='The ontology IRI for the destination',
                         required=False)
+    parser.add_argument('--trace',
+                        help='Given an element name from the source schema, will output trace messages to log.trace() as it is processed',
+                        required=False)
+
 
     args = parser.parse_args()
 
     try:
-        Transform = FlexTransform.FlexTransform()
+        tracelist = []
+        if args.trace:
+            traceitemdict = {"src_field": args.trace,
+                          "src_IRIs": list(),
+                          "dst_fields": list(),
+                          "dst_IRIs": list()}
+            tracelist.append(traceitemdict)
+            logging.debug("[TRACE]: enabling trace for element {}".format(tracelist[-1]["src_field"]))
+
+        Transform = FlexTransform.FlexTransform(tracelist=tracelist)
+
         Transform.AddParser('src', args.src_config, args.src, args.dst)
         Transform.AddParser('dst', args.dst_config, args.src, args.dst)
 

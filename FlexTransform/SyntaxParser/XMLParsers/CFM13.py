@@ -17,7 +17,7 @@ class CFM13(object):
     Parser for CFM version 1.3 XML documents
     '''
 
-    def __init__(self):
+    def __init__(self, tracelist=[]):
         '''
         Constructor
         '''
@@ -38,6 +38,14 @@ class CFM13(object):
                                     }
         
         self.logging = logging.getLogger('FlexTransform.XMLParser.CFM13')
+        self.tracelist = tracelist
+        self.sourcetraceindex = {}
+        self.desttraceindex = {}
+        for x in self.tracelist:
+            self.sourcetraceindex[x["src_field"]] = x
+            for y in x["dst_fields"]:
+                self.desttraceindex[y] = x
+        self.logging.debug("Initialized CFM1.3 XMLParser with tracelist of {} elements.".format(len(tracelist)))
         
         CFM13Functions.RegisterFunctions()
 
