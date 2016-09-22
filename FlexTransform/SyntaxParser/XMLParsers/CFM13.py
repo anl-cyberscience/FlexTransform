@@ -39,12 +39,16 @@ class CFM13(object):
         
         self.logging = logging.getLogger('FlexTransform.XMLParser.CFM13')
         self.tracelist = tracelist
-        self.sourcetraceindex = {}
-        self.desttraceindex = {}
+        self.traceindex={}
         for x in self.tracelist:
-            self.sourcetraceindex[x["src_field"]] = x
+            for v in x["src_fields"]:
+                self.traceindex[v] = x
             for y in x["dst_fields"]:
-                self.desttraceindex[y] = x
+                self.traceindex[y] = x
+            for w in x["src_IRIs"]:
+                self.traceindex[w] = x
+            for z in x["dst_IRIs"]:
+                self.traceindex[z] = x
         self.logging.debug("Initialized CFM1.3 XMLParser with tracelist of {} elements.".format(len(tracelist)))
         
         CFM13Functions.RegisterFunctions()

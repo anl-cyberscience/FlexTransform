@@ -77,8 +77,25 @@ def main():
     parser.add_argument('--destination-schema-IRI',
                         help='The ontology IRI for the destination',
                         required=False)
-    parser.add_argument('--trace',
-                        help='Given an element name from the source schema, will output trace messages to log.trace() as it is processed',
+    parser.add_argument('--trace-src-field',
+                        help='Given the name of a field from the source schema, will output trace messages to log.trace() as it is processed',
+                        action='append',
+                        default=[],
+                        required=False)
+    parser.add_argument('--trace-dst-field',
+                        help='Given the name of a field from the dest schema, will output trace messages to log.trace() as it is processed',
+                        action='append',
+                        default=[],
+                        required=False)
+    parser.add_argument('--trace-src-IRI',
+                        help='Given the name of an IRI from the source schema, will output trace messages to log.trace() as it is processed',
+                        action='append',
+                        default=[],
+                        required=False)
+    parser.add_argument('--trace-dst-IRI',
+                        help='Given the name of an IRI from the dest schema, will output trace messages to log.trace() as it is processed',
+                        action='append',
+                        default=[],
                         required=False)
 
 
@@ -86,13 +103,38 @@ def main():
 
     try:
         tracelist = []
-        if args.trace:
-            traceitemdict = {"src_field": args.trace,
+        if args.trace_src_field:
+            for arg in args.trace_src_field:
+                traceitemdict = {"src_fields": [arg],
                           "src_IRIs": list(),
                           "dst_fields": list(),
                           "dst_IRIs": list()}
-            tracelist.append(traceitemdict)
-            logging.debug("[TRACE]: enabling trace for element {}".format(tracelist[-1]["src_field"]))
+                tracelist.append(traceitemdict)
+                logging.debug("[TRACE]: enabling trace for element {}".format(arg))
+        if args.trace_dst_field:
+            for arg in args.trace_dst_field:
+                traceitemdict = {"src_fields": list(),
+                          "src_IRIs": list(),
+                          "dst_fields": [arg],
+                          "dst_IRIs": list()}
+                tracelist.append(traceitemdict)
+                logging.debug("[TRACE]: enabling trace for element {}".format(arg))
+        if args.trace_src_IRI:
+            for arg in args.trace_src_IRI:
+                traceitemdict = {"src_fields": list(),
+                          "src_IRIs": [arg],
+                          "dst_fields": list(),
+                          "dst_IRIs": list()}
+                tracelist.append(traceitemdict)
+                logging.debug("[TRACE]: enabling trace for element {}".format(arg))
+        if args.trace_dst_IRI:
+            for arg in args.trace_dst_IRI:
+                traceitemdict = {"src_fields": list(),
+                          "src_IRIs": list(),
+                          "dst_fields": list(),
+                          "dst_IRIs": [arg]}
+                tracelist.append(traceitemdict)
+                logging.debug("[TRACE]: enabling trace for element {}".format(arg))
 
         Transform = FlexTransform.FlexTransform(tracelist=tracelist)
 

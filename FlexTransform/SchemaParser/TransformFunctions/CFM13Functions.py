@@ -6,6 +6,7 @@ Created on Mar 13, 2015
 
 import datetime
 import logging
+import pprint
 
 from FlexTransform.SchemaParser.TransformFunctions import TransformFunctionManager
 
@@ -40,8 +41,8 @@ class CFM13Functions(object):
 
     __FunctionNames = {
         'DocumentHeaderData': {
-
             'CFM13_determineTLP': ['transformedData'],
+            'CFM13_determineReportOUO': ['transformedData'],
             'CFM13_earliestIndicatorTime': ['transformedData']
         },
         'IndicatorData': {
@@ -55,6 +56,7 @@ class CFM13Functions(object):
         Constructor
         """
         self.logging = logging.getLogger('FlexTransform.SchemaParser.CFM13Functions')
+        self.pprint = pprint.PrettyPrinter()
 
     @classmethod
     def RegisterFunctions(cls):
@@ -123,5 +125,19 @@ class CFM13Functions(object):
                 sightings += int(args['currentRow'][args['functionArg']]['Value'])
 
             value = str(sightings)
+            
+        elif FunctionName == 'CFM13_determineReportOUO':
+            '''
+            This function determines the OUO level of the overall report by assuming that if any included indicator is OUO,
+            then the entire report is OUO.
+            '''
+            value = "0"
+            self.logging.debug("Evaluating report OUO status based on {} indicators.".format(len(args['transformedData']['IndicatorData'])))
+            for indicator in args['transformedData']['IndicatorData']:
+                self.logging.debug("Checking indicator OUO value: {}".format(indicator['ouo']['Value']))
+                if indicator['ouo']['Value'] == "1":
+                    value = "1"
+                    break
+            self.logging.debug("Returning value {}".format(value))
 
         return value

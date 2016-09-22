@@ -89,7 +89,7 @@ class FlexTransform(object):
         SourceData = SourceConfig.Parser.Read(sourceFileName, SourceConfig)
         
         '''
-        print("FlexTransform.Transform(): SourceData Dictionary: ")
+        self.logging.debug("FlexTransform.Transform(): SourceData Dictionary: ")
         self.pprint.pprint(SourceData)
         '''
         
@@ -100,7 +100,7 @@ class FlexTransform(object):
         MappedData = SourceConfig.SchemaParser.MapDataToSchema(SourceData, oracle)
 
         '''
-        print("FlexTransform.Transform(): MappedData Dictionary: ")
+        self.logging.debug("FlexTransform.Transform(): MappedData Dictionary: ")
         self.pprint.pprint(MappedData)
         '''
         
@@ -110,12 +110,12 @@ class FlexTransform(object):
         # Map source data to destination schema
         TransformedData = DestinationConfig.SchemaParser.TransformData(MappedData, oracle)
 
-        print("FlexTransform.Transform(): TransformedData Dictionary: ")
+        self.logging.debug("FlexTransform.Transform(): TransformedData Dictionary: ")
         self.pprint.pprint(TransformedData)
         
         # Finalize data to be written
         FinalizedData = DestinationConfig.Parser.Finalize(TransformedData)
-        print("FlexTransform.Transform(): FinalizedData Dictionary: ")
+        self.logging.debug("FlexTransform.Transform(): FinalizedData Dictionary: ")
         self.pprint.pprint(FinalizedData)
         
         if (targetFileName is not None) :

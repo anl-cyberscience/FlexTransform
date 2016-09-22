@@ -30,7 +30,8 @@ class Config(object):
         self.traceindex={}
         self.tracelist = tracelist
         for x in self.tracelist:
-            self.traceindex[x["src_field"]] = x
+            for v in x["src_fields"]:
+                self.traceindex[v] = x
             for y in x["dst_fields"]:
                 self.traceindex[y] = x
             for w in x["src_IRIs"]:

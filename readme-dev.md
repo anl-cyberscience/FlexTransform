@@ -93,33 +93,44 @@ This file is written in json and has 2 major sections.
 - **DocumentHeaderData**
 - **IndicatorData**
 
-Under each of these sections, there is a list of fields with attributes and properties.  The list of fields under each section is aggregated inside the “fields” key in the following format. 
+Under each of these sections, there is a list of fields with attributes and properties.  The list of fields under each section is aggregated inside the fields key in the following format. 
 
 ```
-“FieldName” : {
-    “attribute1” : “value1”,  
-    “attribute2” : “value2”,  
-    “attribute3” : “value3”,
+FieldName : {
+    attribute1 : value1,
+    attribute2 : value2,
+    attribute3 : value3,
     ...
 }
 ```
 
 Each of these fields have some or all of the following attributes
 
-- **description** – A brief description of the field
+- **description**   A brief description of the field
 
-- **datatype** – The data type of the field
+- **datatype**  The data type of the field
 
-	Some examples are
+	Currently the following are supported:
 	- datetime
 	- string
 	- ipv4
 	- ipv6
-	- int
+	- emailAddress
+	- int 
+	- enum*
+	- group*
 	
-	There are some special cases where the value for this attribute has special meaning
-	- enum - The field to which the attribute belongs to, would take on values from an enumeration. This enumeration can be specified using the **enumValues** attribute.
-	- group - The field to which the attribute belongs to, is the groupID of fields. All the other fields which are part of this group would use this field's json field name as the value for the **memberof** field. This is called as field grouping. When this happens the members of the group are processed before the groupID field. The fields are assigned respective order in the **field order queue**.
+	The last two, enum and group, carry a special meaning. A data type of
+	enum indicates that the field to which the attribute belongs to, would take one
+	of a specific set of values from an enumeration. This enumeration can be specified 
+	using the **enumValues** attribute (see the examples below).
+
+	The group datatype signifies that the field to which the attribute belongs is 
+	a groupID for a set of sub-fields. The other fields which are part of this group 
+	would use this field's json field name as the value for the **memberof** field. 
+	This is called as field grouping. When this happens the members of the group are 
+	processed before the groupID field. The fields are assigned respective order in 
+	the **field order queue** (see the examples below).
 	
 	
 	Samples :
@@ -156,7 +167,7 @@ Sample 2 : When datatype = group
 
 
 		
-- **subfields** – This optional attribute is used when **datatype** = "group". This is another variation of field grouping. In Sample 2 above, the fields that are part of a group use **memberof** attribute to denote their membership in the group. Another way is to have the set of fields which are part of this group inside the subfields attribute. **subfields** must be a dictionary and **multiple** attribute needs to be set to True.
+- **subfields** -- This optional attribute is used when **datatype** = "group". This is another variation of field grouping. In Sample 2 above, the fields that are part of a group use **memberof** attribute to denote their membership in the group. Another way is to have the set of fields which are part of this group inside the subfields attribute. **subfields** must be a dictionary and **multiple** attribute needs to be set to True.
 
 	Samples:
 	
@@ -174,13 +185,13 @@ Sample 3 : subfields
 		  }
 ```
 
-- **multiple** – Apart from the use mentioned above, This field is also set to true if there is a possibility of the field taking on multiple values.
+- **multiple** - Apart from the use mentioned above, This field is also set to true if there is a possibility of the field taking on multiple values.
 
 - **enumValues** - when **datatype** field is set to "enum", the possible enumerations are present under this attribute as a list. Refer to Sample 1 above.
 
 - **memberof** - Used when **datatype** field is set to "group". Refer to Sample 2 above.
 
-- **defaultValue** – The default value this field would take if the input file does not have a value for this field.
+- **defaultValue** - The default value this field would take if the input file does not have a value for this field.
 	
 	There are some special cases where the value for this attribute has special meaning
 	- Begins with a '&' symbol - Means that a transformation function needs to be invoked which will determine the defaultValue for the field in runtime. These transformation functions needs to be defined under the [Transformation functions](FlexTransform/SchemaParser/TransformFunctions) folder. Desired logic needs to be written under the specific format's python file.
@@ -203,9 +214,9 @@ inside the Execute() method
 ```
 
 
-- **ontologyMapping** – The ontology IRI for the field which is a unique identifier for an element in the ontology. 
+- **ontologyMapping** - The ontology IRI for the field which is a unique identifier for an element in the ontology. 
 
-- **ontologyMappingType** – The type of the underlying ontology mapping. The possible types are
+- **ontologyMappingType** - The type of the underlying ontology mapping. The possible types are
 
 	- simple - Simple one to one mapping between the ontology concept and the field
 	- multiple - The field maps to multiple ontology concepts. The IRI of all those concepts are present as a list under **ontologyMappings** attribute
@@ -260,11 +271,11 @@ Sample 7 : When ontologyMappingType = multiple
 
 - **ontologyMappingEnumValues** - Used when the **ontologyMappingType** = "referencedEnum". Holds all the possible enumerations and their ontology IRIs.
 
-- **required** – Is this a mandatory field? If "yes", then these type of fields will be processed first in the field order queue.
+- **required** - Is this a mandatory field? If "yes", then these type of fields will be processed first in the field order queue.
 
 - **requiredIfReferenceField and requiredIfReferenceValuesMatch** -  This field becomes a mandatory field (similar to **required** set to true), if the field under **requiredIfReferenceField** attribute is present in the input file and matches a certain regular expression denoted by the **requiredIfReferenceValuesMatch** attribute. You can specify * under the **requiredIfReferenceValuesMatch** attribute to accept any value.
 
-- **valuemap** – (Only if the input file is in xml syntax) Helps in mapping the field to the relevant element in the xml tree. 
+- **valuemap** - (Only if the input file is in xml syntax) Helps in mapping the field to the relevant element in the xml tree. 
 
 	Consider the following xml file :
 	
@@ -429,13 +440,13 @@ Sample 12 : reverseOntologyMapping
 
 [Look at the parser modules written for formats such as CFM13,CFM20 and STIX under the directory FlexTransform/SyntaxParser/XMLParsers to get better understanding]
 
-- Read() – The source file needs to be parsed alongside the information available in the schema definition file. A dictionary needs to be created with DocumentHeaderData and IndicatorData as the first level keys and then packing the key-value pairs in the same manner as in the schema definition file. The information about the field to pick up from the source file is present in the schema file. The key is the key of that field in the schema file and the value is the data present in the corresponding field in the source file. This Dictionary is given to the engine for translation 
+- Read() - The source file needs to be parsed alongside the information available in the schema definition file. A dictionary needs to be created with DocumentHeaderData and IndicatorData as the first level keys and then packing the key-value pairs in the same manner as in the schema definition file. The information about the field to pick up from the source file is present in the schema file. The key is the key of that field in the schema file and the value is the data present in the corresponding field in the source file. This Dictionary is given to the engine for translation 
 
 - Validate_config() - Validate the source data against the schema configuration. Make sure the fields with the required attribute set to true are present in the source file.
 
 - Finalize() - finalize the formatting of data before being sent to the write object. Make sure all the required fields are present
 
-- Write() – Write the data in the form of the destination schema configuration by adhering to the attributes and properties defined.
+- Write() - Write the data in the form of the destination schema configuration by adhering to the attributes and properties defined.
 
 [Example XML Parser](FlexTransform/SyntaxParser/XMLParsers/CFM13.py)
 

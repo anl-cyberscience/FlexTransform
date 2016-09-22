@@ -25,8 +25,7 @@
 					"handling_markingstructures_isamversion": "1.0",
 					"handling_markingstructures_isamversion2": "1.0",
 					"handling_markingstructures_mostrestrictive": "true",
-					"handling_markingstructures_policyref": "urn:isa:policy:acs:ns:v2.0?privdefault=permit",
-					"handling_markingstructures_controlset": "CLS:U CUI:FOUO"
+					"handling_markingstructures_policyref": "urn:isa:policy:acs:ns:v2.0?privdefault=permit"
 				}
 			},
 			"handling_markingstructures_identifier": {
@@ -95,18 +94,47 @@
 				"defaultValue": "",
 				"required": "false",
 				"memberof": "handling_markingstructures",
+				"primaryKeyMatch": "edh2cyberMarkingAssert:ISAMarkingsAssertionType",
 				"ontologyMappingType": "simple",
 				"ontologyMapping": ""
+			},
+			"controlset_clearance": {
+				"description": "The clearance level of this document. Values include 'U' for unclass",
+				"datatype": "enum",
+				"defaultValue": "U",
+				"required": true,
+				"ontologyMappingType": "enum",
+				"enumValues": {
+					"U": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#DocumentClassificationLevelUnclassified"
+					}
+				}
+			},
+			"controlset_cui": {
+				"description": "The type (if any) of Controlled Unclassified Information (CUI) in this document. Values include FOUO and None",
+				"datatype": "enum",
+				"defaultValue": "None",
+				"required": true,
+				"ontologyMappingType": "enum",
+				"enumValues": {
+					"FOUO": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#OUOSemanticConcept"
+					},
+					"None": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#NotOUOSemanticConcept"
+					}
+				}
 			},
 			"handling_markingstructures_controlset": {
 				"description": "Group of data tags that are used to inform automated access control decisions.",
 				"valuemap": "handling;marking_structures;controlset", 
 				"datatype": "string",
-				"defaultValue": "",
 				"required": "false",
 				"memberof": "handling_markingstructures",
-				"ontologyMappingType": "simple",
-				"ontologyMapping": ""
+				"ontologyMappingType": "none",
+				"regexSplit": "^CLS:([^\\s]+)\\sCUI:([^\\s]+)$",
+				"regexFields": "controlset_clearance, controlset_cui",
+				"outputFormat": "CLS:[controlset_clearance] CUI:[controlset_cui]"
 			},
 			"handling_markingstructures_mostrestrictive": {
 				"description": "Indicates whether or not this marking structure denotes the most restrictive applied to this structure.  Only used in STIX header. Can only be used if the Controlled_Structure is set to //node()",

@@ -34,6 +34,16 @@ class XMLParser(Parser):
         self.ParsedData = None
         self.logging = logging.getLogger('FlexTransform.XMLParser')
         self.tracelist = tracelist
+        self.traceindex = {}
+        for x in self.tracelist:
+            for v in x["src_fields"]:
+                self.traceindex[v] = x
+            for y in x["dst_fields"]:
+                self.traceindex[y] = x
+            for w in x["src_IRIs"]:
+                self.traceindex[w] = x
+            for z in x["dst_IRIs"]:
+                self.traceindex[z] = x
         self.logging.debug("Initialized XMLParser with tracelist of {} elements.".format(len(tracelist)))
         self.pprint = pprint.PrettyPrinter()
 
