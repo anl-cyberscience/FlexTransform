@@ -98,12 +98,20 @@ class CFM13Functions(object):
                 value += "SharingRestrictions=%s" % args['currentRow']['restriction']['Value']
 
         elif FunctionName == 'CFM13_determineTLP':
+            valuemap = {"WHITE": 1, "GREEN": 2, "AMBER": 3, "RED": 4}
             value = 'WHITE'
             for subrow in args['transformedData']['IndicatorData']:
                 if 'restriction' in subrow:
-                    if subrow['restriction']['Value'] == 'private' or subrow['restriction']['Value'] == 'need-to-know':
-                        value = 'AMBER'
-                        break
+                    if subrow['restriction']['Value'] == 'private':
+                        if valuemap['AMBER'] > valuemap[value]:
+                            value = 'AMBER'
+                    if subrow['restriction']['Value'] == 'need-to-know':
+                        if valuemap['GREEN'] > valuemap[value]:
+                            value = 'GREEN'
+                if 'ouo' in subrow:
+                    if subrow['ouo']['Value'] == '1':
+                        if valuemap['GREEN'] > valuemap[value]:
+                            value = 'GREEN'
 
         elif FunctionName == 'CFM13_earliestIndicatorTime':
             # For now this function is specific to CFM13, it could be made generic if needed in other Schemas

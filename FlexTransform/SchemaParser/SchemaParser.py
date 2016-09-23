@@ -2387,38 +2387,34 @@ class SchemaParser(object):
         ImplicationMap = { 'http://www.anl.gov/cfm/transform.owl#HeaderTLPWhiteSemanticConcept':
                             [
                                 "http://www.anl.gov/cfm/transform.owl#PublicCFM13SharingRestrictionSemanticConcept",
-                                "http://www.anl.gov/cfm/transform.owl#AnonymousAccessSemanticConcept",
-                                "http://www.anl.gov/cfm/transform.owl#EntireDocumentSemanticConcept",
-                                "http://www.anl.gov/cfm/transform.owl#PrivilegePermittedSemanticConcept"
+                                "http://www.anl.gov/cfm/transform.owl#AnonymousAccessPermittedSemanticConcept",
+                                "http://www.anl.gov/cfm/transform.owl#DocumentDefaultSharingPermitSemanticConcept"
                             ],
                         'http://www.anl.gov/cfm/transform.owl#HeaderTLPGreenSemanticConcept':
                             [
                                 "http://www.anl.gov/cfm/transform.owl#NeedToKnowCFM13SharingRestrictionSemanticConcept",
-                                "http://www.anl.gov/cfm/transform.owl#AnonymousAccessSemanticConcept",
-                                "http://www.anl.gov/cfm/transform.owl#EntireDocumentSemanticConcept",
-                                "http://www.anl.gov/cfm/transform.owl#PrivilegeDeniedSemanticConcept"
+                                "http://www.anl.gov/cfm/transform.owl#AnonymousAccessDeniedSemanticConcept",
+                                "http://www.anl.gov/cfm/transform.owl#DocumentDefaultSharingDenySemanticConcept"
                             ],
                         'http://www.anl.gov/cfm/transform.owl#HeaderTLPAmberSemanticConcept':
                             [
                                 "http://www.anl.gov/cfm/transform.owl#PrivateCFM13SharingRestrictionSemanticConcept",
-                                "http://www.anl.gov/cfm/transform.owl#AnonymousAccessSemanticConcept",
-                                "http://www.anl.gov/cfm/transform.owl#EntireDocumentSemanticConcept",
-                                "http://www.anl.gov/cfm/transform.owl#PrivilegeDeniedSemanticConcept"
+                                "http://www.anl.gov/cfm/transform.owl#AnonymousAccessDeniedSemanticConcept",
+                                "http://www.anl.gov/cfm/transform.owl#DocumentDefaultSharingDenySemanticConcept"
                             ],
                         'http://www.anl.gov/cfm/transform.owl#HeaderTLPRedSemanticConcept':
                             [
                                 "http://www.anl.gov/cfm/transform.owl#PrivateCFM13SharingRestrictionSemanticConcept",
-                                "http://www.anl.gov/cfm/transform.owl#AnonymousAccessSemanticConcept",
-                                "http://www.anl.gov/cfm/transform.owl#EntireDocumentSemanticConcept",
-                                "http://www.anl.gov/cfm/transform.owl#PrivilegeDeniedSemanticConcept"
+                                "http://www.anl.gov/cfm/transform.owl#AnonymousAccessDeniedSemanticConcept",
+                                "http://www.anl.gov/cfm/transform.owl#DocumentDefaultSharingDenySemanticConcept"
                             ],
                           'http://www.anl.gov/cfm/transform.owl#ReconNotAllowedSemanticConcept':
                             [
-                                "http://www.anl.gov/cfm/transform.owl#DocumentDefaultPrivilegeDeny"
+                                "http://www.anl.gov/cfm/transform.owl#DocumentDefaultPrivilegeDenySemanticConcept"
                             ],
                           'http://www.anl.gov/cfm/transform.owl#ReconAllowedSemanticConcept':
                             [
-                                "http://www.anl.gov/cfm/transform.owl#DocumentDefaultPrivilegePermit"
+                                "http://www.anl.gov/cfm/transform.owl#DocumentDefaultPrivilegePermitSemanticConcept"
                             ]
                         }
 

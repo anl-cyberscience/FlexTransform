@@ -24,8 +24,7 @@
 					"handling_markingstructures_createdatetime": "&now()",
 					"handling_markingstructures_isamversion": "1.0",
 					"handling_markingstructures_isamversion2": "1.0",
-					"handling_markingstructures_mostrestrictive": "true",
-					"handling_markingstructures_policyref": "urn:isa:policy:acs:ns:v2.0?privdefault=permit"
+					"handling_markingstructures_mostrestrictive": "true"
 				}
 			},
 			"handling_markingstructures_identifier": {
@@ -87,16 +86,47 @@
 					}
 				}
 			},
+			"policyref_privdefault": {
+				"description": "A component of policyref which indicates the default privilege for the document.",
+				"datatype": "enum",
+				"defaultValue": "permit",
+				"required": true,
+				"ontologyMappingType": "enum",
+				"enumValues": {
+					"deny": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#DocumentDefaultPrivilegeDenySemanticConcept"
+					},
+					"permit": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#DocumentDefaultPrivilegePermitSemanticConcept"
+					}
+				}
+			},
+			"policyref_sharedefault": {
+				"description": "A component of policyref which indicates the default (re-)sharing permission for the document.",
+				"datatype": "enum",
+				"defaultValue": "permit",
+				"required": true,
+				"ontologyMappingType": "enum",
+				"enumValues": {
+					"deny": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#DocumentDefaultSharingDenySemanticConcept"
+					},
+					"permit": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#DocumentDefaultSharingPermitSemanticConcept"
+					}
+				}
+			},
 			"handling_markingstructures_policyref": {
 				"description": "If multiple policy refs apply, they are provided as space delimited URNs.",
 				"valuemap": "handling;marking_structures;policyref", 
 				"datatype": "string",
-				"defaultValue": "",
 				"required": "false",
 				"memberof": "handling_markingstructures",
 				"primaryKeyMatch": "edh2cyberMarkingAssert:ISAMarkingsAssertionType",
-				"ontologyMappingType": "simple",
-				"ontologyMapping": ""
+				"ontologyMappingType": "none",
+				"regexSplit": "^urn:isa:policy:acs:ns:v3.0?privdefault=([^\\?]+)\\?sharedefault=([^\\?]+)$",
+				"regexFields": "policyref_privdefault, policyref_sharedefault",
+				"outputFormat": "urn:isa:policy:acs:ns:v3.0?privdefault=[policyref_privdefault]?sharedefault=[policyref_sharedefault]"
 			},
 			"controlset_clearance": {
 				"description": "The clearance level of this document. Values include 'U' for unclass",
