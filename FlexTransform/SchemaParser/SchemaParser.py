@@ -44,6 +44,7 @@ class SchemaParser(object):
         '''
         Constructor
         '''
+        self.pprint = pprint.PrettyPrinter()
         self.logging = logging.getLogger('FlexTransform.SchemaParser')
         self.tracelist = tracelist
         self.traceindex = {}
@@ -58,6 +59,7 @@ class SchemaParser(object):
                 self.traceindex[z] = x
         if len(self.traceindex) > 0:
             self.logging.debug("[TRACE __init__] - Monitoring {} elements".format(len(self.traceindex.keys()))) 
+            self.pprint.pprint(self.traceindex.keys())
 
         self.SchemaConfig = config
 
@@ -66,7 +68,6 @@ class SchemaParser(object):
         self.FunctionManager = TransformFunctionManager()
         
         # TODO: Create a JSON schema document and validate the config against the schema. Worst case, define accepted tags and validate there are no unknown tags.
-        self.pprint = pprint.PrettyPrinter()
 
 
     def MapDataToSchema(self, SourceData, oracle=None):
@@ -1048,8 +1049,6 @@ class SchemaParser(object):
 
         # Build a quick lookup dictionary of Ontology concepts to data from the source document
         DataDictionary = self._MapDataToOntology(DataRow, DocumentHeaderData, DocumentMetaData, DerivedData)
-        # Populate implied ontology values:
-        self._PopulateImpliedOntologyValues(DataDictionary)
 
         # Build the dependency order for processing the target schema
         FieldOrder = self._FieldOrder[rowType]
@@ -1187,7 +1186,7 @@ class SchemaParser(object):
                                                                 field, k, OntologyReference))
                                 if OntologyReference in self.traceindex:
                                     self.logging.debug("[TRACE {}] - Evaluating as reference for enum field {}, value {}.".format(
-                                                                OntologyReference, k, field))
+                                                                OntologyReference, field, k))
                                 # if oracle is not None:
                                 # oRefList = oracle.getCompatibleConcepts(OntologyReference)
                                 # if len(oRefList) > 0 and OntologyReference in DataDictionary:
@@ -1198,6 +1197,7 @@ class SchemaParser(object):
                                     if field in self.traceindex:
                                         self.logging.debug("[TRACE {}] - Ontology reference not found, checking oracle for alternative".format(
                                                                 field, k, OntologyReference))
+                                        #self.pprint.pprint(DataDictionary)
                                     if oracle is not None and False:
                                         oRefList = oracle.getCompatibleConcepts(OntologyReference)
                                         for altOntologyReference in oRefList:
@@ -1207,6 +1207,10 @@ class SchemaParser(object):
                                                     altOntologyReference.stype, altOntologyReference.distance,
                                                     altOntologyReference.IRI, OntologyReference))
                                                 OntologyReference = altOntologyReference.IRI.__str__()
+                                    else:
+                                        if field in self.traceindex:
+                                            self.logging.debug("[TRACE {}] - Oracle could not be reached; no value selected.".format(
+                                                                field, k, OntologyReference))
                                 if (OntologyReference in DataDictionary):
                                     # If the ontology reference is in the DataDictionary, then it is something that is
                                     # provided by the source file
@@ -1608,9 +1612,13 @@ class SchemaParser(object):
                         except Exception as inst:
                             self.logging.info("Validation failed for %s, %s", field, inst)
                             newDict.pop(field)
+            self._PopulateImpliedOntologyValues(DataDictionary)
 
         if (len(GroupRows) != 0):
             self.logging.error("A group has subrow data that was never processed: %s", GroupRows)
+
+        # Populate implied ontology values:
+        self._PopulateImpliedOntologyValues(DataDictionary)
 
         return newDict
 
@@ -1759,6 +1767,7 @@ class SchemaParser(object):
                 if k in self.traceindex:
                     self.logging.debug("[TRACE {}] - Added as other field for group {}".format(k, group))
 
+            # See if fields have values that can be defined:
             if k not in groupRow['fields']:
                 if k in self.traceindex:
                     self.logging.debug("[TRACE {}] - Not found in groupRow['fields']; check to see if it is in groupDict ({}).".format(
@@ -1777,8 +1786,34 @@ class SchemaParser(object):
                         self.logging.debug("[TRACE {}] - Using composed value {} for groupRow in group {}".format(k, Value, group))
                     fieldDict['NewValue'] = Value
                     groupRow['fields'][k].append(fieldDict)
+
+                    '''
+                elif self.SchemaConfig[rowType]['fields'][k]['datatype'] == 'group':
+                    fieldDict = copy.deepcopy(self.SchemaConfig[rowType]['fields'][k])
+                    fieldDict['ReferencedField'] = None
+                    fieldDict['ReferencedValue'] = None
+                    fieldDict['matchedOntology'] = None
+                    if k in self.traceindex:
+                        self.logging.debug("[TRACE {}] - Using composed value {} for groupRow in group {}".format(k, Value, group))
+                    fieldDict['Value'] = 'True'
+                    fieldDict['ParsedValue'] = True
+                    fieldDict['groupedFields'] = []
+
+                    if requiredField in self.traceindex:
+                        self.logging.debug("[TRACE {}] - Subgroup of {}...".format(requiredField, group))
+                    if group in self.traceindex:
+                        self.logging.debug("[TRACE {}] - Required field {} is a subgroup; building.".format(group, requiredField))
+
+                    # TODO: So, at this point, we have a required field which is actually a subgroup, and has no
+                    # value of its own. Is it possible to send the entire newDict rather than the fieldGroup subset?
+                    # No - the fieldGroup is the dictionary slice that has begun to be built at this execution level.
+                    #      instead, we need a way to keep the full set of determined values available - we can either use an instance variable,
+                    #      or we can pass the "full" groupDict as an optional variable. For now we will do the latter:
+                    self._BuildFieldGroup(DataDictionary, fieldGroup, rowType, k, groupRow,
+                                          IndicatorType, fullNewDict = groupDict)
+                    '''
                 else:
-                    self.logging.debug("No default value provided for group {} field {}, and no value could be composed from an output format.".format(
+                    self.logging.info("No default value provided for group {} field {}, and no value could be composed from an output format.".format(
                                                                                 group, k))
 
         if (primaryKey is None):
@@ -1795,7 +1830,7 @@ class SchemaParser(object):
                 if group in self.traceindex:
                     self.logging.debug("[TRACE {}] - Primary key {} not defined; using default value {}.".format(group, primaryKey, fieldDict['NewValue']))
                 if primaryKey in self.traceindex:
-                    self.logging.debug("[TRACE {}] - Not found in available fields; using default value {}".format(k, fieldDict['NewValue']))
+                    self.logging.debug("[TRACE {}] - Not found in available fields; using default value {}".format(primaryKey, fieldDict['NewValue']))
             else:
                 self.logging.info('primaryKey not found for group %s and no defaultValue defined', group)
                 return
@@ -1906,33 +1941,40 @@ class SchemaParser(object):
                     if group in self.traceindex:
                         self.logging.debug("[TRACE {}] - Required field {} not defined by data; using default value.".format(group, requiredField))
 
-
                     # Create a new entry for this field, copying from the field definition.
                     fieldGroup[requiredField] = self.SchemaConfig[rowType]['fields'][requiredField].copy()
 
+                    if requiredField in self.traceindex:
+                        self.logging.debug("[TRACE {}] - primaryKeyMatch? {} primaryKeyMatchValue: {}".format(requiredField,
+                                                                                                              'primaryKeyMatch' in fieldGroup[requiredField],
+                                                                                                              fieldGroup[requiredField]['primaryKeyMatch']))
                     if ('defaultValue' in fieldGroup[requiredField]):
                         fieldGroup[requiredField]['Value'] = fieldGroup[requiredField]['defaultValue']
 
-                    elif (fieldGroup[requiredField]['datatype'] == 'group'):
-                        fieldGroup[requiredField]['Value'] = 'True'
-                        fieldGroup[requiredField]['ParsedValue'] = True
-                        fieldGroup[requiredField]['groupedFields'] = []
+                    elif 'primaryKeyMatch' not in fieldGroup[requiredField] or fieldGroup[requiredField]['primaryKeyMatch'] == fieldGroup[primaryKey]['Value']:
+                        if (fieldGroup[requiredField]['datatype'] == 'group'):
+                            fieldGroup[requiredField]['Value'] = 'True'
+                            fieldGroup[requiredField]['ParsedValue'] = True
+                            fieldGroup[requiredField]['groupedFields'] = []
 
-                        if requiredField in self.traceindex:
-                            self.logging.debug("[TRACE {}] - Subgroup of {}...".format(requiredField, group))
-                        if group in self.traceindex:
-                            self.logging.debug("[TRACE {}] - Required field {} is a subgroup; building.".format(group, requiredField))
+                            if requiredField in self.traceindex:
+                                self.logging.debug("[TRACE {}] - Subgroup of {}...".format(requiredField, group))
+                            if group in self.traceindex:
+                                self.logging.debug("[TRACE {}] - Required field {} is a subgroup; building.".format(group, requiredField))
 
-                        # TODO: So, at this point, we have a required field which is actually a subgroup, and has no
-                        # value of its own. Is it possible to send the entire newDict rather than the fieldGroup subset?
-                        # No - the fieldGroup is the dictionary slice that has begun to be built at this execution level.
-                        #      instead, we need a way to keep the full set of determined values available - we can either use an instance variable,
-                        #      or we can pass the "full" groupDict as an optional variable. For now we will do the latter:
-                        self._BuildFieldGroup(DataDictionary, fieldGroup, rowType, requiredField, groupRow,
+                            # TODO: So, at this point, we have a required field which is actually a subgroup, and has no
+                            # value of its own. Is it possible to send the entire newDict rather than the fieldGroup subset?
+                            # No - the fieldGroup is the dictionary slice that has begun to be built at this execution level.
+                            #      instead, we need a way to keep the full set of determined values available - we can either use an instance variable,
+                            #      or we can pass the "full" groupDict as an optional variable. For now we will do the latter:
+                            self._BuildFieldGroup(DataDictionary, fieldGroup, rowType, requiredField, groupRow,
                                               IndicatorType, fullNewDict = groupDict)
-                        continue
-
+                            continue
                     else:
+                        if 'primaryKeyMatch' in fieldGroup[requiredField]:
+                            self.logging.debug("Primary key specified in subfield {}: {} does not match group primary key value ({})".format(
+                                                                        requiredField, fieldGroup[requiredField], fieldGroup[primaryKey]['Value']))
+
                         self.logging.error('Field %s for group %s is required, but could not be assigned a value. Early abort will likely result in an invalid document.', requiredField, group)
                         return
 
@@ -1952,6 +1994,7 @@ class SchemaParser(object):
                 if group in self.traceindex:
                     self.logging.debug("[TRACE {}] - Evaluating non-required field {}".format(group, otherField))
 
+                # It will only be in groupRow['fields'] if a default value is set for it:
                 if (otherField in groupRow['fields']):
                     # Determine if any of the defined fields match this primary key
                     if otherField in self.traceindex:
@@ -1995,7 +2038,6 @@ class SchemaParser(object):
                                                                     fieldGroup[otherField]['Value']))
 
                     # In this case, if the primary key match for the field is given in the schema, see if it matches this group primary key value:
-                    # TODO: Unfortunately, the primaryKeyMatch is only present in subfields if a default value was used (WHY?); probably needs a design change
                     # TODO: It may also be because the groupIDs aren't being set for the ACS3.0 marking_structures group?
                     elif (fieldGroup and 'primaryKeyMatch' in subfields[otherField]):
                         if otherField in self.traceindex:
@@ -2029,6 +2071,30 @@ class SchemaParser(object):
                                     break
                     else:
                         self.logging.warning('Field %s could not be matched to the group %s', otherField, group)
+                elif 'primaryKeyMatch' in subfields[otherField] and subfields[otherField]['primaryKeyMatch'] == fieldGroup[primaryKey]['Value']:
+                    # Field didn't have a default value set; could be an optional subgroup data type:
+                    if otherField in self.traceindex:
+                        self.logging.debug("[TRACE {}] - Checking for matching primaryKey {}".format(otherField, subfields[otherField]['primaryKeyMatch']))
+                    newDict = self.SchemaConfig[rowType]['fields'][otherField].copy()
+                    if (newDict['datatype'] == 'group'):
+                        newDict['Value'] = 'True'
+                        newDict['ParsedValue'] = True
+                        newDict['groupedFields'] = []
+
+                        if otherField in self.traceindex:
+                            self.logging.debug("[TRACE {}] - Optional subgroup of {}...".format(otherField, group))
+                        if group in self.traceindex:
+                            self.logging.debug("[TRACE {}] - Optional field {} matches primaryKey value and is a subgroup; building.".format(group, otherField))
+
+                        # TODO: So, at this point, we have a required field which is actually a subgroup, and has no
+                        # value of its own. Is it possible to send the entire newDict rather than the fieldGroup subset?
+                        # No - the fieldGroup is the dictionary slice that has begun to be built at this execution level.
+                        #      instead, we need a way to keep the full set of determined values available - we can either use an instance variable,
+                        #      or we can pass the "full" groupDict as an optional variable. For now we will do the latter:
+                        fieldGroup[otherField] = newDict
+                        self._BuildFieldGroup(DataDictionary, fieldGroup, rowType, otherField, groupRow,
+                                          IndicatorType, fullNewDict = groupDict)
+                        continue
                 else:
                     self.logging.warning("Field {} does not exist in groupRow['fields'] for group {}; cannot add value.".format(otherField, group))
 
@@ -2387,26 +2453,34 @@ class SchemaParser(object):
         ImplicationMap = { 'http://www.anl.gov/cfm/transform.owl#HeaderTLPWhiteSemanticConcept':
                             [
                                 "http://www.anl.gov/cfm/transform.owl#PublicCFM13SharingRestrictionSemanticConcept",
-                                "http://www.anl.gov/cfm/transform.owl#AnonymousAccessPermittedSemanticConcept",
-                                "http://www.anl.gov/cfm/transform.owl#DocumentDefaultSharingPermitSemanticConcept"
+                                "http://www.anl.gov/cfm/transform.owl#DocumentDefaultSharingPermitSemanticConcept",
+                                "http://www.anl.gov/cfm/transform.owl#AccessPrivilegeAnonymousAccessSemanticConcept",
+                                "http://www.anl.gov/cfm/transform.owl#AccessPrivilegeScopeALLSemanticConcept",
+                                "http://www.anl.gov/cfm/transform.owl#AccessPrivilegeAllowSemanticConcept"
                             ],
                         'http://www.anl.gov/cfm/transform.owl#HeaderTLPGreenSemanticConcept':
                             [
                                 "http://www.anl.gov/cfm/transform.owl#NeedToKnowCFM13SharingRestrictionSemanticConcept",
-                                "http://www.anl.gov/cfm/transform.owl#AnonymousAccessDeniedSemanticConcept",
-                                "http://www.anl.gov/cfm/transform.owl#DocumentDefaultSharingDenySemanticConcept"
+                                "http://www.anl.gov/cfm/transform.owl#DocumentDefaultSharingDenySemanticConcept",
+                                "http://www.anl.gov/cfm/transform.owl#AccessPrivilegeAnonymousAccessSemanticConcept",
+                                "http://www.anl.gov/cfm/transform.owl#AccessPrivilegeScopeALLSemanticConcept",
+                                "http://www.anl.gov/cfm/transform.owl#AccessPrivilegeDenySemanticConcept"
                             ],
                         'http://www.anl.gov/cfm/transform.owl#HeaderTLPAmberSemanticConcept':
                             [
                                 "http://www.anl.gov/cfm/transform.owl#PrivateCFM13SharingRestrictionSemanticConcept",
-                                "http://www.anl.gov/cfm/transform.owl#AnonymousAccessDeniedSemanticConcept",
-                                "http://www.anl.gov/cfm/transform.owl#DocumentDefaultSharingDenySemanticConcept"
+                                "http://www.anl.gov/cfm/transform.owl#DocumentDefaultSharingDenySemanticConcept",
+                                "http://www.anl.gov/cfm/transform.owl#AccessPrivilegeAnonymousAccessSemanticConcept",
+                                "http://www.anl.gov/cfm/transform.owl#AccessPrivilegeScopeALLSemanticConcept",
+                                "http://www.anl.gov/cfm/transform.owl#AccessPrivilegeDenySemanticConcept"
                             ],
                         'http://www.anl.gov/cfm/transform.owl#HeaderTLPRedSemanticConcept':
                             [
                                 "http://www.anl.gov/cfm/transform.owl#PrivateCFM13SharingRestrictionSemanticConcept",
-                                "http://www.anl.gov/cfm/transform.owl#AnonymousAccessDeniedSemanticConcept",
-                                "http://www.anl.gov/cfm/transform.owl#DocumentDefaultSharingDenySemanticConcept"
+                                "http://www.anl.gov/cfm/transform.owl#DocumentDefaultSharingDenySemanticConcept",
+                                "http://www.anl.gov/cfm/transform.owl#AccessPrivilegeAnonymousAccessSemanticConcept",
+                                "http://www.anl.gov/cfm/transform.owl#AccessPrivilegeScopeALLSemanticConcept",
+                                "http://www.anl.gov/cfm/transform.owl#AccessPrivilegeDenySemanticConcept"
                             ],
                           'http://www.anl.gov/cfm/transform.owl#ReconNotAllowedSemanticConcept':
                             [
@@ -2422,16 +2496,11 @@ class SchemaParser(object):
             if concept in DataMapping:
                 for impliedConcept in ImplicationMap[concept]:
                     if impliedConcept not in DataMapping:
-                        self.logging.warn("Adding implied concept: {} (from source concept {})".format(impliedConcept, concept))
+                        self.logging.info("Adding implied concept: {} (from source concept {})".format(impliedConcept, concept))
                         DataMapping[impliedConcept] = DataMapping[concept]
 
     def _BuildOutputFormatText(self, fieldDict, newDict):
         
-        self.logging.debug("Building output format from fieldDict:")
-        self.pprint.pprint(fieldDict)
-        self.logging.debug("... and newDict:")
-        self.pprint.pprint(newDict)
-
         # Build a new value based on the output format, if it exists
         # Regex match returns two values into a set. [0] is anything that isn't a field name and [1] is a field name
         # New value replaces [field] with the value of that field and outputs everything else out directly
@@ -2464,10 +2533,10 @@ class SchemaParser(object):
             AllFields = True
             for m in match:
                 if (m[0] != ''):
-                    self.logging.debug("Appending value {}".format(m[0]))
+                    #self.logging.debug("Appending value {}".format(m[0]))
                     Value += m[0]
                 if (m[1] != ''):
-                    self.logging.debug("Using value for field {}".format(m[1]))
+                    #self.logging.debug("Using value for field {}".format(m[1]))
                     if (m[1] in newDict and 'Value' in newDict[m[1]]):
                         Value += newDict[m[1]]['Value']
                         if m[1] in self.traceindex:

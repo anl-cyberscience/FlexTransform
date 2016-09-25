@@ -12,6 +12,7 @@ import sys
 from stix.bindings import *
 from stix.bindings import _cast
 import stix.bindings.data_marking as data_marking_binding
+import pprint
 
 XML_NS = "http://data-marking.mitre.org/extensions/MarkingStructure#EDH2Cyber-1"
 XML_NS_Assertion = "http://data-marking.mitre.org/extensions/MarkingAssertion#EDH2Cyber-1"
@@ -254,6 +255,7 @@ class ISAMarkingAssertionsStructureType(data_marking_binding.MarkingStructureTyp
         if self.policyref.valueOf_ is not None:
             self.policyref.export(lwrite, level, nsmap, XML_NS_EDH2, name_='PolicyRef', pretty_print=pretty_print)
         if self.accessprivilege.valueOf_ is not None:
+            print("Have a value for accessprivilege; exporting")
             self.accessprivilege.export(lwrite, level, nsmap, XML_NS_EDH2, name_='AccessPrivilege', pretty_print=pretty_print)
         if self.resourcedisposition.valueOf_ is not None:
             self.resourcedisposition.export(lwrite, level, nsmap, XML_NS_EDH2, name_='ResourceDisposition', pretty_print=pretty_print)
@@ -306,7 +308,8 @@ class ISAMarkingAssertionsStructureType(data_marking_binding.MarkingStructureTyp
             obj_.build(child_)
             self.set_policyref(obj_)
         if nodeName_ == 'AccessPrivilege':
-            obj_ = EDH2TextType.factory()
+            print("nodeName == AccessPrivilege; building object")
+            obj_ = AccessPrivilegeType.factory()
             obj_.build(child_)
             self.set_accessprivilege(obj_)
         if nodeName_ == 'ResourceDisposition':
@@ -369,14 +372,40 @@ class EDH2TextType(GeneratedsSuper):
         lwrite('<%s:%s%s' % (nsmap[namespace_], name_, namespacedef_ and ' ' + namespacedef_ or '', ))
         if self.hasContent_():
             lwrite('>')
-            lwrite(str(quote_xml(self.valueOf_)))
+            if isinstance(self.valueOf_, list):
+                # Access Privilege hack:
+                self.exportChildren(lwrite, level + 1, nsmap, namespace_, name_, False, pretty_print)
+            else:
+                lwrite(str(quote_xml(self.valueOf_)))
             lwrite('</%s:%s>%s' % (nsmap[namespace_], name_, eol_))
         else:
             lwrite('/>%s' % (eol_, ))
     def exportAttributes(self, lwrite, level, already_processed, namespace_='edh2:', name_='EDH2TextType'):
         pass
     def exportChildren(self, lwrite, level, nsmap, namespace_=XML_NS_EDH2, name_='EDH2TextType', fromsubclass_=False, pretty_print=True):
-        pass
+        print("exportChildren(...) in EDH2TextType")
+        if pretty_print:
+            eol_ = '\n'
+        else:
+            eol_ = ''
+        # Pull out objects / text for privilegescop, privilegeaciton, and ruleeffect
+        pp = pprint.PrettyPrinter()
+        pp.pprint(self.valueOf_)
+        apcomponent = AccessPrivilegeType(privilegeaction=self.valueOf_[0]['privilegeaction'],
+                                          privilegescope=self.valueOf_[0]['privilegescope'],
+                                          ruleeffect=self.valueOf_[0]['ruleeffect'])
+        apcomponent.exportChildren(lwrite, level, nsmap, namespace_, 'AccessPrivilege', False, pretty_print)
+        '''
+        if self.privilegescope is not None:
+            showIndent(lwrite, level, pretty_print)
+            lwrite('<%s:privilegeScope>%s</%s:privilegeScope>%s' % (nsmap[namespace_], self.gds_format_string(quote_xml(self.privilegescope), input_name='privilegeScope'), nsmap[namespace_], eol_))
+        if self.ruleeffect is not None:
+            showIndent(lwrite, level, pretty_print)
+            lwrite('<%s:ruleEffect>%s</%s:ruleEffect>%s' % (nsmap[namespace_], self.gds_format_string(quote_xml(self.ruleeffect), input_name='ruleEffect'), nsmap[namespace_], eol_))
+        if self.privilegeaction is not None:
+            showIndent(lwrite, level, pretty_print)
+            lwrite('<%s:privilegeAction>%s</%s:privilegeAction>%s' % (nsmap[namespace_], self.gds_format_string(quote_xml(self.privilegeaction), input_name='privilegeAction'), nsmap[namespace_], eol_))
+        '''
     def build(self, node):
         already_processed = set()
         self.buildAttributes(node, node.attrib, already_processed)
@@ -389,6 +418,95 @@ class EDH2TextType(GeneratedsSuper):
     def buildChildren(self, child_, node, nodeName_, fromsubclass_=False):
         pass
 # end class EDH2TextType
+
+class AccessPrivilegeType(GeneratedsSuper):
+    """ """
+    subclass = None
+    superclass = None
+    def __init__(self, privilegescope=None, ruleeffect=None, privilegeaction=None):
+        print("Creating new AccessPrivilegeType")
+        self.privilegescope = privilegescope
+        self.ruleeffect = ruleeffect
+        self.privilegeaction = privilegeaction
+    def factory(*args_, **kwargs_):
+        if AccessPrivilegeType.subclass:
+            return AccessPrivilegeType.subclass(*args_, **kwargs_)
+        else:
+            return AccessPrivilegeType(*args_, **kwargs_)
+    factory = staticmethod(factory)
+    def get_privilegescope(self): return self.privilegescope
+    def set_privilegescope(self, privilegescope): self.privilegescope = privilegescope
+    def get_ruleeffect(self): return self.ruleeffect
+    def set_ruleeffect(self, ruleeffect): self.ruleeffect = ruleeffect
+    def get_privilegeaction(self): return self.privilegeaction
+    def set_privilegeaction(self, privilegeaction): self.privilegeaction = privilegeaction
+    def hasContent_(self):
+        if (
+            self.privilegescope is not None or
+            self.ruleeffect is not None or
+            self.privilegeaction is not None
+            ):
+            return True
+        else:
+            return False
+    def export(self, lwrite, level, nsmap, namespace_=XML_NS_Assertion, name_='AccessPrivilege', namespacedef_='', pretty_print=True):
+        print("export(...) in AccessPrivilegeType")
+        if pretty_print:
+            eol_ = '\n'
+        else:
+            eol_ = ''
+        showIndent(lwrite, level, pretty_print)
+        lwrite('<%s:%s%s' % (nsmap[namespace_], name_, namespacedef_ and ' ' + namespacedef_ or '', ))
+        if self.hasContent_():
+            lwrite('>%s' % (eol_, ))
+            self.exportChildren(lwrite, level + 1, nsmap, XML_NS_Assertion, name_, pretty_print=pretty_print)
+            showIndent(lwrite, level, pretty_print)
+            lwrite('</%s:%s>%s' % (nsmap[namespace_], name_, eol_))
+        else:
+            lwrite('/>%s' % (eol_, ))
+    def exportAttributes(self, lwrite, level, already_processed, namespace_='edh2cyberMarkingAssert:', name_='AccessPrivilegeType'):
+        pass
+    def exportChildren(self, lwrite, level, nsmap, namespace_=XML_NS_Assertion, name_='AccessPrivilegeType', fromsubclass_=False, pretty_print=True):
+        print("exportChildren(...) in AccessPrivilegeType")
+        if pretty_print:
+            eol_ = '\n'
+        else:
+            eol_ = ''
+        if self.privilegescope is not None:
+            showIndent(lwrite, level, pretty_print)
+            lwrite('<%s:privilegeScope>%s</%s:privilegeScope>%s' % (nsmap[namespace_], self.gds_format_string(quote_xml(self.privilegescope), input_name='privilegeScope'), nsmap[namespace_], eol_))
+        if self.ruleeffect is not None:
+            showIndent(lwrite, level, pretty_print)
+            lwrite('<%s:ruleEffect>%s</%s:ruleEffect>%s' % (nsmap[namespace_], self.gds_format_string(quote_xml(self.ruleeffect), input_name='ruleEffect'), nsmap[namespace_], eol_))
+        if self.privilegeaction is not None:
+            showIndent(lwrite, level, pretty_print)
+            lwrite('<%s:privilegeAction>%s</%s:privilegeAction>%s' % (nsmap[namespace_], self.gds_format_string(quote_xml(self.privilegeaction), input_name='privilegeAction'), nsmap[namespace_], eol_))
+    def build(self, node):
+        print("build(...) in AccessPrivilegeType")
+        already_processed = set()
+        self.buildAttributes(node, node.attrib, already_processed)
+        self.valueOf_ = get_all_text_(node)
+        for child in node:
+            nodeName_ = Tag_pattern_.match(child.tag).groups()[-1]
+            self.buildChildren(child, node, nodeName_)
+    def buildAttributes(self, node, attrs, already_processed):
+        pass
+    def buildChildren(self, child_, node, nodeName_, fromsubclass_=False):
+        print("buildChildren(...) in AccessPrivilegeType")
+        if nodeName_ == 'privilegeAction':
+            privilegeaction = child_.text
+            privilegeaction = self.gds_validate_string(privilegeaction, node, 'privilegAaction')
+            self.privilegeaction = privilegeaction
+        if nodeName_ == 'privilegescope':
+            privilegescope = child_.text
+            privilegescope = self.gds_validate_string(URL, node, 'privilegescope')
+            self.privilegescope = privilegescope
+        if nodeName_ == 'ruleeffect':
+            ruleeffect = child_.text
+            ruleeffect = self.gds_validate_string(ruleeffect, node, 'ruleeffect')
+            self.ruleeffect = ruleeffect
+# end class AccessPrivilegeType
+
 
 class AddlReferenceType(GeneratedsSuper):
     """ """

@@ -176,12 +176,14 @@ class XMLParser(Parser):
                 # Keep passing the IndicatorType forward with the data. This is somewhat messy, but that way we can use it on write
                 DataRow[k] = v
             elif ('groupedFields' in v) :
-                self.logging.debug("Value contains a groupedField for key {}".format(k))
+                if k in self.traceindex:
+                    self.logging.debug("[TRACE {}]: Grouped field for output.".format(k))
                 if ('valuemap' in v) :
-                    self.logging.debug("Grouped field contains a value map; creating new list for {}".format(v['valuemap']))
+                    if k in self.traceindex:
+                        self.logging.debug("[TRACE {}]: Grouped field contains a value map; creating new list for {}".format(k, v['valuemap']))
                     DataRow[v['valuemap']] = []
                     for group in v['groupedFields'] :
-                        self.logging.debug("Adding xmlDict for group {}".format(group))
+                        #self.logging.debug("Adding xmlDict for group {}".format(group))
                         DataRow[v['valuemap']].append(self._BuildXMLDictRow(group, parentValueMap=parentValueMap+v['valuemap']+';'))
             elif ('Value' in v) :
                 if ('valuemap' in v) :

@@ -14,8 +14,8 @@
 								"handling_markingstructures_isamversion2": {"required": false, "primaryKeyMatch": "edh2cyberMarkingAssert:ISAMarkingsAssertionType"},
 								"handling_markingstructures_mostrestrictive": {"required": false, "primaryKeyMatch": "edh2cyberMarkingAssert:ISAMarkingsAssertionType"},
 								"handling_markingstructures_policyref": {"required": false, "primaryKeyMatch": "edh2cyberMarkingAssert:ISAMarkingsAssertionType"},
-								"handling_markingstructures_accessprivilege": {"required": false, "primaryKeyMatch": "edh2cyberMarkingAssert:ISAMarkingsAssertionType"},
-								"handling_markingstructures_controlset": {"required": false, "primaryKeyMatch": "edh2cyberMarkingAssert:ISAMarkingsAssertionType"}
+								"handling_markingstructures_controlset": {"required": false, "primaryKeyMatch": "edh2cyberMarkingAssert:ISAMarkingsAssertionType"},
+								"handling_markingstructures_accessprivilege": {"required": false, "primaryKeyMatch": "edh2cyberMarkingAssert:ISAMarkingsAssertionType"}
 				},
 				"defaultFields": {
 					"handling_markingstructures_xsitype": [ "edh2cyberMarking:ISAMarkingsType", "edh2cyberMarkingAssert:ISAMarkingsAssertionType" ],
@@ -25,6 +25,71 @@
 					"handling_markingstructures_isamversion": "1.0",
 					"handling_markingstructures_isamversion2": "1.0",
 					"handling_markingstructures_mostrestrictive": "true"
+				}
+			},
+			"handling_markingstructures_accessprivilege": {
+				"description": "The set of fields which defines more granular access privileges.",
+				"valuemap": "handling;marking_structures;accessprivilege",
+				"datatype": "group",
+				"multiple": true,
+				"required": true,
+				"primaryKeyMatch": "edh2cyberMarkingAssert:ISAMarkingsAssertionType",
+				"ontologyMappingType": "none",
+				"memberof": "handling_markingstructures",
+				"subfields": {
+					"handling_markingstructures_accessprivilege_action": {"required": true, "primaryKey": true},
+					"handling_markingstructures_accessprivilege_scope": {"required": true, "primaryKeyMatch": "ANONYMOUSACCESS"},
+					"handling_markingstructures_accessprivilege_effect": {"required": true, "primaryKeyMatch": "ANONYMOUSACCESS"}
+				},
+				"defaultFields": {
+					"handling_markingstructures_accessprivilege_action": "ANONYMOUSACCESS",
+					"handling_markingstructures_accessprivilege_scope": "ALL",
+					"handling_markingstructures_accessprivilege_effect": "deny"
+				}
+			},
+			"handling_markingstructures_accessprivilege_action": {
+				"description": "Signifies the action this accessprivilege applies to.",
+				"valuemap": "handling;marking_structures;accessprivilege;privilegeaction",
+				"memberof": "handling_markingstructures_accessprivilege",
+				"datatype": "enum",
+				"required": false,
+				"defaultValue": "ANONYMOUSACCESS",
+				"ontologyMappingType": "enum",
+				"enumValues": {
+					"ANONYMOUSACCESS": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#AccessPrivilegeAnonymousAccessSemanticConcept"
+					}
+				}
+			},
+			"handling_markingstructures_accessprivilege_scope": {
+				"description": "Signifies the scope of the designation for this accessprivilege",
+				"valuemap": "handling;marking_structures;accessprivilege;privilegescope",
+				"memberof": "handling_markingstructures_accessprivilege",
+				"datatype": "enum",
+				"required": false,
+				"defaultValue": "ALL",
+				"ontologyMappingType": "enum",
+				"enumValues": {
+					"ALL": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#AccessPrivilegeScopeALLSemanticConcept"
+					}
+				}
+			},
+			"handling_markingstructures_accessprivilege_effect": {
+				"description": "Signifies the type of restriction being applied for this accessprivilege",
+				"valuemap": "handling;marking_structures;accessprivilege;ruleeffect",
+				"memberof": "handling_markingstructures_accessprivilege",
+				"datatype": "enum",
+				"required": false,
+				"defaultValue": "permit",
+				"ontologyMappingType": "enum",
+				"enumValues": {
+					"deny": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#AccessPrivilegeDenySemanticConcept"
+					},
+					"permit": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#AccessPrivilegePermitSemanticConcept"
+					}
 				}
 			},
 			"handling_markingstructures_identifier": {
