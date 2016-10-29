@@ -9,8 +9,9 @@ import json
 
 import inspect
 import FlexTransform.SyntaxParser.DICTParsers
+from FlexTransform.SyntaxParser.Parser import Parser
 
-class DictionaryParser(object):
+class DictionaryParser(Parser):
     '''
     Key/Value Syntax Parser
     '''
@@ -57,12 +58,14 @@ class DictionaryParser(object):
                 if (config.has_section(CustomParser)) :
                     self.AdvancedParser.ValidateConfig(config)
     
-    def Read(self,file):
+    def Read(self,file,config):
         '''
         Read file and parse into Transform object
         '''
         
         self.ParsedData = {}
+
+        super(DictionaryParser, self).Read(file, config)
         
         if (self.AdvancedParser) :
             self.ParsedData = self.AdvancedParser.Read(file)

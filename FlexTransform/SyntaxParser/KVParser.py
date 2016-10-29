@@ -7,9 +7,10 @@ Created on Oct 15, 2014
 import re
 import logging
 import os
+from FlexTransform.SyntaxParser.Parser import Parser
 
 
-class KVParser(object):
+class KVParser(Parser):
     """
     Key/Value Syntax Parser
     """
@@ -41,12 +42,13 @@ class KVParser(object):
             if config.has_option('KEYVALUE', 'KVSeparator'):
                 self.KVSeparator = config['KEYVALUE']['KVSeparator']
                 
-    def Read(self, file):
+    def Read(self, file, config):
         """
         Read file and parse into Transform object
         """
-        
         self.ParsedData = {}
+
+        super(KVParser, self).Read(file, config)
         
         # TODO: Make it clearer what I'm doing here
         KVRegex = re.compile(

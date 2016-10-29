@@ -110,8 +110,10 @@ class FlexTransform(object):
         # Map source data to destination schema
         TransformedData = DestinationConfig.SchemaParser.TransformData(MappedData, oracle)
 
+        '''
         self.logging.debug("FlexTransform.Transform(): TransformedData Dictionary: ")
         self.pprint.pprint(TransformedData)
+        '''
         
         # Finalize data to be written
         FinalizedData = DestinationConfig.Parser.Finalize(TransformedData)

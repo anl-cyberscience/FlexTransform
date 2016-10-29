@@ -567,7 +567,7 @@
 							"http://www.anl.gov/cfm/transform.owl#MD5FilehashIndicatorValueSemanticComponent",
 							"http://www.anl.gov/cfm/transform.owl#SHA1FilehashIndicatorValueSemanticComponent",
 							"http://www.anl.gov/cfm/transform.owl#SHA256FilehashIndicatorValueSemanticComponent",
-							"http://www.anl.gov/cfm/transform.owl#FilePathIndicatorValueSemanticComponent",
+							"http://www.anl.gov/cfm/transform.owl#FilepathIndicatorValueSemanticConcept",
 							"http://www.anl.gov/cfm/transform.owl#FileNameIndicatorTypeSemanticComponent"
 						]
 					},
@@ -668,7 +668,7 @@
 				"datatype": "string",
 				"required": false,
 				"ontologyMappingType": "simple",
-				"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#FilePathIndicatorValueSemanticComponent"
+				"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#FilepathIndicatorValueSemanticConcept"
 			},
 			"observable_object_filepath_condition": {
 				"description": "The match condition for the filepath object",

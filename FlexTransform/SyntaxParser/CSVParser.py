@@ -8,8 +8,9 @@ import logging
 import csv
 import os
 from builtins import str
+from FlexTransform.SyntaxParser.Parser import Parser
 
-class CSVParser(object):
+class CSVParser(Parser):
     '''
     Key/Value Syntax Parser
     '''
@@ -78,11 +79,13 @@ class CSVParser(object):
                 self.LineTerminator = bytes(config['CSV']['LineTerminator'], "utf-8").decode("unicode_escape")
     
 
-    def Read(self,file):
+    def Read(self,file, config):
         '''
         Read file and parse into Transform object
         '''
-        
+
+        super(CSVParser, self).Read(file, config)
+
         self.ParsedData = {
                            "IndicatorData": []
                            }

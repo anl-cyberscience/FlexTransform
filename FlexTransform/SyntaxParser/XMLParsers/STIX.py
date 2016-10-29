@@ -129,8 +129,9 @@ class STIX(object):
             stix_package  = STIXPackage.from_xml(document)
             
         stix_dict = stix_package.to_dict() # parse to dictionary
-                        
-        
+
+        ParsedData = {}
+
         if ('stix_header' in stix_dict) :
             ParsedData['DocumentHeaderData'] = copy.deepcopy(stix_dict['stix_header'])
         else :
