@@ -167,13 +167,16 @@
 				"memberof": "handling",
 				"enumValues": {
 					"//node()": {
-						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#XMLDocumentControlledStructureSemanticConcept"
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#XMLDocumentControlledStructure1SemanticConcept"
 					},
 					"//node() | //@*": {
-						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#XMLDocumentControlledStructureSemanticConcept"
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#XMLDocumentControlledStructureSemanticConcept",
+						"reverseOntologyMappings": [
+							"http://www.anl.gov/cfm/transform.owl#XMLDocumentControlledStructure1SemanticConcept"
+						]
 					},
 					"//node() | @*": {
-						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#XMLDocumentControlledStructureSemanticConcept"
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#XMLDocumentControlledStructure1SemanticConcept"
 					},
 					"../../../../descendant-or-self::node()": {
 						"ontologyMapping": ""
