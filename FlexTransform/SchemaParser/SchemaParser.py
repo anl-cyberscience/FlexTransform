@@ -743,6 +743,14 @@ class SchemaParser(object):
                 if ('dateTimeFormat' not in fieldDict):
                     raise Exception('SchemaConfigMissing',
                                     'The dateTimeFormat configuration is missing for field ' + fieldName)
+                # TODO - Identify better method of handling function call cases for "&now()" & "&stix_now()"
+                # Exists only to create "ParsedValue" when functions such as "&now()" & "&stix_now()" are used
+                if "ParsedValue" not in fieldDict and "Value" in fieldDict and fieldDict['Value']:
+                    if fieldDict['dateTimeFormat'] == 'unixtime':
+                        fieldDict['ParsedValue'] = arrow.get(fieldDict['Value'])
+                    else:
+                        fieldDict['ParsedValue'] = arrow.get(fieldDict['Value'], fieldDict['dateTimeFormat'])
+
             elif (dataType == 'enum'):
                 if (value not in fieldDict['enumValues']):
                     # Check if there is a case mismatch, update the value to the correct case if there is.
