@@ -64,7 +64,7 @@
 				"description": "Time the report was generated",
 				"datatype": "datetime",
 				"dateTimeFormat": " YYYY-MM-DD HH:mm:ss",
-				"dateTimeFormatAlternate": ["YYYY-MM-DDTHH:mm:ss","YYYY-MM-DDTHH:mm:ssZ"],
+				"dateTimeFormatAlternate": ["YYYY-MM-DDTHH:mm:ss","YYYY-MM-DDTHH:mm:ssZ", "YYYY-MM-DD"],
 				"dateTimezoneDefault": "US/Pacific",
 				"required": false,
 				"defaultValue": "&now()",
