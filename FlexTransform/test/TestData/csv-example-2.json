@@ -61,7 +61,7 @@
 			"detectedTime": {
 				"description": "Time the report was generated",
 				"datatype": "datetime",
-				"dateTimeFormat": " %Y-%m-%d %H:%M:%S",
+				"dateTimeFormat": " YYYY-MM-DD HH:mm:ss",
 				"required": true,
 				"ontologyMappingType": "simple",
 				"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#TimeAlertProcessedOnClientSemanticConcept"
