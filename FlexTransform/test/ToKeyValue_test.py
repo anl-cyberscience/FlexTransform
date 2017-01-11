@@ -65,6 +65,7 @@ class TestCFM13AlertToKeyValue(unittest.TestCase):
     def test_combined_comment(self):
         self.assertIn("combined_comment='SSH scans against multiple hosts, direction:ingress, confidence:87, severity:high'", self.output1[0])
 
+
 class TestSTIXTLPToKeyValue(unittest.TestCase):
     output1 = None
 
@@ -112,6 +113,7 @@ class TestSTIXTLPToKeyValue(unittest.TestCase):
 
     def test_combined_comment(self):
         self.assertIs(5, self.output1.count("combined_comment='CRISP Report Indicator'"))
+
 
 class TestSTIXACSToKeyValue(unittest.TestCase):
     output1 = None
