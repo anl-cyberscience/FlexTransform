@@ -74,11 +74,9 @@ class GlobalFunctions(object):
         if function_name == 'now':
             if 'dateTimeFormat' in args['fieldDict']:
                 if args['fieldDict']['dateTimeFormat'] == 'unixtime':
-                    value = arrow.utcnow().timestamp
+                    value = str(arrow.utcnow().timestamp)
                 else:
                     value = arrow.utcnow().format(args['fieldDict']['dateTimeFormat'])
-
-            
         elif function_name == 'countOfIndicators':
             if 'IndicatorData' in args['transformedData']:
                 value = str(len(args['transformedData']['IndicatorData']))
