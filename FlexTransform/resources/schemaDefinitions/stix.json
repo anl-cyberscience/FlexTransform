@@ -35,9 +35,9 @@
 				"description": "Time the report was generated",
 				"valuemap": "timestamp", 
 				"datatype": "datetime",
-				"dateTimeFormat": "YYYY-MM-DDTHH:mm:ssZ",
-				"dateTimeFormatAlternate": ["YYYY-MM-DDTHH:mm:ss", "YYYY-MM-DDTHH:mm:ssZZ"],
-				"defaultValue": "&now()",
+				"dateTimeFormat": "YYYY-MM-DDTHH:mm:ssZZ",
+				"dateTimeFormatAlternate": ["YYYY-MM-DDTHH:mm:ssZ", "YYYY-MM-DDTHH:mm:ssZZ"],
+				"defaultValue": "&stix_now()",
 				"required": true,
 				"ontologyMappingType": "simple",
 				"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#DocumentGeneratedTimeSemanticConcept"
@@ -46,8 +46,8 @@
 				"description": "Time the report was generated",
 				"valuemap": "information_source;time;produced_time", 
 				"datatype": "datetime",
-				"dateTimeFormat": "YYYY-MM-DDTHH:mm:ssZ",
-				"dateTimeFormatAlternate": ["YYYY-MM-DDTHH:mm:ss", "YYYY-MM-DDTHH:mm:ssZZ"],
+				"dateTimeFormat": "YYYY-MM-DDTHH:mm:ssZZ",
+				"dateTimeFormatAlternate": ["YYYY-MM-DDTHH:mm:ssZ", "YYYY-MM-DDTHH:mm:ssZZ"],
 				"required": false,
 				"ontologyMappingType": "multiple",
 				"ontologyMappings": [
@@ -353,7 +353,7 @@
 				"datatype": "datetime",
 				"dateTimeFormat": "YYYY-MM-DDTHH:mm:ssZ",
 				"dateTimeFormatAlternate": ["YYYY-MM-DDTHH:mm:ss", "YYYY-MM-DDTHH:mm:ssZZ"],
-				"defaultValue": "&now()",
+				"defaultValue": "&stix_now()",
 				"required": true,
 				"ontologyMappingType": "simple",
 				"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#IndicatorGeneratedTimeSemanticConcept"
