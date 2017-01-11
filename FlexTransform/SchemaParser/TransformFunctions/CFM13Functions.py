@@ -109,7 +109,7 @@ class CFM13Functions(object):
             mintime = None
             for subrow in args['transformedData']['IndicatorData']:
                 if 'create_time' in subrow:
-                    indicatorTime = arrow.get(subrow['create_time']['Value'], 'YYYY-MM-DDTHH:mm:ssZZ')
+                    indicatorTime = arrow.get(subrow['create_time']['Value'], 'YYYY-MM-DDTHH:mm:ssZ')
                     if mintime is None or mintime > indicatorTime:
                         mintime = indicatorTime
 
