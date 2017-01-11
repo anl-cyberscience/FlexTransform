@@ -91,6 +91,7 @@ class TestCFM13AlertToSTIXTLP(unittest.TestCase):
     def test_indicator_properties_related_objects_properties_port_protocol_text(self):
         self.assertEqual(self.output1.xpath("/stix:STIX_Package/stix:Indicators/stix:Indicator/indicator:Observable/cybox:Object/cybox:Related_Objects/cybox:Related_Object/cybox:Properties/PortObj:Layer4_Protocol/text()", namespaces=self.namespace)[0], "TCP")
 
+
 class STIXACSToSTIXTLP(unittest.TestCase):
     output1 = None
 

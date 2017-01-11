@@ -9,9 +9,11 @@ import datetime
 import logging
 import re
 import socket
-
-import pytz
 import time
+
+import arrow
+import pytz
+
 # import dumper
 import copy
 from builtins import str
@@ -382,8 +384,39 @@ class SchemaParser(object):
                         # TODO - Add logging of skipping this element
                         continue
 
-                newDict[field] = fieldDict.copy()
                 Value = DataRow[mappedField]
+
+                if fieldDict['datatype'] == "datetime":
+                    if ('dateTimeFormat' not in fieldDict):
+                        raise Exception('SchemaConfigMissing',
+                                        'The dateTimeFormat configuration is missing for field ' + field)
+                    try:
+                        if fieldDict['dateTimeFormat'] == "unixtime":
+                            fieldDict['ParsedValue'] = arrow.get(Value)
+                        else:
+                            datetime_formats = list()
+                            datetime_formats.append(fieldDict['dateTimeFormat'])
+                            if 'dateTimeFormatAlternate' in fieldDict:
+                                datetime_formats.append(fieldDict['dateTimeFormatAlternate'])
+
+                            # If datetime value ends with "+XXXX", "-XXXX", "+XX:XX", "-XX:XX", or "Z", ingest normally
+                            if re.match(r"(.*)([+-]\d\d):(\d\d)$|(.*)\d+([+-]\d\d\d\d)$|(.*)Z$", Value):
+                                fieldDict['ParsedValue'] = arrow.get(Value, datetime_formats)
+                                # self.logging.info("Datetime parsed with provided Timezone, value=%".format(Value))
+                            elif 'dateTimezoneDefault' in fieldDict:
+                                # If value has no timezone, but default is provided, ingest with default timezone
+                                fieldDict['ParsedValue'] = arrow.get(Value, datetime_formats, tzinfo=fieldDict['dateTimezoneDefault'])
+                                # self.logging.info("Datetime ingested with default Timezone ({}), value={}".format(fieldDict['dateTimezoneDefault'], Value))
+                            else:
+                                # If value has no timezone & no default, ingest as UTC
+                                fieldDict['ParsedValue'] = arrow.get(Value, datetime_formats)
+                                # self.logging.warning("Datetime ingested as UTC, no timezone provided, value={}".format(Value))
+                    except Exception as inst:
+                        self.logging.error(inst)
+                        raise Exception('DataTypeInvalid',
+                                        'Value for field ' + mappedField + ' is not a valid date time value:{}' + Value)
+
+                newDict[field] = fieldDict.copy()
 
                 if 'mapOntologyToElement' in fieldDict:
                     # TODO - Add logging & additional error checking
@@ -707,31 +740,9 @@ class SchemaParser(object):
                                         'The value for field ' + fieldName + ' is outside of the allowed range(' +
                                         fieldDict['dataRange'] + '): ' + value)
             elif (dataType == 'datetime'):
-                # TODO: Support multiple date time formats
                 if ('dateTimeFormat' not in fieldDict):
                     raise Exception('SchemaConfigMissing',
                                     'The dateTimeFormat configuration is missing for field ' + fieldName)
-                try:
-                    if (fieldDict['dateTimeFormat'] == "unixtime"):
-                        fieldDict['ParsedValue'] = pytz.utc.localize(datetime.datetime.utcfromtimestamp(int(value)))
-                    else:
-                        # This is a very poor hack to force the weird STIX time format from the CISCP reports with timezone as [+-]xx:yy to the standard [+-]xxyy format.
-                        # TODO: Have something in the json config that forces this conversion, and can undo it on write if needed. Possibly use pytz to fix the issue
-                        match = re.match(r"(.*)([+-]\d\d):(\d\d)$", value)
-                        if (match):
-                            value = match.group(1) + match.group(2) + match.group(3)
-                        match = re.match(r"(.*)\.\d+([+-]\d\d\d\d)$", value)
-                        if (match):
-                            value = match.group(1) + match.group(2)
-                        fieldDict['ParsedValue'] = datetime.datetime.strptime(value, fieldDict['dateTimeFormat'])
-
-                        # TODO: replace this
-                        if fieldDict['ParsedValue'].tzinfo is None:
-                            fieldDict['ParsedValue'] = fieldDict['ParsedValue'].replace(tzinfo=pytz.UTC)
-                except Exception as inst:
-                    self.logging.error(inst)
-                    raise Exception('DataTypeInvalid',
-                                    'Value for field ' + fieldName + ' is not a valid date time value: ' + value)
             elif (dataType == 'enum'):
                 if (value not in fieldDict['enumValues']):
                     # Check if there is a case mismatch, update the value to the correct case if there is.
@@ -1422,9 +1433,11 @@ class SchemaParser(object):
         if (fieldDict['datatype'] == 'datetime'):
             if ('ParsedValue' in sourceDict):
                 if (fieldDict['dateTimeFormat'] == 'unixtime'):
-                    NewValue = time.mktime(sourceDict['ParsedValue'].timetuple())
+                    # NewValue = time.mktime(sourceDict['ParsedValue'].timetuple())
+                    NewValue = sourceDict['ParsedValue'].timestamp
                 else:
-                    NewValue = sourceDict['ParsedValue'].strftime(fieldDict['dateTimeFormat'])
+                    # NewValue = sourceDict['ParsedValue'].strftime(fieldDict['dateTimeFormat'])
+                    NewValue = sourceDict['ParsedValue'].format(fieldDict['dateTimeFormat'])
             else:
                 # TODO: ParsedValue should always exist, but I got errors when testing some CISCP STIX documents, need to test further
                 self.logging.error('DateTime data type did not have a ParsedValue defined for field %s (%s)', field,

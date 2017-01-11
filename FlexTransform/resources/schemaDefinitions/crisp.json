@@ -18,7 +18,8 @@
 			"produced_time": {
 				"description": "Time the report was generated",
 				"datatype": "datetime",
-				"dateTimeFormat": "%Y-%m-%dT%H:%M:%SZ",
+				"dateTimeFormat": "YYYY-MM-DDTHH:mm:ssZ",
+				"dateTimeFormatAlternate": ["YYYY-MM-DDTHH:mm:ss", "YYYY-MM-DDTHH:mm:ssZZ"],
 				"required": true,
 				"ontologyMappingType": "simple",
 				"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#ReportGeneratedTimeSemanticConcept"
