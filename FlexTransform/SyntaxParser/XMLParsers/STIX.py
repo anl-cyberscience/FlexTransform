@@ -379,7 +379,8 @@ class STIX(object):
             else :
                 objid = "%s:%s%s" % (self.STIXAlias, prefix, data.lower())
         elif (hashdata) :
-            objuuid = uuid.uuid5(self.UUIDNamespace, hashdata)
+            # objuuid = uuid.uuid5(self.UUIDNamespace, hashdata)
+            objuuid = uuid.uuid4()
             objid = "%s:%s%s" % (self.STIXAlias, prefix, objuuid)
         else :
             objid = idgen.create_id(prefix.strip("-"))
