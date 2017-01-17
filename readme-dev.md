@@ -340,6 +340,8 @@ This ensures that the FlexTransform map the properties of the attribute in the s
 
 - **ignore** - For testing purposes. If set to true, we ignore this field during processing.
 
+- **discardBeforeTranslation** - Used to have the field dropped after ingest & source mapping, but before translation onto the destination schema. 
+
 - **stripNamespace** - Some schemas included namespace or *other data* in the value of the field, which should be stripped before transformation to the target schema.
 
 	Samples:
@@ -400,6 +402,8 @@ Hence the value will be constructed using two fields "assessment_action" and "ac
 ```
 
 - **dependsOn** - When this field is dependant on another field to be processed first (by the **field order queue**) , then the dependancy is placed under the **dependsOn** attribute
+
+- **mapOntologyToElement** - This field is used when the ontology mapping of one field must be applied to another.  The **dependsOn** field is required, and using this field forces the **discardBeforeTranslation** field to be *True* 
 
 - **reverseOntologyMapping** - When an IRI required by the destination format is not available in the source format, then it looks for the next best value that possesess the closest semantic meaning as the required concept. This worst case scenario ontologyMappings (more than one can be specified as a list) are placed under the **reverseOntologyMapping** attribute.
 
