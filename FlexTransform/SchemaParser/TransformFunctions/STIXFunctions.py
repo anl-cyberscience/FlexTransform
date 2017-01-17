@@ -6,7 +6,10 @@ Created on Mar 13, 2015
 
 import logging
 
+import arrow
+
 from FlexTransform.SchemaParser.TransformFunctions import TransformFunctionManager
+
 
 class STIXFunctions(object):
     '''
@@ -34,7 +37,14 @@ class STIXFunctions(object):
 
     '''
     
-    __FunctionNames = {}
+    __FunctionNames = {
+        'DocumentHeaderData': {
+            'stix_now': ['fieldDict']
+        },
+        'IndicatorData': {
+            'stix_now': ['fieldDict']
+        }
+    }
 
     def __init__(self):
         '''
@@ -48,14 +58,21 @@ class STIXFunctions(object):
             for FunctionName, RequiredArgs in Functions.items() :
                 TransformFunctionManager.RegisterFunction(Scope, FunctionName, RequiredArgs, 'STIXFunctions')
         
-    def Execute(self, Scope, FunctionName, args):
+    def Execute(self, Scope, function_name, args):
         '''
         Execute the specific called function with the supplied args
         '''
         
-        Value = None
+        value = None
          
-        if (FunctionName not in self.__FunctionNames[Scope]) :
-            raise Exception('FunctionNotDefined','Function %s is not defined in STIXFunctions for document scope %s' % (FunctionName, Scope))
-                
-        return Value
+        if function_name not in self.__FunctionNames[Scope] :
+            raise Exception('FunctionNotDefined',
+                            'Function %s is not defined in STIXFunctions for document scope %s' % (function_name, Scope))
+        if function_name == 'stix_now':
+            if 'dateTimeFormat' in args['fieldDict']:
+                value = arrow.utcnow().format(args['fieldDict']['dateTimeFormat'])
+                # self.logging.info("Called stix now")
+                # match = re.match(r"(.*)([+-]\d\d)(\d\d)$", value)
+                # if match:
+                #     value = match.group(1) + match.group(2) + ":" + match.group(3)
+        return value

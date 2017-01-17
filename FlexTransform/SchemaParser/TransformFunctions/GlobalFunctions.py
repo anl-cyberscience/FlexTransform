@@ -4,9 +4,7 @@ Created on Mar 13, 2015
 @author: ahoying
 '''
 
-import pytz
-import time
-import datetime
+import arrow
 import logging
 import uuid
 
@@ -76,10 +74,9 @@ class GlobalFunctions(object):
         if function_name == 'now':
             if 'dateTimeFormat' in args['fieldDict']:
                 if args['fieldDict']['dateTimeFormat'] == 'unixtime':
-                    value = '%i' % time.mktime(datetime.datetime.utcnow().timetuple())
+                    value = str(arrow.utcnow().timestamp)
                 else:
-                    value = datetime.datetime.now(tz=pytz.utc).strftime(args['fieldDict']['dateTimeFormat'])
-            
+                    value = arrow.utcnow().format(args['fieldDict']['dateTimeFormat'])
         elif function_name == 'countOfIndicators':
             if 'IndicatorData' in args['transformedData']:
                 value = str(len(args['transformedData']['IndicatorData']))
