@@ -10,7 +10,6 @@ from .Configuration import Config
 from .OntologyOracle import Oracle
 
 # TODO: Document in Sphinx compatible format
-# TODO: Optimization - Too much pass by value for large dictionary objects currently, need to move to more pass by reference to minimize cpu and memory resource usage
 
 class FlexTransform(object):
     '''
@@ -87,10 +86,10 @@ class FlexTransform(object):
             raise Exception('NoSourceData', 'Source data file could not be parsed, no data')
         
         # Map source file data to source schema
-        MappedData = SourceConfig.SchemaParser.MapDataToSchema(SourceData, oracle)
+        MappedData = SourceConfig.SchemaParser.map_data_to_schema(SourceData, oracle)
         
         if (sourceMetaData is not None) :
-            SourceConfig.SchemaParser.MapMetadataToSchema(sourceMetaData)
+            SourceConfig.SchemaParser.map_metadata_to_schema(sourceMetaData)
         
         # Map source data to destination schema
         TransformedData = DestinationConfig.SchemaParser.TransformData(MappedData, oracle)

@@ -1,29 +1,22 @@
-'''
+"""
 Created on Oct 13, 2014
 
 @author: ahoying
-'''
+"""
 
 import collections
-import datetime
 import logging
 import re
 import socket
-import time
 
 import arrow
-import pytz
-
-# import dumper
 import copy
 from builtins import str
 from FlexTransform.SchemaParser.TransformFunctions import TransformFunctionManager
 
 
-# from _sqlite3 import Row
-
 class SchemaParser(object):
-    '''
+    """
     Base class for the Schema Parser logic.  The following fields are defined for this class:
 
     * self.SchemaConfig - The schema configuration for the target format
@@ -34,18 +27,18 @@ class SchemaParser(object):
                               Example outputFormat: "[comment], direction:[direction],
                                                      confidence:[confidence], severity:[severity]"
     * self.logging - The logging object
-    '''
+    """
 
     # Class global variables
     _outputFormatRE = re.compile(r"([^\[]+)?(?:\[([^\]]+)\])?")
 
     def __init__(self, config):
-        '''
+        """
         Constructor
-        '''
+        """
         self.SchemaConfig = config
 
-        self._FieldOrder = self._CalculateSchemaFieldOrder()
+        self._FieldOrder = self._calculate_schema_field_order()
 
         self.FunctionManager = TransformFunctionManager()
 
@@ -53,8 +46,8 @@ class SchemaParser(object):
 
         self.logging = logging.getLogger('FlexTransform.SchemaParser')
 
-    def MapDataToSchema(self, SourceData, oracle=None):
-        '''
+    def map_data_to_schema(self, SourceData, oracle=None):
+        """
         Maps the values in SourceData to the underlying schema from the config
         Parameters:
         * SourceData -
@@ -65,38 +58,38 @@ class SchemaParser(object):
               target production, as data will be requested from the ABOX.
 
               Essentially this will consist of creating instances of the appropriate subclasses in an ABOX.
-        '''
+        """
 
         # The value map is only used by the _MapRowToSchema function, so it isn't calculated
         # until this method is called and not under __init__()
-        self._ValueMap = self._ValuemapToField()
+        self._value_map = self._valuemap_to_field()
 
-        self.MappedData = {}
+        self.mapped_data = {}
 
-        rowTypes = []
+        row_types = []
 
         if 'IndicatorData' in SourceData:
-            rowTypes.append('IndicatorData')
+            row_types.append('IndicatorData')
         if 'DocumentHeaderData' in SourceData:
-            rowTypes.append('DocumentHeaderData')
+            row_types.append('DocumentHeaderData')
 
-        for rowType in rowTypes:
+        for rowType in row_types:
             if rowType in self.SchemaConfig:
                 if isinstance(SourceData[rowType], list):
-                    self.MappedData[rowType] = []
+                    self.mapped_data[rowType] = []
                     for row in SourceData[rowType]:
                         if isinstance(row, dict):
                             try:
-                                DataRow = self._MapRowToSchema(SchemaParser.FlattenDict(row), rowType)
-                                self.MappedData[rowType].append(DataRow)
+                                DataRow = self._map_row_to_schema(SchemaParser.FlattenDict(row), rowType)
+                                self.mapped_data[rowType].append(DataRow)
                             except Exception as inst:
                                 self.logging.error(inst)
                                 # self.logging.debug(str(SchemaParser.FlattenDict(row)))
                         else:
                             raise Exception('NoParsableDataFound', "Data isn't in a parsable dictionary format")
                 elif isinstance(SourceData[rowType], dict):
-                    DataRow = self._MapRowToSchema(SchemaParser.FlattenDict(SourceData[rowType]), rowType)
-                    self.MappedData[rowType] = DataRow
+                    DataRow = self._map_row_to_schema(SchemaParser.FlattenDict(SourceData[rowType]), rowType)
+                    self.mapped_data[rowType] = DataRow
                 else:
                     raise Exception('NoParsableDataFound', "Data isn't in a parsable dictionary format")
             else:
@@ -133,17 +126,17 @@ class SchemaParser(object):
             logging.debug(oracle.dumpGraph())
         '''
 
-        return self.MappedData
+        return self.mapped_data
 
-    def MapMetadataToSchema(self, sourceMetaData):
+    def map_metadata_to_schema(self, sourceMetaData):
         """
         Add meta data to the MappedData
         """
 
         if 'DocumentMetaData' in self.SchemaConfig:
             if isinstance(sourceMetaData, dict):
-                DataRow = self._MapRowToSchema(SchemaParser.FlattenDict(sourceMetaData), 'DocumentMetaData')
-                self.MappedData['DocumentMetaData'] = DataRow
+                DataRow = self._map_row_to_schema(SchemaParser.FlattenDict(sourceMetaData), 'DocumentMetaData')
+                self.mapped_data['DocumentMetaData'] = DataRow
             else:
                 raise Exception('NoParsableDataFound', "Data isn't in a parsable dictionary format")
         else:
@@ -157,75 +150,75 @@ class SchemaParser(object):
         * oracle - An instance of the OntologyOracle class which encapsulates the target schema ontology
                    If 'None', will not be used.
         """
-        self.TransformedData = {}
+        self.transformed_data = {}
 
         # If the oracle is set, initialize it:
         if oracle is not None:
             oracle.buildABOX(MappedData)
 
         # Parse indicators before headers
-        rowTypes = []
+        row_types = []
 
-        DocumentHeaderData = None
-        DocumentMetaData = None
+        document_header_data = None
+        document_meta_data = None
 
         if 'IndicatorData' in self.SchemaConfig.keys():
-            rowTypes.append('IndicatorData')
+            row_types.append('IndicatorData')
         if 'DocumentHeaderData' in self.SchemaConfig.keys():
-            rowTypes.append('DocumentHeaderData')
+            row_types.append('DocumentHeaderData')
 
         if 'DocumentHeaderData' in MappedData:
-            DocumentHeaderData = MappedData['DocumentHeaderData']
+            document_header_data = MappedData['DocumentHeaderData']
 
         if 'DocumentMetaData' in MappedData:
-            DocumentMetaData = MappedData['DocumentMetaData']
+            document_meta_data = MappedData['DocumentMetaData']
 
-        for rowType in rowTypes:
+        for rowType in row_types:
             if rowType in MappedData:
                 if isinstance(MappedData[rowType], list):
-                    self.TransformedData[rowType] = []
+                    self.transformed_data[rowType] = []
                     for row in MappedData[rowType]:
                         if isinstance(row, dict):
                             try:
-                                self.TransformedData[rowType].append(
-                                    self._TransformDataToNewSchema(rowType, row, DocumentHeaderData, DocumentMetaData,
-                                                                   oracle))
+                                self.transformed_data[rowType].append(
+                                    self._TransformDataToNewSchema(rowType, row, document_header_data,
+                                                                   document_meta_data, oracle))
                             except Exception as inst:
                                 self.logging.error(inst)
                         else:
                             raise Exception('NoParsableDataFound', "Data isn't in a parsable dictionary format")
 
                 elif isinstance(MappedData[rowType], dict):
-                    self.TransformedData[rowType] = self._TransformDataToNewSchema(rowType, MappedData[rowType], None,
-                                                                                   DocumentMetaData, oracle)
+                    self.transformed_data[rowType] = self._TransformDataToNewSchema(rowType, MappedData[rowType], None,
+                                                                                    document_meta_data, oracle)
                 else:
                     raise Exception('NoParsableDataFound', "Data isn't in a parsable dictionary format")
             else:
-                self.TransformedData[rowType] = self._TransformDataToNewSchema(rowType, None, None, DocumentMetaData,
-                                                                               oracle)
+                self.transformed_data[rowType] = self._TransformDataToNewSchema(rowType, None, None, document_meta_data,
+                                                                                oracle)
 
-        return self.TransformedData
+        return self.transformed_data
 
-    def _ValuemapToField(self):
+    def _valuemap_to_field(self):
         """
         Create a fast lookup dictionary for mapping values from flattened dictionaries back to the schema field
         """
 
-        ValueMap = {}
+        value_map = {}
 
         for rowType in self.SchemaConfig:
-            ValueMap[rowType] = {}
+            value_map[rowType] = {}
             if 'fields' in self.SchemaConfig[rowType] and isinstance(self.SchemaConfig[rowType]['fields'], dict):
                 for fieldName, fieldDict in self.SchemaConfig[rowType]['fields'].items():
                     if 'valuemap' in fieldDict:
-                        ValueMap[rowType][fieldDict['valuemap']] = fieldName
+                        value_map[rowType][fieldDict['valuemap']] = fieldName
                     if 'additionalValuemaps' in fieldDict:
                         for valuemap in fieldDict['additionalValuemaps']:
-                            ValueMap[rowType][valuemap] = fieldName
+                            value_map[rowType][valuemap] = fieldName
 
-        return ValueMap
+        return value_map
 
-    def _CalculateSchemaFieldOrder(self):
+    def _calculate_schema_field_order(self):
         """
         Sorts the schema fields from the first fields that must be processed to the last based on the relationships between the fields.
         Caches the data so that this only has to be determined the first time.
@@ -233,39 +226,41 @@ class SchemaParser(object):
         Returns a list with the fields in order.
         """
         # TODO: Can this be cached offline so it is loaded between runs so long as the schema .json files don't change?
-        SchemaFieldOrder = {}
+        schema_field_order = {}
 
         for rowType in self.SchemaConfig:
-            SchemaFieldOrder[rowType] = []
+            schema_field_order[rowType] = []
 
-            FieldOrder = {}
+            field_order = {}
 
             for field, fieldDict in self.SchemaConfig[rowType]['fields'].items():
                 if 'datatype' in fieldDict and fieldDict['datatype'] == "group":
                     # Groups need to be processed last by the transform engine
-                    if field not in FieldOrder or FieldOrder[field] < 10:
-                        FieldOrder[field] = 10
+                    if field not in field_order or field_order[field] < 10:
+                        field_order[field] = 10
 
                     # Handle subgroups, parent group needs to be processed after all child groups
                     if 'memberof' in fieldDict:
-                        if fieldDict['memberof'] not in FieldOrder or FieldOrder[fieldDict['memberof']] <= FieldOrder[field]:
-                            FieldOrder[fieldDict['memberof']] = FieldOrder[field] + 1
+                        if fieldDict['memberof'] not in field_order \
+                                or field_order[fieldDict['memberof']] <= field_order[field]:
+                            field_order[fieldDict['memberof']] = field_order[field] + 1
 
                 elif 'required' in fieldDict and fieldDict['required'] == True:
-                    if field not in FieldOrder or FieldOrder[field] > 1:
-                        FieldOrder[field] = 1
+                    if field not in field_order or field_order[field] > 1:
+                        field_order[field] = 1
                 elif 'memberof' in fieldDict:
-                    if field not in FieldOrder or FieldOrder[field] > 5:
-                        FieldOrder[field] = 5
-                        if (fieldDict['memberof'] not in FieldOrder or FieldOrder[fieldDict['memberof']] <= FieldOrder[
+                    if field not in field_order or field_order[field] > 5:
+                        field_order[field] = 5
+                        if (fieldDict['memberof'] not in field_order
+                            or field_order[fieldDict['memberof']] <= field_order[
                             field]):
-                            FieldOrder[fieldDict['memberof']] = FieldOrder[field] + 1
+                            field_order[fieldDict['memberof']] = field_order[field] + 1
                 elif 'dependsOn' in fieldDict:
-                    if field not in FieldOrder or FieldOrder[field] < 6:
-                        FieldOrder[field] = 6
+                    if field not in field_order or field_order[field] < 6:
+                        field_order[field] = 6
                 else:
-                    if field not in FieldOrder or FieldOrder[field] > 4:
-                        FieldOrder[field] = 4
+                    if field not in field_order or field_order[field] > 4:
+                        field_order[field] = 4
 
             # Run through all the fields again and re-order based on references
             for field, fieldDict in self.SchemaConfig[rowType]['fields'].items():
@@ -273,78 +268,78 @@ class SchemaParser(object):
                     match = re.match(r'&([^\(]+)\(([^\)]*)\)', fieldDict['defaultValue'])
                     if match:
                         args = match.group(2)
-                        if (args and args in self.SchemaConfig[rowType]['fields']):
-                            if (field in FieldOrder and (
-                                    args not in FieldOrder or FieldOrder[args] >= FieldOrder[field])):
-                                FieldOrder[field] = FieldOrder[args] + 1
+                        if args and args in self.SchemaConfig[rowType]['fields']:
+                            if (field in field_order and (
+                                    args not in field_order or field_order[args] >= field_order[field])):
+                                field_order[field] = field_order[args] + 1
 
-                elif ('outputFormat' in fieldDict):
+                elif 'outputFormat' in fieldDict:
                     match = self._outputFormatRE.findall(fieldDict['outputFormat'])
-                    if (match):
+                    if match:
                         for m in match:
-                            if (m[1] != ''):
-                                if (m[1] in self.SchemaConfig[rowType]['fields']):
-                                    if (field in FieldOrder and (
-                                            m[1] not in FieldOrder or FieldOrder[m[1]] >= FieldOrder[field])):
-                                        FieldOrder[m[1]] = FieldOrder[field] - 1
+                            if m[1] != '':
+                                if m[1] in self.SchemaConfig[rowType]['fields']:
+                                    if (field in field_order and (
+                                            m[1] not in field_order or field_order[m[1]] >= field_order[field])):
+                                        field_order[m[1]] = field_order[field] - 1
 
-                    if ('outputFormatCondition' in fieldDict):
+                    if 'outputFormatCondition' in fieldDict:
                         match = self._outputFormatRE.findall(fieldDict['outputFormatCondition'])
-                        if (match):
+                        if match:
                             for m in match:
-                                if (m[1] != ''):
-                                    if (m[1] in self.SchemaConfig[rowType]['fields']):
-                                        if (field in FieldOrder and (
-                                                m[1] not in FieldOrder or FieldOrder[m[1]] >= FieldOrder[field])):
-                                            FieldOrder[m[1]] = FieldOrder[field] - 1
+                                if m[1] != '':
+                                    if m[1] in self.SchemaConfig[rowType]['fields']:
+                                        if field in field_order and (
+                                                m[1] not in field_order or field_order[m[1]] >= field_order[field]):
+                                            field_order[m[1]] = field_order[field] - 1
 
-                if (field in FieldOrder):
-                    if ('requiredIfReferenceField' in fieldDict):
-                        if (fieldDict['requiredIfReferenceField'] not in FieldOrder):
-                            FieldOrder[fieldDict['requiredIfReferenceField']] = FieldOrder[field] - 1
-                        elif (FieldOrder[fieldDict['requiredIfReferenceField']] >= FieldOrder[field]):
-                            FieldOrder[field] = FieldOrder[fieldDict['requiredIfReferenceField']] + 1
+                if field in field_order:
+                    if 'requiredIfReferenceField' in fieldDict:
+                        if fieldDict['requiredIfReferenceField'] not in field_order:
+                            field_order[fieldDict['requiredIfReferenceField']] = field_order[field] - 1
+                        elif field_order[fieldDict['requiredIfReferenceField']] >= field_order[field]:
+                            field_order[field] = field_order[fieldDict['requiredIfReferenceField']] + 1
 
-                    if ('ontologyMappingType' in fieldDict and fieldDict['ontologyMappingType'] == 'referencedEnum'):
-                        if (fieldDict['ontologyEnumField'] not in FieldOrder):
-                            FieldOrder[fieldDict['ontologyEnumField']] = FieldOrder[field] - 1
-                        elif (FieldOrder[fieldDict['ontologyEnumField']] >= FieldOrder[field]):
-                            FieldOrder[field] = FieldOrder[fieldDict['ontologyEnumField']] + 1
+                    if 'ontologyMappingType' in fieldDict and fieldDict['ontologyMappingType'] == 'referencedEnum':
+                        if fieldDict['ontologyEnumField'] not in field_order:
+                            field_order[fieldDict['ontologyEnumField']] = field_order[field] - 1
+                        elif field_order[fieldDict['ontologyEnumField']] >= field_order[field]:
+                            field_order[field] = field_order[fieldDict['ontologyEnumField']] + 1
 
-                    if ('dependsOn' in fieldDict):
-                        if (fieldDict['dependsOn'] not in FieldOrder):
-                            FieldOrder[fieldDict['dependsOn']] = FieldOrder[field] - 1
-                        elif (FieldOrder[fieldDict['dependsOn']] >= FieldOrder[field]):
-                            FieldOrder[field] = FieldOrder[fieldDict['dependsOn']] + 1
+                    if 'dependsOn' in fieldDict:
+                        if fieldDict['dependsOn'] not in field_order:
+                            field_order[fieldDict['dependsOn']] = field_order[field] - 1
+                        elif field_order[fieldDict['dependsOn']] >= field_order[field]:
+                            field_order[field] = field_order[fieldDict['dependsOn']] + 1
 
-                    if ('fields' in fieldDict):
-                        requiredFields = fieldDict['fields']
-                        for requiredField in requiredFields:
-                            if (requiredField not in FieldOrder):
-                                FieldOrder[requiredField] = FieldOrder[field] - 1
-                            elif (FieldOrder[requiredField] >= FieldOrder[field]):
-                                FieldOrder[field] = FieldOrder[requiredField] + 1
+                    if 'fields' in fieldDict:
+                        required_fields = fieldDict['fields']
+                        for requiredField in required_fields:
+                            if requiredField not in field_order:
+                                field_order[requiredField] = field_order[field] - 1
+                            elif field_order[requiredField] >= field_order[field]:
+                                field_order[field] = field_order[requiredField] + 1
 
-            SchemaFieldOrder[rowType].extend(sorted(FieldOrder, key=FieldOrder.get))
+            schema_field_order[rowType].extend(sorted(field_order, key=field_order.get))
 
-        return SchemaFieldOrder
+        return schema_field_order
 
-    def _MapRowToSchema(self, DataRow, rowType, SubGroupedRow=False):
-        '''
+    def _map_row_to_schema(self, DataRow, rowType, SubGroupedRow=False):
+        """
         Create a new dictionary with the mapping between the data row and the schema field definition
         Parameters:
           * DataRow - The specification of data which will be the source for this mapping
           * rowType - Either DocumentHeaderData, DocumentMetaData or IndicatorData.
           * SubGroupedRow - Set to true if this is processing a subgrouped row and not the primary data row
-        '''
+        """
 
-        newDict = {}
-        processedFields = {}
+        new_dict = {}
+        processed_fields = {}
 
-        if ('IndicatorType' in DataRow):
-            newDict['IndicatorType'] = DataRow['IndicatorType']
+        if 'IndicatorType' in DataRow:
+            new_dict['IndicatorType'] = DataRow['IndicatorType']
 
-        ValueMap = self._ValueMap[rowType]
+        ValueMap = self._value_map[rowType]
 
         # Get the field dependency order for processing the source schema
         FieldOrder = self._FieldOrder[rowType]
@@ -368,7 +363,7 @@ class SchemaParser(object):
 
             if (mappedField is not None):
 
-                processedFields[mappedField] = True
+                processed_fields[mappedField] = True
 
                 if 'ignore' in fieldDict and fieldDict['ignore'] == True:
                     # TODO - Add logging of ignore flag processed
@@ -380,14 +375,14 @@ class SchemaParser(object):
                 if 'dependsOn' in fieldDict:
                     # If the field this field depends on does not exist, then don't add to new dictionary
                     dependsOn = fieldDict['dependsOn']
-                    if dependsOn not in newDict or 'Value' not in newDict[dependsOn]:
+                    if dependsOn not in new_dict or 'Value' not in new_dict[dependsOn]:
                         # TODO - Add logging of skipping this element
                         continue
 
                 Value = DataRow[mappedField]
 
                 if fieldDict['datatype'] == "datetime":
-                    if ('dateTimeFormat' not in fieldDict):
+                    if 'dateTimeFormat' not in fieldDict:
                         raise Exception('SchemaConfigMissing',
                                         'The dateTimeFormat configuration is missing for field ' + field)
                     try:
@@ -416,15 +411,15 @@ class SchemaParser(object):
                         raise Exception('DataTypeInvalid',
                                         'Value for field ' + mappedField + ' is not a valid date time value:{}' + Value)
 
-                newDict[field] = fieldDict.copy()
+                new_dict[field] = fieldDict.copy()
 
                 if 'mapOntologyToElement' in fieldDict:
                     # TODO - Add logging & additional error checking
                     map_onto = fieldDict['mapOntologyToElement']
-                    if map_onto in newDict and not newDict[map_onto]['ontologyMapping']:
-                        newDict[map_onto]['ontologyMapping'] = \
+                    if map_onto in new_dict and not new_dict[map_onto]['ontologyMapping']:
+                        new_dict[map_onto]['ontologyMapping'] = \
                             fieldDict['enumValues'][DataRow[mappedField]]['ontologyMapping']
-                        newDict[field]["discardBeforeTranslation"] = True
+                        new_dict[field]["discardBeforeTranslation"] = True
                     else:
                         # TODO - Throw error and remove pass command
                         pass
@@ -456,8 +451,8 @@ class SchemaParser(object):
 
                                     newDataRow[subkey] = subvalue
 
-                                subDict = self._MapRowToSchema(newDataRow, rowType, SubGroupedRow=True)
-                                newDict.update(self._UpdateFieldReferences(subDict, GroupID, subfields))
+                                subDict = self._map_row_to_schema(newDataRow, rowType, SubGroupedRow=True)
+                                new_dict.update(self._UpdateFieldReferences(subDict, GroupID, subfields))
                                 GroupID = GroupID + 1
 
                             else:
@@ -465,10 +460,10 @@ class SchemaParser(object):
                                                 'Data type of sub row for %s is not dict: %s' % (mappedField, row))
 
                         # Value could be set to any string, it isn't used for field groups except to indicate that the group has been parsed
-                        newDict[field]['Value'] = 'True'
+                        new_dict[field]['Value'] = 'True'
                     else:
                         if (Value.__len__() > 1):
-                            newDict[field]['AdditionalValues'] = []
+                            new_dict[field]['AdditionalValues'] = []
                         for d in Value:
                             if (isinstance(d, (list, dict))):
                                 self.logging.warning(
@@ -476,11 +471,11 @@ class SchemaParser(object):
                                     mappedField, d)
                                 continue
 
-                            if ('Value' not in newDict[field]):
+                            if ('Value' not in new_dict[field]):
                                 # Put the first value in Value and the rest into AdditionalValues
-                                newDict[field]['Value'] = str(d)
+                                new_dict[field]['Value'] = str(d)
                             else:
-                                newDict[field]['AdditionalValues'].append(str(d))
+                                new_dict[field]['AdditionalValues'].append(str(d))
 
                 elif (isinstance(Value, (list, dict))):
                     self.logging.warning('%s value is a list or dictionary, not currently supported: %s', mappedField,
@@ -488,13 +483,13 @@ class SchemaParser(object):
                     continue
                 elif (isinstance(Value, str)):
                     # The rstrip is to get rid of rogue tabs and white space at the end of a value, a frequent problem with STIX formated documents in testing
-                    newDict[field]['Value'] = str.rstrip(Value)
+                    new_dict[field]['Value'] = str.rstrip(Value)
                 else:
-                    newDict[field]['Value'] = str(Value)
+                    new_dict[field]['Value'] = str(Value)
 
                 # Process the regexSplit directive
                 if ('regexSplit' in fieldDict):
-                    match = re.match(fieldDict['regexSplit'], newDict[field]['Value'])
+                    match = re.match(fieldDict['regexSplit'], new_dict[field]['Value'])
                     if match:
                         regexFields = re.split(',\s+', fieldDict['regexFields'])
                         i = 0
@@ -502,13 +497,13 @@ class SchemaParser(object):
                             if (match.group(i + 1)):
                                 newFieldName = regexFields[i]
                                 newFieldValue = match.group(i + 1)
-                                newDict[newFieldName] = self.SchemaConfig[rowType]['fields'][newFieldName].copy()
-                                newDict[newFieldName]['Value'] = newFieldValue
+                                new_dict[newFieldName] = self.SchemaConfig[rowType]['fields'][newFieldName].copy()
+                                new_dict[newFieldName]['Value'] = newFieldValue
 
-                                self._ValidateField(newDict[newFieldName], newFieldName, rowType)
+                                self._ValidateField(new_dict[newFieldName], newFieldName, rowType)
                             i += 1
 
-                self._ValidateField(newDict[field], field, rowType)
+                self._ValidateField(new_dict[field], field, rowType)
 
             elif (not SubGroupedRow):
                 # Check if there is a default value
@@ -524,46 +519,46 @@ class SchemaParser(object):
                         ReferenceValues = fieldDict['requiredIfReferenceValues']
                         for val in ReferenceValues:
                             if (
-                                        (ReferenceField in newDict and val == newDict[ReferenceField]['Value']) or
+                                        (ReferenceField in new_dict and val == new_dict[ReferenceField]['Value']) or
                                         (val == '' and (
-                                            not ReferenceField in newDict or not newDict[ReferenceField]['Value']))):
+                                            not ReferenceField in new_dict or not new_dict[ReferenceField]['Value']))):
                                 required = True
                                 break
 
                     elif ('requiredIfReferenceValuesMatch' in fieldDict):
-                        if (ReferenceField in newDict):
+                        if (ReferenceField in new_dict):
                             ReferenceValuesMatch = fieldDict['requiredIfReferenceValuesMatch']
                             for val in ReferenceValuesMatch:
                                 if (val == '*'):
-                                    if ('Value' in newDict[ReferenceField]):
+                                    if ('Value' in new_dict[ReferenceField]):
                                         required = True
                                         break
                                 elif (val.endswith('*')):
-                                    if ('Value' in newDict[ReferenceField] and newDict[ReferenceField][
+                                    if ('Value' in new_dict[ReferenceField] and new_dict[ReferenceField][
                                         'Value'].startswith(val.strip('*'))):
                                         required = True
                                         break
 
                 if (required == True or ('required' in fieldDict and fieldDict['required'] == True)):
                     if ('defaultValue' in fieldDict):
-                        newDict[field] = fieldDict.copy()
-                        newDict[field]['Value'] = fieldDict['defaultValue']
+                        new_dict[field] = fieldDict.copy()
+                        new_dict[field]['Value'] = fieldDict['defaultValue']
 
-                        if (newDict[field]['Value'].startswith('&')):
-                            newDict[field]['Value'] = self._CalculateFunctionValue(newDict[field]['Value'], field,
-                                                                                   newDict[field], rowType, newDict,
+                        if (new_dict[field]['Value'].startswith('&')):
+                            new_dict[field]['Value'] = self._CalculateFunctionValue(new_dict[field]['Value'], field,
+                                                                                   new_dict[field], rowType, new_dict,
                                                                                    IndicatorType=None,
-                                                                                   TransformedData=self.MappedData)
+                                                                                   TransformedData=self.mapped_data)
 
-                        self._ValidateField(newDict[field], field, rowType)
+                        self._ValidateField(new_dict[field], field, rowType)
 
                     elif ('outputFormat' in fieldDict):
-                        Value = self._BuildOutputFormatText(fieldDict, newDict)
+                        Value = self._BuildOutputFormatText(fieldDict, new_dict)
                         if (Value):
-                            newDict[field] = fieldDict.copy()
-                            newDict[field]['Value'] = Value
+                            new_dict[field] = fieldDict.copy()
+                            new_dict[field]['Value'] = Value
 
-                        self._ValidateField(newDict[field], field, rowType)
+                        self._ValidateField(new_dict[field], field, rowType)
 
                     elif ('datatype' in fieldDict and fieldDict['datatype'] == 'group'):
                         if ('memberof' in fieldDict):
@@ -571,7 +566,7 @@ class SchemaParser(object):
                                 "Sub-groups should not have 'required' set to true, processing skipped: %s", field)
                         else:
                             groupRow = {'fields': {}}
-                            self._BuildFieldGroup(None, newDict, rowType, field, groupRow, None)
+                            self._BuildFieldGroup(None, new_dict, rowType, field, groupRow, None)
 
                     else:
                         raise Exception('NoDefaultValue',
@@ -579,14 +574,14 @@ class SchemaParser(object):
 
         if (not SubGroupedRow):
             for field in DataRow:
-                if (field not in processedFields):
+                if (field not in processed_fields):
                     self.logging.warning('%s not processed for row type %s in schema config. Value: %s', field, rowType,
                                          DataRow[field])
 
             if (rowType == "IndicatorData"):
-                self._AddIndicatorType(newDict)
+                self._AddIndicatorType(new_dict)
 
-        return newDict
+        return new_dict
 
     def _UpdateFieldReferences(self, subDict, GroupID, subfields):
         '''
@@ -1063,7 +1058,7 @@ class SchemaParser(object):
                             newDict[field]['Value'] = self._CalculateFunctionValue(newDict[field]['Value'], field,
                                                                                    newDict[field], rowType, newDict,
                                                                                    IndicatorType,
-                                                                                   TransformedData=self.TransformedData)
+                                                                                   TransformedData=self.transformed_data)
 
                         self._ValidateField(newDict[field], field, rowType)
 
@@ -1237,7 +1232,7 @@ class SchemaParser(object):
                             if (v2.startswith('&')):
                                 v2 = self._CalculateFunctionValue(v2, k, self.SchemaConfig[rowType]['fields'][k],
                                                                   rowType, groupDict, IndicatorType,
-                                                                  TransformedData=self.TransformedData)
+                                                                  TransformedData=self.transformed_data)
 
                             fieldDict['NewValue'] = v2
                             groupRow['fields'][k].append(fieldDict)
@@ -1250,7 +1245,7 @@ class SchemaParser(object):
                         if (v.startswith('&')):
                             v = self._CalculateFunctionValue(v, k, self.SchemaConfig[rowType]['fields'][k], rowType,
                                                              groupDict, IndicatorType,
-                                                             TransformedData=self.TransformedData)
+                                                             TransformedData=self.transformed_data)
 
                         fieldDict['NewValue'] = v
                         groupRow['fields'][k].append(fieldDict)
@@ -1304,7 +1299,7 @@ class SchemaParser(object):
                 fieldGroup[primaryKey]['Value'] = self._CalculateFunctionValue(fieldGroup[primaryKey]['Value'],
                                                                                primaryKey, fieldGroup, rowType,
                                                                                fieldGroup, IndicatorType,
-                                                                               TransformedData=self.TransformedData)
+                                                                               TransformedData=self.transformed_data)
 
             self._ValidateField(fieldGroup[primaryKey], primaryKey, rowType)
 
