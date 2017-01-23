@@ -4,6 +4,7 @@ setup(
     name='FlexTransform',
     version='1.1.1.2',
     description='Flexible Transform is a tool that enables dynamic translation between formats',
+    long_description='Flexible Transform (FlexT) enables dynamic translation between formats, accomplishing this by digesting CTI data down to its semantic roots (meaning and context)',
     url='https://github.com/anl-cyberscience/FlexTransform/',
     author='The CFM Team',
     author_email='fedhelp@anl.gov',
