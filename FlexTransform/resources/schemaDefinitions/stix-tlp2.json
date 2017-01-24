@@ -16,7 +16,7 @@
 			}
 			,
 			"produced_time": {
-				"dateTimeFormat": "%Y-%m-%dT%H:%M:%S%z",
+				"dateTimeFormat": "YYYY-MM-DDTHH:mm:ssZ",
 				"required": true,
 				"defaultValue": "&now()"
 			},
