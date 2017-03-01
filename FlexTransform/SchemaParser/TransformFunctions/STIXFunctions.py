@@ -46,7 +46,7 @@ class STIXFunctions(object):
     def RegisterFunctions(cls):
         for Scope, Functions in cls.__FunctionNames.items() :
             for FunctionName, RequiredArgs in Functions.items() :
-                TransformFunctionManager.RegisterFunction(Scope, FunctionName, RequiredArgs, 'STIXFunctions')
+                TransformFunctionManager.register_function(Scope, FunctionName, RequiredArgs, 'STIXFunctions')
         
     def Execute(self, Scope, FunctionName, args):
         '''

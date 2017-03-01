@@ -62,7 +62,7 @@ class GlobalFunctions(object):
     def RegisterFunctions(cls):
         for Scope, Functions in cls.__FunctionNames.items():
             for FunctionName, RequiredArgs in Functions.items():
-                TransformFunctionManager.RegisterFunction(Scope, FunctionName, RequiredArgs, 'GlobalFunctions')
+                TransformFunctionManager.register_function(Scope, FunctionName, RequiredArgs, 'GlobalFunctions')
         
     def Execute(self, scope, function_name, args):
         """
