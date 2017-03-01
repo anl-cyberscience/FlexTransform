@@ -1,12 +1,12 @@
-'''
-Created on Mar 13, 2015
+"""
+Created on Jun 13, 2016
 
-@author: ahoying
-'''
+@author: cstrasburg
+"""
 
 import FlexTransform.Configuration
 
 from .ConfigFunctionManager import ConfigFunctionManager
 from .GlobalFunctions import GlobalFunctions
 
-GlobalFunctions.RegisterFunctions()
+GlobalFunctions.register_functions()
