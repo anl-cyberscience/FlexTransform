@@ -133,7 +133,6 @@ class TestSTIXACSToCFM13Alert(unittest.TestCase):
         output1_object.readline()
         cls.output1 = etree.parse(output1_object)
 
-
     def test_alert_analyzerid(self):
         self.assertEqual(self.output1.xpath("/xmlns:IDMEF-Message/xmlns:Alert/xmlns:Analyzer/@analyzerid", namespaces=self.namespace)[0], "TEST")
 
@@ -176,7 +175,7 @@ class TestSTIXACSToCFM13Alert(unittest.TestCase):
     def test_alert_assessment_action(self):
         self.assertEqual(set(self.output1.xpath("//xmlns:Action/@category", namespaces=self.namespace)), set(["block-installed"]))
 
-    def test_alert_classification_reference_name(self):
+    def test_alert_classification_text(self):
         self.assertEqual(set(self.output1.xpath("//xmlns:Classification/@text", namespaces=self.namespace)), set(["Domain Block: AAA Report Indicator", "Domain Block: Domain Indicator", "Domain Block: Just Another Indicator",]))
 
     def test_alert_classification_reference_meaning(self):
@@ -269,9 +268,6 @@ class TestKeyValueToCFM13Alert(unittest.TestCase):
 
     def test_alert_assessment_action(self):
         self.assertEqual(set(self.output1.xpath("//xmlns:Action/@category", namespaces=self.namespace)), set(["block-installed"]))
-
-    def test_alert_classification_reference_name(self):
-        self.assertEqual(set(self.output1.xpath("//xmlns:Classification/@text", namespaces=self.namespace)), set(["Domain Block: AAA Report Indicator", "Domain Block: Domain Indicator", "Domain Block: Just Another Indicator",]))
 
     def test_alert_classification_reference_meaning(self):
         self.assertEqual(set(self.output1.xpath("//xmlns:Reference/@meaning", namespaces=self.namespace)), set(["Scanning", "Malware Traffic"]))

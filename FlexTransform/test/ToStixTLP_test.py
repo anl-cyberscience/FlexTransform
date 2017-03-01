@@ -83,10 +83,6 @@ class TestCFM13AlertToSTIXTLP(unittest.TestCase):
         self.assertEqual(self.output1.xpath("/stix:STIX_Package/stix:Indicators/stix:Indicator/indicator:Observable/cybox:Object/cybox:Properties/@category",
                                             namespaces=self.namespace)[0], "ipv4-addr")
 
-    def test_indicator_properties_category(self):
-        self.assertEqual(self.output1.xpath("/stix:STIX_Package/stix:Indicators/stix:Indicator/indicator:Observable/cybox:Object/cybox:Properties/@category",
-                                            namespaces=self.namespace)[0], "ipv4-addr")
-
     def test_indicator_properties_indicator(self):
         self.assertEqual(self.output1.xpath("/stix:STIX_Package/stix:Indicators/stix:Indicator/indicator:Observable/cybox:Object/cybox:Properties/AddressObj:Address_Value/text()",
                                             namespaces=self.namespace)[0], "10.10.10.10")
@@ -261,7 +257,7 @@ class KeyValueToSTIXTLP(unittest.TestCase):
     def test_indicator_description(self):
         self.assertEqual(set(self.output1.xpath("//indicator:Description/text()", namespaces=self.namespace)), set(['Attacker scanning for SSH, direction:ingress, confidence:0, severity:high','Attacker scanning for RDP, direction:ingress, confidence:0, severity:high','HTTP Response code 4xx, suspicious, direction:ingress, confidence:0, severity:low','Malicious domain, direction:egress, confidence:0, severity:high']))
 
-    def def_indicator_observable_keywords(self):
+    def test_indicator_observable_keywords(self):
         self.assertEqual(set(self.output1.xpath("//cybox:Keyword/text()", namespaces=self.namespace)), set(['Reconnaissance', 'Scanning', 'Malware Traffic']))
 
     def test_indicator_properties_type(self):

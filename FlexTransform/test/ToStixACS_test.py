@@ -63,9 +63,6 @@ class CFM13Alert1ToSTIXACS(unittest.TestCase):
     def test_indicator_properties_category(self):
         self.assertEqual(self.output1.xpath("/stix:STIX_Package/stix:Indicators/stix:Indicator/indicator:Observable/cybox:Object/cybox:Properties/@category", namespaces=self.namespace)[0], "ipv4-addr")
 
-    def test_indicator_properties_category(self):
-        self.assertEqual(self.output1.xpath("/stix:STIX_Package/stix:Indicators/stix:Indicator/indicator:Observable/cybox:Object/cybox:Properties/@category", namespaces=self.namespace)[0], "ipv4-addr")
-
     def test_indicator_properties_indicator(self):
         self.assertEqual(self.output1.xpath("/stix:STIX_Package/stix:Indicators/stix:Indicator/indicator:Observable/cybox:Object/cybox:Properties/AddressObj:Address_Value/text()", namespaces=self.namespace)[0], "10.10.10.10")
 
@@ -90,7 +87,7 @@ class CFM13Alert1ToSTIXACS(unittest.TestCase):
     def test_indicator_sightings_sighting_timestamp(self):
         self.assertEqual(self.output1.xpath("//indicator:Sighting/@timestamp", namespaces=self.namespace)[0], "2016-02-21T22:45:53-04:00")
 
-    def test_indicator_sightings_sighting_timestamp(self):
+    def test_indicator_sightings_sighting_timestamp_seconds(self):
         self.assertEqual(self.output1.xpath("//indicator:Sighting/@timestamp_precision", namespaces=self.namespace)[0], "second")
 
 
@@ -233,9 +230,6 @@ class KeyValueToSTIXACS(unittest.TestCase):
 
         transform.TransformFile(io.StringIO(KEYVALUE), 'keyvalue', 'stixacs', targetFileName=output1_object)
         cls.output1 = etree.XML(output1_object.getvalue())
-
-    def test_profile(self):
-        self.assertEqual(self.output1.xpath("/stix:STIX_Package/stix:STIX_Header/stix:Profiles/stixCommon:Profile/text()", namespaces=self.namespace)[0], "Ransomware Update")
 
     def test_package_intent_type(self):
         self.assertEqual(self.output1.xpath("/stix:STIX_Package/stix:STIX_Header/stix:Package_Intent/@xsi:type", namespaces=self.namespace)[0], "stixVocabs:PackageIntentVocab-1.0")
