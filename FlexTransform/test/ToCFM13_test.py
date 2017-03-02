@@ -34,12 +34,12 @@ class TestSTIXTLPToCFM13Alert(unittest.TestCase):
         transform = FlexTransform.FlexTransform()
 
         with open(os.path.join(current_dir, '../resources/sampleConfigurations/cfm13.cfg'), 'r') as input_file:
-            transform.AddParser('cfm13alert', input_file)
+            transform.add_parser('cfm13alert', input_file)
         with open(os.path.join(current_dir, '../resources/sampleConfigurations/stix_tlp.cfg'), 'r') as input_file:
-            transform.AddParser('stix', input_file)
+            transform.add_parser('stix', input_file)
         output1_object = io.StringIO()
 
-        transform.TransformFile(io.StringIO(STIXTLP), 'stix', 'cfm13alert', targetFileName=output1_object)
+        transform.transform(io.StringIO(STIXTLP), 'stix', 'cfm13alert', target_file=output1_object)
         output1_object.seek(0)
         output1_object.readline()
         cls.output1 = etree.parse(output1_object)
@@ -123,12 +123,12 @@ class TestSTIXACSToCFM13Alert(unittest.TestCase):
         transform = FlexTransform.FlexTransform()
 
         with open(os.path.join(current_dir, '../resources/sampleConfigurations/cfm13.cfg'), 'r') as input_file:
-            transform.AddParser('cfm13alert', input_file)
+            transform.add_parser('cfm13alert', input_file)
         with open(os.path.join(current_dir, '../resources/sampleConfigurations/stix_essa.cfg'), 'r') as input_file:
-            transform.AddParser('stix', input_file)
+            transform.add_parser('stix', input_file)
         output1_object = io.StringIO()
 
-        transform.TransformFile(io.StringIO(STIXACS), 'stix', 'cfm13alert', targetFileName=output1_object)
+        transform.transform(io.StringIO(STIXACS), 'stix', 'cfm13alert', target_file=output1_object)
         output1_object.seek(0)
         output1_object.readline()
         cls.output1 = etree.parse(output1_object)
@@ -218,12 +218,12 @@ class TestKeyValueToCFM13Alert(unittest.TestCase):
         transform = FlexTransform.FlexTransform()
 
         with open(os.path.join(current_dir, '../resources/sampleConfigurations/cfm13.cfg'), 'r') as input_file:
-            transform.AddParser('cfm13alert', input_file)
+            transform.add_parser('cfm13alert', input_file)
         with open(os.path.join(current_dir, '../resources/sampleConfigurations/keyvalue.cfg'), 'r') as input_file:
-            transform.AddParser('keyvalue', input_file)
+            transform.add_parser('keyvalue', input_file)
         output1_object = io.StringIO()
 
-        transform.TransformFile(io.StringIO(KEYVALUE), 'keyvalue', 'cfm13alert', targetFileName=output1_object)
+        transform.transform(io.StringIO(KEYVALUE), 'keyvalue', 'cfm13alert', target_file=output1_object)
         output1_object.seek(0)
         output1_object.readline()
         cls.output1 = etree.parse(output1_object)

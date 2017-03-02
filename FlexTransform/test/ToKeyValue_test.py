@@ -15,12 +15,12 @@ class TestCFM13AlertToKeyValue(unittest.TestCase):
         transform = FlexTransform.FlexTransform()
 
         with open(os.path.join(current_dir, '../resources/sampleConfigurations/cfm13.cfg'), 'r') as input_file:
-            transform.AddParser('cfm13alert', input_file)
+            transform.add_parser('cfm13alert', input_file)
         with open(os.path.join(current_dir, '../resources/sampleConfigurations/keyvalue.cfg'), 'r') as input_file:
-            transform.AddParser('keyvalue', input_file)
+            transform.add_parser('keyvalue', input_file)
         output1_object = io.StringIO()
 
-        transform.TransformFile(io.StringIO(CFM13ALERT), 'cfm13alert', 'keyvalue', targetFileName=output1_object)
+        transform.transform(io.StringIO(CFM13ALERT), 'cfm13alert', 'keyvalue', target_file=output1_object)
         cls.output1 = []
         output1_object.seek(0)
         for line in output1_object.read().splitlines():
@@ -74,12 +74,12 @@ class TestSTIXTLPToKeyValue(unittest.TestCase):
         transform = FlexTransform.FlexTransform()
 
         with open(os.path.join(current_dir, '../resources/sampleConfigurations/stix_tlp.cfg'), 'r') as input_file:
-            transform.AddParser('stixtlp', input_file)
+            transform.add_parser('stixtlp', input_file)
         with open(os.path.join(current_dir, '../resources/sampleConfigurations/keyvalue.cfg'), 'r') as input_file:
-            transform.AddParser('keyvalue', input_file)
+            transform.add_parser('keyvalue', input_file)
         output1_object = io.StringIO()
 
-        transform.TransformFile(io.StringIO(STIXTLP), 'stixtlp', 'keyvalue', targetFileName=output1_object)
+        transform.transform(io.StringIO(STIXTLP), 'stixtlp', 'keyvalue', target_file=output1_object)
         cls.output1 = []
         output1_object.seek(0)
         for line in output1_object.read().splitlines():
@@ -122,12 +122,12 @@ class TestSTIXACSToKeyValue(unittest.TestCase):
         transform = FlexTransform.FlexTransform()
 
         with open(os.path.join(current_dir, '../resources/sampleConfigurations/stix_essa.cfg'), 'r') as input_file:
-            transform.AddParser('stixacs', input_file)
+            transform.add_parser('stixacs', input_file)
         with open(os.path.join(current_dir, '../resources/sampleConfigurations/keyvalue.cfg'), 'r') as input_file:
-            transform.AddParser('keyvalue', input_file)
+            transform.add_parser('keyvalue', input_file)
         output1_object = io.StringIO()
 
-        transform.TransformFile(io.StringIO(STIXACS), 'stixacs', 'keyvalue', targetFileName=output1_object)
+        transform.transform(io.StringIO(STIXACS), 'stixacs', 'keyvalue', target_file=output1_object)
         cls.output1 = []
         output1_object.seek(0)
         for line in output1_object.read().splitlines():

@@ -26,12 +26,12 @@ class TestCFM13AlertToSTIXTLP(unittest.TestCase):
         transform = FlexTransform.FlexTransform()
 
         with open(os.path.join(current_dir, '../resources/sampleConfigurations/cfm13.cfg'), 'r') as input_file:
-            transform.AddParser('cfm13alert', input_file)
+            transform.add_parser('cfm13alert', input_file)
         with open(os.path.join(current_dir, '../resources/sampleConfigurations/stix_tlp.cfg'), 'r') as input_file:
-            transform.AddParser('stix', input_file)
+            transform.add_parser('stix', input_file)
         output1_object = io.StringIO()
 
-        transform.TransformFile(io.StringIO(CFM13ALERT), 'cfm13alert', 'stix', targetFileName=output1_object)
+        transform.transform(io.StringIO(CFM13ALERT), 'cfm13alert', 'stix', target_file=output1_object)
         cls.output1 = etree.XML(output1_object.getvalue())
 
     def test_package_intent_type(self):
@@ -115,12 +115,12 @@ class STIXACSToSTIXTLP(unittest.TestCase):
         transform = FlexTransform.FlexTransform()
 
         with open(os.path.join(current_dir, '../resources/sampleConfigurations/stix_essa.cfg'), 'r') as input_file:
-            transform.AddParser('stixacs', input_file)
+            transform.add_parser('stixacs', input_file)
         with open(os.path.join(current_dir, '../resources/sampleConfigurations/stix_tlp.cfg'), 'r') as input_file:
-            transform.AddParser('stix', input_file)
+            transform.add_parser('stix', input_file)
         output1_object = io.StringIO()
 
-        transform.TransformFile(io.StringIO(STIXACS), 'stixacs', 'stix', targetFileName=output1_object)
+        transform.transform(io.StringIO(STIXACS), 'stixacs', 'stix', target_file=output1_object)
         cls.output1 = etree.XML(output1_object.getvalue())
 
     def test_package_title(self):
@@ -205,12 +205,12 @@ class KeyValueToSTIXTLP(unittest.TestCase):
         transform = FlexTransform.FlexTransform()
 
         with open(os.path.join(current_dir, '../resources/sampleConfigurations/stix_tlp.cfg'), 'r') as input_file:
-            transform.AddParser('stix', input_file)
+            transform.add_parser('stix', input_file)
         with open(os.path.join(current_dir, '../resources/sampleConfigurations/keyvalue.cfg'), 'r') as input_file:
-            transform.AddParser('keyvalue', input_file)
+            transform.add_parser('keyvalue', input_file)
         output1_object = io.StringIO()
 
-        transform.TransformFile(io.StringIO(KEYVALUE), 'keyvalue', 'stix', targetFileName=output1_object)
+        transform.transform(io.StringIO(KEYVALUE), 'keyvalue', 'stix', target_file=output1_object)
         cls.output1 = etree.XML(output1_object.getvalue())
 
     def test_package_intent_type(self):
