@@ -1,19 +1,20 @@
-'''
+"""
 Created on Jun 17, 2015
 
 @author: ahoying
-'''
+"""
+
+import argparse
+import json
+import logging
+import os
+import sys
+import traceback
+
+import rdflib
 
 from FlexTransform import FlexTransform
 from FlexTransform.OntologyOracle import Oracle
-import logging
-import rdflib
-
-import argparse
-import os
-import sys
-import json
-import traceback
 
 
 # Configure logging to send INFO, DEGUB and TRACE messages to stdout and all other logs to stderr
@@ -138,8 +139,8 @@ def main():
 
         Transform = FlexTransform.FlexTransform(tracelist=tracelist)
 
-        Transform.AddParser('src', args.src_config, args.src, args.dst)
-        Transform.AddParser('dst', args.dst_config, args.src, args.dst)
+        Transform.add_parser('src', args.src_config)
+        Transform.add_parser('dst', args.dst_config)
 
         metadata = None
 
@@ -155,12 +156,12 @@ def main():
                 logging.warning(
                     "Ontology file specified, but no destination schema IRI is given.  Ontology will not be used.")
 
-        FinalizedData = Transform.TransformFile(
-            sourceFileName=args.src,
-            targetFileName=args.dst,
-            sourceParserName='src',
-            targetParserName='dst',
-            sourceMetaData=metadata,
+        FinalizedData = Transform.transform(
+            source_file=args.src,
+            target_file=args.dst,
+            source_parser_name='src',
+            target_parser_name='dst',
+            source_meta_data=metadata,
             oracle=kb)
         args.dst.close()
 
