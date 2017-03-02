@@ -222,8 +222,7 @@ class STIX(object):
                        'timestamp': ParsedData['DocumentHeaderData'].pop('timestamp'),
                        'stix_header': ParsedData['DocumentHeaderData'],
                        'indicators': ParsedData['IndicatorData']}
-            self.logging.debug("Writing stix package to XML:")
-            self.pprint.pprint(towrite)
+
             stix_package = STIXPackage.from_dict(towrite)
             stixfile.write(stix_package.to_xml())
             
