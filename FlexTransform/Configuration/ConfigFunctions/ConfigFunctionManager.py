@@ -1,15 +1,15 @@
-'''
-Created on Mar 13, 2015
+"""
+Created on Jun 13, 2016
 
-@author: ahoying
-'''
+@author: cstrastburg
+"""
 
-from collections import defaultdict
-import logging
 import inspect
-import pprint
+import logging
+from collections import defaultdict
 
 import FlexTransform.Configuration.ConfigFunctions
+
 
 class ConfigFunctionManager(object):
     '''
@@ -18,76 +18,69 @@ class ConfigFunctionManager(object):
 
     __KnownFunctions = defaultdict(dict)
 
-    def __init__(self, tracelist=[]):
-        '''
+    def __init__(self, trace_list=[]):
+        """
         Constructor
-        '''
+        :param trace_list: list of elements to trace
+        :return:
+        """
         self.logging = logging.getLogger('FlexTransform.Configuration.ConfigFunctions.ConfigFunctionManager')
         
         self._FunctionClasses = {}
-        self.pprint = pprint.PrettyPrinter()
-        self.tracelist = tracelist
-        self.traceindex = {}
-        for x in self.tracelist:
+        self.trace_list = trace_list
+        self.trace_index = {}
+        for x in self.trace_list:
             for v in x["src_fields"]:
-                self.traceindex[v] = x
+                self.trace_index[v] = x
             for y in x["dst_fields"]:
-                self.traceindex[y] = x
+                self.trace_index[y] = x
             for w in x["src_IRIs"]:
-                self.traceindex[w] = x
+                self.trace_index[w] = x
             for z in x["dst_IRIs"]:
-                self.traceindex[z] = x
+                self.trace_index[z] = x
 
-        self.logging.debug("Initialized ConfigFunctionManager with tracelist of {} elements".format(len(tracelist)))
+        self.logging.debug("Initialized ConfigFunctionManager with trace_list of {} elements".format(len(trace_list)))
                 
     @classmethod
-    def RegisterFunction(cls, FunctionName, RequiredArgs, FunctionClass):
-        '''
-        '''
-        cls.__KnownFunctions[FunctionName] = {
-                                                     'class': FunctionClass,
-                                                     'RequiredArgs': RequiredArgs
-                                                    }
+    def register_function(cls, function_name, required_args, function_class):
+        cls.__KnownFunctions[function_name] = {
+            'class': function_class,
+            'RequiredArgs': required_args
+        }
         
     @classmethod
-    def GetFunctionClass(cls, FunctionName):
-        '''
-        '''
-        if (FunctionName in cls.__KnownFunctions) :
-            ClassName = cls.__KnownFunctions[FunctionName]['class']
-        else :
-            raise Exception('FunctionNotRegistered', "The function %s is not registered with the ConfigFunctionManager" % (FunctionName))
+    def get_function_class(cls, function_name):
+        if function_name in cls.__KnownFunctions:
+            class_name = cls.__KnownFunctions[function_name]['class']
+        else:
+            raise Exception('FunctionNotRegistered',
+                            "The function %s is not registered with the ConfigFunctionManager" % function_name)
         
-        for name, obj in inspect.getmembers(FlexTransform.Configuration.ConfigFunctions, inspect.isclass) :
-            if (name == ClassName) :
-                return obj();
+        for name, obj in inspect.getmembers(FlexTransform.Configuration.ConfigFunctions, inspect.isclass):
+            if name == class_name:
+                return obj()
             
-        raise Exception('FunctionClassNotFound', "The Class %s for function %s was not found by the ConfigFunctionManager" % (ClassName, FunctionName))
+        raise Exception('FunctionClassNotFound',
+                        "The Class %s for function %s was not found by the ConfigFunctionManager" % (class_name, function_name))
        
-    def GetFunction(self, FunctionName):
-        '''
-        '''
-        if FunctionName in self.__KnownFunctions:
+    def get_function(self, function_name):
+        if function_name in self.__KnownFunctions:
             return True
-        else :
+        else:
             return False
 
-    def ExecuteConfigFunction(self, FunctionName, args):
-        '''
-        '''
-        
-        FunctionClass = None
-        if (FunctionName in self._FunctionClasses) :
-            FunctionClass = self._FunctionClasses[FunctionName]
-        else :
-            FunctionClass = ConfigFunctionManager.GetFunctionClass(FunctionName)
-            self._FunctionClasses[FunctionName] = FunctionClass
+    def execute_config_function(self, function_name, args):
+        if function_name in self._FunctionClasses:
+            function_class = self._FunctionClasses[function_name]
+        else:
+            function_class = ConfigFunctionManager.get_function_class(function_name)
+            self._FunctionClasses[function_name] = function_class
             
-        self._ValidateArgs(FunctionName, args)
-        return FunctionClass.Execute(FunctionName, args)
+        self._validate_args(function_name, args)
+        return function_class.Execute(function_name, args)
     
-    def _ValidateArgs(self, FunctionName, args):
-        '''
+    def _validate_args(self, function_name, args):
+        """
         Allowed fields for the Args dictionary:
         
         functionArg     - Optional - Any arguments passed to the function when it is called from SchemaParser. 
@@ -99,21 +92,22 @@ class ConfigFunctionManager(object):
 
         fieldDict       - Optional - The dictionary associated with this field
     
-        '''
-        AllowedFields = set(['functionArg', 'fileName', 'fieldName', 'fieldDict'])
+        """
+        allowed_fields = set(['functionArg', 'fileName', 'fieldName', 'fieldDict'])
         RequiredFields = set([])
         
-        if (isinstance(args, dict)) :
-            for arg in args :
-                if (arg not in AllowedFields) :
-                    self.logging.warning('A argument passed to function %s is not allowed: %s' % (FunctionName, arg))
+        if isinstance(args, dict):
+            for arg in args:
+                if arg not in allowed_fields:
+                    self.logging.warning('A argument passed to function %s is not allowed: %s' % (function_name, arg))
         else :
-            raise Exception('InvalidArgs','The arguments passed to function %s are not defined or not in dictionary format' % FunctionName)
-                    
+            raise Exception('InvalidArgs',
+                            'The arguments passed to function %s are not defined or not in dictionary format' % function_name)
+
+        if self.__KnownFunctions[function_name]['RequiredArgs'] is not None:
+            RequiredFields.update(self.__KnownFunctions[function_name]['RequiredArgs'])
         
-        if (self.__KnownFunctions[FunctionName]['RequiredArgs'] is not None) :
-            RequiredFields.update(self.__KnownFunctions[FunctionName]['RequiredArgs'])
-        
-        for arg in RequiredFields :
-            if (arg not in args or args[arg] is None) :
-                raise Exception('InvalidArgs', 'Function %s args did not include the required %s field, could not process' % (FunctionName, arg))
+        for arg in RequiredFields:
+            if arg not in args or args[arg] is None:
+                raise Exception('InvalidArgs',
+                                'Function %s args did not include the required %s field, could not process' % (function_name, arg))

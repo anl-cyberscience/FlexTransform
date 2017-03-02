@@ -1,16 +1,16 @@
-'''
-Created on Mar 13, 2015
+"""
+Created on Jun 13, 2015
 
-@author: ahoying
-'''
+@author: cstrasburg
+"""
 
-import pytz
-import time
 import datetime
 import logging
-import uuid
 import os.path
 import re
+import time
+
+import pytz
 
 from FlexTransform.Configuration.ConfigFunctions import ConfigFunctionManager
 
@@ -48,15 +48,11 @@ class GlobalFunctions(object):
         self.logging = logging.getLogger('FlexTransform.Configuration.ConfigFunctions.GlobalFunctions')
         
     @classmethod
-    def RegisterFunctions(cls):
+    def register_functions(cls):
         for FunctionName, RequiredArgs in cls.__FunctionNames.items():
-            ConfigFunctionManager.RegisterFunction(FunctionName, RequiredArgs, 'GlobalFunctions')
+            ConfigFunctionManager.register_function(FunctionName, RequiredArgs, 'GlobalFunctions')
         
     def Execute(self, function_name, args):
-        """
-        Execute the specific called function with the supplied args
-        """
-        
         value = None
          
         if function_name not in self.__FunctionNames:
@@ -68,14 +64,13 @@ class GlobalFunctions(object):
                 try: 
                     rawctime = os.path.getctime(args['fileName'])
                     ''' Convert to given time format '''
-                    if 'fieldDict' in args and \
-                        'dateTimeFormat' in args['fieldDict'] and \
+                    if 'fieldDict' in args and 'dateTimeFormat' in args['fieldDict'] and \
                         args['fieldDict']['dateTimeFormat'] == 'unixtime':
                         value = '%i' % time.mktime(datetime.datetime.utcfromtimestamp(rawctime).timetuple())
                     else:
                         value = datetime.datetime.fromtimestamp(rawctime, tz=pytz.utc).strftime(args['fieldDict']['dateTimeFormat'])
                 except OSError as e:
-                    self.logging.warn("Could not get file ctime for {}: {}".format(fileName, e))
+                    self.logging.warn("Could not get file ctime for {}: {}".format(args['fileName'], e))
 
         elif function_name == 'getFileUUID':
             if 'fileName' in args:
