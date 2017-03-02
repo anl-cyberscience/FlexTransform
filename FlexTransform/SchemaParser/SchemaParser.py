@@ -5,19 +5,17 @@ Created on Oct 13, 2014
 '''
 
 import collections
+import copy
 import datetime
 import logging
+import pprint
 import re
 import socket
-import pprint
-import sys
-import traceback
+import time
+from builtins import str
 
 import pytz
-import time
-# import dumper
-import copy
-from builtins import str
+
 from FlexTransform.SchemaParser.TransformFunctions import TransformFunctionManager
 
 
@@ -58,7 +56,7 @@ class SchemaParser(object):
             for z in x["dst_IRIs"]:
                 self.traceindex[z] = x
         if len(self.traceindex) > 0:
-            self.logging.debug("[TRACE __init__] - Monitoring {} elements".format(len(self.traceindex.keys()))) 
+            self.logging.debug("[TRACE __init__] - Monitoring {} elements".format(len(self.traceindex.keys())))
             self.pprint.pprint(self.traceindex.keys())
 
         self.SchemaConfig = config
@@ -1612,13 +1610,13 @@ class SchemaParser(object):
                         except Exception as inst:
                             self.logging.info("Validation failed for %s, %s", field, inst)
                             newDict.pop(field)
-            self._PopulateImpliedOntologyValues(DataDictionary)
+            self._populate_implied_ontology_values(DataDictionary)
 
         if (len(GroupRows) != 0):
             self.logging.error("A group has subrow data that was never processed: %s", GroupRows)
 
         # Populate implied ontology values:
-        self._PopulateImpliedOntologyValues(DataDictionary)
+        self._populate_implied_ontology_values(DataDictionary)
 
         return newDict
 
@@ -2435,7 +2433,7 @@ class SchemaParser(object):
 
         return DataDictionary
 
-    def _PopulateImpliedOntologyValues(self, DataMapping):
+    def _populate_implied_ontology_values(self, DataMapping):
         '''
         Given a dictionary keyed on ontology concepts, will also include concepts which are implied (according to the
         ontology) but not explicitly defined in the source document. For example, mapping TLP:AMBER to the set of restrictions
@@ -2450,53 +2448,55 @@ class SchemaParser(object):
         }
         '''
         # TODO: Move this to the ontology:
-        ImplicationMap = { 'http://www.anl.gov/cfm/transform.owl#HeaderTLPWhiteSemanticConcept':
-                            [
-                                "http://www.anl.gov/cfm/transform.owl#PublicCFM13SharingRestrictionSemanticConcept",
-                                "http://www.anl.gov/cfm/transform.owl#DocumentDefaultSharingPermitSemanticConcept",
-                                "http://www.anl.gov/cfm/transform.owl#AccessPrivilegeAnonymousAccessSemanticConcept",
-                                "http://www.anl.gov/cfm/transform.owl#AccessPrivilegeScopeALLSemanticConcept",
-                                "http://www.anl.gov/cfm/transform.owl#AccessPrivilegeAllowSemanticConcept"
-                            ],
-                        'http://www.anl.gov/cfm/transform.owl#HeaderTLPGreenSemanticConcept':
-                            [
-                                "http://www.anl.gov/cfm/transform.owl#NeedToKnowCFM13SharingRestrictionSemanticConcept",
-                                "http://www.anl.gov/cfm/transform.owl#DocumentDefaultSharingDenySemanticConcept",
-                                "http://www.anl.gov/cfm/transform.owl#AccessPrivilegeAnonymousAccessSemanticConcept",
-                                "http://www.anl.gov/cfm/transform.owl#AccessPrivilegeScopeALLSemanticConcept",
-                                "http://www.anl.gov/cfm/transform.owl#AccessPrivilegeDenySemanticConcept"
-                            ],
-                        'http://www.anl.gov/cfm/transform.owl#HeaderTLPAmberSemanticConcept':
-                            [
-                                "http://www.anl.gov/cfm/transform.owl#PrivateCFM13SharingRestrictionSemanticConcept",
-                                "http://www.anl.gov/cfm/transform.owl#DocumentDefaultSharingDenySemanticConcept",
-                                "http://www.anl.gov/cfm/transform.owl#AccessPrivilegeAnonymousAccessSemanticConcept",
-                                "http://www.anl.gov/cfm/transform.owl#AccessPrivilegeScopeALLSemanticConcept",
-                                "http://www.anl.gov/cfm/transform.owl#AccessPrivilegeDenySemanticConcept"
-                            ],
-                        'http://www.anl.gov/cfm/transform.owl#HeaderTLPRedSemanticConcept':
-                            [
-                                "http://www.anl.gov/cfm/transform.owl#PrivateCFM13SharingRestrictionSemanticConcept",
-                                "http://www.anl.gov/cfm/transform.owl#DocumentDefaultSharingDenySemanticConcept",
-                                "http://www.anl.gov/cfm/transform.owl#AccessPrivilegeAnonymousAccessSemanticConcept",
-                                "http://www.anl.gov/cfm/transform.owl#AccessPrivilegeScopeALLSemanticConcept",
-                                "http://www.anl.gov/cfm/transform.owl#AccessPrivilegeDenySemanticConcept"
-                            ],
-                          'http://www.anl.gov/cfm/transform.owl#ReconNotAllowedSemanticConcept':
-                            [
-                                "http://www.anl.gov/cfm/transform.owl#DocumentDefaultPrivilegeDenySemanticConcept"
-                            ],
-                          'http://www.anl.gov/cfm/transform.owl#ReconAllowedSemanticConcept':
-                            [
-                                "http://www.anl.gov/cfm/transform.owl#DocumentDefaultPrivilegePermitSemanticConcept"
-                            ]
-                        }
+        implication_map = {
+            'http://www.anl.gov/cfm/transform.owl#HeaderTLPWhiteSemanticConcept':
+                [
+                    "http://www.anl.gov/cfm/transform.owl#PublicCFM13SharingRestrictionSemanticConcept",
+                    "http://www.anl.gov/cfm/transform.owl#DocumentDefaultSharingPermitSemanticConcept",
+                    "http://www.anl.gov/cfm/transform.owl#AccessPrivilegeAnonymousAccessSemanticConcept",
+                    "http://www.anl.gov/cfm/transform.owl#AccessPrivilegeScopeALLSemanticConcept",
+                    "http://www.anl.gov/cfm/transform.owl#AccessPrivilegeAllowSemanticConcept"
+                ],
+            'http://www.anl.gov/cfm/transform.owl#HeaderTLPGreenSemanticConcept':
+                [
+                    "http://www.anl.gov/cfm/transform.owl#NeedToKnowCFM13SharingRestrictionSemanticConcept",
+                    "http://www.anl.gov/cfm/transform.owl#DocumentDefaultSharingDenySemanticConcept",
+                    "http://www.anl.gov/cfm/transform.owl#AccessPrivilegeAnonymousAccessSemanticConcept",
+                    "http://www.anl.gov/cfm/transform.owl#AccessPrivilegeScopeALLSemanticConcept",
+                    "http://www.anl.gov/cfm/transform.owl#AccessPrivilegeDenySemanticConcept"
+                ],
+            'http://www.anl.gov/cfm/transform.owl#HeaderTLPAmberSemanticConcept':
+                [
+                    "http://www.anl.gov/cfm/transform.owl#PrivateCFM13SharingRestrictionSemanticConcept",
+                    "http://www.anl.gov/cfm/transform.owl#DocumentDefaultSharingDenySemanticConcept",
+                    "http://www.anl.gov/cfm/transform.owl#AccessPrivilegeAnonymousAccessSemanticConcept",
+                    "http://www.anl.gov/cfm/transform.owl#AccessPrivilegeScopeALLSemanticConcept",
+                    "http://www.anl.gov/cfm/transform.owl#AccessPrivilegeDenySemanticConcept"
+                ],
+            'http://www.anl.gov/cfm/transform.owl#HeaderTLPRedSemanticConcept':
+                [
+                    "http://www.anl.gov/cfm/transform.owl#PrivateCFM13SharingRestrictionSemanticConcept",
+                    "http://www.anl.gov/cfm/transform.owl#DocumentDefaultSharingDenySemanticConcept",
+                    "http://www.anl.gov/cfm/transform.owl#AccessPrivilegeAnonymousAccessSemanticConcept",
+                    "http://www.anl.gov/cfm/transform.owl#AccessPrivilegeScopeALLSemanticConcept",
+                    "http://www.anl.gov/cfm/transform.owl#AccessPrivilegeDenySemanticConcept"
+                ],
+            'http://www.anl.gov/cfm/transform.owl#ReconNotAllowedSemanticConcept':
+                [
+                    "http://www.anl.gov/cfm/transform.owl#DocumentDefaultPrivilegeDenySemanticConcept"
+                ],
+            'http://www.anl.gov/cfm/transform.owl#ReconAllowedSemanticConcept':
+                [
+                    "http://www.anl.gov/cfm/transform.owl#DocumentDefaultPrivilegePermitSemanticConcept"
+                ]
+            }
 
-        for concept in ImplicationMap:
+        for concept in implication_map:
             if concept in DataMapping:
-                for impliedConcept in ImplicationMap[concept]:
+                for impliedConcept in implication_map[concept]:
                     if impliedConcept not in DataMapping:
-                        self.logging.info("Adding implied concept: {} (from source concept {})".format(impliedConcept, concept))
+                        self.logging.info("Adding implied concept: {} (from source concept {})".format(impliedConcept,
+                                                                                                       concept))
                         DataMapping[impliedConcept] = DataMapping[concept]
 
     def _BuildOutputFormatText(self, fieldDict, newDict):
@@ -2568,7 +2568,7 @@ class SchemaParser(object):
                 function = match.group(1)
                 functionarg = match.group(2)
 
-                FunctionScopeValid = self.FunctionManager.GetFunctionScope(rowType, function)
+                FunctionScopeValid = self.FunctionManager.get_function_scope(rowType, function)
 
                 if fieldName in self.traceindex:
                     self.logging.debug("[TRACE {}]: Extracted function name {}, args {} with scope validity {}".format(
@@ -2585,7 +2585,7 @@ class SchemaParser(object):
                         'transformedData': TransformedData
                     }
 
-                    value = self.FunctionManager.ExecuteTransformFunction(rowType, function, args)
+                    value = self.FunctionManager.execute_transform_function(rowType, function, args)
 
                 else:
                     self.logging.warning('Function %s in field %s is not valid for current document scope %s', function,
