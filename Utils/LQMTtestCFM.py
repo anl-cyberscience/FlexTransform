@@ -25,17 +25,17 @@ if __name__ == '__main__':
     
     TestDir = os.path.join(currentdir, 'resources/sampleMessages/cfm13Uploads/WithMetadata')
     
-    Transform = FlexTransform()
+    Transform = FlexTransform.FlexTransform()
     Cfm13AlertConfig = open(os.path.join(currentdir,'resources/sampleConfigurations/cfm13.cfg'), 'r')
-    Transform.AddParser('Cfm13Alert', Cfm13AlertConfig)
+    Transform.add_parser('Cfm13Alert', Cfm13AlertConfig)
     
     LQMToolsConfig = open(os.path.join(currentdir,'resources/sampleConfigurations/lqmtools.cfg'), 'r')
-    Transform.AddParser('LQMTools', LQMToolsConfig)
+    Transform.add_parser('LQMTools', LQMToolsConfig)
     
     TransformedData = []
     
-    for file in os.listdir(TestDir) :
-        if (file.startswith('.')) :
+    for file in os.listdir(TestDir):
+        if file.startswith('.'):
             f = open(os.path.join(TestDir, file), 'r')
             metadata = json.load(f)
             f.close()
@@ -48,12 +48,12 @@ if __name__ == '__main__':
             pr.enable()
             '''
             
-            try :
-                Data = Transform.TransformFile(sourceFileName=sourceFile, sourceParserName=metadata['PayloadFormat'], targetParserName='LQMTools', sourceMetaData=metadata)
+            try:
+                Data = Transform.transform(source_file=sourceFile, source_parser_name=metadata['PayloadFormat'], target_parser_name='LQMTools', source_meta_data=metadata)
             except Exception as inst :
                 logging.exception(inst)
-            else :
-                if (Data) :
+            else:
+                if Data:
                     TransformedData.extend(Data)
 
             '''

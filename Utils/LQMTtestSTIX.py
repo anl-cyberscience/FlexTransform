@@ -18,10 +18,10 @@ if __name__ == '__main__':
     
     Transform = FlexTransform()
     StixConfig = open(os.path.join(currentdir,'resources/sampleConfigurations/stix_ciscp.cfg'), 'r')
-    Transform.AddParser('STIX', StixConfig)
+    Transform.add_parser('STIX', StixConfig)
     
     LQMToolsConfig = open(os.path.join(currentdir,'resources/sampleConfigurations/lqmtools.cfg'), 'r')
-    Transform.AddParser('LQMTools', LQMToolsConfig)
+    Transform.add_parser('LQMTools', LQMToolsConfig)
     
     TransformedData = []
     
@@ -32,7 +32,7 @@ if __name__ == '__main__':
             logging.info(sourceFile)
             
             try :
-                Data = Transform.TransformFile(sourceFileName=sourceFile, sourceParserName='STIX', targetParserName='LQMTools')
+                Data = Transform.transform(source_file=sourceFile, source_parser_name='STIX', target_parser_name='LQMTools')
             except Exception as inst :
                 logging.exception(inst)
             else :
