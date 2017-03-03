@@ -139,11 +139,11 @@ class Config(object):
         # TODO: Validate that the syntax and schema is read only, write only or read/write and throw an error if necessary
 
     def calculate_derived_data(self, source_file=None, dest_file=None):
-        if source_file is not None:
+        if hasattr(source_file, "name") and source_file is not None:
             source_file_name = source_file.name
         else:
             source_file_name = None
-        if dest_file is not None:
+        if hasattr(dest_file, "name") and dest_file is not None:
             dest_file_name = dest_file.name
         else:
             dest_file_name = None
