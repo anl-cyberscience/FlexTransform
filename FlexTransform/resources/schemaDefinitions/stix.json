@@ -14,7 +14,7 @@
 				"description": "Title of the STIX document",
 				"valuemap": "title",
 				"datatype": "string",
-				"defaultValue": "NoValue",
+				"defaultValue": "FlexT Converted Alert File",
 				"required": false,
 				"ontologyMappingType": "simple",
 				"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#ReportTitleSemanticComponent"
