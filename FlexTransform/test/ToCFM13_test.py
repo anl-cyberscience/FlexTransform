@@ -78,7 +78,7 @@ class TestSTIXTLPToCFM13Alert(unittest.TestCase):
         self.assertEqual(set(self.output1.xpath("//xmlns:AdditionalData[@meaning='OUO']/text()", namespaces=self.namespace)), set(['0']))
 
     def test_alert_AD_restriction(self):
-        self.assertEqual(set(self.output1.xpath("//xmlns:AdditionalData[@meaning='restriction']/text()", namespaces=self.namespace)),set(['public']))
+        self.assertEqual(set(self.output1.xpath("//xmlns:AdditionalData[@meaning='restriction']/text()", namespaces=self.namespace)), set(['private']))
 
     def test_alert_AD_duration(self):
         self.assertEqual(set(self.output1.xpath("//xmlns:AdditionalData[@meaning='duration']/text()", namespaces=self.namespace)), set(['0']))
@@ -165,7 +165,7 @@ class TestSTIXACSToCFM13Alert(unittest.TestCase):
         self.assertEqual(set(self.output1.xpath("//xmlns:AdditionalData[@meaning='OUO']/text()", namespaces=self.namespace)), set(['0']))
 
     def test_alert_AD_restriction(self):
-        self.assertEqual(set(self.output1.xpath("//xmlns:AdditionalData[@meaning='restriction']/text()", namespaces=self.namespace)),set(['public']))
+        self.assertEqual(set(self.output1.xpath("//xmlns:AdditionalData[@meaning='restriction']/text()", namespaces=self.namespace)),set(['private']))
 
     def test_alert_AD_duration(self):
         self.assertEqual(set(self.output1.xpath("//xmlns:AdditionalData[@meaning='duration']/text()", namespaces=self.namespace)), set(['0']))

@@ -1,10 +1,13 @@
 import io
 import os
+import tempfile
 import unittest
+
 from lxml import etree
 
-from FlexTransform.test.SampleInputs import CFM13ALERT, STIXACS,KEYVALUE
 from FlexTransform import FlexTransform
+from FlexTransform.test.SampleInputs import CFM13ALERT, CFM13ALERTUUID, STIXACS, KEYVALUE
+
 
 class TestCFM13AlertToSTIXTLP(unittest.TestCase):
     output1 = None
@@ -20,6 +23,7 @@ class TestCFM13AlertToSTIXTLP(unittest.TestCase):
         'xsi': "http://www.w3.org/2001/XMLSchema-instance",
         'ArtifactObj': "http://cybox.mitre.org/objects#ArtifactObject-2"
     }
+
     @classmethod
     def setUpClass(cls):
         current_dir = os.path.dirname(__file__)
@@ -31,7 +35,11 @@ class TestCFM13AlertToSTIXTLP(unittest.TestCase):
             transform.add_parser('stix', input_file)
         output1_object = io.StringIO()
 
-        transform.transform(io.StringIO(CFM13ALERT), 'cfm13alert', 'stix', target_file=output1_object)
+        with tempfile.NamedTemporaryFile(mode="w+", prefix=CFM13ALERTUUID) as input_file:
+            input_file.write(CFM13ALERT)
+            input_file.seek(0)
+            transform.transform(input_file, 'cfm13alert', 'stix', target_file=output1_object)
+
         cls.output1 = etree.XML(output1_object.getvalue())
 
     def test_package_intent_type(self):
@@ -90,6 +98,7 @@ class TestCFM13AlertToSTIXTLP(unittest.TestCase):
 
     def test_indicator_properties_related_objects_properties_port_protocol_text(self):
         self.assertEqual(self.output1.xpath("/stix:STIX_Package/stix:Indicators/stix:Indicator/indicator:Observable/cybox:Object/cybox:Related_Objects/cybox:Related_Object/cybox:Properties/PortObj:Layer4_Protocol/text()", namespaces=self.namespace)[0], "TCP")
+
 
 class STIXACSToSTIXTLP(unittest.TestCase):
     output1 = None

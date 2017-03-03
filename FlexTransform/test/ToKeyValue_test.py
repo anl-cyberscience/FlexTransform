@@ -1,9 +1,10 @@
 import io
 import os
+import tempfile
 import unittest
 
-from FlexTransform.test.SampleInputs import STIXTLP, STIXACS, CFM13ALERT
 from FlexTransform import FlexTransform
+from FlexTransform.test.SampleInputs import STIXTLP, STIXACS, CFM13ALERT, CFM13ALERTUUID
 
 
 class TestCFM13AlertToKeyValue(unittest.TestCase):
@@ -20,7 +21,10 @@ class TestCFM13AlertToKeyValue(unittest.TestCase):
             transform.add_parser('keyvalue', input_file)
         output1_object = io.StringIO()
 
-        transform.transform(io.StringIO(CFM13ALERT), 'cfm13alert', 'keyvalue', target_file=output1_object)
+        with tempfile.NamedTemporaryFile(mode="w+", prefix=CFM13ALERTUUID) as input_file:
+            input_file.write(CFM13ALERT)
+            input_file.seek(0)
+            transform.transform(input_file, 'cfm13alert', 'keyvalue', target_file=output1_object)
         cls.output1 = []
         output1_object.seek(0)
         for line in output1_object.read().splitlines():
@@ -64,6 +68,7 @@ class TestCFM13AlertToKeyValue(unittest.TestCase):
 
     def test_combined_comment(self):
         self.assertIn("combined_comment='SSH scans against multiple hosts, direction:ingress, confidence:87, severity:high'", self.output1[0])
+
 
 class TestSTIXTLPToKeyValue(unittest.TestCase):
     output1 = None
@@ -112,6 +117,7 @@ class TestSTIXTLPToKeyValue(unittest.TestCase):
 
     def test_combined_comment(self):
         self.assertIs(5, self.output1.count("combined_comment='CRISP Report Indicator'"))
+
 
 class TestSTIXACSToKeyValue(unittest.TestCase):
     output1 = None
