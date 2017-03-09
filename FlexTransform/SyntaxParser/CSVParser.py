@@ -44,7 +44,8 @@ class CSVParser(Parser):
         if (config.has_section('CSV')) :
             if (config.has_option('CSV', 'Fields')) :
                 FieldsList = config['CSV']['Fields']
-                self.Fields = FieldsList.split(',')
+                for field in FieldsList.split(','):
+                    self.Fields.append(field.strip())
             else :
                 raise Exception("ConfigError", "CSV Configuration does not include the required Fields key")
             

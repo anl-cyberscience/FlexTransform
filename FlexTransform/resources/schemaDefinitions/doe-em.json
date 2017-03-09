@@ -1,0 +1,76 @@
+{
+	"IndicatorData": {
+		"types": {
+			"IPv4-Address-Block": [ {"indicatorType": "IPv4 Address"} ],
+			"IPv6-Address-Block": [ {"indicatorType": "IPv6 Address"} ],
+			"DNS-Hostname-Block": [ {"indicatorType": "DNSHostName"}, {"indicatorType": "Domain"} , {"indicatorType": "DNSDomainName"} ],
+			"URL-Block": [ {"indicatorType": "URL"}, {"indicatorType": "URI"} ],
+			"Malicious-File-Hash": [ {"indicatorType": "FileMD5Hash"}, {"indicatorType": "FileSHA1Hash"}]
+		},
+		"fields": {
+			"indicator": {
+				"description": "The value to be acted upon (e.g. ip, domain name, URL)",
+				"datatype": "string",
+				"required": true,
+				"ontologyMappingType": "simple",
+				"ontologyMapping": ""
+			},
+			"indicatorType": {
+				"description": "A type name that informs how to interpret the indicator (e.g. ipv4, emailAddress) (enum)",
+				"datatype": "enum",
+				"dependsOn": "indicator",
+				"mapOntologyToElement": "indicator",
+				"required": false,
+				"ontologyMappingType": "enum",
+				"enumValues": {
+					"IPv6 Address": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#IPv6AddressIndicatorValueSemanticComponent"
+					},
+					"IPv4 Address": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#IPv4AddressIndicatorValueSemanticComponent"
+					},
+					"URL": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#URLIndicatorValueSemanticComponent"
+					},
+					"URI": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#URLIndicatorValueSemanticComponent"
+					},
+					"DNSDomainName": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#DNSIndicatorValueSemanticComponent"
+					},
+					"Domain": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#DNSIndicatorValueSemanticComponent"
+					},
+					"DNSHostName": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#DNSIndicatorValueSemanticComponent"
+					},
+					"FileMD5Hash": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#MD5FilehashIndicatorValueSemanticComponent"
+					},
+					"FileSHA1Hash": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#SHA1FilehashIndicatorValueSemanticComponent"
+					}
+				}
+			},
+			"reason": {
+				"description": "Description associated with indicator",
+				"datatype": "string",
+				"required": false,
+				"defaultValue": "noValue",
+				"ontologyMappingType": "simple",
+				"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#IndicatorDescriptionSemanticConcept"
+			},
+			"detectedTime": {
+				"description": "Time the report was generated",
+				"datatype": "datetime",
+				"dateTimeFormat": " YYYY-MM-DD HH:mm:ss",
+				"dateTimeFormatAlternate": ["YYYY-MM-DDTHH:mm:ss","YYYY-MM-DDTHH:mm:ssZ", "YYYY-MM-DD"],
+				"dateTimezoneDefault": "US/Pacific",
+				"required": false,
+				"defaultValue": "&now()",
+				"ontologyMappingType": "simple",
+				"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#IndicatorGeneratedTimeSemanticConcept"
+			}
+		}
+	}
+}

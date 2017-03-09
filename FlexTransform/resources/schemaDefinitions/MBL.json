@@ -1,0 +1,199 @@
+{
+	"IndicatorData": {
+		"types": {
+			"IPv4-Address-Block": [ { "ipv4": "*", "ipv6": "" } ],
+			"IPv6-Address-Block": [ { "ipv6": "*", "ipv4": "" } ],
+			"DNS-Hostname-Block": [ { "fqdn": "*", "ipv4": "", "ipv6": "" } ],
+            "Malicious-Email-Block": [ { "envelopeaddress": "*", "ipv4": "", "ipv6": "", "fqdn": "*" } ]
+		},
+		"fields": {
+			"site": {
+				"description": "The short name for the indicator originator",
+				"datatype": "string",
+                "defaultValue": "FP-MBLrelay",
+				"required": true,
+				"ontologyMappingType": "simple",
+				"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#SiteAbbreviationSemanticConcept"
+			},
+			"ipv4": {
+				"description": "IPv4 address of indicator",
+				"datatype": "ipv4",
+				"required": false,
+				"ontologyMappingType": "simple",
+				"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#IPv4AddressIndicatorValueSemanticComponent"
+			},
+			"ipv6": {
+				"description": "IPv6 address of indicator",
+				"datatype": "ipv6",
+				"required": false,
+				"ontologyMappingType": "simple",
+				"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#IPv6AddressIndicatorValueSemanticComponent"
+			},
+			"fqdn": {
+				"description": "Fully qualified domain name of indicator",
+				"datatype": "string",
+				"required": false,
+				"ontologyMappingType": "simple",
+				"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#DNSIndicatorValueSemanticComponent"
+			},
+			"envelopeaddress": {
+				"description": "email address",
+				"datatype": "string",
+				"required": false,
+				"ontologyMappingType": "simple",
+				"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#EmailAddressIndicatorValueSemanticComponent"
+			},
+			"direction": {
+				"description": "Direction of traffic flow",
+				"datatype": "enum",
+				"required": false,
+				"defaultValue" : "unknown",
+				"ontologyMappingType": "enum",
+				"enumValues": {
+					"ingress": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#IngressDirectionSemanticConcept#"
+					},
+					"egress": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#EgressDirectionSemanticConcept"
+					},
+					"bidirectional": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#BidirectionalDirectionSemanticConcept"
+					},
+					"unknown": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#UnknownDirectionSemanticConcept"
+					}
+				}
+			},
+			"comment": {
+				"description": "Description of indicator",
+				"datatype": "string",
+				"required": false,
+				"defaultValue": "No Comment",
+				"ontologyMappingType": "simple",
+				"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#IndicatorDescriptionSemanticConcept"
+			},
+			"confidence": {
+				"description": "Confidence that the indicator is not a false positive",
+				"datatype": "int",
+				"dataRange": "0-100",
+				"required": false,
+				"defaultValue": "0",
+				"ontologyMappingType": "simple",
+				"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#IndicatorConfidenceSemanticConcept"
+			},
+			"severity": {
+				"description": "Severity of impact if detected indicator had been successful",
+				"datatype": "enum",
+				"required": false,
+				"defaultValue": "unknown",
+				"ontologyMappingType": "enum",
+				"enumValues": {
+					"informational": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#InformationalSeveritySemanticConcept"
+					},
+					"low": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#LowSeveritySemanticConcept"
+					},
+					"medium": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#MediumSeveritySemanticConcept"
+					},
+					"high": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#HighSeveritySemanticConcept"
+					},
+					"critical": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#CriticalSeveritySemanticConcept"
+					},
+					"unknown": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#UnknownSeveritySemanticConcept"
+					}
+				}
+			},
+			"sizeOnDisk": {
+				"description": "Size of indicator file",
+				"datatype": "string",
+				"required": false,
+				"defaultValue": "block",
+				"discardBeforeTranslation": true,
+				"ontologyMappingType": "simple",
+				"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#FilesizeByteValueSemanticConcept"
+			},
+			"sourcetype": {
+				"description": "Severity of impact if detected indicator had been successful",
+				"datatype": "string",
+				"required": true,
+				"defaultValue": "block",
+				"discardBeforeTranslation": true,
+				"ontologyMappingType": "enum",
+				"enumValue": {
+                    "block": {
+                        "ontologyMapping": "",
+                        "reverseOntologyMappings": [
+							"http://www.anl.gov/cfm/transform.owl#DNSIndicatorValueSemanticComponent",
+                            "http://www.anl.gov/cfm/transform.owl#IPv4AddressIndicatorValueSemanticComponent",
+                            "http://www.anl.gov/cfm/transform.owl#IPv6AddressIndicatorValueSemanticComponent"
+						]
+                    },
+                    "spearphish": {
+                        "ontologyMapping": "",
+                        "reverseOntologyMappings": [
+                            "http://www.anl.gov/cfm/transform.owl#EmailAddressIndicatorValueSemanticComponent",
+                            "http://www.anl.gov/cfm/transform.owl#EmailSubjectValueSemanticComponent"
+                        ]
+                    }
+                }
+			},
+			"subject": {
+				"description": "Severity of impact if detected indicator had been successful",
+				"datatype": "string",
+				"required": false,
+				"ontologyMappingType": "simple",
+				"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#EmailSubjectValueSemanticComponent"
+			},
+			"category": {
+				"description": "The category for the alert",
+				"datatype": "enum",
+				"required": true,
+				"defaultValue": "Unspecified",
+				"ontologyMappingType": "enum",
+				"enumValues": {
+					"DoS": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#DOSAlertBehaviorCharacterizationSemanticComponent"
+					},
+					"Scanning": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#ScanningAlertBehaviorCharacterizationSemanticComponent"
+					},
+					"Reconnaissance": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#ReconnaissanceAlertBehaviorCharacterizationSemanticComponent"
+					},
+					"Botnet": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#BotnetAlertBehaviorCharacterizationSemanticComponent"
+					},
+					"Malware Traffic": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#MalwareTrafficAlertBehaviorCharacterizationSemanticComponent"
+					},
+					"Exploit": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#ExploitAlertBehaviorCharacterizationSemanticComponent"
+					},
+					"Spam": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#SpamAlertBehaviorCharacterizationSemanticComponent"
+					},
+					"Phishing": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#PhishingAlertBehaviorCharacterizationSemanticComponent"
+					},
+					"Unauthorized Use": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#UnauthorizedUseAlertBehaviorCharacterizationSemanticComponent"
+					},
+					"Known Bad Actor": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#KnownBadActorAlertBehaviorCharacterizationSemanticComponent"
+					},
+					"Revocation": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#RevocationAlertBehaviorCharacterizationSemanticComponent"
+					},
+					"Unspecified": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#UnspecifiedAlertBehaviorCharacterizationSemanticComponent"
+					}
+				}
+			}
+		}
+	}
+}

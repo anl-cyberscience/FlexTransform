@@ -67,9 +67,6 @@ class CFM13Alert1ToSTIXACS(unittest.TestCase):
     def test_indicator_properties_category(self):
         self.assertEqual(self.output1.xpath("/stix:STIX_Package/stix:Indicators/stix:Indicator/indicator:Observable/cybox:Object/cybox:Properties/@category", namespaces=self.namespace)[0], "ipv4-addr")
 
-    def test_indicator_properties_category(self):
-        self.assertEqual(self.output1.xpath("/stix:STIX_Package/stix:Indicators/stix:Indicator/indicator:Observable/cybox:Object/cybox:Properties/@category", namespaces=self.namespace)[0], "ipv4-addr")
-
     def test_indicator_properties_indicator(self):
         self.assertEqual(self.output1.xpath("/stix:STIX_Package/stix:Indicators/stix:Indicator/indicator:Observable/cybox:Object/cybox:Properties/AddressObj:Address_Value/text()", namespaces=self.namespace)[0], "10.10.10.10")
 
@@ -94,7 +91,7 @@ class CFM13Alert1ToSTIXACS(unittest.TestCase):
     def test_indicator_sightings_sighting_timestamp(self):
         self.assertEqual(self.output1.xpath("//indicator:Sighting/@timestamp", namespaces=self.namespace)[0], "2016-02-21T22:45:53-04:00")
 
-    def test_indicator_sightings_sighting_timestamp(self):
+    def test_indicator_sightings_sighting_timestamp_seconds(self):
         self.assertEqual(self.output1.xpath("//indicator:Sighting/@timestamp_precision", namespaces=self.namespace)[0], "second")
 
 
@@ -154,7 +151,7 @@ class STIXTLPToSTIXACS(unittest.TestCase):
         self.assertEqual(self.output1.xpath("/stix:STIX_Package/stix:STIX_Header/stix:Profiles/stixCommon:Profile/text()", namespaces=self.namespace)[0], "ISA Profile v1.0")
 
     def test_controlled_structure_text(self):
-        self.assertEqual(set(self.output1.xpath("//marking:Controlled_Structure/text()", namespaces=self.namespace)), set(["//node() | //@*", "//node()", "//node() | @*"]))
+        self.assertEqual(self.output1.xpath("//marking:Controlled_Structure/text()", namespaces=self.namespace), ["//node() | //@*"])
 
     def test_marking_type(self):
         self.assertEqual(set(self.output1.xpath("//marking:Marking_Structure/@xsi:type", namespaces=self.namespace)), set(['edh2cyberMarking:ISAMarkingsType', 'edh2cyberMarkingAssert:ISAMarkingsAssertionType']))
@@ -237,9 +234,6 @@ class KeyValueToSTIXACS(unittest.TestCase):
 
         transform.transform(io.StringIO(KEYVALUE), 'keyvalue', 'stixacs', target_file=output1_object)
         cls.output1 = etree.XML(output1_object.getvalue())
-
-    def test_profile(self):
-        self.assertEqual(self.output1.xpath("/stix:STIX_Package/stix:STIX_Header/stix:Profiles/stixCommon:Profile/text()", namespaces=self.namespace)[0], "Ransomware Update")
 
     def test_package_intent_type(self):
         self.assertEqual(self.output1.xpath("/stix:STIX_Package/stix:STIX_Header/stix:Package_Intent/@xsi:type", namespaces=self.namespace)[0], "stixVocabs:PackageIntentVocab-1.0")

@@ -4,9 +4,10 @@ Created on Mar 13, 2015
 @author: ahoying
 """
 
-import datetime
 import logging
 import pprint
+
+import arrow
 
 from FlexTransform.SchemaParser.TransformFunctions import TransformFunctionManager
 
@@ -118,12 +119,12 @@ class CFM13Functions(object):
             mintime = None
             for subrow in args['transformedData']['IndicatorData']:
                 if 'create_time' in subrow:
-                    indicatorTime = datetime.datetime.strptime(subrow['create_time']['Value'], '%Y-%m-%dT%H:%M:%S%z')
+                    indicatorTime = arrow.get(subrow['create_time']['Value'], 'YYYY-MM-DDTHH:mm:ssZ')
                     if mintime is None or mintime > indicatorTime:
                         mintime = indicatorTime
 
             if mintime is not None:
-                value = mintime.strftime('%Y-%m-%dT%H:%M:%S%z')
+                value = mintime.format('YYYY-MM-DDTHH:mm:ssZZ')
             else:
                 value = args['currentRow']['analyzer_time']['Value']
 

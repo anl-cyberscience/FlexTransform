@@ -9,6 +9,7 @@ from FlexTransform import FlexTransform
 from FlexTransform.test.SampleInputs import CFM13ALERT, CFM13ALERTUUID, STIXACS, KEYVALUE
 
 
+
 class TestCFM13AlertToSTIXTLP(unittest.TestCase):
     output1 = None
     namespace = {
@@ -43,58 +44,72 @@ class TestCFM13AlertToSTIXTLP(unittest.TestCase):
         cls.output1 = etree.XML(output1_object.getvalue())
 
     def test_package_intent_type(self):
-        self.assertEqual(self.output1.xpath("/stix:STIX_Package/stix:STIX_Header/stix:Package_Intent/@xsi:type", namespaces=self.namespace)[0], "stixVocabs:PackageIntentVocab-1.0")
+        self.assertEqual(self.output1.xpath("/stix:STIX_Package/stix:STIX_Header/stix:Package_Intent/@xsi:type",
+                                            namespaces=self.namespace)[0], "stixVocabs:PackageIntentVocab-1.0")
 
     def test_package_intent_text(self):
-        self.assertEqual(self.output1.xpath("/stix:STIX_Package/stix:STIX_Header/stix:Package_Intent/text()", namespaces=self.namespace)[0], "Indicators")
+        self.assertEqual(self.output1.xpath("/stix:STIX_Package/stix:STIX_Header/stix:Package_Intent/text()",
+                                            namespaces=self.namespace)[0], "Indicators")
 
     def test_controlled_structure_text(self):
-        self.assertEqual(self.output1.xpath("/stix:STIX_Package/stix:STIX_Header/stix:Handling/marking:Marking/marking:Controlled_Structure/text()", namespaces=self.namespace)[0], "//node() | //@*")
+        self.assertEqual(self.output1.xpath("/stix:STIX_Package/stix:STIX_Header/stix:Handling/marking:Marking/marking:Controlled_Structure/text()",
+                                            namespaces=self.namespace)[0], "//node() | //@*")
 
     def test_tlp_type(self):
-        self.assertEqual(self.output1.xpath("/stix:STIX_Package/stix:STIX_Header/stix:Handling/marking:Marking/marking:Marking_Structure/@xsi:type", namespaces=self.namespace)[0], "tlpMarking:TLPMarkingStructureType")
+        self.assertEqual(self.output1.xpath("/stix:STIX_Package/stix:STIX_Header/stix:Handling/marking:Marking/marking:Marking_Structure/@xsi:type",
+                                            namespaces=self.namespace)[0], "tlpMarking:TLPMarkingStructureType")
 
     def test_tlp_color(self):
-        self.assertEqual(self.output1.xpath("/stix:STIX_Package/stix:STIX_Header/stix:Handling/marking:Marking/marking:Marking_Structure/@color", namespaces=self.namespace)[0], "AMBER")
+        self.assertEqual(self.output1.xpath("/stix:STIX_Package/stix:STIX_Header/stix:Handling/marking:Marking/marking:Marking_Structure/@color",
+                                            namespaces=self.namespace)[0], "AMBER")
 
     def test_information_source_description(self):
-        self.assertEqual(self.output1.xpath("/stix:STIX_Package/stix:STIX_Header/stix:Information_Source/stixCommon:Description/text()", namespaces=self.namespace)[0], "Fake National Lab")
+        self.assertEqual(self.output1.xpath("/stix:STIX_Package/stix:STIX_Header/stix:Information_Source/stixCommon:Description/text()",
+                                            namespaces=self.namespace)[0], "Fake National Lab")
 
     def test_information_source_name(self):
-        self.assertEqual(self.output1.xpath("/stix:STIX_Package/stix:STIX_Header/stix:Information_Source/stixCommon:Identity/stixCommon:Name/text()", namespaces=self.namespace)[0], "Fake")
+        self.assertEqual(self.output1.xpath("/stix:STIX_Package/stix:STIX_Header/stix:Information_Source/stixCommon:Identity/stixCommon:Name/text()",
+                                            namespaces=self.namespace)[0], "Fake")
 
     def test_indicator_type(self):
-        self.assertEqual(self.output1.xpath("/stix:STIX_Package/stix:Indicators/stix:Indicator/indicator:Type/text()", namespaces=self.namespace)[0], "IP Watchlist")
+        self.assertEqual(self.output1.xpath("/stix:STIX_Package/stix:Indicators/stix:Indicator/indicator:Type/text()",
+                                            namespaces=self.namespace)[0], "IP Watchlist")
 
     def test_indicator_description(self):
-        self.assertEqual(self.output1.xpath("/stix:STIX_Package/stix:Indicators/stix:Indicator/indicator:Description/text()", namespaces=self.namespace)[0], "SSH scans against multiple hosts, direction:ingress, confidence:87, severity:high")
+        self.assertEqual(self.output1.xpath("/stix:STIX_Package/stix:Indicators/stix:Indicator/indicator:Description/text()",
+                                            namespaces=self.namespace)[0], "SSH scans against multiple hosts, direction:ingress, confidence:87, severity:high")
 
     def test_indicator_keyword(self):
-        self.assertEqual(self.output1.xpath("/stix:STIX_Package/stix:Indicators/stix:Indicator/indicator:Observable/cybox:Keywords/cybox:Keyword/text()", namespaces=self.namespace)[0], "Scanning")
+        self.assertEqual(self.output1.xpath("/stix:STIX_Package/stix:Indicators/stix:Indicator/indicator:Observable/cybox:Keywords/cybox:Keyword/text()",
+                                            namespaces=self.namespace)[0], "Scanning")
 
     def test_indicator_properties_type(self):
-        self.assertEqual(self.output1.xpath("/stix:STIX_Package/stix:Indicators/stix:Indicator/indicator:Observable/cybox:Object/cybox:Properties/@xsi:type", namespaces=self.namespace)[0], "AddressObj:AddressObjectType")
+        self.assertEqual(self.output1.xpath("/stix:STIX_Package/stix:Indicators/stix:Indicator/indicator:Observable/cybox:Object/cybox:Properties/@xsi:type",
+                                            namespaces=self.namespace)[0], "AddressObj:AddressObjectType")
 
     def test_indicator_properties_category(self):
-        self.assertEqual(self.output1.xpath("/stix:STIX_Package/stix:Indicators/stix:Indicator/indicator:Observable/cybox:Object/cybox:Properties/@category", namespaces=self.namespace)[0], "ipv4-addr")
-
-    def test_indicator_properties_category(self):
-        self.assertEqual(self.output1.xpath("/stix:STIX_Package/stix:Indicators/stix:Indicator/indicator:Observable/cybox:Object/cybox:Properties/@category", namespaces=self.namespace)[0], "ipv4-addr")
+        self.assertEqual(self.output1.xpath("/stix:STIX_Package/stix:Indicators/stix:Indicator/indicator:Observable/cybox:Object/cybox:Properties/@category",
+                                            namespaces=self.namespace)[0], "ipv4-addr")
 
     def test_indicator_properties_indicator(self):
-        self.assertEqual(self.output1.xpath("/stix:STIX_Package/stix:Indicators/stix:Indicator/indicator:Observable/cybox:Object/cybox:Properties/AddressObj:Address_Value/text()", namespaces=self.namespace)[0], "10.10.10.10")
+        self.assertEqual(self.output1.xpath("/stix:STIX_Package/stix:Indicators/stix:Indicator/indicator:Observable/cybox:Object/cybox:Properties/AddressObj:Address_Value/text()",
+                                            namespaces=self.namespace)[0], "10.10.10.10")
 
     def test_indicator_properties_related_objects_properties(self):
-        self.assertEqual(self.output1.xpath("/stix:STIX_Package/stix:Indicators/stix:Indicator/indicator:Observable/cybox:Object/cybox:Related_Objects/cybox:Related_Object/cybox:Properties/@xsi:type", namespaces=self.namespace)[0], "PortObj:PortObjectType")
+        self.assertEqual(self.output1.xpath("/stix:STIX_Package/stix:Indicators/stix:Indicator/indicator:Observable/cybox:Object/cybox:Related_Objects/cybox:Related_Object/cybox:Properties/@xsi:type",
+                                            namespaces=self.namespace)[0], "PortObj:PortObjectType")
 
     def test_indicator_properties_related_objects_properties_port_value(self):
-        self.assertEqual(len(self.output1.xpath("/stix:STIX_Package/stix:Indicators/stix:Indicator/indicator:Observable/cybox:Object/cybox:Related_Objects/cybox:Related_Object/cybox:Properties/PortObj:Port_Value", namespaces=self.namespace)), 1)
+        self.assertEqual(len(self.output1.xpath("/stix:STIX_Package/stix:Indicators/stix:Indicator/indicator:Observable/cybox:Object/cybox:Related_Objects/cybox:Related_Object/cybox:Properties/PortObj:Port_Value",
+                                                namespaces=self.namespace)), 1)
 
     def test_indicator_properties_related_objects_properties_port_value_text(self):
-        self.assertEqual(self.output1.xpath("/stix:STIX_Package/stix:Indicators/stix:Indicator/indicator:Observable/cybox:Object/cybox:Related_Objects/cybox:Related_Object/cybox:Properties/PortObj:Port_Value/text()", namespaces=self.namespace)[0], "22")
+        self.assertEqual(self.output1.xpath("/stix:STIX_Package/stix:Indicators/stix:Indicator/indicator:Observable/cybox:Object/cybox:Related_Objects/cybox:Related_Object/cybox:Properties/PortObj:Port_Value/text()",
+                                            namespaces=self.namespace)[0], "22")
 
     def test_indicator_properties_related_objects_properties_port_protocol(self):
-        self.assertEqual(len(self.output1.xpath("/stix:STIX_Package/stix:Indicators/stix:Indicator/indicator:Observable/cybox:Object/cybox:Related_Objects/cybox:Related_Object/cybox:Properties/PortObj:Layer4_Protocol", namespaces=self.namespace)), 1)
+        self.assertEqual(len(self.output1.xpath("/stix:STIX_Package/stix:Indicators/stix:Indicator/indicator:Observable/cybox:Object/cybox:Related_Objects/cybox:Related_Object/cybox:Properties/PortObj:Layer4_Protocol",
+                                                namespaces=self.namespace)), 1)
 
     def test_indicator_properties_related_objects_properties_port_protocol_text(self):
         self.assertEqual(self.output1.xpath("/stix:STIX_Package/stix:Indicators/stix:Indicator/indicator:Observable/cybox:Object/cybox:Related_Objects/cybox:Related_Object/cybox:Properties/PortObj:Layer4_Protocol/text()", namespaces=self.namespace)[0], "TCP")
@@ -145,7 +160,7 @@ class STIXACSToSTIXTLP(unittest.TestCase):
         self.assertEqual(self.output1.xpath("/stix:STIX_Package/stix:STIX_Header/stix:Package_Intent/text()", namespaces=self.namespace)[0], "Indicators")
 
     def test_controlled_structure_text(self):
-        self.assertEqual(set(self.output1.xpath("//marking:Controlled_Structure/text()", namespaces=self.namespace)), set(["//node()", "//node() | //@*", "//node() | @*"]))
+        self.assertEqual(self.output1.xpath("//marking:Controlled_Structure/text()", namespaces=self.namespace), ["//node() | //@*"])
 
     def test_tlp_type(self):
         self.assertEqual(set(self.output1.xpath("//marking:Marking_Structure/@xsi:type", namespaces=self.namespace)), set(["tlpMarking:TLPMarkingStructureType"]))
@@ -189,6 +204,7 @@ class STIXACSToSTIXTLP(unittest.TestCase):
 
     def test_indicator_properties_domainnames(self):
         self.assertEqual(set(self.output1.xpath("//DomainNameObj:Value[@condition='Equals']/text()", namespaces=self.namespace)), set(["goo.gl/peter", "fake.com", "blog.website.net"]))
+
 
 class KeyValueToSTIXTLP(unittest.TestCase):
     output1 = None
@@ -249,7 +265,7 @@ class KeyValueToSTIXTLP(unittest.TestCase):
     def test_indicator_description(self):
         self.assertEqual(set(self.output1.xpath("//indicator:Description/text()", namespaces=self.namespace)), set(['Attacker scanning for SSH, direction:ingress, confidence:0, severity:high','Attacker scanning for RDP, direction:ingress, confidence:0, severity:high','HTTP Response code 4xx, suspicious, direction:ingress, confidence:0, severity:low','Malicious domain, direction:egress, confidence:0, severity:high']))
 
-    def def_indicator_observable_keywords(self):
+    def test_indicator_observable_keywords(self):
         self.assertEqual(set(self.output1.xpath("//cybox:Keyword/text()", namespaces=self.namespace)), set(['Reconnaissance', 'Scanning', 'Malware Traffic']))
 
     def test_indicator_properties_type(self):

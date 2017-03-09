@@ -4,6 +4,7 @@ setup(
     name='FlexTransform',
     version='1.2.0',
     description='Flexible Transform is a tool that enables dynamic translation between formats',
+    long_description='Flexible Transform (FlexT) enables dynamic translation between formats, accomplishing this by digesting CTI data down to its semantic roots (meaning and context)',
     url='https://github.com/anl-cyberscience/FlexTransform/',
     author='The CFM Team',
     author_email='fedhelp@anl.gov',
@@ -18,7 +19,7 @@ setup(
         # Development Status :: 5 - Production/Stable
         # Development Status :: 6 - Mature
         # Development Status :: 7 - Inactive
-        'Development Status :: 4 - Beta',
+        'Development Status :: 5 - Production/Stable',
 
         # Indicate who your project is intended for
         'Intended Audience :: Information Technology',
@@ -30,14 +31,15 @@ setup(
         # Specify the Python versions you support here. In particular, ensure
         # that you indicate whether you support Python 2, Python 3 or both.
         'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.2',
         'Programming Language :: Python :: 3.3',
         'Programming Language :: Python :: 3.4',
         'Programming Language :: Python :: 3.5',
+        'Programming Language :: Python :: 3.6',
     ],
     keywords='',
     packages=find_packages(exclude=['contrib', 'doc', 'tests*']),
     install_requires=[
+        'arrow',
         'python-dateutil',
         'lxml',
         'pytz',

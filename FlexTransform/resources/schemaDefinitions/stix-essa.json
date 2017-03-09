@@ -20,7 +20,7 @@
 					"handling_markingstructures_xsitype": [ "edh2cyberMarking:ISAMarkingsType", "edh2cyberMarkingAssert:ISAMarkingsAssertionType" ],
 					"handling_markingstructures_identifier": "",
 					"handling_markingstructures_responsibleentity": "CUST:USA.DOE",
-					"handling_markingstructures_createdatetime": "&now()",
+					"handling_markingstructures_createdatetime": "&stix_now()",
 					"handling_markingstructures_isamversion": "1.0",
 					"handling_markingstructures_isamversion2": "1.0",
 					"handling_markingstructures_mostrestrictive": "true",
@@ -42,8 +42,9 @@
 				"description": "The creation date and time of the associated resource.",
 				"valuemap": "handling;marking_structures;createdatetime", 
 				"datatype": "datetime",
-				"dateTimeFormat": "%Y-%m-%dT%H:%M:%S%z",
-				"defaultValue": "&now()",
+				"dateTimeFormat": "YYYY-MM-DDTHH:mm:ssZZ",
+				"dateTimeFormatAlternate": ["YYYY-MM-DDTHH:mm:ss", "YYYY-MM-DDTHH:mm:ssZ"],
+				"defaultValue": "&stix_now()",
 				"required": "false",
 				"memberof": "handling_markingstructures",
 				"ontologyMappingType": "none"
@@ -128,9 +129,9 @@
 				}
 			},
 			"produced_time": {
-				"dateTimeFormat": "%Y-%m-%dT%H:%M:%S%z",
+				"dateTimeFormat": "YYYY-MM-DDTHH:mm:ssZ",
 				"required": true,
-				"defaultValue": "&now()"
+				"defaultValue": "&stix_now()"
 			},
 			"information_source_name": {
 				"description": "The source of the report",

@@ -13,7 +13,6 @@ from .OntologyOracle import Oracle
 
 
 # TODO: Document in Sphinx compatible format
-# TODO: Optimization - Too much pass by value for large dictionary objects currently, need to move to more pass by reference to minimize cpu and memory resource usage
 
 class FlexTransform(object):
     '''
@@ -35,7 +34,7 @@ class FlexTransform(object):
         if self.trace:
             self._create_trace_list(source_fields=source_fields, destination_fields=destination_fields,
                                     source_iri=source_iri, destination_iri=destination_iri)
-        
+
     def add_parser(self, parser_name, config_file):
         """
         Add Parser to FlexTransform Object
@@ -49,10 +48,10 @@ class FlexTransform(object):
         """
         
         parser_config = Config(config_file, trace_list=self.trace_list)
-        
+
         if parser_name in self.Parsers:
             self.logging.warn('Parser %s already configured, configuration will be overwritten', parser_name)
-        
+
         if parser_config:
             self.Parsers[parser_name] = parser_config
             
@@ -113,10 +112,10 @@ class FlexTransform(object):
             raise Exception('NoSourceData', 'Source data file could not be parsed, no data')
         
         # Map source file data to source schema
-        mapped_data = source_config.SchemaParser.MapDataToSchema(source_data, oracle)
+        mapped_data = source_config.SchemaParser.map_data_to_schema(source_data, oracle)
         
         if source_meta_data is not None:
-            source_config.SchemaParser.MapMetadataToSchema(source_meta_data)
+            source_config.SchemaParser.map_metadata_to_schema(source_meta_data)
         
         # Map source data to destination schema
         transformed_data = destination_config.SchemaParser.TransformData(mapped_data, oracle)
