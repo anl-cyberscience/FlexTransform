@@ -20,15 +20,21 @@ class FlexTransform(object):
     API for accessing performing Flexible Transform of source documents to target documents based on syntax and schema mappings against the ontology
     '''
     
-    def __init__(self, logging_level=logging.WARN, tracelist=[]):
-        '''
-        Constructor
-        '''
+    def __init__(self,
+                 logging_level=logging.WARN,
+                 trace=False,
+                 source_fields=None,
+                 destination_fields=None,
+                 source_iri=None,
+                 destination_iri=None):
         self.Parsers = {}
         self.logging = logging.getLogger('FlexTransform')
         self.logging.setLevel(logging_level)
         self.oracle = None
-        self.tracelist = tracelist
+        self.trace = trace
+        if self.trace:
+            self._create_trace_list(source_fields=source_fields, destination_fields=destination_fields,
+                                    source_iri=source_iri, destination_iri=destination_iri)
         
     def add_parser(self, parser_name, config_file):
         """
@@ -42,21 +48,21 @@ class FlexTransform(object):
         :return:
         """
         
-        parserConfig = Config(config_file, trace_list=self.tracelist)
+        parser_config = Config(config_file, trace_list=self.trace_list)
         
         if parser_name in self.Parsers:
             self.logging.warn('Parser %s already configured, configuration will be overwritten', parser_name)
         
-        if parserConfig:
-            self.Parsers[parser_name] = parserConfig
+        if parser_config:
+            self.Parsers[parser_name] = parser_config
             
-    def add_oracle(self, tbox_loc, schema_IRI):
+    def add_oracle(self, tbox_location, schema_iri):
         '''
         Add oracle to the FlexTransform object"
         '''
         
-        #TODO add error checking for locations
-        self.oracle = Oracle(tbox_loc, rdflib.URIRef(schema_IRI), tracelist=self.tracelist)
+        # TODO add error checking for locations
+        self.oracle = Oracle(tbox_location, rdflib.URIRef(schema_iri), tracelist=self.trace_list)
         
     def transform(self, source_file, source_parser_name, target_parser_name,
                   target_file=None, source_meta_data=None, oracle=None):
@@ -94,36 +100,52 @@ class FlexTransform(object):
             oracle = self.oracle
         
         # Parse and validate configurations
-        SourceConfig = self.Parsers[source_parser_name]
-        DestinationConfig = self.Parsers[target_parser_name]
+        source_config = self.Parsers[source_parser_name]
+        destination_config = self.Parsers[target_parser_name]
 
         # Calculate "DerivedData" functions
-        SourceConfig.calculate_derived_data(source_file=source_file, dest_file=target_file)
+        source_config.calculate_derived_data(source_file=source_file, dest_file=target_file)
 
         # Parse source file into dictionary object
-        SourceData = SourceConfig.Parser.Read(source_file, SourceConfig)
+        source_data = source_config.Parser.Read(source_file, source_config)
         
-        if SourceData is None:
+        if source_data is None:
             raise Exception('NoSourceData', 'Source data file could not be parsed, no data')
         
         # Map source file data to source schema
-        MappedData = SourceConfig.SchemaParser.MapDataToSchema(SourceData, oracle)
+        mapped_data = source_config.SchemaParser.MapDataToSchema(source_data, oracle)
         
         if source_meta_data is not None:
-            SourceConfig.SchemaParser.MapMetadataToSchema(source_meta_data)
+            source_config.SchemaParser.MapMetadataToSchema(source_meta_data)
         
         # Map source data to destination schema
-        TransformedData = DestinationConfig.SchemaParser.TransformData(MappedData, oracle)
+        transformed_data = destination_config.SchemaParser.TransformData(mapped_data, oracle)
         
         # Finalize data to be written
-        FinalizedData = DestinationConfig.Parser.Finalize(TransformedData)
+        finalized_data = destination_config.Parser.Finalize(transformed_data)
         self.logging.debug("FlexTransform.Transform(): FinalizedData Dictionary: ")
         
         if target_file is not None:
-            DestinationConfig.Parser.Write(target_file, FinalizedData)
+            destination_config.Parser.Write(target_file, finalized_data)
         
-        return FinalizedData
+        return finalized_data
 
+    def _create_trace_list(self, source_fields=None, destination_fields=None, source_iri=None, destination_iri=None):
+
+        trace_list = []
+        if source_fields:
+            for arg in source_fields:
+                trace_list.append({"src_fields": [arg], "src_IRIs": list(), "dst_fields": list(), "dst_IRIs": list()})
+        if source_iri:
+            for arg in source_iri:
+                trace_list.append({"src_fields": list(), "src_IRIs": [arg], "dst_fields": list(), "dst_IRIs": list()})
+        if destination_fields:
+            for arg in destination_fields:
+                trace_list.append({"src_fields": list(), "src_IRIs": list(), "dst_fields": [arg], "dst_IRIs": list()})
+        if destination_iri:
+            for arg in destination_iri:
+                trace_list.append({"src_fields": list(), "src_IRIs": list(), "dst_fields": list(), "dst_IRIs": [arg]})
+        self.trace_list = trace_list
 
 if __name__ == '__main__':
     raise Exception("Unsupported", "FlexTransform.py should not be called directly, use helper script FlexT.py")
