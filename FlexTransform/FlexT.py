@@ -99,48 +99,15 @@ def main():
                         default=[],
                         required=False)
 
-
     args = parser.parse_args()
-
     try:
-        tracelist = []
-        if args.trace_src_field:
-            for arg in args.trace_src_field:
-                traceitemdict = {"src_fields": [arg],
-                          "src_IRIs": list(),
-                          "dst_fields": list(),
-                          "dst_IRIs": list()}
-                tracelist.append(traceitemdict)
-                logging.debug("[TRACE]: enabling trace for element {}".format(arg))
-        if args.trace_dst_field:
-            for arg in args.trace_dst_field:
-                traceitemdict = {"src_fields": list(),
-                          "src_IRIs": list(),
-                          "dst_fields": [arg],
-                          "dst_IRIs": list()}
-                tracelist.append(traceitemdict)
-                logging.debug("[TRACE]: enabling trace for element {}".format(arg))
-        if args.trace_src_IRI:
-            for arg in args.trace_src_IRI:
-                traceitemdict = {"src_fields": list(),
-                          "src_IRIs": [arg],
-                          "dst_fields": list(),
-                          "dst_IRIs": list()}
-                tracelist.append(traceitemdict)
-                logging.debug("[TRACE]: enabling trace for element {}".format(arg))
-        if args.trace_dst_IRI:
-            for arg in args.trace_dst_IRI:
-                traceitemdict = {"src_fields": list(),
-                          "src_IRIs": list(),
-                          "dst_fields": list(),
-                          "dst_IRIs": [arg]}
-                tracelist.append(traceitemdict)
-                logging.debug("[TRACE]: enabling trace for element {}".format(arg))
+        transform = FlexTransform.FlexTransform(source_fields=args.trace_src_field,
+                                                source_iri=args.trace_src_IRI,
+                                                destination_fields=args.trace_dst_field,
+                                                destination_iri=args.trace_dst_IRI)
 
-        Transform = FlexTransform.FlexTransform(tracelist=tracelist)
-
-        Transform.add_parser('src', args.src_config)
-        Transform.add_parser('dst', args.dst_config)
+        transform.add_parser('src', args.src_config)
+        transform.add_parser('dst', args.dst_config)
 
         metadata = None
 
@@ -156,7 +123,7 @@ def main():
                 logging.warning(
                     "Ontology file specified, but no destination schema IRI is given.  Ontology will not be used.")
 
-        FinalizedData = Transform.transform(
+        FinalizedData = transform.transform(
             source_file=args.src,
             target_file=args.dst,
             source_parser_name='src',
