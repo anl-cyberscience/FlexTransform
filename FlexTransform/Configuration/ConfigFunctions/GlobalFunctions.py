@@ -4,13 +4,11 @@ Created on Jun 13, 2015
 @author: cstrasburg
 """
 
-import datetime
 import logging
 import os.path
 import re
-import time
 
-import pytz
+import arrow
 
 from FlexTransform.Configuration.ConfigFunctions import ConfigFunctionManager
 
@@ -65,10 +63,10 @@ class GlobalFunctions(object):
                     rawctime = os.path.getctime(args['fileName'])
                     ''' Convert to given time format '''
                     if 'fieldDict' in args and 'dateTimeFormat' in args['fieldDict'] and \
-                        args['fieldDict']['dateTimeFormat'] == 'unixtime':
-                        value = '%i' % time.mktime(datetime.datetime.utcfromtimestamp(rawctime).timetuple())
+                            args['fieldDict']['dateTimeFormat'] == 'unixtime':
+                        value = str(arrow.get(rawctime).timestamp)
                     else:
-                        value = datetime.datetime.fromtimestamp(rawctime, tz=pytz.utc).strftime(args['fieldDict']['dateTimeFormat'])
+                        value = arrow.get(rawctime).format(args['fieldDict']['dateTimeFormat'])
                 except OSError as e:
                     self.logging.warn("Could not get file ctime for {}: {}".format(args['fileName'], e))
 
