@@ -25,7 +25,7 @@ class SchemaParser(object):
     * self.SchemaConfig - The schema configuration for the target format
     * self._ValueMap - Mapping from the valuemap specification to the JSON config item that defines
                       it (or items)
-    * self._FieldOrder - Ordered list of field names used to process the fields in the schema based on their relationship to each other.
+    * self._field_order - Ordered list of field names used to process the fields in the schema based on their relationship to each other.
     * self._outputFormatRE -  Regex used to parse the outputFormat field
                               Example outputFormat: "[comment], direction:[direction],
                                                      confidence:[confidence], severity:[severity]"
@@ -35,7 +35,7 @@ class SchemaParser(object):
     # Class global variables
     _outputFormatRE = re.compile(r"([^\[]+)?(?:\[([^\]]+)\])?")
 
-    def __init__(self, config):
+    def __init__(self, config, tracelist=[]):
         """
         Constructor
         """
@@ -58,7 +58,7 @@ class SchemaParser(object):
 
         self.SchemaConfig = config
 
-        self._FieldOrder = self._calculate_schema_field_order()
+        self._field_order = self._calculate_schema_field_order()
 
         self.FunctionManager = TransformFunctionManager()
 
@@ -90,13 +90,13 @@ class SchemaParser(object):
         row_types = []
 
         if ('IndicatorData' in SourceData):
-            rowTypes.append('IndicatorData')
+            row_types.append('IndicatorData')
         if ('DocumentHeaderData' in SourceData):
-            rowTypes.append('DocumentHeaderData')
+            row_types.append('DocumentHeaderData')
         #TODO: Need to generalize this to deal elegantly with environment-derived data:
         ''' Get data about the environment '''
         if ('DerivedData' in SourceData):
-            rowTypes.append('DerivedData')
+            row_types.append('DerivedData')
 
         for rowType in row_types:
             if rowType in self.SchemaConfig:
@@ -180,7 +180,7 @@ class SchemaParser(object):
         self.logging.debug("Begin TransformData(...)")
         if len(self.traceindex) > 0:
             self.logging.debug("[TRACE TransformData] - Monitoring {} elements".format(len(self.traceindex.keys())))
-        self.TransformedData = {}
+        self.transformed_data = {}
 
         # If the oracle is set, initialize it:
         if oracle is not None:
@@ -218,7 +218,7 @@ class SchemaParser(object):
                             try:
                                 self.transformed_data[rowType].append(
                                     self._TransformDataToNewSchema(rowType, row, document_header_data,
-                                                                   document_meta_data, DerivedData, oracle))
+                                                                   document_meta_data, derived_data, oracle))
                             except Exception as inst:
                                 self.logging.error(inst)
                         else:
@@ -286,7 +286,7 @@ class SchemaParser(object):
                     if field not in field_order or field_order[field] < 10:
                         field_order[field] = 10
                         if field in self.traceindex:
-                            self.logging.debug("[TRACE {}] - Group data type - FieldOrder set to {}".format(field, FieldOrder[field]))
+                            self.logging.debug("[TRACE {}] - Group data type - field_order set to {}".format(field, field_order[field]))
 
                     # Handle subgroups, parent group needs to be processed after all child groups
                     if 'memberof' in fieldDict:
@@ -294,24 +294,24 @@ class SchemaParser(object):
                                 or field_order[fieldDict['memberof']] <= field_order[field]:
                             field_order[fieldDict['memberof']] = field_order[field] + 1
                             if fieldDict['memberof'] in self.traceindex:
-                                self.logging.debug("[TRACE {}] - memberof {}, incrementing FieldOrder to {}".format(fieldDict['memberof'],
+                                self.logging.debug("[TRACE {}] - memberof {}, incrementing field_order to {}".format(fieldDict['memberof'],
                                                                                                                     field,
                                                                                                                     field_order[fieldDict['memberof']]))
                 elif 'required' in fieldDict and fieldDict['required'] == True:
                     if field not in field_order or field_order[field] > 1:
                         field_order[field] = 1
                         if field in self.traceindex:
-                            self.logging.debug("[TRACE {}] - Required; FieldOrder set to {}".format(field, field_order[field]))
+                            self.logging.debug("[TRACE {}] - Required; field_order set to {}".format(field, field_order[field]))
                 elif 'memberof' in fieldDict:
                     if field not in field_order or field_order[field] > 5:
                         field_order[field] = 5
                         if field in self.traceindex:
-                            self.logging.debug("[TRACE {}] - memberof {}; FieldOrder set to {}".format(field, fieldDict['memberof'], FieldOrder[field]))
+                            self.logging.debug("[TRACE {}] - memberof {}; field_order set to {}".format(field, fieldDict['memberof'], field_order[field]))
                         if (fieldDict['memberof'] not in field_order or field_order[fieldDict['memberof']] <= field_order[
                             field]):
                             field_order[fieldDict['memberof']] = field_order[field] + 1
                             if fieldDict['memberof'] in self.traceindex:
-                                self.logging.debug("[TRACE {}] - Incremented parent {}; FieldOrder set to {}".format(fieldDict['memberof'], field, FieldOrder[fieldDict['memberof']]))
+                                self.logging.debug("[TRACE {}] - Incremented parent {}; field_order set to {}".format(fieldDict['memberof'], field, field_order[fieldDict['memberof']]))
 
                 elif ('dependsOn' in fieldDict):
                     if (field not in field_order or field_order[field] < 6):
@@ -320,7 +320,7 @@ class SchemaParser(object):
                     if field not in field_order or field_order[field] > 4:
                         field_order[field] = 4
                         if field in self.traceindex:
-                            self.logging.debug("[TRACE {}] - no conditions apply; FieldOrder set to {}".format(field, field_order[field]))
+                            self.logging.debug("[TRACE {}] - no conditions apply; field_order set to {}".format(field, field_order[field]))
 
             # Run through all the fields again and re-order based on references
             for field, fieldDict in self.SchemaConfig[rowType]['fields'].items():
@@ -337,7 +337,7 @@ class SchemaParser(object):
                                     args not in field_order or field_order[args] >= field_order[field])):
                                 field_order[field] = field_order[args] + 1
                                 if field in self.traceindex:
-                                    self.logging.debug("[TRACE {}] - Updated order based on argument {} - FieldOrder set to {}".format(
+                                    self.logging.debug("[TRACE {}] - Updated order based on argument {} - field_order set to {}".format(field, args, field_order[field]))
 
                 elif 'outputFormat' in fieldDict:
                     if field in self.traceindex:
@@ -357,9 +357,9 @@ class SchemaParser(object):
                                             m[1] not in field_order or field_order[m[1]] >= field_order[field])):
                                         field_order[m[1]] = field_order[field] - 1
                                         if m[1] in self.traceindex:
-                                            self.logging.debug("[TRACE {}] - FieldOrder set to {}".format(m[1], field_order[m[1]]))
+                                            self.logging.debug("[TRACE {}] - field_order set to {}".format(m[1], field_order[m[1]]))
                                         if field in self.traceindex:
-                                            self.logging.debug("[TRACE {}] - FieldOrder of outputFormatField {} set to {}".format(field, m[1], field_order[m[1]]))
+                                            self.logging.debug("[TRACE {}] - field_order of outputFormatField {} set to {}".format(field, m[1], field_order[m[1]]))
 
                     if 'outputFormatCondition' in fieldDict:
                         if field in self.traceindex:
@@ -377,11 +377,11 @@ class SchemaParser(object):
                                     if m[1] in self.SchemaConfig[rowType]['fields']:
                                         if field in field_order and (
                                                 m[1] not in field_order or field_order[m[1]] >= field_order[field]):
-                                            FieldOrder[m[1]] = FieldOrder[field] - 1
+                                            field_order[m[1]] = field_order[field] - 1
                                             if m[1] in self.traceindex:
                                                 self.logging.debug("[TRACE {}] - Found in outputFormat for {}; evaluating field order".format(m[1], field))
                                             if field in self.traceindex:
-                                                self.logging.debug("[TRACE {}] - FieldOrder of outputFormatField {} set to {}".format(field, m[1], field_order[m[1]]))
+                                                self.logging.debug("[TRACE {}] - field_order of outputFormatField {} set to {}".format(field, m[1], field_order[m[1]]))
                         else:
                             self.logging.warning("OutputFormatCondition {} specified for field {} but could not be parsed.".format(fieldDict['outputFormatCondition'], field))
 
@@ -389,7 +389,7 @@ class SchemaParser(object):
                     if 'requiredIfReferenceField' in fieldDict:
                         if fieldDict['requiredIfReferenceField'] not in field_order:
                             field_order[fieldDict['requiredIfReferenceField']] = field_order[field] - 1
-                        elif FieldOrder[fieldDict['requiredIfReferenceField']] >= field_order[field]:
+                        elif field_order[fieldDict['requiredIfReferenceField']] >= field_order[field]:
                             field_order[field] = field_order[fieldDict['requiredIfReferenceField']] + 1
                         tfield = fieldDict['requiredIfReferenceField']
                         if tfield in self.traceindex:
@@ -443,14 +443,13 @@ class SchemaParser(object):
           TODO: Add processing for derived data rowType
 
           Data structures used:
-          * newDict - Dictionary to hold the mapping of data to new schema that we return.
-          * processedFields - Keep track of the fields we've already processed; important to ensure that dependent values are taken from the
+          * new_dict - Dictionary to hold the mapping of data to new schema that we return.
+          * processed_fields - Keep track of the fields we've already processed; important to ensure that dependent values are taken from the
                               source data, or are defined before they are referenced.
           * fieldDict - The dictionary of metadata related to the field from the source schema.
         """
         if len(self.traceindex) > 0:
             self.logging.debug("[TRACE _MapRowToSchema] - Monitoring {} elements".format(len(self.traceindex.keys())))
-
 
         new_dict = {}
         processed_fields = {}
@@ -461,9 +460,9 @@ class SchemaParser(object):
         ValueMap = self._value_map[rowType]
 
         # Get the field dependency order for processing the source schema
-        FieldOrder = self._FieldOrder[rowType]
+        field_order = self._field_order[rowType]
 
-        for field in FieldOrder:
+        for field in field_order:
             fieldDict = self.SchemaConfig[rowType]['fields'][field]
             mappedField = None
             if field in self.traceindex:
@@ -478,23 +477,20 @@ class SchemaParser(object):
                 if (fieldDict['valuemap'] in DataRow):
                     mappedField = fieldDict['valuemap']
                     if field in self.traceindex:
-                        self.logging.debug("[TRACE {}] - Field not found in DataRow, mapping to found valuemap ({})".format(
-                                                                field, fieldDict['valuemap']))
+                        self.logging.debug("[TRACE {}] - Field not found in DataRow, mapping to found valuemap ({})".format(field, fieldDict['valuemap']))
 
             if (not mappedField and 'additionalValuemaps' in fieldDict):
                 for valuemap in fieldDict['additionalValuemaps']:
                     if (valuemap in DataRow):
                         mappedField = valuemap
                         if field in self.traceindex:
-                            self.logging.debug("[TRACE {}] - Field not found in DataRow, mapping to found additionalValuemap ({})".format(
-                                                                field, valuemap))
+                            self.logging.debug("[TRACE {}] - Field not found in DataRow, mapping to found additionalValuemap ({})".format(field, valuemap))
                         break
 
-            if (mappedField is not None):
-                processedFields[mappedField] = True
+            if mappedField is not None:
+                processed_fields[mappedField] = True
                 if field in self.traceindex:
-                    self.logging.debug("[TRACE {}] - Setting prcessedFields to True".format(
-                                                                field))
+                    self.logging.debug("[TRACE {}] - Setting prcessedFields to True".format(field))
 
                 if 'ignore' in fieldDict and fieldDict['ignore'] == True:
                      # TODO - Add logging of ignore flag processed
@@ -504,21 +500,18 @@ class SchemaParser(object):
 
                 elif 'error' in fieldDict:
                     if field in self.traceindex:
-                        self.logging.debug("[TRACE {}] - Field error flagged, not mapping to schema.".format(
-                                                                field))
+                        self.logging.debug("[TRACE {}] - Field error flagged, not mapping to schema.".format(field))
                     raise Exception("InvalidSchemaMapping", fieldDict['error'])
 
                 if 'dependsOn' in fieldDict:
                     # If the field this field depends on does not exist, then don't add to new dictionary
                     dependsOn = fieldDict['dependsOn']
-                    if dependsOn not in newDict or 'Value' not in newDict[dependsOn]:
+                    if dependsOn not in new_dict or 'Value' not in new_dict[dependsOn]:
                         # TODO - Add logging of skipping this element
                         if field in self.traceindex:
-                            self.logging.debug("[TRACE {}] - Field depends on another that does not exist {}, not mapping to schema.".format(
-                                                                field, dependsOn))
+                            self.logging.debug("[TRACE {}] - Field depends on another that does not exist {}, not mapping to schema.".format(field, dependsOn))
                         if dependsOn in self.traceindex:
-                            self.logging.debug("[TRACE {}] - Field does not exist for dependent field {}; not mapping dependent to schema.".format(
-                                                                dependsOn, field))
+                            self.logging.debug("[TRACE {}] - Field does not exist for dependent field {}; not mapping dependent to schema.".format(dependsOn, field))
                         continue
 
                 Value = DataRow[mappedField]
@@ -555,7 +548,7 @@ class SchemaParser(object):
                     except Exception as inst:
                         self.logging.error(inst)
                         raise Exception('DataTypeInvalid',
-                                        'Value for field ' + mappedField + ' is not a valid date time value:{}' + Value)
+                                        'Value for field ' + mappedField + ' is not a valid date time value: ' + Value)
 
                 new_dict[field] = fieldDict.copy()
 
@@ -588,13 +581,13 @@ class SchemaParser(object):
                         GroupID = 0
 
                         for row in Value:
-                            if (isinstance(row, dict)):
+                            if isinstance(row, dict):
                                 subRow = SchemaParser.FlattenDict(row, ParentKey=mappedField)
                                 if field in self.traceindex:
                                     self.logging.debug("[TRACE {}] - Processing subRow as flattened dict".format(field))
 
                                 for (subkey, subvalue) in subRow.items():
-                                    if (subkey in ValueMap and ValueMap[subkey] not in subfields):
+                                    if subkey in ValueMap and ValueMap[subkey] not in subfields:
                                         raise Exception('FieldNotAllowed',
                                                         'Field %s is not an allowed subfield of %s' % (
                                                         ValueMap[subkey], field))
@@ -614,12 +607,12 @@ class SchemaParser(object):
                         # Value could be set to any string, it isn't used for field groups except to indicate that the group has been parsed
                         new_dict[field]['Value'] = 'True'
                     else:
-                        if (Value.__len__() > 1):
+                        if Value.__len__() > 1:
                             new_dict[field]['AdditionalValues'] = []
                             if field in self.traceindex:
                                 self.logging.debug("[TRACE {}] - Field has multiple values; setting...".format(field))
                         for d in Value:
-                            if (isinstance(d, (list, dict))):
+                            if isinstance(d, (list, dict)):
                                 self.logging.warning(
                                     '%s subvalue in the list is another list or dictionary, not currently supported: %s',
                                     mappedField, d)
@@ -635,11 +628,11 @@ class SchemaParser(object):
                                 if field in self.traceindex:
                                     self.logging.debug("[TRACE {}] - Appending AdditionalValue {}".format(field, str(d)))
 
-                elif (isinstance(Value, (list, dict))):
+                elif isinstance(Value, (list, dict)):
                     self.logging.warning('%s value is a list or dictionary, not currently supported: %s', mappedField,
                                          Value)
                     continue
-                elif (isinstance(Value, str)):
+                elif isinstance(Value, str):
                     # The rstrip is to get rid of rogue tabs and white space at the end of a value, a frequent problem with STIX formated documents in testing
                     new_dict[field]['Value'] = str.rstrip(Value)
                     if field in self.traceindex:
@@ -650,7 +643,7 @@ class SchemaParser(object):
                         self.logging.debug("[TRACE {}] - Setting string value to {}".format(field, new_dict[field]['Value']))
 
                 # Process the regexSplit directive
-                if ('regexSplit' in fieldDict):
+                if 'regexSplit' in fieldDict:
                     match = re.match(fieldDict['regexSplit'], new_dict[field]['Value'])
                     if field in self.traceindex:
                         self.logging.debug("[TRACE {}] - Identified as regex field, processing {} with {}".format(
@@ -661,8 +654,8 @@ class SchemaParser(object):
                                                 field, fieldDict['regexFields']))
                         regexFields = re.split(',\s+', fieldDict['regexFields'])
                         i = 0
-                        while (i < regexFields.__len__()):
-                            if (match.group(i + 1)):
+                        while i < regexFields.__len__():
+                            if match.group(i + 1):
                                 newFieldName = regexFields[i]
                                 newFieldValue = match.group(i + 1)
                                 new_dict[newFieldName] = self.SchemaConfig[rowType]['fields'][newFieldName].copy()
@@ -676,7 +669,7 @@ class SchemaParser(object):
 
                 self._ValidateField(new_dict[field], field, rowType)
 
-            elif (not SubGroupedRow):
+            elif not SubGroupedRow:
                 # Check if there is a default value
                 if field in self.traceindex:
                     self.logging.debug("[TRACE {}] - No mapped data found; looking for default value.".format(field))
@@ -686,11 +679,11 @@ class SchemaParser(object):
                 required = False
                 ReferenceField = None
 
-                if ('requiredIfReferenceField' in fieldDict):
+                if 'requiredIfReferenceField' in fieldDict:
                     ReferenceField = fieldDict['requiredIfReferenceField']
                     if field in self.traceindex:
                         self.logging.debug("[TRACE {}] - requiredIfReferenceField {}".format(field, ReferenceField))
-                    if ('requiredIfReferenceValues' in fieldDict):
+                    if 'requiredIfReferenceValues' in fieldDict:
                         ReferenceValues = fieldDict['requiredIfReferenceValues']
                         for val in ReferenceValues:
                             if (
@@ -729,32 +722,32 @@ class SchemaParser(object):
                                         required = True
                                         break
 
-                if (required == True or ('required' in fieldDict and fieldDict['required'] == True)):
+                if required is True or ('required' in fieldDict and fieldDict['required'] == True):
                     if field in self.traceindex:
                         self.logging.debug("[TRACE {}] - Required flag is set; checking default value:".format(field))
-                    if ('defaultValue' in fieldDict):
+                    if 'defaultValue' in fieldDict:
                         new_dict[field] = fieldDict.copy()
                         new_dict[field]['Value'] = fieldDict['defaultValue']
                         if field in self.traceindex:
-                            self.logging.debug("[TRACE {}] - Using default value {}".format(field, newDict[field]['Value']))
+                            self.logging.debug("[TRACE {}] - Using default value {}".format(field, new_dict[field]['Value']))
 
                         if new_dict[field]['Value'].startswith('&'):
                             if field in self.traceindex:
-                                self.logging.debug("[TRACE {}] - Default value is a function; calculating result...".format(field, newDict[field]['Value']))
+                                self.logging.debug("[TRACE {}] - Default value is a function; calculating result...".format(field, new_dict[field]['Value']))
                             new_dict[field]['Value'] = self._CalculateFunctionValue(new_dict[field]['Value'], field,
                                                                                     new_dict[field], rowType, new_dict,
                                                                                     IndicatorType=None,
-                                                                                    TransformedData=self.MappedData)
+                                                                                    TransformedData=self.mapped_data)
                             if field in self.traceindex:
                                 self.logging.debug("[TRACE {}] - Function returned result {}".format(field, new_dict[field]['Value']))
 
                         self._ValidateField(new_dict[field], field, rowType)
 
-                    elif ('outputFormat' in fieldDict):
+                    elif 'outputFormat' in fieldDict:
                         Value = self._BuildOutputFormatText(fieldDict, new_dict)
                         if field in self.traceindex:
                             self.logging.debug("[TRACE {}] - Output format specified, building".format(field))
-                        if (Value):
+                        if Value:
                             new_dict[field] = fieldDict.copy()
                             new_dict[field]['Value'] = Value
                             if field in self.traceindex:
@@ -762,8 +755,8 @@ class SchemaParser(object):
 
                         self._ValidateField(new_dict[field], field, rowType)
 
-                    elif ('datatype' in fieldDict and fieldDict['datatype'] == 'group'):
-                        if ('memberof' in fieldDict):
+                    elif 'datatype' in fieldDict and fieldDict['datatype'] == 'group':
+                        if 'memberof' in fieldDict:
                             self.logging.warning(
                                 "Sub-groups should not have 'required' set to true, processing skipped: %s", field)
                         else:
@@ -776,13 +769,13 @@ class SchemaParser(object):
                         raise Exception('NoDefaultValue',
                                         'Default Value or outputFormat not defined for required field %s' % field)
 
-        if (not SubGroupedRow):
+        if not SubGroupedRow:
             for field in DataRow:
-                if (field not in processed_fields):
+                if field not in processed_fields:
                     self.logging.warning('%s not processed for row type %s in schema config. Value: %s', field, rowType,
                                          DataRow[field])
 
-            if (rowType == "IndicatorData"):
+            if rowType == "IndicatorData":
                 self._AddIndicatorType(new_dict)
                 if field in self.traceindex:
                     self.logging.debug("[TRACE {}] - Field processed, adding Indicator Type".format(field))
@@ -1067,12 +1060,12 @@ class SchemaParser(object):
         DataDictionary = self._MapDataToOntology(DataRow, DocumentHeaderData, DocumentMetaData, DerivedData)
 
         # Build the dependency order for processing the target schema
-        FieldOrder = self._FieldOrder[rowType]
+        field_order = self._field_order[rowType]
 
         GroupRows = {}
         fieldcount = 0
 
-        for field in FieldOrder:
+        for field in field_order:
             # Iterate over each field in the target file schema, copying in data from the source as it is available.
             fieldcount = fieldcount + 1
             if field in self.traceindex:

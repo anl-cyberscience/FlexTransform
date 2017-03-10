@@ -4,11 +4,10 @@ Created on Mar 13, 2015
 @author: ahoying
 '''
 
-import arrow
 import logging
 import uuid
-import os.path
-import re
+
+import arrow
 
 from FlexTransform.SchemaParser.TransformFunctions import TransformFunctionManager
 
@@ -79,6 +78,7 @@ class GlobalFunctions(object):
                     value = str(arrow.utcnow().timestamp)
                 else:
                     value = arrow.utcnow().format(args['fieldDict']['dateTimeFormat'])
+            # TODO - Handle case of no 'dateTimeFormat'
         elif function_name == 'countOfIndicators':
             if 'IndicatorData' in args['transformedData']:
                 value = str(len(args['transformedData']['IndicatorData']))
