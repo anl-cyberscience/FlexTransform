@@ -21,12 +21,14 @@ class Config(object):
     a source or destination file
     '''
 
-    def __init__(self, config_file, trace_list=[]):
+    def __init__(self, config_file, parser_name, trace_list=[]):
         '''
         Constructor
         '''
         self.logging = logging.getLogger('FlexTransform.Config')
-        
+
+        self.name = parser_name
+
         self.trace_index = {}
         self.trace_list = trace_list
         for x in self.trace_list:
@@ -133,10 +135,16 @@ class Config(object):
             if self.config.has_option('SCHEMA', 'MetadataSchemaConfiguration'):
                 metadata_schema_config = self._ReadSchemaConfig(self.config['SCHEMA']['MetadataSchemaConfiguration'])
                 self._MergeDictionaries(self.SchemaConfig, metadata_schema_config)
-                
+
+        self._validate_schema()
         self.SchemaParser = SchemaParser(self.SchemaConfig, tracelist=self.trace_list)
         
         # TODO: Validate that the syntax and schema is read only, write only or read/write and throw an error if necessary
+    def _validate_schema(self):
+        for outer_key, outer_value in self.SchemaConfig.items():
+            for inner_key, inner_value in outer_value['fields'].items():
+                if 'datatype' not in inner_value or not inner_value['datatype']:
+                    raise Exception('RequiredSchemaOptionNotFound', "{}:{}:{}: 'datatype' not found / invalid".format(self.name, outer_key, inner_key))
 
     def calculate_derived_data(self, source_file=None, dest_file=None):
         if hasattr(source_file, "name") and source_file is not None:
