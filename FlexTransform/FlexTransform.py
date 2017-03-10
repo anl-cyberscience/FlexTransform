@@ -31,6 +31,7 @@ class FlexTransform(object):
         self.logging.setLevel(logging_level)
         self.oracle = None
         self.trace = trace
+        self.trace_list = []
         if self.trace:
             self._create_trace_list(source_fields=source_fields, destination_fields=destination_fields,
                                     source_iri=source_iri, destination_iri=destination_iri)
@@ -47,7 +48,7 @@ class FlexTransform(object):
         :return:
         """
         
-        parser_config = Config(config_file, trace_list=self.trace_list)
+        parser_config = Config(config_file, parser_name, trace_list=self.trace_list)
 
         if parser_name in self.Parsers:
             self.logging.warn('Parser %s already configured, configuration will be overwritten', parser_name)

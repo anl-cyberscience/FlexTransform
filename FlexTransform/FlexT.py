@@ -98,13 +98,28 @@ def main():
                         action='append',
                         default=[],
                         required=False)
+    parser.add_argument('--logging-level', '-l',
+                        help="Set the output level for the logger.  Acceptable values: debug, info, warning, error, critical",
+                        required=False)
 
     args = parser.parse_args()
     try:
+        if args.logging_level:
+            if args.logging_level.lower() == "debug":
+                log.setLevel(logging.DEBUG)
+            elif args.logging_level.lower() == "info":
+                log.setLevel(logging.INFO)
+            elif args.logging_level.lower() == "warning":
+                log.setLevel(logging.WARNING)
+            elif args.logging_level.lower() == "error":
+                log.setLevel(logging.ERROR)
+            elif args.logging_level.lower() == "critical":
+                log.setLevel(logging.CRITICAL)
         transform = FlexTransform.FlexTransform(source_fields=args.trace_src_field,
                                                 source_iri=args.trace_src_IRI,
                                                 destination_fields=args.trace_dst_field,
-                                                destination_iri=args.trace_dst_IRI)
+                                                destination_iri=args.trace_dst_IRI,
+                                                logging_level=logging.NOTSET)
 
         transform.add_parser('src', args.src_config)
         transform.add_parser('dst', args.dst_config)
