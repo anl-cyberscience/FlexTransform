@@ -145,6 +145,8 @@ class Config(object):
             for inner_key, inner_value in outer_value['fields'].items():
                 if 'datatype' not in inner_value or not inner_value['datatype']:
                     raise Exception('RequiredSchemaOptionNotFound', "{}:{}:{}: 'datatype' not found / invalid".format(self.name, outer_key, inner_key))
+                if inner_value['datatype'] == 'datetime' and not ('dateTimeFormat' in inner_value and inner_value['dateTimeFormat']):
+                    raise Exception('RequiredSchemaOptionNotFound', "{}:{}:{}: 'dateTimeFormat' element not present / malformed".format(self.name, outer_key, inner_key))
 
     def calculate_derived_data(self, source_file=None, dest_file=None):
         if hasattr(source_file, "name") and source_file is not None:
