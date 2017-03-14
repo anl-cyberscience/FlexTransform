@@ -1,6 +1,4 @@
 """
-Created on Jun 13, 2015
-
 @author: cstrasburg
 """
 
@@ -19,21 +17,21 @@ class GlobalFunctions(object):
     """
 
     '''
-    The _FunctionNames dictionary should contain each function name understood by this class. Each is 
+    The _FunctionNames dictionary should contain each function name understood by this class. Each is
     mapped to a list with required fields to be passed in the args dictionary, or None if no args are required.
-    
+
     Allowed fields for the Args dictionary:
-    
+
     fieldName       - Optional - The name of the field being processed
 
     fileName        - Optional - The name of the loaded file (full path)
-    
+
     functionArg     - Optional - The string between the '(' and ')' in the function definition
 
     fieldDict       - Optional - The dictionary of the field where this method is defined
 
     '''
-    
+
     __FunctionNames = {
                           'getFileCreationDate': ['fileName'],
                           'getFileUUID': ['fileName', 'functionArg'],
@@ -44,22 +42,22 @@ class GlobalFunctions(object):
         Constructor
         """
         self.logging = logging.getLogger('FlexTransform.Configuration.ConfigFunctions.GlobalFunctions')
-        
+
     @classmethod
     def register_functions(cls):
         for FunctionName, RequiredArgs in cls.__FunctionNames.items():
             ConfigFunctionManager.register_function(FunctionName, RequiredArgs, 'GlobalFunctions')
-        
+
     def Execute(self, function_name, args):
         value = None
-         
+
         if function_name not in self.__FunctionNames:
             raise Exception('FunctionNotDefined',
                             'Function %s is not defined in GlobalFunctions' % (function_name))
-        
+
         elif function_name == 'getFileCreationDate':
             if 'fileName' in args:
-                try: 
+                try:
                     rawctime = os.path.getctime(args['fileName'])
                     ''' Convert to given time format '''
                     if 'fieldDict' in args and 'dateTimeFormat' in args['fieldDict'] and \
@@ -71,7 +69,7 @@ class GlobalFunctions(object):
                     self.logging.warn("Could not get file ctime for {}: {}".format(args['fileName'], e))
 
         elif function_name == 'getFileUUID':
-            if 'fileName' in args:
+            if 'fileName' in args and args['fileName']:
                 fileName = args['fileName']
                 baseName = os.path.basename(fileName)
                 p = re.compile(args['functionArg'])

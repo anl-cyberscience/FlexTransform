@@ -154,11 +154,11 @@ class Config(object):
         if hasattr(source_file, "name") and source_file is not None:
             source_file_name = source_file.name
         else:
-            source_file_name = None
+            source_file_name = ""
         if hasattr(dest_file, "name") and dest_file is not None:
             dest_file_name = dest_file.name
         else:
-            dest_file_name = None
+            dest_file_name = ""
 
         # TODO - Check that SchemaParser has been set
         if "DerivedData" in self.SchemaParser.SchemaConfig:
@@ -184,7 +184,8 @@ class Config(object):
                     value = self._calculate_function_value(value, field_name, field_dict,
                                                            schema_config=schema_config_data,
                                                            file_name=source_file_name)
-                    self.SchemaParser.SchemaConfig["DerivedData"]["fields"][field]["value"] = value
+                    if value:
+                        self.SchemaParser.SchemaConfig["DerivedData"]["fields"][field]["value"] = value
                     if field in self.trace_index.keys():
                         self.logging.debug("[TRACE {}]: Calculated function value = {}".format(field, value))
 
@@ -375,9 +376,9 @@ class Config(object):
                 fields[field]["ontologyMapping"] = "http://www.anl.gov/cfm/transform.owl#" + OntologyMapping
                 if fieldtrace:
                     self.logging.debug("[TRACE {}]: Found simple ontology mapping: {}".format(
-                                                 field, 
+                                                 field,
                                                  fields[field]["ontologyMapping"]))
-                
+
             elif "OntologyMappingMultiple" in schemaConfiguration[field]:
                 OntologyMappings = schemaConfiguration[field].pop("OntologyMappingMultiple")
                 fields[field]["ontologyMappingType"] = "multiple"
@@ -386,7 +387,7 @@ class Config(object):
                     fields[field]["ontologyMappings"].append("http://www.anl.gov/cfm/transform.owl#" + mapping)
                     if fieldtrace:
                         self.logging.debug("[TRACE {}]: Adding multiple ontology mappings: {}".format(
-                                                 field, 
+                                                 field,
                                                  fields[field]["ontologyMappings"][-1]))
                         self.trace_index[field]["dst_IRIs"].append(fields[field]["ontologyMappings"][-1])
 
@@ -401,15 +402,15 @@ class Config(object):
                     fields[field]["enumValues"][kv[0]]["ontologyMapping"] = "http://www.anl.gov/cfm/transform.owl#" + kv[1]
                     if fieldtrace:
                         self.logging.debug("[TRACE {}]: Adding enumerated ontology mappings: {}".format(
-                                                 field, 
+                                                 field,
                                                  fields[field]["enumValues"][kv[0]]["ontologyMappings"]))
                         self.trace_index[field]["dst_IRIs"].append(fields[field]["enumValues"][kv[0]]["ontologyMappings"])
-                    
+
             else:
                 fields[field]["ontologyMappingType"] = "none"
                 if fieldtrace:
                     self.logging.debug("[TRACE {}]: Found no ontology mapping".format(field))
-            
+
             for Directive in schemaConfiguration[field] :
                 if fieldtrace:
                     self.logging.debug("[TRACE {}]: Setting special directive {}".format(field, Directive))
