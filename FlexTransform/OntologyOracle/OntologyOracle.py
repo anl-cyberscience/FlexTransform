@@ -4,22 +4,24 @@ Created on Aug 27, 2014
 @author: cstras
 '''
 
-from rdflib import Graph, Literal, BNode, Namespace, RDF, URIRef
-from rdflib.namespace import RDF, RDFS, OWL
-from collections import namedtuple
-import uuid
 import logging
+import uuid
+from collections import namedtuple
 from uuid import uuid4
+
+from rdflib import Graph, Literal, Namespace, URIRef
+from rdflib.namespace import RDF, RDFS
+
 
 class Oracle(object):
     '''
     classdocs
     '''
     BASEIRI = "http://www.anl.gov/cfm/transform.owl"
-    XFORMNS = Namespace("%s#"%(BASEIRI))
+    XFORMNS = Namespace("%s#" % (BASEIRI))
 
     ''' Define Class Names '''
-    SEMANTICCOMPONENT = URIRef("%s#%s"%(BASEIRI,"SemanticComponent"))
+    SEMANTICCOMPONENT = URIRef("%s#%s" % (BASEIRI, "SemanticComponent"))
     
     ''' Define Properties '''
     HASSEMANTICCONCEPT = XFORMNS.hasSemanticConcept
@@ -30,37 +32,39 @@ class Oracle(object):
     SPECIALIZATION = 2
     EXACTMATCH = 3
 
-    def __init__(self, tboxLoc, schemaIRI):
+    def __init__(self, tboxLoc, schemaIRI, trace, trace_list=[]):
         '''
         Constructor
         '''
         self.bmap = {"xform": self.XFORMNS,
-                     "rdfs" : RDFS }
+                     "rdfs": RDFS}
         self.g = Graph()
         self.g.load(tboxLoc)
         for k in self.bmap:
             self.g.bind(k, self.bmap[k])
         self.schemaReference = schemaIRI
         logging.getLogger("FlexTransform")
+        self.trace = trace
+        self.trace_list = trace_list
         
-    def addSemanticComponent(self, semanticConceptClassIRI, semanticValueClassIRI ):
+    def addSemanticComponent(self, semanticConceptClassIRI, semanticValueClassIRI):
         '''
         Create new components in the given semantic concept class and value class,
         and create a new semantic component with those attributes
         '''
-        semValClassURIRef = URIRef("%s#%s"%(self.BASEIRI,semanticValueClassIRI))
-        semConClassURIRef = URIRef("%s#%s"%(self.BASEIRI,semanticConceptClassIRI))
+        semValClassURIRef = URIRef("%s#%s" % (self.BASEIRI, semanticValueClassIRI))
+        semConClassURIRef = URIRef("%s#%s" % (self.BASEIRI, semanticConceptClassIRI))
 
         ciUUID = uuid.uuid4()
-        conceptIndividual = URIRef("%s#%s-%s"%(self.BASEIRI,"concept",ciUUID))
+        conceptIndividual = URIRef("%s#%s-%s" % (self.BASEIRI, "concept", ciUUID))
         self.g.add((conceptIndividual, RDF.type, semConClassURIRef))
 
         ciUUID = uuid.uuid4()
-        valueIndividual = URIRef("%s#%s-%s"%(self.BASEIRI,"value",ciUUID))
+        valueIndividual = URIRef("%s#%s-%s" % (self.BASEIRI, "value", ciUUID))
         self.g.add((valueIndividual, RDF.type, semValClassURIRef))
         
         ciUUID = uuid.uuid4()
-        componentIndividual = URIRef("%s#%s-%s"%(self.BASEIRI,"component",ciUUID))
+        componentIndividual = URIRef("%s#%s-%s" % (self.BASEIRI, "component", ciUUID))
         self.g.add((componentIndividual, RDF.type, self.SEMANTICCOMPONENT))
         self.g.add((componentIndividual, self.HASSEMANTICCONCEPT, conceptIndividual))
         self.g.add((componentIndividual, self.HASSEMANTICVALUE, valueIndividual))
@@ -81,13 +85,12 @@ class Oracle(object):
                 for schema_element_name in d:
                     # Look for specific fields now:
                     current_fragment = d[schema_element_name]
-                    if type(current_fragment) == dict and \
-                       "ontologyMapping" in current_fragment.keys() and \
-                       "ontologyMappingType" in current_fragment.keys() and \
-                       current_fragment["ontologyMappingType"] == "simple": 
+                    if type(current_fragment) == dict and "ontologyMapping" in current_fragment.keys() and \
+                                    "ontologyMappingType" in current_fragment.keys() and \
+                                    current_fragment["ontologyMappingType"] == "simple":
                         ## Add an individual to the ontology in the given class
                         parentClass = URIRef(current_fragment["ontologyMapping"])
-                        individual = URIRef("%s-ind-%s"%(parentClass,uuid4().__str__()))
+                        individual = URIRef("%s-ind-%s" % (parentClass,uuid4().__str__()))
                         self.g.add((individual, RDF.type, parentClass))
 
     def getSemanticComponentList(self):
@@ -170,7 +173,7 @@ class Oracle(object):
         # Make sure the ontology knows about this concept.  If not, print a warning and return.
         sanityQuery = """SELECT ?parent WHERE {
     <%s> rdfs:subClassOf ?parent .
-}"""%(OntologyReference)
+}""" % (OntologyReference)
         resList = self.g.query(sanityQuery, initNs = self.bmap)
         if len(resList) == 0:
             ## Uh-oh!
@@ -185,7 +188,7 @@ class Oracle(object):
         #
         xQuery = """ASK WHERE {
 <%s> <%s> <%s> .
-}"""%(self.schemaReference, self.XFORMNS.requiresComponent, OntologyReference)
+}""" % (self.schemaReference, self.XFORMNS.requiresComponent, OntologyReference)
 
         resList = self.g.query(xQuery, initNs = self.bmap)
         if resList:
@@ -223,7 +226,7 @@ class Oracle(object):
                 parent = result.individual
                 if result.matchValue:
                     # We've found one, add it!
-                    returnValue.append(ourResult(result.individual,self.GENERALIZATION,distance))
+                    returnValue.append(ourResult(result.individual, self.GENERALIZATION,distance))
             if len(childList) > 0:
                 stillLooking = True
                 newChildList = list()
@@ -233,11 +236,11 @@ class Oracle(object):
                         newChildList.append(resultElement.individual)
                         if resultElement.matchValue:
                             # We found a result!
-                            returnValue.append(ourResult(resultElement.individual,self.SPECIALIZATION,distance))
+                            returnValue.append(ourResult(resultElement.individual, self.SPECIALIZATION, distance))
                 childList = newChildList
         return returnValue
     
-    def stepUpHierarchy(self,start,relation,subject):
+    def stepUpHierarchy(self, start, relation, subject):
         '''
         Returns a tuple giving the parent IRI of 'start' as the first argument, and
         whether it bears 'relation' to 'object' as the second argument.
@@ -255,8 +258,8 @@ WHERE {
         for row in qres:
             parent = row[0]
             wrongRowCount = wrongRowCount + 1
-            query2 = """ ASK WHERE { <%s> <%s> <%s> . } """%(subject, relation, parent)
-            qres2 = self.g.query(query2, initNs = self.bmap)
+            query2 = """ ASK WHERE { <%s> <%s> <%s> . } """ % (subject, relation, parent)
+            qres2 = self.g.query(query2, initNs=self.bmap)
             for row in qres2:
                 resultValue = row
                 
@@ -265,8 +268,7 @@ WHERE {
         Result = namedtuple("Result", ["individual", "matchValue"])
         return Result(parent, resultValue)
 
-
-    def stepDownHierarchy(self,start,relation,subject):
+    def stepDownHierarchy(self, start, relation, subject):
         '''
         Returns a list of tuples giving a child IRIs of 'start' as the first argument, and
         whether it bears 'relation' to 'object' as the second argument.
@@ -274,18 +276,18 @@ WHERE {
         query = """SELECT ?child
 WHERE {
     ?child rdfs:subClassOf <%s> .
-}"""%start
+}""" % start
         child = None
         resultValue = None
         returnValue = list()
         Result = namedtuple("Result", ["individual", "matchValue"])
 
         # There may be any number of results
-        qres = self.g.query(query, initNs = self.bmap)
+        qres = self.g.query(query, initNs=self.bmap)
         for row in qres:
             child = row[0]
-            query2 = """ ASK WHERE { <%s> <%s> <%s> } """%(subject, relation, child)
-            qres2 = self.g.query(query2, initNs = self.bmap)
+            query2 = """ ASK WHERE { <%s> <%s> <%s> } """ % (subject, relation, child)
+            qres2 = self.g.query(query2, initNs=self.bmap)
             for row in qres2:
                 resultValue = row
             returnValue.append(Result(child, resultValue))
@@ -295,4 +297,4 @@ WHERE {
         return returnValue
        
     def dumpGraph(self):
-        print (self.g.serialize(format="n3"))
+        print(self.g.serialize(format="n3"))

@@ -5,11 +5,12 @@ Created on Jul 28, 2014
 '''
 
 import inspect
-import FlexTransform.SyntaxParser
 import logging
 
+import FlexTransform.SyntaxParser
+
 ''' Debugging only '''
-import pprint
+
 
 class Parser(object):
     '''
@@ -21,24 +22,25 @@ class Parser(object):
     # Dictionary of loaded Parser classes
     __KnownParsers = {}
 
-    def __init__(self, tracelist=[]):
+    def __init__(self, trace, tracelist=[]):
         '''
         Constructor
         '''
         self.logging = logging.getLogger('FlexTransform.Parser')
-        self.pprint = pprint.PrettyPrinter(indent=2)
+        self.trace = trace
         self.tracelist = tracelist
         self.traceindex = {}
-        for x in self.tracelist:
-            for v in x["src_fields"]:
-                self.traceindex[v] = x
-            for y in x["dst_fields"]:
-                self.traceindex[y] = x
-            for w in x["src_IRIs"]:
-                self.traceindex[w] = x
-            for z in x["dst_IRIs"]:
-                self.traceindex[z] = x
-        self.logging.debug("Initialized Parser with tracelist of {} elements.".format(len(tracelist)))
+        if self.trace:
+            for x in self.tracelist:
+                for v in x["src_fields"]:
+                    self.traceindex[v] = x
+                for y in x["dst_fields"]:
+                    self.traceindex[y] = x
+                for w in x["src_IRIs"]:
+                    self.traceindex[w] = x
+                for z in x["dst_IRIs"]:
+                    self.traceindex[z] = x
+            self.logging.debug("Initialized Parser with tracelist of {} elements.".format(len(tracelist)))
         
     @classmethod
     def UpdateKnownParsers(cls, ParserName, ParserClass):
@@ -49,10 +51,10 @@ class Parser(object):
         return cls.__KnownParsers
 
     @classmethod
-    def GetParser(cls, ParserName, tracelist=[]):
-        for name, obj in inspect.getmembers(FlexTransform.SyntaxParser, inspect.isclass) :
-            if (name == ParserName) :
-                return obj(tracelist=tracelist);
+    def GetParser(cls, ParserName, trace, tracelist=[]):
+        for name, obj in inspect.getmembers(FlexTransform.SyntaxParser, inspect.isclass):
+            if name == ParserName:
+                return obj(trace, tracelist=tracelist);
 
     # Virtual methods that must be implemented in child classes
 
@@ -77,17 +79,17 @@ class Parser(object):
             self.ParsedData['DerivedData'] = {}
             for field in configurationfile.SchemaConfig['DerivedData']['fields']:
                 self.ParsedData['DerivedData'][field] = configurationfile.SchemaConfig['DerivedData']['fields'][field]['value']
-                if field in self.traceindex:
+                if self.trace and field in self.traceindex:
                     self.logging.debug("[TRACE {}]: Read: value {} copied to ParsedData['DerivedData'] from SchemaConfig".format(field, self.ParsedData['DerivedData'][field]))
     
-    def Write(self,file):
+    def Write(self, file, FinalizedData):
         '''
         Base document write method, must be implemented in subclasses
         '''
-        raise Exception("MethodNotDefined","Write")
+        raise Exception("MethodNotDefined", "Write")
     
     def Finalize(self,data):
         '''
         Base document finalize method, must be implemented in subclasses
         '''
-        raise Exception("MethodNotDefined","Finalize")
+        raise Exception("MethodNotDefined", "Finalize")

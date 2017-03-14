@@ -24,7 +24,7 @@ class XMLParser(Parser):
     XML Syntax Parsers
     '''
 
-    def __init__(self, tracelist=[]):
+    def __init__(self, trace, tracelist=[]):
         '''
         Constructor
         '''
@@ -33,59 +33,59 @@ class XMLParser(Parser):
         self.AdvancedParser = None
         self.ParsedData = None
         self.logging = logging.getLogger('FlexTransform.XMLParser')
+        self.trace = trace
         self.tracelist = tracelist
         self.traceindex = {}
-        for x in self.tracelist:
-            for v in x["src_fields"]:
-                self.traceindex[v] = x
-            for y in x["dst_fields"]:
-                self.traceindex[y] = x
-            for w in x["src_IRIs"]:
-                self.traceindex[w] = x
-            for z in x["dst_IRIs"]:
-                self.traceindex[z] = x
-        self.logging.debug("Initialized XMLParser with tracelist of {} elements.".format(len(tracelist)))
-        self.pprint = pprint.PrettyPrinter()
+        if self.trace:
+            for x in self.tracelist:
+                for v in x["src_fields"]:
+                    self.traceindex[v] = x
+                for y in x["dst_fields"]:
+                    self.traceindex[y] = x
+                for w in x["src_IRIs"]:
+                    self.traceindex[w] = x
+                for z in x["dst_IRIs"]:
+                    self.traceindex[z] = x
+            self.logging.debug("Initialized XMLParser with tracelist of {} elements.".format(len(tracelist)))
 
-    def LoadAdvancedParser(self,CustomParser):
+    def LoadAdvancedParser(self, CustomParser):
         '''
         Returns the Custom Parser Class from the configuration file if it exists
         '''
-        for name, obj in inspect.getmembers(FlexTransform.SyntaxParser.XMLParsers, inspect.isclass) :
-            if (name == CustomParser) :
-                return obj(tracelist=self.tracelist);
+        for name, obj in inspect.getmembers(FlexTransform.SyntaxParser.XMLParsers, inspect.isclass):
+            if name == CustomParser:
+                return obj(self.trace, tracelist=self.tracelist)
 
-    def ValidateConfig(self,config):
+    def ValidateConfig(self, config):
         '''
         Validate XML Parser specific configuration options
         '''
-        if (config.has_section('XML')) :
-            if (config.getboolean('XML', 'ValidateSchema', fallback=False)) :
-                if (config.has_option('XML', 'SchemaFile')) :
+        if config.has_section('XML'):
+            if config.getboolean('XML', 'ValidateSchema', fallback=False):
+                if config.has_option('XML', 'SchemaFile'):
                     SchemaFile = config['XML']['SchemaFile']
-                    if (not SchemaFile.startswith('/')) :
+                    if not SchemaFile.startswith('/'):
                         # Find path to schema file
                         currentdir = os.path.dirname(__file__)
                         SchemaFile = os.path.join(currentdir, '../', SchemaFile)
-                    try :
+                    try:
                         schema_root = etree.parse(SchemaFile)
                         XMLSchema = etree.XMLSchema(schema_root)
-                        self.XMLParser = etree.XMLParser(schema = XMLSchema)
-                    except OSError :
+                        self.XMLParser = etree.XMLParser(schema=XMLSchema)
+                    except OSError:
                         raise Exception('XMLSchemaError', 'Error opening ' + SchemaFile)
                     except etree.XMLSyntaxError as e:
                         raise Exception('XMLSchemaError', e.msg)
-
-                else :
+                else:
                     raise Exception('RequiredOptionNotFound', 'XML: SchemaFile')
 
-            if (config.has_option('XML', 'CustomParser')) :
-                CustomParser = config['XML']['CustomParser']
-                self.AdvancedParser = self.LoadAdvancedParser(CustomParser)
-                if (self.AdvancedParser == None) :
-                    raise Exception('CustomParserNotDefined', 'XML: ' + CustomParser)
+            if config.has_option('XML', 'CustomParser'):
+                custom_parser = config['XML']['CustomParser']
+                self.AdvancedParser = self.LoadAdvancedParser(custom_parser)
+                if self.AdvancedParser is None:
+                    raise Exception('CustomParserNotDefined', 'XML: ' + custom_parser)
                 
-                if (config.has_section(CustomParser)) :
+                if config.has_section(custom_parser):
                     self.AdvancedParser.ValidateConfig(config)
                 
     def Read(self, file, config):
@@ -94,12 +94,12 @@ class XMLParser(Parser):
         '''
         super(XMLParser, self).Read(file, config)
                
-        if (self.AdvancedParser) :
-            partialParsedData = self.ParsedData
-            tempParsedData = self.AdvancedParser.Read(file, self.XMLParser)
-            self.ParsedData = partialParsedData.copy()
-            self.ParsedData.update(tempParsedData)
-        else :
+        if self.AdvancedParser:
+            partial_parsed_data = self.ParsedData
+            temp_parsed_data = self.AdvancedParser.Read(file, self.XMLParser)
+            self.ParsedData = partial_parsed_data.copy()
+            self.ParsedData.update(temp_parsed_data)
+        else:
             self.ParsedData = self._ParseXMLData(file)
             
         return self.ParsedData
@@ -113,12 +113,12 @@ class XMLParser(Parser):
         Write the file out using either an advanced XML parser or the generic parser.
         '''
         
-        if (self.AdvancedParser) :
+        if self.AdvancedParser:
             self.AdvancedParser.Write(file, FinalizedData)
-        else :
+        else:
             self._WriteXMLData(file, FinalizedData)
             
-        if (self.XMLParser) :
+        if self.XMLParser:
             # Validate the created file against the XML schema
             xmlfile = open(file.name, mode='r')
             etree.parse(xmlfile, self.XMLParser)
@@ -128,7 +128,7 @@ class XMLParser(Parser):
         Finalize the formatting of the data before being sent to the Write object or returned to the caller
         '''
         
-        if ('IndicatorData' not in MappedData or MappedData['IndicatorData'].__len__() == 0) :
+        if 'IndicatorData' not in MappedData or MappedData['IndicatorData'].__len__() == 0:
             raise Exception('NoIndicatorData', 'Transformed data has no indicators, nothing to write')
         
         return self._MappedDataToXMLDict(MappedData)
@@ -144,18 +144,18 @@ class XMLParser(Parser):
         ParsedData = {}
         
         for rowType in MappedData :
-            if (isinstance(MappedData[rowType],list)) :
+            if isinstance(MappedData[rowType],list):
                 ParsedData[rowType] = []
-                for row in MappedData[rowType] :
-                    if (isinstance(row,dict)) :
+                for row in MappedData[rowType]:
+                    if isinstance(row,dict):
                         DataRow = self._BuildXMLDictRow(row)
                         ParsedData[rowType].append(DataRow)
-                    else :
+                    else:
                         raise Exception('NoParsableDataFound', "Data isn't in a parsable dictionary format")
-            elif (isinstance(MappedData[rowType],dict)) :
+            elif isinstance(MappedData[rowType],dict):
                 DataRow = self._BuildXMLDictRow(MappedData[rowType])
                 ParsedData[rowType] = DataRow
-            else :
+            else:
                 raise Exception('NoParsableDataFound', "Data isn't in a parsable dictionary format")
             
         return ParsedData
@@ -167,34 +167,33 @@ class XMLParser(Parser):
         DataRow = {}
         
         for k, v in row.items() :
-            if (parentValueMap is not None and 'valuemap' in v) :
-                v['valuemap'] = v['valuemap'].replace(parentValueMap,'')
-            else :
+            if parentValueMap is not None and 'valuemap' in v:
+                v['valuemap'] = v['valuemap'].replace(parentValueMap, '')
+            else:
                 parentValueMap = ''
             
-            if (k == 'IndicatorType') :
+            if k == 'IndicatorType':
                 # Keep passing the IndicatorType forward with the data. This is somewhat messy, but that way we can use it on write
                 DataRow[k] = v
-            elif ('groupedFields' in v) :
-                if k in self.traceindex:
+            elif 'groupedFields' in v:
+                if self.trace and k in self.traceindex:
                     self.logging.debug("[TRACE {}]: Grouped field for output.".format(k))
-                if ('valuemap' in v) :
-                    if k in self.traceindex:
+                if 'valuemap' in v:
+                    if self.trace and k in self.traceindex:
                         self.logging.debug("[TRACE {}]: Grouped field contains a value map; creating new list for {}".format(k, v['valuemap']))
                     DataRow[v['valuemap']] = []
-                    for group in v['groupedFields'] :
-                        #self.logging.debug("Adding xmlDict for group {}".format(group))
+                    for group in v['groupedFields']:
                         DataRow[v['valuemap']].append(self._BuildXMLDictRow(group, parentValueMap=parentValueMap+v['valuemap']+';'))
-            elif ('Value' in v) :
-                if ('valuemap' in v) :
-                    if (v['valuemap'] != '') :
+            elif 'Value' in v:
+                if 'valuemap' in v:
+                    if v['valuemap'] != '':
                         DataRow[v['valuemap']] = v['Value']
-                    else :
+                    else:
                         return v['Value']
-            else :
+            else:
                 self.logging.warning("Field %s is neither a groupedField nor contains a Value entry", k)
         
-        try :
+        try:
             return SchemaParser.UnflattenDict(DataRow)
         except Exception as e:
             self.logging.error('Could not processes %s', DataRow)
@@ -271,12 +270,12 @@ class XMLParser(Parser):
         '''
         results = {}
         
-        if (isinstance(Data,dict)) :
+        if isinstance(Data,dict):
             # Data is expected to be a list
             Data = [Data]
         
-        for row in iter(Data) :
-            if (AttributeName in row and ValueName in row) :
+        for row in iter(Data):
+            if AttributeName in row and ValueName in row:
                 results[row[AttributeName]] = row[ValueName]
             
         return results
@@ -288,12 +287,10 @@ class XMLParser(Parser):
         '''
         results = []
         
-        for key, value in Data.items() :
-                row = {}
+        for key, value in Data.items():
+                row = dict()
                 row[AttributeName] = key
                 row[ValueName] = value
                 results.append(row)
             
         return results
-    
-    

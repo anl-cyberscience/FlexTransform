@@ -15,11 +15,11 @@ class KVParser(Parser):
     Key/Value Syntax Parser
     """
 
-    def __init__(self, tracelist=[]):
+    def __init__(self, trace, tracelist=[]):
         """
         Constructor
         """
-        super(KVParser, self).__init__(tracelist)
+        super(KVParser, self).__init__(trace, tracelist)
         self.SeparatorChar = r"\s"
         self.QuoteChar = r"[']"
         self.KVSeparator = r"[=]"
@@ -27,8 +27,10 @@ class KVParser(Parser):
         self.ParsedData = {}
         
         self.logging = logging.getLogger('FlexTransform.KVParser')
+        self.trace = trace
         self.tracelist = tracelist
-        self.logging.debug("Initialized KVParser with tracelist of {} elements.".format(len(tracelist)))
+        if self.trace:
+            self.logging.debug("Initialized KVParser with tracelist of {} elements.".format(len(tracelist)))
         
     def ValidateConfig(self,config):
         """
@@ -58,20 +60,20 @@ class KVParser(Parser):
         
         self.ParsedData['IndicatorData'] = []
         
-        for line in file :
-            try :
+        for line in file:
+            try:
                 if isinstance(line, bytes):
                     line = line.decode('UTF-8')
                     
                 match = KVRegex.findall(line)
                 DataRow = dict(match)
                 
-                if (self.QuoteChar) :
-                    for k,v in DataRow.items() :
+                if self.QuoteChar:
+                    for k, v in DataRow.items():
                         DataRow[k] = v.strip(self.QuoteChar.strip("[]"))
                         
                 self.ParsedData['IndicatorData'].append(DataRow)
-            except : 
+            except:
                 self.logging.warning("Line could not be parsed: %s", line)
             
         return self.ParsedData
@@ -85,7 +87,7 @@ class KVParser(Parser):
             raise Exception('NoIndicatorData', 'Transformed data has no indicators, nothing to write')
 
         FinalizedData = []
-        for row in MappedData['IndicatorData'] :
+        for row in MappedData['IndicatorData']:
 
             indicatorRow = []
             # Keep passing the IndicatorType forward with the data. This is somewhat messy,
@@ -94,7 +96,7 @@ class KVParser(Parser):
 
             for field in row:
                 DataRow = {}
-                if ('Value' in row[field]) :
+                if 'Value' in row[field]:
                     if 'datatype' in row[field]:
                         if row[field]['datatype'] == 'enum' or row[field]['datatype'] == 'string':
                             DataRow[field] = self.QuoteChar.strip("[]") + row[field]['Value'] + self.QuoteChar.strip("[]")

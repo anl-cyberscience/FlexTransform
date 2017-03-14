@@ -21,7 +21,7 @@ class FlexTransform(object):
     
     def __init__(self,
                  logging_level=logging.WARN,
-                 trace=False,
+                 trace=None,
                  source_fields=None,
                  destination_fields=None,
                  source_iri=None,
@@ -30,7 +30,12 @@ class FlexTransform(object):
         self.logging = logging.getLogger('FlexTransform')
         self.logging.setLevel(logging_level)
         self.oracle = None
-        self.trace = trace
+
+        if trace is None and (source_fields or source_iri or destination_fields or destination_iri):
+            self.trace = True
+        else:
+            self.trace = trace
+
         self.trace_list = []
         if self.trace:
             self._create_trace_list(source_fields=source_fields, destination_fields=destination_fields,
@@ -48,7 +53,7 @@ class FlexTransform(object):
         :return:
         """
         
-        parser_config = Config(config_file, parser_name, trace_list=self.trace_list)
+        parser_config = Config(config_file, parser_name, self.trace, trace_list=self.trace_list)
 
         if parser_name in self.Parsers:
             self.logging.warn('Parser %s already configured, configuration will be overwritten', parser_name)
@@ -62,7 +67,7 @@ class FlexTransform(object):
         '''
         
         # TODO add error checking for locations
-        self.oracle = Oracle(tbox_location, rdflib.URIRef(schema_iri), tracelist=self.trace_list)
+        self.oracle = Oracle(tbox_location, rdflib.URIRef(schema_iri), self.trace, tracelist=self.trace_list)
         
     def transform(self, source_file, source_parser_name, target_parser_name,
                   target_file=None, source_meta_data=None, oracle=None):
@@ -123,7 +128,6 @@ class FlexTransform(object):
         
         # Finalize data to be written
         finalized_data = destination_config.Parser.Finalize(transformed_data)
-        self.logging.debug("FlexTransform.Transform(): FinalizedData Dictionary: ")
         
         if target_file is not None:
             destination_config.Parser.Write(target_file, finalized_data)

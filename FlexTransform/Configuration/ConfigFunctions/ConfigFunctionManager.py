@@ -18,7 +18,7 @@ class ConfigFunctionManager(object):
 
     __KnownFunctions = defaultdict(dict)
 
-    def __init__(self, trace_list=[]):
+    def __init__(self, trace, trace_list=[]):
         """
         Constructor
         :param trace_list: list of elements to trace
@@ -27,19 +27,20 @@ class ConfigFunctionManager(object):
         self.logging = logging.getLogger('FlexTransform.Configuration.ConfigFunctions.ConfigFunctionManager')
         
         self._FunctionClasses = {}
+        self.trace = trace
         self.trace_list = trace_list
         self.trace_index = {}
-        for x in self.trace_list:
-            for v in x["src_fields"]:
-                self.trace_index[v] = x
-            for y in x["dst_fields"]:
-                self.trace_index[y] = x
-            for w in x["src_IRIs"]:
-                self.trace_index[w] = x
-            for z in x["dst_IRIs"]:
-                self.trace_index[z] = x
-
-        self.logging.debug("Initialized ConfigFunctionManager with trace_list of {} elements".format(len(trace_list)))
+        if self.trace:
+            for x in self.trace_list:
+                for v in x["src_fields"]:
+                    self.trace_index[v] = x
+                for y in x["dst_fields"]:
+                    self.trace_index[y] = x
+                for w in x["src_IRIs"]:
+                    self.trace_index[w] = x
+                for z in x["dst_IRIs"]:
+                    self.trace_index[z] = x
+            self.logging.debug("Initialized ConfigFunctionManager with trace_list of {} elements".format(len(trace_list)))
                 
     @classmethod
     def register_function(cls, function_name, required_args, function_class):
@@ -100,7 +101,7 @@ class ConfigFunctionManager(object):
             for arg in args:
                 if arg not in allowed_fields:
                     self.logging.warning('A argument passed to function %s is not allowed: %s' % (function_name, arg))
-        else :
+        else:
             raise Exception('InvalidArgs',
                             'The arguments passed to function %s are not defined or not in dictionary format' % function_name)
 

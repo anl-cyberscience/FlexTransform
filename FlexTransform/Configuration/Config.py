@@ -21,7 +21,7 @@ class Config(object):
     a source or destination file
     '''
 
-    def __init__(self, config_file, parser_name, trace_list=[]):
+    def __init__(self, config_file, parser_name, trace, trace_list=[]):
         '''
         Constructor
         '''
@@ -29,22 +29,24 @@ class Config(object):
 
         self.name = parser_name
 
+        self.trace = trace
         self.trace_index = {}
         self.trace_list = trace_list
-        for x in self.trace_list:
-            for v in x["src_fields"]:
-                self.trace_index[v] = x
-            for y in x["dst_fields"]:
-                self.trace_index[y] = x
-            for w in x["src_IRIs"]:
-                self.trace_index[w] = x
-            for z in x["dst_IRIs"]:
-                self.trace_index[z] = x
-        self.logging.debug("Initializing Config with trace_list of {} elements".format(len(trace_list)))
+        if self.trace:
+            for x in self.trace_list:
+                for v in x["src_fields"]:
+                    self.trace_index[v] = x
+                for y in x["dst_fields"]:
+                    self.trace_index[y] = x
+                for w in x["src_IRIs"]:
+                    self.trace_index[w] = x
+                for z in x["dst_IRIs"]:
+                    self.trace_index[z] = x
+            self.logging.debug("Initializing Config with trace_list of {} elements".format(len(trace_list)))
 
         self.SchemaConfig = None
         self.MetadataSchemaConfig = None
-        self.ConfigFunctionManager = ConfigFunctionManager(trace_list=trace_list)
+        self.ConfigFunctionManager = ConfigFunctionManager(self.trace, trace_list=trace_list)
 
         self.config_file = config_file
         self._read_config()
@@ -80,7 +82,7 @@ class Config(object):
             Parsers = Parser.GetParsers()
             if file_parser in Parsers:
                 ParserName = Parsers[file_parser]
-                self.Parser = Parser.GetParser(ParserName, tracelist=self.trace_list)
+                self.Parser = Parser.GetParser(ParserName, self.trace, tracelist=self.trace_list)
                 self.Parser.ValidateConfig(self.config)
             else:
                 raise Exception('UndefinedParserType', file_parser)
@@ -137,7 +139,7 @@ class Config(object):
                 self._MergeDictionaries(self.SchemaConfig, metadata_schema_config)
 
         self._validate_schema()
-        self.SchemaParser = SchemaParser(self.SchemaConfig, tracelist=self.trace_list)
+        self.SchemaParser = SchemaParser(self.SchemaConfig, self.trace, tracelist=self.trace_list)
         
         # TODO: Validate that the syntax and schema is read only, write only or read/write and throw an error if necessary
     def _validate_schema(self):

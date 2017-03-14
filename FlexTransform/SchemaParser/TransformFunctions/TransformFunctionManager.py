@@ -15,10 +15,12 @@ class TransformFunctionManager(object):
 
     __KnownFunctions = defaultdict(dict)
 
-    def __init__(self, trace_list=[]):
+    def __init__(self, trace, trace_list=[]):
         self.logging = logging.getLogger('FlexTransform.SchemaParser.TransformFunctionManager')
+        self.trace = trace
         self.trace_list = trace_list
-        self.logging.debug("Initialized DictionaryParser with tracelist of {} elements.".format(len(trace_list)))
+        if self.trace:
+            self.logging.debug("Initialized DictionaryParser with tracelist of {} elements.".format(len(trace_list)))
         
         self._FunctionClasses = {}
                 
