@@ -1,13 +1,11 @@
 import io
 import os
-import tempfile
 import unittest
 
 from lxml import etree
 
 from FlexTransform import FlexTransform
-from FlexTransform.test.SampleInputs import CFM13ALERT, CFM13ALERTUUID, STIXACS, KEYVALUE
-
+from FlexTransform.test.SampleInputs import CFM13ALERT, STIXACS, KEYVALUE
 
 
 class TestCFM13AlertToSTIXTLP(unittest.TestCase):
@@ -36,10 +34,7 @@ class TestCFM13AlertToSTIXTLP(unittest.TestCase):
             transform.add_parser('stix', input_file)
         output1_object = io.StringIO()
 
-        with tempfile.NamedTemporaryFile(mode="w+", prefix=CFM13ALERTUUID) as input_file:
-            input_file.write(CFM13ALERT)
-            input_file.seek(0)
-            transform.transform(input_file, 'cfm13alert', 'stix', target_file=output1_object)
+        transform.transform(io.StringIO(CFM13ALERT), 'cfm13alert', 'stix', target_file=output1_object)
 
         cls.output1 = etree.XML(output1_object.getvalue())
 

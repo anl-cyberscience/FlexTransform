@@ -41,7 +41,7 @@ class Parser(object):
                 for z in x["dst_IRIs"]:
                     self.traceindex[z] = x
             self.logging.debug("Initialized Parser with tracelist of {} elements.".format(len(tracelist)))
-        
+
     @classmethod
     def UpdateKnownParsers(cls, ParserName, ParserClass):
         cls.__KnownParsers[ParserName] = ParserClass;
@@ -67,21 +67,22 @@ class Parser(object):
     def Read(self,file,configurationfile):
         '''
         Base document read method, must be implemented in subclasses
-        TODO: need proper subclassing: All subclasses should call this Read method as well, as it contains 
+        TODO: need proper subclassing: All subclasses should call this Read method as well, as it contains
         code common to all parsers.
         '''
-        
+
         ''' Ensure the derived data is available to all parsers, e.g. to extract information from the file
-            name or metadata 
+            name or metadata
         '''
         self.ParsedData = {}
         if 'DerivedData' in configurationfile.SchemaConfig:
             self.ParsedData['DerivedData'] = {}
             for field in configurationfile.SchemaConfig['DerivedData']['fields']:
-                self.ParsedData['DerivedData'][field] = configurationfile.SchemaConfig['DerivedData']['fields'][field]['value']
-                if self.trace and field in self.traceindex:
-                    self.logging.debug("[TRACE {}]: Read: value {} copied to ParsedData['DerivedData'] from SchemaConfig".format(field, self.ParsedData['DerivedData'][field]))
-    
+                if 'value' in configurationfile.SchemaConfig['DerivedData']['fields'][field] and configurationfile.SchemaConfig['DerivedData']['fields'][field]['value']:
+                    self.ParsedData['DerivedData'][field] = configurationfile.SchemaConfig['DerivedData']['fields'][field]['value']
+                    if self.trace and field in self.traceindex:
+                        self.logging.debug("[TRACE {}]: Read: value {} copied to ParsedData['DerivedData'] from SchemaConfig".format(field, self.ParsedData['DerivedData'][field]))
+
     def Write(self, file, FinalizedData):
         '''
         Base document write method, must be implemented in subclasses
