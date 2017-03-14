@@ -5,6 +5,7 @@ Created on Mar 13, 2015
 """
 
 import logging
+import pprint
 
 import arrow
 
@@ -41,8 +42,8 @@ class CFM13Functions(object):
 
     __FunctionNames = {
         'DocumentHeaderData': {
-
             'CFM13_determineTLP': ['transformedData'],
+            'CFM13_determineReportOUO': ['transformedData'],
             'CFM13_earliestIndicatorTime': ['transformedData']
         },
         'IndicatorData': {
@@ -56,12 +57,13 @@ class CFM13Functions(object):
         Constructor
         """
         self.logging = logging.getLogger('FlexTransform.SchemaParser.CFM13Functions')
+        self.pprint = pprint.PrettyPrinter()
 
     @classmethod
     def RegisterFunctions(cls):
         for Scope, Functions in cls.__FunctionNames.items():
             for FunctionName, RequiredArgs in Functions.items():
-                TransformFunctionManager.RegisterFunction(Scope, FunctionName, RequiredArgs, 'CFM13Functions')
+                TransformFunctionManager.register_function(Scope, FunctionName, RequiredArgs, 'CFM13Functions')
 
     def Execute(self, Scope, FunctionName, args):
         """
@@ -97,12 +99,20 @@ class CFM13Functions(object):
                 value += "SharingRestrictions=%s" % args['currentRow']['restriction']['Value']
 
         elif FunctionName == 'CFM13_determineTLP':
+            valuemap = {"WHITE": 1, "GREEN": 2, "AMBER": 3, "RED": 4}
             value = 'WHITE'
             for subrow in args['transformedData']['IndicatorData']:
                 if 'restriction' in subrow:
-                    if subrow['restriction']['Value'] == 'private' or subrow['restriction']['Value'] == 'need-to-know':
-                        value = 'AMBER'
-                        break
+                    if subrow['restriction']['Value'] == 'private':
+                        if valuemap['AMBER'] > valuemap[value]:
+                            value = 'AMBER'
+                    if subrow['restriction']['Value'] == 'need-to-know':
+                        if valuemap['GREEN'] > valuemap[value]:
+                            value = 'GREEN'
+                if 'ouo' in subrow:
+                    if subrow['ouo']['Value'] == '1':
+                        if valuemap['GREEN'] > valuemap[value]:
+                            value = 'GREEN'
 
         elif FunctionName == 'CFM13_earliestIndicatorTime':
             # For now this function is specific to CFM13, it could be made generic if needed in other Schemas
@@ -124,5 +134,19 @@ class CFM13Functions(object):
                 sightings += int(args['currentRow'][args['functionArg']]['Value'])
 
             value = str(sightings)
+            
+        elif FunctionName == 'CFM13_determineReportOUO':
+            '''
+            This function determines the OUO level of the overall report by assuming that if any included indicator is OUO,
+            then the entire report is OUO.
+            '''
+            value = "0"
+            self.logging.debug("Evaluating report OUO status based on {} indicators.".format(len(args['transformedData']['IndicatorData'])))
+            for indicator in args['transformedData']['IndicatorData']:
+                self.logging.debug("Checking indicator OUO value: {}".format(indicator['ouo']['Value']))
+                if indicator['ouo']['Value'] == "1":
+                    value = "1"
+                    break
+            self.logging.debug("Returning value {}".format(value))
 
         return value

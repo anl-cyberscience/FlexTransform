@@ -4,23 +4,30 @@ Created on Dec 5, 2014
 @author: ahoying
 '''
 
-from lxml import etree
-import FlexTransform.SyntaxParser
-import logging
 import copy
+import logging
+
+from lxml import etree
+
+import FlexTransform.SyntaxParser
 from FlexTransform.SchemaParser.TransformFunctions import CFM20Functions
+
 
 class CFM20Alert(object):
     '''
     Parser for CFM version 2.0 Alert XML documents
     '''
 
-    def __init__(self):
+    def __init__(self, trace, tracelist=[]):
         '''
         Constructor
         '''
         
         self.logging = logging.getLogger('FlexTransform.XMLParser.CFM20Alert')
+        self.trace = trace
+        self.tracelist = tracelist
+        if self.trace:
+            self.logging.debug("Initialized CFM20 XMLParser with tracelist of {} elements.".format(len(tracelist)))
         
         CFM20Functions.RegisterFunctions()
     
@@ -30,32 +37,32 @@ class CFM20Alert(object):
         '''
         
         root = None
-        if (xmlparser is not None) :
+        if xmlparser is not None:
             # Validate file against the schema when it is loaded
             tree = etree.parse(cfm20file, xmlparser)
             root = tree.getroot()
-        else :
+        else:
             tree = etree.parse(cfm20file)
             root = tree.getroot()
         
-        ParsedData = {};
+        ParsedData = {}
         ParsedData['DocumentHeaderData'] = {}
-        ParsedData['IndicatorData'] = [];
+        ParsedData['IndicatorData'] = []
                
         cfm20dict = FlexTransform.SyntaxParser.XMLParser.etree_to_dict(root)
         
         # Extract CFM 2.0 version information
-        if ('Version' in cfm20dict['CFMAlert']) :
+        if 'Version' in cfm20dict['CFMAlert']:
             ParsedData['DocumentHeaderData']['Version'] = cfm20dict['CFMAlert']['Version']
             
-        if (isinstance(cfm20dict['CFMAlert']['Alert'],list)) :
-            for alert in cfm20dict['CFMAlert']['Alert'] :
+        if isinstance(cfm20dict['CFMAlert']['Alert'],list):
+            for alert in cfm20dict['CFMAlert']['Alert']:
                 indicators = self._ProcessCFM20Alert(alert)
-                if (indicators.__len__() > 0) :
+                if indicators.__len__() > 0:
                     ParsedData['IndicatorData'].extend(indicators)
-        else :
+        else:
             indicators = self._ProcessCFM20Alert(cfm20dict['CFMAlert']['Alert'])
-            if (indicators.__len__() > 0) :
+            if indicators.__len__() > 0:
                 ParsedData['IndicatorData'].extend(indicators)
                 
         self._NormalizeCFM20AlertData(ParsedData)
@@ -72,13 +79,13 @@ class CFM20Alert(object):
         
         compositeRows = self._BuildCompositeIndicators(ParsedData['IndicatorData'])
             
-        for row in compositeRows :
-            try :
+        for row in compositeRows:
+            try:
                 Alert = self._BuildAlert(row)
-                if (Alert) :
+                if Alert:
                     Alerts.append(Alert)
                     
-            except Exception as inst :
+            except Exception as inst:
                 self.logging.error(inst)
                 
         # Name space mapping for CFM 2.0 Alert XML documents
@@ -95,7 +102,7 @@ class CFM20Alert(object):
         CFM20Root.append(FlexTransform.SyntaxParser.XMLParser.dict_to_etree({'Version': '2.0'}))
         
         # Parse the alert dictionaries back into XML Element trees and append to the root element
-        for alert in Alerts :
+        for alert in Alerts:
             CFM20Alert = FlexTransform.SyntaxParser.XMLParser.dict_to_etree({'Alert': alert})
             CFM20Root.append(CFM20Alert)
             
@@ -107,8 +114,7 @@ class CFM20Alert(object):
                                        doctype="<!DOCTYPE CFMEnvelope [\n    <!ENTITY cfm 'http://www.anl.gov/cfm/2.0/current/#'>\n    <!ENTITY tlp 'http://www.us-cert.gov/tlp/#'>\n]>"
                                        ).decode(encoding='UTF-8').replace('>http://www.anl.gov/cfm/2.0/current/#', '>&cfm;'))
         # cfm20file.close()
-            
-            
+
     def _BuildAlert(self, row):
         '''
         OrderedLists and SubLists are used to force dictionary data into the correct output order for CFM 2.0 Alert Schema validation
@@ -117,65 +123,64 @@ class CFM20Alert(object):
         RequiredFields = ['AlertID', 'AlertTimestamp', 'IndicatorSet', 'ReasonList', 'ActionList']
         
         # Validate required fields are present
-        for field in RequiredFields :
-            if (field not in row) :
+        for field in RequiredFields:
+            if (field not in row):
                 raise Exception("MissingRequiredField", "Required field %s is not present in row: %s", field, row)
         
-        OrderedList = [];
+        OrderedList = []
         OrderedList.append({'AlertID': row['AlertID']})
         OrderedList.append({'AlertTimestamp': row['AlertTimestamp']})
         
-        if ('RelatedList' in row and 'RelatedAlert' in row['RelatedList']) :
-            if (isinstance(row['RelatedList']['RelatedAlert'], list)) :
+        if 'RelatedList' in row and 'RelatedAlert' in row['RelatedList']:
+            if isinstance(row['RelatedList']['RelatedAlert'], list):
                 SubLists = []
-                for relatedalert in row['RelatedList']['RelatedAlert'] :
+                for relatedalert in row['RelatedList']['RelatedAlert']:
                     SubList = [];
                     SubList.append({'RelatedID': relatedalert['RelatedID']})
-                    if ('RelatedDescription' in relatedalert) :
+                    if 'RelatedDescription' in relatedalert:
                         SubList.append({'RelatedDescription': relatedalert['RelatedDescription']})
                     SubLists.append({'RelatedAlert': SubList})
                 OrderedList.append({'RelatedList': SubLists})
-            else :
+            else:
                 raise Exception('UnexpectedPath', 'RelatedAlert is not a list: %s', row['RelatedList']['RelatedAlert'])
-           
-        
+
         OrderedList.append({'IndicatorSet': row['IndicatorSet']})
         
-        if ('ReasonList' in row and 'Reason' in row['ReasonList']) :
-            if (isinstance(row['ReasonList']['Reason'], list)) :
+        if 'ReasonList' in row and 'Reason' in row['ReasonList']:
+            if isinstance(row['ReasonList']['Reason'], list):
                 SubLists = []
-                for reason in row['ReasonList']['Reason'] :
-                    SubList = [];
+                for reason in row['ReasonList']['Reason']:
+                    SubList = []
                     SubList.append({'ReasonCategory': reason['ReasonCategory']})
-                    if ('ReasonDescription' in reason) :
+                    if 'ReasonDescription' in reason:
                         SubList.append({'ReasonDescription': reason['ReasonDescription']})
                     SubLists.append({'Reason': SubList})
                 OrderedList.append({'ReasonList': SubLists})
-            else :
+            else:
                 raise Exception('UnexpectedPath', 'Reason is not a list: %s', row['ReasonList']['Reason'])
 
-        if ('ActionList' in row and 'Action' in row['ActionList']) :
-            if (isinstance(row['ActionList']['Action'], list)) :
+        if 'ActionList' in row and 'Action' in row['ActionList']:
+            if isinstance(row['ActionList']['Action'], list):
                 SubLists = []
-                for action in row['ActionList']['Action'] :
-                    SubList = [];
+                for action in row['ActionList']['Action']:
+                    SubList = []
                     SubList.append({'ActionCategory': action['ActionCategory']})
-                    if ('ActionDescription' in action) :
+                    if 'ActionDescription' in action:
                         SubList.append({'ActionDescription': action['ActionDescription']})
-                    if ('ActionTimestamp' in action) :
+                    if 'ActionTimestamp' in action:
                         SubList.append({'ActionTimestamp': action['ActionTimestamp']})
                     SubLists.append({'Action': SubList})
                 OrderedList.append({'ActionList': SubLists})
-            else :
+            else:
                 raise Exception('UnexpectedPath', 'Action is not a list: %s', row['ActionList']['Action'])
             
-        if ('Comment' in row) :
+        if 'Comment' in row:
             OrderedList.append({'Comment': row['Comment']})
             
-        if ('AlertExtendedAttribute' in row) :
-            if (isinstance(row['AlertExtendedAttribute'], list)) :
-                for extendedattr in row['AlertExtendedAttribute'] :
-                    SubList = [];
+        if 'AlertExtendedAttribute' in row:
+            if isinstance(row['AlertExtendedAttribute'], list):
+                for extendedattr in row['AlertExtendedAttribute']:
+                    SubList = []
                     SubList.append({'Field': extendedattr['Field']})
                     SubList.append({'Value': extendedattr['Value']})
                     OrderedList.append({'AlertExtendedAttribute': SubList})
@@ -191,14 +196,14 @@ class CFM20Alert(object):
         
         indicators = []
         
-        if ('IndicatorSet' in alert) :
+        if 'IndicatorSet' in alert:
             indicatorList = self._BuildIndicatorList(alert['IndicatorSet'])
-            if (indicatorList.__len__() == 1) :
+            if indicatorList.__len__() == 1:
                 alert['IndicatorSet'] = indicatorList[0]
                 indicators.append(alert)
-            else :
-                for indicator in indicatorList :
-                    newAlert = copy.deepcopy(alert);
+            else:
+                for indicator in indicatorList:
+                    newAlert = copy.deepcopy(alert)
                     newAlert['IndicatorSet'] = indicator
                     indicators.append(newAlert)
         
@@ -213,22 +218,22 @@ class CFM20Alert(object):
         
         # Group alerts by AlertID
         # TODO: there is other ways that groups of related indicators can be created, such as having the same data for reason and action and it may be worth auto-grouping those
-        for row in indicatorData :
+        for row in indicatorData:
             alertID = row['AlertID']
-            if (alertID in indicatorIDs) :
+            if alertID in indicatorIDs:
                 indicatorIDs[alertID].append(row)
-            else :
+            else:
                 indicatorIDs[alertID] = []
                 indicatorIDs[alertID].append(row)
                 
-        for rows in indicatorIDs.values() :
-            if (rows.__len__() == 1) :
+        for rows in indicatorIDs.values():
+            if rows.__len__() == 1:
                 row = rows[0]
                 indicators = self._BuildIndicators(row.pop('IndicatorSet'))
                 
-                if (indicators.__len__() == 1) :
+                if indicators.__len__() == 1:
                     row['IndicatorSet'] = indicators[0]
-                else :
+                else:
                     row['IndicatorSet'] = {'CompositeIndicator': {'And': indicators}}
                     
                 compositeRows.append(row)
@@ -241,7 +246,7 @@ class CFM20Alert(object):
                 
                 compositeIndicator = {'CompositeIndicator': {}}
                 
-                for row in rows :
+                for row in rows:
                     '''
                     TODO: This isn't designed to create the most optimal Composite Indicator.
                     
@@ -278,16 +283,16 @@ class CFM20Alert(object):
                     '''
                     indicators = self._BuildIndicators(row.pop('IndicatorSet'))
                     
-                    if (indicators.__len__() == 1) :
-                        if ('Or' in compositeIndicator['CompositeIndicator']) :
+                    if indicators.__len__() == 1:
+                        if 'Or' in compositeIndicator['CompositeIndicator']:
                             compositeIndicator['CompositeIndicator']['Or'].append(indicators[0])
-                        else :
+                        else:
                             compositeIndicator['CompositeIndicator']['Or'] = indicators
                             
                     else :
-                        if ('Or' in compositeIndicator['CompositeIndicator']) :
+                        if 'Or' in compositeIndicator['CompositeIndicator']:
                             compositeIndicator['CompositeIndicator']['Or'].append({'CompositeIndicator': {'And': indicators}})
-                        else :
+                        else:
                             compositeIndicator['CompositeIndicator']['Or'] = [{'CompositeIndicator': {'And': indicators}}]
                             
                 newrow['IndicatorSet'] = compositeIndicator
@@ -300,17 +305,17 @@ class CFM20Alert(object):
         Turns an indicatorSet into a properly formatted dictionary for the CFM 2.0 Alert Schema
         '''
                 
-        if (isinstance(indicatorSet, list)) :
+        if isinstance(indicatorSet, list):
             SubLists = []
-            for indicator in indicatorSet :
-                SubList = [];
+            for indicator in indicatorSet:
+                SubList = []
                 SubList.append({'Type': indicator['Type']})
                 SubList.append({'Constraint': indicator['Constraint']})
                 SubList.append({'Value': indicator['Value']})
                 SubLists.append({'Indicator': SubList})
                 
             return SubLists
-        else :
+        else:
             raise Exception('UnexpectedPath', 'IndicatorSet is not a list: %s', indicatorSet)
     
     def _BuildIndicatorList(self, indicatorSet, operation=None):
@@ -321,32 +326,30 @@ class CFM20Alert(object):
         indicatorList = []
         newIndicators = []
         
-        for k,v in indicatorSet.items() :
-            if (k == 'Indicator') :
-                if (isinstance(v,list)) :
+        for k,v in indicatorSet.items():
+            if k == 'Indicator':
+                if isinstance(v,list):
                     indicatorList.extend(v)
-                else :
+                else:
                     indicatorList.append(v)
-            elif (k == 'CompositeIndicator') :
-                if ('Or' in v) :
+            elif k == 'CompositeIndicator':
+                if 'Or' in v:
                     newIndicators = self._BuildIndicatorList(v['Or'], operation='Or')
-                    if (operation != 'And') :
+                    if operation != 'And':
                         indicatorList.extend(newIndicators)
-                    
-                elif ('And' in v) :
+                elif 'And' in v:
                     newIndicators = self._BuildIndicatorList(v['And'], operation='And')
                     indicatorList.append(newIndicators)
-                    
-                else :
+                else:
                     raise Exception('InvalidOperation', 'Invalid composite indicator operation: %s' % v.items())
                 
-        if (operation == 'And') :
-            for i in newIndicators :
-                for x in indicatorList :
-                    if (isinstance(x,list)) :
+        if operation == 'And':
+            for i in newIndicators:
+                for x in indicatorList:
+                    if isinstance(x,list):
                         x.extend(i)
-                    else :
-                        x = [x,i]
+                    else:
+                        x = [x, i]
                         
         return indicatorList
     
@@ -362,14 +365,14 @@ class CFM20Alert(object):
                                 'AlertExtendedAttribute': 'list'
                                 }
         
-        NormalizeElementValueNamespaces =   {
-                                            'ActionList': {'Action': { 'ActionCategory': 'http://www.anl.gov/cfm/2.0/current/#'}},
-                                            'ReasonList': {'Reason': { 'ReasonCategory': 'http://www.anl.gov/cfm/2.0/current/#'}},
-                                            'IndicatorSet': {'Type': 'http://www.anl.gov/cfm/2.0/current/#', 'Constraint': 'http://www.anl.gov/cfm/2.0/current/#'},
-                                            'AlertExtendedAttribute': {'Field': 'http://www.anl.gov/cfm/2.0/current/#'},
-                                            }
+        NormalizeElementValueNamespaces = {
+            'ActionList': {'Action': {'ActionCategory': 'http://www.anl.gov/cfm/2.0/current/#'}},
+            'ReasonList': {'Reason': {'ReasonCategory': 'http://www.anl.gov/cfm/2.0/current/#'}},
+            'IndicatorSet': {'Type': 'http://www.anl.gov/cfm/2.0/current/#', 'Constraint': 'http://www.anl.gov/cfm/2.0/current/#'},
+            'AlertExtendedAttribute': {'Field': 'http://www.anl.gov/cfm/2.0/current/#'},
+        }
         
-        for indicator in ParsedData['IndicatorData'] :
+        for indicator in ParsedData['IndicatorData']:
             self._NormalizeIndicatorElements(indicator, NormalizeElementLists)
             self._NormalizeIndicatorNamespaces(indicator, NormalizeElementValueNamespaces)
             
@@ -379,13 +382,13 @@ class CFM20Alert(object):
         Normalize a single indicator, use the element dictionary for processing rules on which elements should always be represented as a list
         '''
         
-        if (isinstance(element,dict)) :
-            for (e,v) in element.items() :
-                if (e in indicator) :
-                    if (isinstance(v,dict)) :
+        if isinstance(element,dict):
+            for (e, v) in element.items():
+                if e in indicator:
+                    if isinstance(v,dict):
                         self._NormalizeIndicatorElements(indicator[e], element[e])
-                    elif (isinstance(v,str)) :
-                        if (v == 'list' and not isinstance(indicator[e], list)) :
+                    elif isinstance(v,str):
+                        if v == 'list' and not isinstance(indicator[e], list):
                             newValue = indicator.pop(e)
                             indicator[e] = [newValue]
 
@@ -394,14 +397,13 @@ class CFM20Alert(object):
         Normalize a single indicator, use the element dictionary for processing rules on which elements should have the namespace prepended to the value
         '''
         
-        if (isinstance(element,dict)) :
-            for (e,v) in element.items() :
-                if (isinstance(indicator,dict) and e in indicator) :
-                    if (isinstance(v,dict)) :
+        if isinstance(element,dict):
+            for (e, v) in element.items():
+                if isinstance(indicator,dict) and e in indicator:
+                    if isinstance(v,dict):
                         self._NormalizeIndicatorNamespaces(indicator[e], element[e])
-                    elif (isinstance(v,str) and v not in indicator[e]) :
+                    elif isinstance(v,str) and v not in indicator[e]:
                         indicator[e] = "%s%s" % (v,indicator[e])
-                elif (isinstance(indicator,list)) :
-                    for i in indicator :
+                elif isinstance(indicator,list):
+                    for i in indicator:
                         self._NormalizeIndicatorNamespaces(i, element)
-                        

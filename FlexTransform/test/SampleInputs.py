@@ -531,19 +531,21 @@ STIXACS = """<stix:STIX_Package
 
 LQMTOOLS = """{
     "indicators" : {
-    "DataSensitivity": "noSensitivity",
-    "DownloadElementExtendedAttribute": {
-        "Field": "orig1.3Filename",
-        "Value": "asderts.201409140500.xml.gpg"
-    },
-    "FileName": "LQMT_Test_Alert.Alert.Cfm13Alert",
-    "PayloadFormat": "Cfm13Alert",
-    "PayloadType": "Alert",
-    "ReconPolicy": "Touch",
-    "SendingSite": "ANL",
-    "SentTimestamp": "1410685202",
-    "UploadID": "0387f9cc-a903-4822-8976-27e1ff47ca71"
-}
+        "DataSensitivity": "noSensitivity",
+        "DownloadElementExtendedAttribute": {
+            "Field": "orig1.3Filename",
+            "Value": "asderts.201409140500.xml.gpg"
+        },
+        "FileName": "LQMT_Test_Alert.Alert.Cfm13Alert",
+        "PayloadFormat": "Cfm13Alert",
+        "PayloadType": "Alert",
+        "ReconPolicy": "Touch",
+        "SendingSite": "ANL",
+        "SentTimestamp": "1410685202",
+        "UploadID": "0387f9cc-a903-4822-8976-27e1ff47ca71"
+    }
 }"""
 
 KEYVALUE = """timestamp=1325401200&ipv4=10.11.12.13&direction=ingress&comment='Attacker scanning for RDP'&service=3389/TCP&category='Scanning'&severity=high\r\ntimestamp=1325401200&ipv4=10.11.12.14&fqdn=bad.scanning.dom&direction=ingress&comment='Attacker scanning for SSH'&service=22/TCP&category='Scanning'&severity=high\r\ntimestamp=1325401200&ipv6=2001:db8:16::1&direction=ingress&comment='HTTP Response code 4xx, suspicious'&category='Reconnaissance'&severity=low\r\ntimestamp=1325401200&fqdn=bad.domain&direction=egress&comment='Malicious domain'&category='Malware Traffic'&severity=high\r\n"""
+
+CFM13ALERTUUID = """37880b79-bb9e-4025-9813-94d07981d9ff_"""

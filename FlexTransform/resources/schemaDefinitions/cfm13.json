@@ -1,4 +1,29 @@
 {
+	"DerivedData": {
+		"fields": {
+			"create_time_filectime": {
+				"description": "File created timestamp for the time the report was created (not standard)",
+				"valuemap": "None",
+				"datatype": "datetime",
+				"dateTimeFormat": "YYYY-MM-DDTHH:mm:ssZZ",
+				"dateTimeFormatAlternate": ["YYYY-MM-DDTHH:mm:ssZZ"],
+				"valueFunction": "&getFileCreationDate()",
+				"required": false,
+				"ontologyMappingType": "simple",
+				"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#DocumentFileCreatedTimestampSemanticConcept",
+				"nonStandard": true
+			},
+			"file_uuid": {
+				"description": "File created timestamp for the time the report was created (not standard)",
+				"datatype": "string",
+				"valueFunction": "&getFileUUID(([A-Fa-f0-9-]+)_)",
+				"required": false,
+				"ontologyMappingType": "simple",
+				"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#UUIDv4DocumentIdentifierSemanticConcept",
+				"nonStandard": true
+			}
+		}
+	},
 	"DocumentHeaderData": {
 		"fields": {
 			"analyzerid": {
@@ -56,7 +81,8 @@
 				"valuemap": "AnalyzerTime", 
 				"additionalValuemaps": [ "AnalyzerTime;#text" ], 
 				"datatype": "datetime",
-				"dateTimeFormat": "YYYY-MM-DDTHH:mm:ssZZ",
+				"dateTimeFormat": "YYYY-MM-DDTHH:mm:ssZ",
+				"dateTimeFormatAlternate": ["YYYY-MM-DDTHH:mm:ssZZ"],
 				"defaultValue": "&now()",
 				"required": true,
 				"ontologyMappingType": "simple",
@@ -131,6 +157,22 @@
 				"required": true,
 				"ontologyMappingType": "simple",
 				"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#ReportAlertCountSemanticConcept"
+			},
+			"report_ouo": {
+				"description": "An OUO level for the entire document; set to true (1) if any indicator is OUO",
+				"valuemap": "AdditionalData;report ouo",
+				"datatype": "int",
+				"defaultValue": "&CFM13_determineReportOUO()",
+				"required": true,
+				"ontologyMappingType": "enum",
+				"enumValues": {
+					"0": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#NotOUOSemanticConcept"
+					},
+					"1": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#OUOSemanticConcept"
+					}
+				}
 			},
 			"report_tlp": {
 				"description": "The TLP restriction for this document",

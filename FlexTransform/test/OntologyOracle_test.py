@@ -21,7 +21,7 @@ class OntologyOracleTests(unittest.TestCase):
     def setUp(self):
         self.IRIBaseNS = Namespace("http://www.anl.gov/cfm/transform.owl#")
         currentdir = os.path.dirname(__file__)
-        self.myOracle = Oracle(os.path.join(currentdir,"../resources/test.owl"), self.IRIBaseNS.cfm13schema)
+        self.myOracle = Oracle(os.path.join(currentdir,"../resources/test.owl"), self.IRIBaseNS.cfm13schema, False)
 
     def tearDown(self):
         pass

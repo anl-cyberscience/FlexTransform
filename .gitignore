@@ -82,5 +82,8 @@ celerybeat-schedule
 venv/
 ENV/
 
-# PyCharm
+# IDE
 .idea/
+catalog*.xml
+.project
+.pydevproject

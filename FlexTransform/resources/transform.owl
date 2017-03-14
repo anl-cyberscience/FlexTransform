@@ -416,10 +416,58 @@
     
 
 
-    <!-- http://www.anl.gov/cfm/transform.owl#BidirectionalDirectionSemanticConcept -->
+    <!-- http://www.anl.gov/cfm/transform.owl#AnonymousAccessSemanticConcept -->
 
-    <Class rdf:about="http://www.anl.gov/cfm/transform.owl#BidirectionalDirectionSemanticConcept">
-        <rdfs:subClassOf rdf:resource="http://www.anl.gov/cfm/transform.owl#DirectionSemanticConcept"/>
+    <Class rdf:about="http://www.anl.gov/cfm/transform.owl#AnonymousAccessSemanticConcept">
+        <rdfs:subClassOf rdf:resource="http://www.anl.gov/cfm/transform.owl#SemanticComponent"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#ArtifactContentTypeSemanticComponent -->
+
+    <Class rdf:about="http://www.anl.gov/cfm/transform.owl#ArtifactContentTypeSemanticComponent">
+        <rdfs:subClassOf rdf:resource="http://www.anl.gov/cfm/transform.owl#ArtifactSemanticComponent"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#ArtifactPackagingSemanticComponent -->
+
+    <Class rdf:about="http://www.anl.gov/cfm/transform.owl#ArtifactPackagingSemanticComponent">
+        <rdfs:subClassOf rdf:resource="http://www.anl.gov/cfm/transform.owl#ArtifactSemanticComponent"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#ArtifactRawObjectBase64EncodingAlgorithmSemanticComponent -->
+
+    <Class rdf:about="http://www.anl.gov/cfm/transform.owl#ArtifactRawObjectBase64EncodingAlgorithmSemanticComponent">
+        <rdfs:subClassOf rdf:resource="http://www.anl.gov/cfm/transform.owl#ArtifactPackagingSemanticComponent"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#ArtifactRawObjectIndicatorValueSemanticComponent -->
+
+    <Class rdf:about="http://www.anl.gov/cfm/transform.owl#ArtifactRawObjectIndicatorValueSemanticComponent">
+        <rdfs:subClassOf rdf:resource="http://www.anl.gov/cfm/transform.owl#ArtifactSemanticComponent"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#ArtifactRawObjectPackageEncodingSemanticComponent -->
+
+    <Class rdf:about="http://www.anl.gov/cfm/transform.owl#ArtifactRawObjectPackageEncodingSemanticComponent">
+        <rdfs:subClassOf rdf:resource="http://www.anl.gov/cfm/transform.owl#ArtifactPackagingSemanticComponent"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#ArtifactSemanticComponent -->
+
+    <Class rdf:about="http://www.anl.gov/cfm/transform.owl#ArtifactSemanticComponent">
+        <rdfs:subClassOf rdf:resource="http://www.anl.gov/cfm/transform.owl#SemanticComponent"/>
     </Class>
     
 
@@ -628,14 +676,6 @@
     
 
 
-    <!-- http://www.anl.gov/cfm/transform.owl#CriticalSeveritySemanticConcept -->
-
-    <Class rdf:about="http://www.anl.gov/cfm/transform.owl#CriticalSeveritySemanticConcept">
-        <rdfs:subClassOf rdf:resource="http://www.anl.gov/cfm/transform.owl#SeveritySemanticConcept"/>
-    </Class>
-    
-
-
     <!-- http://www.anl.gov/cfm/transform.owl#DNSDomainNameIndicatorTypeSemanticComponent -->
 
     <Class rdf:about="http://www.anl.gov/cfm/transform.owl#DNSDomainNameIndicatorTypeSemanticComponent">
@@ -746,18 +786,18 @@
     
 
 
-    <!-- http://www.anl.gov/cfm/transform.owl#DirectionSemanticConcept -->
-
-    <Class rdf:about="http://www.anl.gov/cfm/transform.owl#DirectionSemanticConcept">
-        <rdfs:subClassOf rdf:resource="http://www.anl.gov/cfm/transform.owl#SemanticComponent"/>
-    </Class>
-    
-
-
     <!-- http://www.anl.gov/cfm/transform.owl#Document -->
 
     <Class rdf:about="http://www.anl.gov/cfm/transform.owl#Document">
         <rdfs:subClassOf rdf:resource="http://www.anl.gov/cfm/transform.owl#DocumentComponent"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#DocumentClassificationLevelUnclassified -->
+
+    <Class rdf:about="http://www.anl.gov/cfm/transform.owl#DocumentClassificationLevelUnclassified">
+        <rdfs:subClassOf rdf:resource="http://www.anl.gov/cfm/transform.owl#SemanticComponent"/>
     </Class>
     
 
@@ -796,6 +836,24 @@ The DocumentComponentValue is actually comprised of both a value type and a valu
     <Class rdf:about="http://www.anl.gov/cfm/transform.owl#DocumentControlledStructureSemanticConcept">
         <rdfs:subClassOf rdf:resource="http://www.anl.gov/cfm/transform.owl#SemanticComponent"/>
         <rdfs:comment xml:lang="en">A concept denoting the specification of components of a document.  An example is the XML XPath specification of document components for the purpose of applying an Access Control marking structure.</rdfs:comment>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#DocumentFileCreatedTimestampSemanticConcept -->
+
+    <Class rdf:about="http://www.anl.gov/cfm/transform.owl#DocumentFileCreatedTimestampSemanticConcept">
+        <rdfs:subClassOf rdf:resource="http://www.anl.gov/cfm/transform.owl#DocumentGeneratedTimeSemanticConcept"/>
+        <rdfs:comment>The timestamp as determined by examining the metadata of the file itself.</rdfs:comment>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#DocumentGeneratedExplicitDeclarationTimestampSemanticConcept -->
+
+    <Class rdf:about="http://www.anl.gov/cfm/transform.owl#DocumentGeneratedExplicitDeclarationTimestampSemanticConcept">
+        <rdfs:subClassOf rdf:resource="http://www.anl.gov/cfm/transform.owl#DocumentGeneratedTimeSemanticConcept"/>
+        <rdfs:comment>An explicit declaration within a report of when the document was created.</rdfs:comment>
     </Class>
     
 
@@ -850,14 +908,6 @@ The schema is associated with a schema parser class which can be dynamically loa
 
     <Class rdf:about="http://www.anl.gov/cfm/transform.owl#DomainNameIndicatorSemanticComponent">
         <rdfs:subClassOf rdf:resource="http://www.anl.gov/cfm/transform.owl#IndicatorSemanticConcept"/>
-    </Class>
-    
-
-
-    <!-- http://www.anl.gov/cfm/transform.owl#EgressDirectionSemanticConcept -->
-
-    <Class rdf:about="http://www.anl.gov/cfm/transform.owl#EgressDirectionSemanticConcept">
-        <rdfs:subClassOf rdf:resource="http://www.anl.gov/cfm/transform.owl#DirectionSemanticConcept"/>
     </Class>
     
 
@@ -1026,6 +1076,14 @@ The schema is associated with a schema parser class which can be dynamically loa
 
     <Class rdf:about="http://www.anl.gov/cfm/transform.owl#EmailSubjetMultiMatchConstraintSemanticConcept">
         <rdfs:subClassOf rdf:resource="http://www.anl.gov/cfm/transform.owl#IndicatorMatchConstraintSemanticConcept"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#EntireDocumentSemanticConcept -->
+
+    <Class rdf:about="http://www.anl.gov/cfm/transform.owl#EntireDocumentSemanticConcept">
+        <rdfs:subClassOf rdf:resource="http://www.anl.gov/cfm/transform.owl#SemanticComponent"/>
     </Class>
     
 
@@ -1272,14 +1330,6 @@ The schema is associated with a schema parser class which can be dynamically loa
 
     <Class rdf:about="http://www.anl.gov/cfm/transform.owl#HeaderTLPWhiteSemanticConcept">
         <rdfs:subClassOf rdf:resource="http://www.anl.gov/cfm/transform.owl#TLPSharingRestrictionSemanticConcept"/>
-    </Class>
-    
-
-
-    <!-- http://www.anl.gov/cfm/transform.owl#HighSeveritySemanticConcept -->
-
-    <Class rdf:about="http://www.anl.gov/cfm/transform.owl#HighSeveritySemanticConcept">
-        <rdfs:subClassOf rdf:resource="http://www.anl.gov/cfm/transform.owl#SeveritySemanticConcept"/>
     </Class>
     
 
@@ -1568,6 +1618,14 @@ Indicates the specific origin or source of a submitted indicator.  For example, 
     
 
 
+    <!-- http://www.anl.gov/cfm/transform.owl#IndicatorTitleSemanticConcept -->
+
+    <Class rdf:about="http://www.anl.gov/cfm/transform.owl#IndicatorTitleSemanticConcept">
+        <rdfs:subClassOf rdf:resource="http://www.anl.gov/cfm/transform.owl#SemanticComponent"/>
+    </Class>
+    
+
+
     <!-- http://www.anl.gov/cfm/transform.owl#IndicatorTypeSemanticConcept -->
 
     <Class rdf:about="http://www.anl.gov/cfm/transform.owl#IndicatorTypeSemanticConcept">
@@ -1605,22 +1663,6 @@ Indicates the specific origin or source of a submitted indicator.  For example, 
 
     <Class rdf:about="http://www.anl.gov/cfm/transform.owl#InformationSourceSemanticConcept">
         <rdfs:subClassOf rdf:resource="http://www.anl.gov/cfm/transform.owl#SemanticComponent"/>
-    </Class>
-    
-
-
-    <!-- http://www.anl.gov/cfm/transform.owl#InformationalSeveritySemanticConcept -->
-
-    <Class rdf:about="http://www.anl.gov/cfm/transform.owl#InformationalSeveritySemanticConcept">
-        <rdfs:subClassOf rdf:resource="http://www.anl.gov/cfm/transform.owl#SeveritySemanticConcept"/>
-    </Class>
-    
-
-
-    <!-- http://www.anl.gov/cfm/transform.owl#IngressDirectionSemanticConcept -->
-
-    <Class rdf:about="http://www.anl.gov/cfm/transform.owl#IngressDirectionSemanticConcept">
-        <rdfs:subClassOf rdf:resource="http://www.anl.gov/cfm/transform.owl#DirectionSemanticConcept"/>
     </Class>
     
 
@@ -1705,6 +1747,14 @@ Indicates the specific origin or source of a submitted indicator.  For example, 
     
 
 
+    <!-- http://www.anl.gov/cfm/transform.owl#LinkObjectIndicatorValueSemanticComponent -->
+
+    <Class rdf:about="http://www.anl.gov/cfm/transform.owl#LinkObjectIndicatorValueSemanticComponent">
+        <rdfs:subClassOf rdf:resource="http://www.anl.gov/cfm/transform.owl#SemanticComponent"/>
+    </Class>
+    
+
+
     <!-- http://www.anl.gov/cfm/transform.owl#LinkObjectSchemaTypeSpecification -->
 
     <Class rdf:about="http://www.anl.gov/cfm/transform.owl#LinkObjectSchemaTypeSpecification">
@@ -1727,14 +1777,6 @@ Indicates the specific origin or source of a submitted indicator.  For example, 
     
 
 
-    <!-- http://www.anl.gov/cfm/transform.owl#LowSeveritySemanticConcept -->
-
-    <Class rdf:about="http://www.anl.gov/cfm/transform.owl#LowSeveritySemanticConcept">
-        <rdfs:subClassOf rdf:resource="http://www.anl.gov/cfm/transform.owl#SeveritySemanticConcept"/>
-    </Class>
-    
-
-
     <!-- http://www.anl.gov/cfm/transform.owl#MD5FilehashIndicatorValueSemanticComponent -->
 
     <Class rdf:about="http://www.anl.gov/cfm/transform.owl#MD5FilehashIndicatorValueSemanticComponent">
@@ -1747,14 +1789,6 @@ Indicates the specific origin or source of a submitted indicator.  For example, 
 
     <Class rdf:about="http://www.anl.gov/cfm/transform.owl#MalwareTrafficAlertBehaviorCharacterizationSemanticComponent">
         <rdfs:subClassOf rdf:resource="http://www.anl.gov/cfm/transform.owl#AlertBehaviorCharacterizationSemanticComponent"/>
-    </Class>
-    
-
-
-    <!-- http://www.anl.gov/cfm/transform.owl#MediumSeveritySemanticConcept -->
-
-    <Class rdf:about="http://www.anl.gov/cfm/transform.owl#MediumSeveritySemanticConcept">
-        <rdfs:subClassOf rdf:resource="http://www.anl.gov/cfm/transform.owl#SeveritySemanticConcept"/>
     </Class>
     
 
@@ -2135,6 +2169,22 @@ Indicates the specific origin or source of a submitted indicator.  For example, 
 
     <Class rdf:about="http://www.anl.gov/cfm/transform.owl#PrivateCFM13SharingRestrictionSemanticConcept">
         <rdfs:subClassOf rdf:resource="http://www.anl.gov/cfm/transform.owl#CFM13SharingRestrictionSemanticConcept"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#PrivilegeDeniedSemanticConcept -->
+
+    <Class rdf:about="http://www.anl.gov/cfm/transform.owl#PrivilegeDeniedSemanticConcept">
+        <rdfs:subClassOf rdf:resource="http://www.anl.gov/cfm/transform.owl#SemanticComponent"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#PrivilegeGrantedSemanticConcept -->
+
+    <Class rdf:about="http://www.anl.gov/cfm/transform.owl#PrivilegeGrantedSemanticConcept">
+        <rdfs:subClassOf rdf:resource="http://www.anl.gov/cfm/transform.owl#SemanticComponent"/>
     </Class>
     
 
@@ -2572,6 +2622,14 @@ Indicates the specific origin or source of a submitted indicator.  For example, 
 
     <Class rdf:about="http://www.anl.gov/cfm/transform.owl#STIXXMLHeader">
         <rdfs:subClassOf rdf:resource="http://www.anl.gov/cfm/transform.owl#XMLComponent"/>
+    </Class>
+    
+
+
+    <!-- http://www.anl.gov/cfm/transform.owl#STIXprofileSemanticConcept -->
+
+    <Class rdf:about="http://www.anl.gov/cfm/transform.owl#STIXprofileSemanticConcept">
+        <rdfs:subClassOf rdf:resource="http://www.anl.gov/cfm/transform.owl#SemanticComponent"/>
     </Class>
     
 
@@ -3378,6 +3436,15 @@ Indicates the specific origin or source of a submitted indicator.  For example, 
     
 
 
+    <!-- http://www.anl.gov/cfm/transform.owl#UniqueMarkingStructureIdentifierSemanticConcept -->
+
+    <Class rdf:about="http://www.anl.gov/cfm/transform.owl#UniqueMarkingStructureIdentifierSemanticConcept">
+        <rdfs:subClassOf rdf:resource="http://www.anl.gov/cfm/transform.owl#UniqueIdentifierSemanticConcept"/>
+        <rdfs:comment>Denotes the marking structure identifier, e.g. in ACS3.0, which gives a unique ID to the markings of a document.</rdfs:comment>
+    </Class>
+    
+
+
     <!-- http://www.anl.gov/cfm/transform.owl#UniqueObservableIdentifierSemanticConcept -->
 
     <Class rdf:about="http://www.anl.gov/cfm/transform.owl#UniqueObservableIdentifierSemanticConcept">
@@ -3394,27 +3461,11 @@ Indicates the specific origin or source of a submitted indicator.  For example, 
     
 
 
-    <!-- http://www.anl.gov/cfm/transform.owl#UnknownDirectionSemanticConcept -->
-
-    <Class rdf:about="http://www.anl.gov/cfm/transform.owl#UnknownDirectionSemanticConcept">
-        <rdfs:subClassOf rdf:resource="http://www.anl.gov/cfm/transform.owl#DirectionSemanticConcept"/>
-    </Class>
-    
-
-
     <!-- http://www.anl.gov/cfm/transform.owl#UnknownOriginSemanticConcept -->
 
     <Class rdf:about="http://www.anl.gov/cfm/transform.owl#UnknownOriginSemanticConcept">
         <rdfs:subClassOf rdf:resource="http://www.anl.gov/cfm/transform.owl#IndicatorOriginSemanticConcept"/>
         <rdfs:comment xml:lang="en">Signifies that a submitted indicator has an unknown or unspecified origin.</rdfs:comment>
-    </Class>
-    
-
-
-    <!-- http://www.anl.gov/cfm/transform.owl#UnknownSeveritySemanticConcept -->
-
-    <Class rdf:about="http://www.anl.gov/cfm/transform.owl#UnknownSeveritySemanticConcept">
-        <rdfs:subClassOf rdf:resource="http://www.anl.gov/cfm/transform.owl#SeveritySemanticConcept"/>
     </Class>
     
 
@@ -5214,8 +5265,14 @@ Indicates the specific origin or source of a submitted indicator.  For example, 
     <rdf:Description rdf:about="http://www.anl.gov/cfm/transform.owl#AlertReferenceURLSemanticComponent">
         <rdfs:comment xml:lang="en">A URL at which the manager (or the human operator of the manager) can find additional information about the alert. The document pointed to by the URL may include an in-depth description of the attack, appropriate countermeasures, or other information deemed relevant by the vendor.</rdfs:comment>
     </rdf:Description>
+    <rdf:Description rdf:about="http://www.anl.gov/cfm/transform.owl#DocumentGeneratedTimeSemanticConcept">
+        <rdfs:comment>When the report document was actually generated. Could be, for instance, an explicit declaration within the document, or taken from the file creation timestamp.</rdfs:comment>
+    </rdf:Description>
     <rdf:Description rdf:about="http://www.anl.gov/cfm/transform.owl#IndicatorDescriptionSemanticConcept">
         <rdfs:comment xml:lang="en">User defined description of the alert</rdfs:comment>
+    </rdf:Description>
+    <rdf:Description rdf:about="http://www.anl.gov/cfm/transform.owl#IndicatorGeneratedTimeSemanticConcept">
+        <rdfs:comment>The time when a specific Indicator was generated.</rdfs:comment>
     </rdf:Description>
     <rdf:Description rdf:about="http://www.anl.gov/cfm/transform.owl#IndicatorSightingsSemanticConcept">
         <rdfs:comment xml:lang="en">Number of times an indicator has been seen</rdfs:comment>
@@ -5234,6 +5291,9 @@ Indicates the specific origin or source of a submitted indicator.  For example, 
     </rdf:Description>
     <rdf:Description rdf:about="http://www.anl.gov/cfm/transform.owl#ReportStartTimeSemanticConcept">
         <rdfs:comment xml:lang="en">Indicates the earliest time an event could have been included in the report.</rdfs:comment>
+    </rdf:Description>
+    <rdf:Description rdf:about="http://www.anl.gov/cfm/transform.owl#ReportSubmittedTimeSemanticConcept">
+        <rdfs:comment>The time when the report was submitted to the recipient.</rdfs:comment>
     </rdf:Description>
     <rdf:Description rdf:about="http://www.anl.gov/cfm/transform.owl#ReportTitleSemanticComponent">
         <rdfs:comment xml:lang="en">A human-readable title for the given report.  E.g. the title of a STIX document.</rdfs:comment>

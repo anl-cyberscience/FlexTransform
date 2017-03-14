@@ -33,12 +33,12 @@ class TestCFM13AlertToLQMT(unittest.TestCase):
         transform = FlexTransform.FlexTransform()
 
         with open(os.path.join(current_dir, '../resources/sampleConfigurations/cfm13.cfg'), 'r') as input_file:
-            transform.AddParser('cfm13alert', input_file)
+            transform.add_parser('cfm13alert', input_file)
         with open(os.path.join(current_dir, '../resources/sampleConfigurations/lqmtools.cfg'), 'r') as input_file:
-            transform.AddParser('lqmtools', input_file)
+            transform.add_parser('lqmtools', input_file)
         output1_object = io.StringIO()
 
-        transform.TransformFile(io.StringIO(CFM13ALERT2), 'cfm13alert', 'lqmtools', targetFileName=output1_object)
+        transform.transform(io.StringIO(CFM13ALERT2), 'cfm13alert', 'lqmtools', target_file=output1_object)
         output1_object.seek(0)
         output1_object.readline()
         print(output1_object.getvalue())

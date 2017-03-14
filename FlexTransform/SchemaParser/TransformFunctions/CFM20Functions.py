@@ -51,7 +51,7 @@ class CFM20Functions(object):
     def RegisterFunctions(cls):
         for Scope, Functions in cls.__FunctionNames.items() :
             for FunctionName, RequiredArgs in Functions.items() :
-                TransformFunctionManager.RegisterFunction(Scope, FunctionName, RequiredArgs, 'CFM20Functions')
+                TransformFunctionManager.register_function(Scope, FunctionName, RequiredArgs, 'CFM20Functions')
         
     def Execute(self, Scope, FunctionName, args):
         '''

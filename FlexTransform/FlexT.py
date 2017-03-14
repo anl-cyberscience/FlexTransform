@@ -1,18 +1,20 @@
-'''
+"""
 Created on Jun 17, 2015
 
 @author: ahoying
-'''
+"""
+
+import argparse
+import json
+import logging
+import os
+import sys
+import traceback
+
+import rdflib
 
 from FlexTransform import FlexTransform
 from FlexTransform.OntologyOracle import Oracle
-import logging
-import rdflib
-
-import argparse
-import os
-import sys
-import json
 
 
 # Configure logging to send INFO, DEGUB and TRACE messages to stdout and all other logs to stderr
@@ -76,13 +78,51 @@ def main():
     parser.add_argument('--destination-schema-IRI',
                         help='The ontology IRI for the destination',
                         required=False)
+    parser.add_argument('--trace-src-field',
+                        help='Given the name of a field from the source schema, will output trace messages to log.trace() as it is processed',
+                        action='append',
+                        default=[],
+                        required=False)
+    parser.add_argument('--trace-dst-field',
+                        help='Given the name of a field from the dest schema, will output trace messages to log.trace() as it is processed',
+                        action='append',
+                        default=[],
+                        required=False)
+    parser.add_argument('--trace-src-IRI',
+                        help='Given the name of an IRI from the source schema, will output trace messages to log.trace() as it is processed',
+                        action='append',
+                        default=[],
+                        required=False)
+    parser.add_argument('--trace-dst-IRI',
+                        help='Given the name of an IRI from the dest schema, will output trace messages to log.trace() as it is processed',
+                        action='append',
+                        default=[],
+                        required=False)
+    parser.add_argument('--logging-level', '-l',
+                        help="Set the output level for the logger.  Acceptable values: debug, info, warning, error, critical",
+                        required=False)
 
     args = parser.parse_args()
-
     try:
-        Transform = FlexTransform.FlexTransform()
-        Transform.AddParser('src', args.src_config)
-        Transform.AddParser('dst', args.dst_config)
+        if args.logging_level:
+            if args.logging_level.lower() == "debug":
+                log.setLevel(logging.DEBUG)
+            elif args.logging_level.lower() == "info":
+                log.setLevel(logging.INFO)
+            elif args.logging_level.lower() == "warning":
+                log.setLevel(logging.WARNING)
+            elif args.logging_level.lower() == "error":
+                log.setLevel(logging.ERROR)
+            elif args.logging_level.lower() == "critical":
+                log.setLevel(logging.CRITICAL)
+        transform = FlexTransform.FlexTransform(source_fields=args.trace_src_field,
+                                                source_iri=args.trace_src_IRI,
+                                                destination_fields=args.trace_dst_field,
+                                                destination_iri=args.trace_dst_IRI,
+                                                logging_level=logging.NOTSET)
+
+        transform.add_parser('src', args.src_config)
+        transform.add_parser('dst', args.dst_config)
 
         metadata = None
 
@@ -98,17 +138,19 @@ def main():
                 logging.warning(
                     "Ontology file specified, but no destination schema IRI is given.  Ontology will not be used.")
 
-        FinalizedData = Transform.TransformFile(
-            sourceFileName=args.src,
-            targetFileName=args.dst,
-            sourceParserName='src',
-            targetParserName='dst',
-            sourceMetaData=metadata,
+        FinalizedData = transform.transform(
+            source_file=args.src,
+            target_file=args.dst,
+            source_parser_name='src',
+            target_parser_name='dst',
+            source_meta_data=metadata,
             oracle=kb)
         args.dst.close()
 
     except Exception as inst:
         log.error(inst)
+        ''' For debugging - capture to log.debug instead? '''
+        traceback.print_exc()
         args.dst.close()
         os.remove(args.dst.name)
         exit(1)

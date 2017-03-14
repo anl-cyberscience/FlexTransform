@@ -5,8 +5,12 @@ Created on Jul 28, 2014
 '''
 
 import inspect
-import FlexTransform.SyntaxParser
 import logging
+
+import FlexTransform.SyntaxParser
+
+''' Debugging only '''
+
 
 class Parser(object):
     '''
@@ -18,11 +22,25 @@ class Parser(object):
     # Dictionary of loaded Parser classes
     __KnownParsers = {}
 
-    def __init__(self):
+    def __init__(self, trace, tracelist=[]):
         '''
         Constructor
         '''
         self.logging = logging.getLogger('FlexTransform.Parser')
+        self.trace = trace
+        self.tracelist = tracelist
+        self.traceindex = {}
+        if self.trace:
+            for x in self.tracelist:
+                for v in x["src_fields"]:
+                    self.traceindex[v] = x
+                for y in x["dst_fields"]:
+                    self.traceindex[y] = x
+                for w in x["src_IRIs"]:
+                    self.traceindex[w] = x
+                for z in x["dst_IRIs"]:
+                    self.traceindex[z] = x
+            self.logging.debug("Initialized Parser with tracelist of {} elements.".format(len(tracelist)))
         
     @classmethod
     def UpdateKnownParsers(cls, ParserName, ParserClass):
@@ -33,10 +51,10 @@ class Parser(object):
         return cls.__KnownParsers
 
     @classmethod
-    def GetParser(cls, ParserName):
-        for name, obj in inspect.getmembers(FlexTransform.SyntaxParser, inspect.isclass) :
-            if (name == ParserName) :
-                return obj();
+    def GetParser(cls, ParserName, trace, tracelist=[]):
+        for name, obj in inspect.getmembers(FlexTransform.SyntaxParser, inspect.isclass):
+            if name == ParserName:
+                return obj(trace, tracelist=tracelist);
 
     # Virtual methods that must be implemented in child classes
 
@@ -46,20 +64,32 @@ class Parser(object):
         '''
         raise Exception("MethodNotDefined","ValidateConfig")
 
-    def Read(self,file):
+    def Read(self,file,configurationfile):
         '''
         Base document read method, must be implemented in subclasses
+        TODO: need proper subclassing: All subclasses should call this Read method as well, as it contains 
+        code common to all parsers.
         '''
-        raise Exception("MethodNotDefined","Read")
+        
+        ''' Ensure the derived data is available to all parsers, e.g. to extract information from the file
+            name or metadata 
+        '''
+        self.ParsedData = {}
+        if 'DerivedData' in configurationfile.SchemaConfig:
+            self.ParsedData['DerivedData'] = {}
+            for field in configurationfile.SchemaConfig['DerivedData']['fields']:
+                self.ParsedData['DerivedData'][field] = configurationfile.SchemaConfig['DerivedData']['fields'][field]['value']
+                if self.trace and field in self.traceindex:
+                    self.logging.debug("[TRACE {}]: Read: value {} copied to ParsedData['DerivedData'] from SchemaConfig".format(field, self.ParsedData['DerivedData'][field]))
     
-    def Write(self,file):
+    def Write(self, file, FinalizedData):
         '''
         Base document write method, must be implemented in subclasses
         '''
-        raise Exception("MethodNotDefined","Write")
+        raise Exception("MethodNotDefined", "Write")
     
     def Finalize(self,data):
         '''
         Base document finalize method, must be implemented in subclasses
         '''
-        raise Exception("MethodNotDefined","Finalize")
+        raise Exception("MethodNotDefined", "Finalize")

@@ -8,21 +8,27 @@ import logging
 import csv
 import os
 from builtins import str
+from FlexTransform.SyntaxParser.Parser import Parser
 
-class CSVParser(object):
+class CSVParser(Parser):
     '''
     Key/Value Syntax Parser
     '''
 
-    def __init__(self):
+    def __init__(self, trace, tracelist=[]):
         '''
         Constructor
         '''
+        super(CSVParser, self).__init__(tracelist)
         
         self.ParsedData = {}
         self.logging = logging.getLogger('FlexTransform.CSVParser')
+        self.trace = trace
+        self.tracelist = tracelist
+        if self.trace:
+            self.logging.debug("Initialized CSVParser with tracelist of {} elements.".format(len(tracelist)))
         
-        self.Fields = [];
+        self.Fields = []
         self.Delimiter = ','
         self.QuoteChar = '"'
         self.EscapeChar = None
@@ -37,50 +43,51 @@ class CSVParser(object):
         
         The indicatorsKey sets the key in the json document that contains the indicators, or "" if the root of the document contains the indicators
         '''
-        if (config.has_section('CSV')) :
-            if (config.has_option('CSV', 'Fields')) :
+        if config.has_section('CSV'):
+            if config.has_option('CSV', 'Fields'):
                 FieldsList = config['CSV']['Fields']
                 for field in FieldsList.split(','):
                     self.Fields.append(field.strip())
-            else :
+            else:
                 raise Exception("ConfigError", "CSV Configuration does not include the required Fields key")
             
-            if (config.has_option('CSV', 'Delimiter')) :
+            if config.has_option('CSV', 'Delimiter'):
                 self.Delimiter = bytes(config['CSV']['Delimiter'], "utf-8").decode("unicode_escape").strip("\"'")
                 
-            if (config.has_option('CSV', 'QuoteChar')) :
+            if config.has_option('CSV', 'QuoteChar'):
                 self.QuoteChar = bytes(config['CSV']['QuoteChar'], "utf-8").decode("unicode_escape")
                 
-            if (config.has_option('CSV', 'EscapeChar')) :
+            if config.has_option('CSV', 'EscapeChar'):
                 self.EscapeChar = bytes(config['CSV']['EscapeChar'], "utf-8").decode("unicode_escape")
                 
-            if (config.has_option('CSV', 'HeaderLine')) :
+            if config.has_option('CSV', 'HeaderLine'):
                 self.HeaderLine = config.getboolean('CSV', 'HeaderLine', fallback=False)
                 
-            if (config.has_option('CSV', 'DoubleQuote')) :
+            if config.has_option('CSV', 'DoubleQuote'):
                 self.DoubleQuote = config.getboolean('CSV', 'DoubleQuote', fallback=True)
                 
-            if (config.has_option('CSV', 'QuoteStyle')) :
-                if (config['CSV']['QuoteStyle'].lower() == 'none') :
+            if config.has_option('CSV', 'QuoteStyle'):
+                if config['CSV']['QuoteStyle'].lower() == 'none':
                     self.QuoteStyle = csv.QUOTE_NONE
-                elif (config['CSV']['QuoteStyle'].lower() == 'nonnumeric') :
+                elif config['CSV']['QuoteStyle'].lower() == 'nonnumeric':
                     self.QuoteStyle = csv.QUOTE_NONNUMERIC
-                elif (config['CSV']['QuoteStyle'].lower() == 'all') :
+                elif config['CSV']['QuoteStyle'].lower() == 'all':
                     self.QuoteStyle = csv.QUOTE_ALL
-                elif (config['CSV']['QuoteStyle'].lower() == 'minimal') :
+                elif config['CSV']['QuoteStyle'].lower() == 'minimal':
                     self.QuoteStyle = csv.QUOTE_MINIMAL
-                else :
+                else:
                     raise Exception("ConfigError", "Unknown option for CSV QuoteStyle: " + config['CSV']['QuoteStyle'])
                 
-            if (config.has_option('CSV', 'LineTerminator')) :
+            if config.has_option('CSV', 'LineTerminator'):
                 self.LineTerminator = bytes(config['CSV']['LineTerminator'], "utf-8").decode("unicode_escape")
-    
 
-    def Read(self,file):
+    def Read(self, file, config):
         '''
         Read file and parse into Transform object
         '''
-        
+
+        super(CSVParser, self).Read(file, config)
+
         self.ParsedData = {
                            "IndicatorData": []
                            }
@@ -95,7 +102,7 @@ class CSVParser(object):
             to_add = {}
             for idx, record in enumerate(records): 
                 record = record.rstrip(self.LineTerminator)
-                to_add.update({position[idx] : record})
+                to_add.update({position[idx]: record})
             self.ParsedData["IndicatorData"].append(to_add)
  
         return self.ParsedData
@@ -105,22 +112,22 @@ class CSVParser(object):
         Finalize the formatting of the data before being returned to the caller
         '''
         
-        if ('IndicatorData' not in MappedData or MappedData['IndicatorData'].__len__() == 0) :
+        if 'IndicatorData' not in MappedData or MappedData['IndicatorData'].__len__() == 0:
             raise Exception('NoIndicatorData', 'Transformed data has no indicators, nothing to write')
         
         FinalizedData = []
-        for indicator in MappedData['IndicatorData'] :
+        for indicator in MappedData['IndicatorData']:
             DataRow = {}
             # Keep passing the IndicatorType forward with the data. This is somewhat messy, but that way we can use it on write
             # DataRow['IndicatorType'] = indicator['IndicatorType']
             
-            for field in self.Fields :
-                if (field not in indicator) :
+            for field in self.Fields:
+                if field not in indicator:
                     self.logging.warning("Field %s does not exist in IndicatorData", field)
                     DataRow[field] = ''
-                elif ('Value' in indicator[field]) :
+                elif 'Value' in indicator[field]:
                     DataRow[field] = indicator[field]['Value']
-                else :
+                else:
                     self.logging.warning("Field %s does not contain a Value entry", field)
                     DataRow[field] = ''
                     
@@ -148,8 +155,8 @@ class CSVParser(object):
 
         writer = csv.DictWriter(file, fieldnames=self.Fields, dialect='flext')
 
-        if (self.HeaderLine) :
+        if self.HeaderLine:
             writer.writeheader()
 
         writer.writerows(FinalizedData)
-        
+

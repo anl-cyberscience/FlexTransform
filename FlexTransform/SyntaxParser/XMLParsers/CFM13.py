@@ -9,12 +9,15 @@ import FlexTransform.SyntaxParser
 import logging
 from FlexTransform.SchemaParser.TransformFunctions import CFM13Functions
 
+''' Debug '''
+import pprint
+
 class CFM13(object):
     '''
     Parser for CFM version 1.3 XML documents
     '''
 
-    def __init__(self):
+    def __init__(self, trace, tracelist=[]):
         '''
         Constructor
         '''
@@ -33,8 +36,22 @@ class CFM13(object):
                                         'top level domain owner': 'string',
                                         'alert provenance': 'string'
                                     }
-        
+
+        self.trace = trace
         self.logging = logging.getLogger('FlexTransform.XMLParser.CFM13')
+        self.tracelist = tracelist
+        self.traceindex={}
+        if self.trace:
+            for x in self.tracelist:
+                for v in x["src_fields"]:
+                    self.traceindex[v] = x
+                for y in x["dst_fields"]:
+                    self.traceindex[y] = x
+                for w in x["src_IRIs"]:
+                    self.traceindex[w] = x
+                for z in x["dst_IRIs"]:
+                    self.traceindex[z] = x
+            self.logging.debug("Initialized CFM1.3 XMLParser with tracelist of {} elements.".format(len(tracelist)))
         
         CFM13Functions.RegisterFunctions()
     
@@ -44,48 +61,48 @@ class CFM13(object):
         '''
         
         root = None
-        if (xmlparser is not None) :
+        if xmlparser is not None:
             # Validate file against the schema when it is loaded
             tree = etree.parse(cfm13file, xmlparser)
             root = tree.getroot()
-        else :
+        else:
             tree = etree.parse(cfm13file)
             root = tree.getroot()
         
-        ParsedData = {};
+        ParsedData = {}
         
-        ParsedData['IndicatorData'] = [];
+        ParsedData['IndicatorData'] = []
         
         AlertNode = '{http://www.anl.gov/cfm/1.3/IDMEF-Message}Alert'
         AnalyzerNode = '{http://www.anl.gov/cfm/1.3/IDMEF-Message}Analyzer'
         
         # Check if document has the name space configured, if not remove the NS from the tag names before parsing the tree
-        if (root.find(AlertNode) is None) :
+        if root.find(AlertNode) is None:
             AlertNode = 'Alert'
             AnalyzerNode = 'Analyzer'
             
         for element in root.iterchildren(AlertNode) :
-            if (element.find(AnalyzerNode) is not None) :
+            if element.find(AnalyzerNode) is not None:
                 # CFM 1.3 Header data
                 DocumentHeaderData = FlexTransform.SyntaxParser.XMLParser.etree_to_dict(element)
-                if ('AdditionalData' in DocumentHeaderData['Alert']):
-                    DocumentHeaderData['Alert']['AdditionalData'] = FlexTransform.SyntaxParser.XMLParser.AttributeToKey('@meaning','#text',DocumentHeaderData['Alert']['AdditionalData'])
+                if 'AdditionalData' in DocumentHeaderData['Alert']:
+                    DocumentHeaderData['Alert']['AdditionalData'] = FlexTransform.SyntaxParser.XMLParser.AttributeToKey('@meaning', '#text', DocumentHeaderData['Alert']['AdditionalData'])
                 
                 ParsedData['DocumentHeaderData'] = DocumentHeaderData['Alert']
-            else :
+            else:
                 # CFM 1.3 Indicator data
                 IndicatorData = FlexTransform.SyntaxParser.XMLParser.etree_to_dict(element)
-                if ('AdditionalData' in IndicatorData['Alert']):
-                    IndicatorData['Alert']['AdditionalData'] = FlexTransform.SyntaxParser.XMLParser.AttributeToKey('@meaning','#text',IndicatorData['Alert']['AdditionalData'])
+                if 'AdditionalData' in IndicatorData['Alert']:
+                    IndicatorData['Alert']['AdditionalData'] = FlexTransform.SyntaxParser.XMLParser.AttributeToKey('@meaning', '#text', IndicatorData['Alert']['AdditionalData'])
                     
-                if ('Target' in IndicatorData['Alert'] and 'Service' in IndicatorData['Alert']['Target'] and 'portlist' in IndicatorData['Alert']['Target']['Service']) :
+                if 'Target' in IndicatorData['Alert'] and 'Service' in IndicatorData['Alert']['Target'] and 'portlist' in IndicatorData['Alert']['Target']['Service']:
                     portlist = IndicatorData['Alert']['Target']['Service'].pop('portlist')
                     IndicatorData['Alert']['Target']['Service']['port'] = portlist.split(',')
                     
-                    if ('protocol' in IndicatorData['Alert']['Target']['Service']) :
+                    if 'protocol' in IndicatorData['Alert']['Target']['Service']:
                         protocol = IndicatorData['Alert']['Target']['Service'].pop('protocol')
                         IndicatorData['Alert']['Target']['Service']['protocol'] = []
-                        for port in IndicatorData['Alert']['Target']['Service']['port'] :
+                        for port in IndicatorData['Alert']['Target']['Service']['port']:
                             IndicatorData['Alert']['Target']['Service']['protocol'].append(protocol)
                 
                 ParsedData['IndicatorData'].append(IndicatorData['Alert'])
@@ -100,20 +117,20 @@ class CFM13(object):
         
         # OrderedLists and SubLists are used to force dictionary data into the correct output order for CFM Message 1.3 Schema validation
         
-        if ('AdditionalData' in ParsedData['DocumentHeaderData']):
-            ParsedData['DocumentHeaderData']['AdditionalData'] = FlexTransform.SyntaxParser.XMLParser.KeyToAttribute('@meaning','#text',ParsedData['DocumentHeaderData']['AdditionalData'])
+        if 'AdditionalData' in ParsedData['DocumentHeaderData']:
+            ParsedData['DocumentHeaderData']['AdditionalData'] = FlexTransform.SyntaxParser.XMLParser.KeyToAttribute('@meaning', '#text', ParsedData['DocumentHeaderData']['AdditionalData'])
             ParsedData['DocumentHeaderData']['AdditionalData'] = self._AddAdditionalDataType(ParsedData['DocumentHeaderData']['AdditionalData'])
             
             # This reformats AdditionalData so that dict_to_xml outputs multiple rows with the same element name
             SubList = []
-            for ad in ParsedData['DocumentHeaderData']['AdditionalData'] :
+            for ad in ParsedData['DocumentHeaderData']['AdditionalData']:
                 SubList.append({'AdditionalData': ad})
                 
             ParsedData['DocumentHeaderData']['AdditionalData'] = SubList
             
-        OrderedList = [];
+        OrderedList = []
         
-        if ('Node' in ParsedData['DocumentHeaderData']['Analyzer']) :
+        if 'Node' in ParsedData['DocumentHeaderData']['Analyzer']:
             SubList = []
             SubList.append({'location': ParsedData['DocumentHeaderData']['Analyzer']['Node']['location']})
             SubList.append({'name': ParsedData['DocumentHeaderData']['Analyzer']['Node']['name']})
@@ -125,59 +142,59 @@ class CFM13(object):
         
         Alerts.append(OrderedList)
         
-        for row in ParsedData['IndicatorData'] :
-            if ('IndicatorType' in row) :
+        for row in ParsedData['IndicatorData']:
+            if 'IndicatorType' in row:
                 # Add special text indicator to DNS block classification per CFM 1.3 schema
-                if (row['IndicatorType'] == 'DNS-Hostname-Block') :
-                    if ('@text' in row['Classification'] and not row['Classification']['@text'].startswith('Domain Block:')) :
+                if row['IndicatorType'] == 'DNS-Hostname-Block':
+                    if '@text' in row['Classification'] and not row['Classification']['@text'].startswith('Domain Block:'):
                         row['Classification']['@text'] = "Domain Block: %s" % row['Classification']['@text']
-                    elif ('@text' not in row['Classification']) :
+                    elif '@text' not in row['Classification']:
                         row['Classification']['@text'] = "Domain Block: blocked"
-                elif (row['IndicatorType'] == 'URL-Block') :
-                    if ('@text' in row['Classification'] and not row['Classification']['@text'].startswith('URL Block:')) :
+                elif row['IndicatorType'] == 'URL-Block':
+                    if '@text' in row['Classification'] and not row['Classification']['@text'].startswith('URL Block:'):
                         row['Classification']['@text'] = "URL Block: %s" % row['Classification']['@text']
-                    elif ('@text' not in row['Classification']) :
+                    elif '@text' not in row['Classification']:
                         row['Classification']['@text'] = "URL Block: blocked"
 
-            if ('AdditionalData' in row):
-                row['AdditionalData'] = FlexTransform.SyntaxParser.XMLParser.KeyToAttribute('@meaning','#text',row['AdditionalData'])
+            if 'AdditionalData' in row:
+                row['AdditionalData'] = FlexTransform.SyntaxParser.XMLParser.KeyToAttribute('@meaning', '#text', row['AdditionalData'])
                 row['AdditionalData'] = self._AddAdditionalDataType(row['AdditionalData'])
                 
                 # This reformats AdditionalData so that dict_to_xml outputs multiple rows with the same element name
                 SubList = []
-                for ad in row['AdditionalData'] :
+                for ad in row['AdditionalData']:
                     SubList.append({'AdditionalData': ad})
                     
                 row['AdditionalData'] = SubList
                 
-            OrderedList = [];
+            OrderedList = []
             
-            if ('CreateTime' not in row) :
+            if 'CreateTime' not in row:
                 row['CreateTime'] = ParsedData['DocumentHeaderData']['AnalyzerTime']
                 
             OrderedList.append({'CreateTime': row['CreateTime']})
             
-            if ('name' in row['Source']['Node']) :
+            if 'name' in row['Source']['Node']:
                 SubList = []
                 # Always add attribute category = dns to the Node if there is a dns name entry
-                SubList.append({'name': row['Source']['Node']['name'], '@category' : 'dns'})
-                if ('Address' in row['Source']['Node']) :
+                SubList.append({'name': row['Source']['Node']['name'], '@category': 'dns'})
+                if 'Address' in row['Source']['Node']:
                     SubList.append({'Address': row['Source']['Node']['Address']})
                 row['Source']['Node'] = SubList
             OrderedList.append({'Source': row['Source']})
             
-            if ('Target' in row) :
+            if 'Target' in row:
                 SubList = []
-                if ('port' in row['Target']['Service']) :
+                if 'port' in row['Target']['Service']:
                     SubList.append({'port': row['Target']['Service']['port']})
-                elif ('Portlist' in row['Target']['Service']) :
+                elif 'Portlist' in row['Target']['Service']:
                     SubList.append({'Portlist': row['Target']['Service']['Portlist']})
-                if ('protocol' in row['Target']['Service']) :
+                if 'protocol' in row['Target']['Service']:
                     SubList.append({'protocol': row['Target']['Service']['protocol']})
                 row['Target']['Service'] = SubList
                 OrderedList.append({'Target': row['Target']})
                 
-            if ('Reference' in row['Classification']) :
+            if 'Reference' in row['Classification']:
                 # TODO: Technically multiple references can exist for a single Indicator, this code only supports a single reference
                 SubList = []
                 SubList.append({'@meaning': row['Classification']['Reference']['@meaning']})
@@ -202,11 +219,11 @@ class CFM13(object):
         
         NS_MAP = {None: CFM13_URI,'xsi': XSI_URI}
         
-        CFM13Root = etree.Element(CFM13_NS+'IDMEF-Message', nsmap=NS_MAP)
+        CFM13Root = etree.Element(CFM13_NS + 'IDMEF-Message', nsmap=NS_MAP)
         CFM13Root.set(XSI_NS+'schemaLocation', "http://www.anl.gov/cfm/1.3/IDMEF-Message/../../../resources/schemas/CFMMessage13.xsd")
         
         # Parse the alert dictionaries back into XML Element trees and append to the root element
-        for alert in Alerts :
+        for alert in Alerts:
             CFM13Alert = FlexTransform.SyntaxParser.XMLParser.dict_to_etree({'Alert': alert})
             CFM13Root.append(CFM13Alert)
                 
@@ -217,17 +234,16 @@ class CFM13(object):
                                        doctype='<!DOCTYPE IDMEF-Message PUBLIC "-//IETF//DTD RFC XXXX IDMEF v1.0//EN" "idmef-message.dtd">'
                                        ).decode(encoding='UTF-8'))
         # cfm13file.close()
-        
-        
+
     def _AddAdditionalDataType(self, rows):
         '''
         Add the correct type attribute for AdditionalData rows
         '''
-        for row in rows :
-            if ('@meaning' in row) :
-                if (row['@meaning'] in self.AdditionalDataTypes) :
+        for row in rows:
+            if '@meaning' in row:
+                if row['@meaning'] in self.AdditionalDataTypes:
                     row['@type'] = self.AdditionalDataTypes[row['@meaning']]
-                else :
+                else:
                     self.logging.warning("Unknown AdditionalData Meaning, no type mapping exists: %s", row['@meaning'])
                     
         return rows

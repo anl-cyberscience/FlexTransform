@@ -34,12 +34,12 @@ class TestSTIXTLPToCFM13Alert(unittest.TestCase):
         transform = FlexTransform.FlexTransform()
 
         with open(os.path.join(current_dir, '../resources/sampleConfigurations/cfm13.cfg'), 'r') as input_file:
-            transform.AddParser('cfm13alert', input_file)
+            transform.add_parser('cfm13alert', input_file)
         with open(os.path.join(current_dir, '../resources/sampleConfigurations/stix_tlp.cfg'), 'r') as input_file:
-            transform.AddParser('stix', input_file)
+            transform.add_parser('stix', input_file)
         output1_object = io.StringIO()
 
-        transform.TransformFile(io.StringIO(STIXTLP), 'stix', 'cfm13alert', targetFileName=output1_object)
+        transform.transform(io.StringIO(STIXTLP), 'stix', 'cfm13alert', target_file=output1_object)
         output1_object.seek(0)
         output1_object.readline()
         cls.output1 = etree.parse(output1_object)
@@ -54,7 +54,7 @@ class TestSTIXTLPToCFM13Alert(unittest.TestCase):
         self.assertEqual(self.output1.xpath("/xmlns:IDMEF-Message/xmlns:Alert/xmlns:Analyzer/xmlns:Node/xmlns:name/text()", namespaces=self.namespace)[0], "Test User, 555-555-1212, test@test.int")
 
     def test_alert_analyzer_time(self):
-        self.assertEqual(self.output1.xpath("/xmlns:IDMEF-Message/xmlns:Alert/xmlns:AnalyzerTime/text()", namespaces=self.namespace)[0], "2016-03-23T16:45:05+04:00")
+        self.assertEqual(self.output1.xpath("/xmlns:IDMEF-Message/xmlns:Alert/xmlns:AnalyzerTime/text()", namespaces=self.namespace)[0], "2016-03-23T16:45:05+0400")
 
     def test_alert_AD_number_alerts(self):
         self.assertEqual(self.output1.xpath("/xmlns:IDMEF-Message/xmlns:Alert/xmlns:AdditionalData[@meaning='number of alerts in this report']/text()", namespaces=self.namespace)[0], "7")
@@ -66,7 +66,7 @@ class TestSTIXTLPToCFM13Alert(unittest.TestCase):
         self.assertEqual(self.output1.xpath("/xmlns:IDMEF-Message/xmlns:Alert/xmlns:AdditionalData[@meaning='report type']/text()", namespaces=self.namespace)[0], "alerts")
 
     def test_alert_AD_start_time(self):
-        self.assertEqual(self.output1.xpath("/xmlns:IDMEF-Message/xmlns:Alert/xmlns:AdditionalData[@meaning='report start time']/text()", namespaces=self.namespace)[0], "2016-03-23T16:45:05+04:00")
+        self.assertEqual(self.output1.xpath("/xmlns:IDMEF-Message/xmlns:Alert/xmlns:AdditionalData[@meaning='report start time']/text()", namespaces=self.namespace)[0], "2016-03-23T16:45:05+0400")
 
     def test_source_node_address_ipv4(self):
         self.assertEqual(set(self.output1.xpath("//xmlns:Address[@category='ipv4-addr']/xmlns:address/text()", namespaces=self.namespace)), set(["10.10.10.10", "11.11.11.11", "12.12.12.12", "13.13.13.13", "14.14.14.14"]))
@@ -78,7 +78,7 @@ class TestSTIXTLPToCFM13Alert(unittest.TestCase):
         self.assertEqual(set(self.output1.xpath("//xmlns:AdditionalData[@meaning='OUO']/text()", namespaces=self.namespace)), set(['0']))
 
     def test_alert_AD_restriction(self):
-        self.assertEqual(set(self.output1.xpath("//xmlns:AdditionalData[@meaning='restriction']/text()", namespaces=self.namespace)),set(['public']))
+        self.assertEqual(set(self.output1.xpath("//xmlns:AdditionalData[@meaning='restriction']/text()", namespaces=self.namespace)), set(['public']))
 
     def test_alert_AD_duration(self):
         self.assertEqual(set(self.output1.xpath("//xmlns:AdditionalData[@meaning='duration']/text()", namespaces=self.namespace)), set(['0']))
@@ -123,12 +123,12 @@ class TestSTIXACSToCFM13Alert(unittest.TestCase):
         transform = FlexTransform.FlexTransform()
 
         with open(os.path.join(current_dir, '../resources/sampleConfigurations/cfm13.cfg'), 'r') as input_file:
-            transform.AddParser('cfm13alert', input_file)
+            transform.add_parser('cfm13alert', input_file)
         with open(os.path.join(current_dir, '../resources/sampleConfigurations/stix_essa.cfg'), 'r') as input_file:
-            transform.AddParser('stix', input_file)
+            transform.add_parser('stix', input_file)
         output1_object = io.StringIO()
 
-        transform.TransformFile(io.StringIO(STIXACS), 'stix', 'cfm13alert', targetFileName=output1_object)
+        transform.transform(io.StringIO(STIXACS), 'stix', 'cfm13alert', target_file=output1_object)
         output1_object.seek(0)
         output1_object.readline()
         cls.output1 = etree.parse(output1_object)
@@ -143,7 +143,7 @@ class TestSTIXACSToCFM13Alert(unittest.TestCase):
         self.assertEqual(self.output1.xpath("/xmlns:IDMEF-Message/xmlns:Alert/xmlns:Analyzer/xmlns:Node/xmlns:name/text()", namespaces=self.namespace)[0], "Test User, 555-555-1212, test@test.int")
 
     def test_alert_analyzer_time(self):
-        self.assertEqual(self.output1.xpath("/xmlns:IDMEF-Message/xmlns:Alert/xmlns:AnalyzerTime/text()", namespaces=self.namespace)[0], "2015-11-25T01:45:05+00:00")
+        self.assertEqual(self.output1.xpath("/xmlns:IDMEF-Message/xmlns:Alert/xmlns:AnalyzerTime/text()", namespaces=self.namespace)[0], "2015-11-25T01:45:05+0000")
 
     def test_alert_AD_number_alerts(self):
         self.assertEqual(self.output1.xpath("/xmlns:IDMEF-Message/xmlns:Alert/xmlns:AdditionalData[@meaning='number of alerts in this report']/text()", namespaces=self.namespace)[0], "3")
@@ -155,7 +155,7 @@ class TestSTIXACSToCFM13Alert(unittest.TestCase):
         self.assertEqual(self.output1.xpath("/xmlns:IDMEF-Message/xmlns:Alert/xmlns:AdditionalData[@meaning='report type']/text()", namespaces=self.namespace)[0], "alerts")
 
     def test_alert_AD_start_time(self):
-        self.assertEqual(self.output1.xpath("/xmlns:IDMEF-Message/xmlns:Alert/xmlns:AdditionalData[@meaning='report start time']/text()", namespaces=self.namespace)[0], "2015-11-25T01:45:05+00:00")
+        self.assertEqual(self.output1.xpath("/xmlns:IDMEF-Message/xmlns:Alert/xmlns:AdditionalData[@meaning='report start time']/text()", namespaces=self.namespace)[0], "2015-11-25T01:45:05+0000")
 
     def test_source_node_name_dns(self):
         self.assertEqual(set(self.output1.xpath("//xmlns:Node[@category='dns']/xmlns:name/text()", namespaces=self.namespace)), set(["blog.website.net", "fake.com", "goo.gl/peter"]))
@@ -217,12 +217,12 @@ class TestKeyValueToCFM13Alert(unittest.TestCase):
         transform = FlexTransform.FlexTransform()
 
         with open(os.path.join(current_dir, '../resources/sampleConfigurations/cfm13.cfg'), 'r') as input_file:
-            transform.AddParser('cfm13alert', input_file)
+            transform.add_parser('cfm13alert', input_file)
         with open(os.path.join(current_dir, '../resources/sampleConfigurations/keyvalue.cfg'), 'r') as input_file:
-            transform.AddParser('keyvalue', input_file)
+            transform.add_parser('keyvalue', input_file)
         output1_object = io.StringIO()
 
-        transform.TransformFile(io.StringIO(KEYVALUE), 'keyvalue', 'cfm13alert', targetFileName=output1_object)
+        transform.transform(io.StringIO(KEYVALUE), 'keyvalue', 'cfm13alert', target_file=output1_object)
         output1_object.seek(0)
         output1_object.readline()
         cls.output1 = etree.parse(output1_object)

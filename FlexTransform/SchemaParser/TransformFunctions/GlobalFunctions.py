@@ -4,9 +4,10 @@ Created on Mar 13, 2015
 @author: ahoying
 '''
 
-import arrow
 import logging
 import uuid
+
+import arrow
 
 from FlexTransform.SchemaParser.TransformFunctions import TransformFunctionManager
 
@@ -44,7 +45,7 @@ class GlobalFunctions(object):
                                              },
                        'IndicatorData':      {
                                               'now': ['fieldDict'],
-                                              'generate_uuid': None
+                                              'generate_uuid': None,
                                              }
                       }
 
@@ -58,7 +59,7 @@ class GlobalFunctions(object):
     def RegisterFunctions(cls):
         for Scope, Functions in cls.__FunctionNames.items():
             for FunctionName, RequiredArgs in Functions.items():
-                TransformFunctionManager.RegisterFunction(Scope, FunctionName, RequiredArgs, 'GlobalFunctions')
+                TransformFunctionManager.register_function(Scope, FunctionName, RequiredArgs, 'GlobalFunctions')
         
     def Execute(self, scope, function_name, args):
         """
@@ -77,6 +78,7 @@ class GlobalFunctions(object):
                     value = str(arrow.utcnow().timestamp)
                 else:
                     value = arrow.utcnow().format(args['fieldDict']['dateTimeFormat'])
+            # TODO - Handle case of no 'dateTimeFormat'
         elif function_name == 'countOfIndicators':
             if 'IndicatorData' in args['transformedData']:
                 value = str(len(args['transformedData']['IndicatorData']))
