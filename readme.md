@@ -1,7 +1,7 @@
 # Flexible Transform
 [![Build Status](https://travis-ci.org/anl-cyberscience/FlexTransform.svg?branch=master)](https://travis-ci.org/anl-cyberscience/FlexTransform)
 [![PyPI version](https://badge.fury.io/py/FlexTransform.svg)](https://badge.fury.io/py/FlexTransform)
-[![PyPI](https://img.shields.io/pypi/pyversions/Django.svg)](https://github.com/anl-cyberscience/FlexTransform)
+[![PyPI](https://img.shields.io/pypi/pyversions/FlexTransform.svg)](https://github.com/anl-cyberscience/FlexTransform)
 
 Flexible Transform (FlexT) enables dynamic translation between formats, accomplishing this by digesting CTI data down to its semantic roots (meaning and context).  
 ## Install
