@@ -7,7 +7,6 @@ Created on Oct 13, 2014
 import collections
 import copy
 import logging
-import pprint
 import re
 import socket
 from builtins import str
@@ -38,7 +37,6 @@ class SchemaParser(object):
         """
         Constructor
         """
-        self.pprint = pprint.PrettyPrinter()
         self.logging = logging.getLogger('FlexTransform.SchemaParser')
         self.trace = trace
         self.tracelist = tracelist
@@ -1204,7 +1202,6 @@ class SchemaParser(object):
                                     if self.trace and field in self.traceindex:
                                         self.logging.debug("[TRACE {}] - Ontology reference not found, checking oracle for alternative".format(
                                                                 field, k, OntologyReference))
-                                        #self.pprint.pprint(DataDictionary)
                                     if oracle is not None and False:
                                         oRefList = oracle.getCompatibleConcepts(OntologyReference)
                                         for altOntologyReference in oRefList:
@@ -1479,7 +1476,6 @@ class SchemaParser(object):
 
                             self._ValidateField(newDict[field], field, rowType)
                             self.logging.debug("newDict (for rowType {}) is now:".format(rowType))
-                            self.pprint.pprint(newDict)
                     '''
 
 
@@ -1653,8 +1649,6 @@ class SchemaParser(object):
 
         if self.trace and group in self.traceindex:
             self.logging.debug("[TRACE {}] - BuildFieldGroup(rowType = {})".format(group, rowType))
-            self.logging.debug("groupDict = ")
-            self.pprint.pprint(groupDict)
 
         if group not in groupDict:
             groupDict[group] = self.SchemaConfig[rowType]['fields'][group].copy()
@@ -1996,9 +1990,9 @@ class SchemaParser(object):
 
                 # It will only be in groupRow['fields'] if a default value is set for it:
                 if otherField in groupRow['fields']:
-                    # Determine if any of the defined fields match this primary key
                     if self.trace and otherField in self.traceindex:
                         self.logging.debug("[TRACE {}] - Found in groupRow['fields']".format(otherField))
+                    # Determine if any of the defined fields match this primary key
                     if groupID is not None:
                         if self.trace and otherField in self.traceindex:
                             self.logging.debug("[TRACE {}] - Checking for matching groupID {}".format(otherField, groupID))
@@ -2096,7 +2090,7 @@ class SchemaParser(object):
                                           IndicatorType, fullNewDict = groupDict)
                         continue
                 else:
-                    self.logging.warning("Field {} does not exist in groupRow['fields'] for group {}; cannot add value.".format(otherField, group))
+                    self.logging.info("Field {} does not exist in groupRow['fields'] for group {}; cannot add value.".format(otherField, group))
 
             # If the fieldGroup was successfully defined, add them to the group dictionary!
             if fieldGroup:
