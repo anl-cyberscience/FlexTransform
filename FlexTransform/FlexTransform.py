@@ -5,6 +5,7 @@ Created on Jul 27, 2014
 """
 
 import logging
+import warnings
 
 import rdflib
 
@@ -67,7 +68,7 @@ class FlexTransform(object):
         '''
         
         # TODO add error checking for locations
-        self.oracle = Oracle(tbox_location, rdflib.URIRef(schema_iri), self.trace, tracelist=self.trace_list)
+        self.oracle = Oracle(tbox_location, rdflib.URIRef(schema_iri), self.trace, trace_list=self.trace_list)
         
     def transform(self, source_file, source_parser_name, target_parser_name,
                   target_file=None, source_meta_data=None, oracle=None):
@@ -151,6 +152,17 @@ class FlexTransform(object):
                 trace_list.append({"src_fields": list(), "src_IRIs": list(), "dst_fields": list(), "dst_IRIs": [arg]})
         self.trace_list = trace_list
 
+    def AddParser(self, parserName, configFile, sourceFileName = None, destFileName = None):
+        warnings.warn('"AddParser()" has been deprecated in favor of "add_parser()"', DeprecationWarning)
+        self.logging.warn('"AddParser()" has been deprecated in favor of "add_parser()"')
+        return self.add_parser(parserName, configFile)
+
+    def TransformFile(self, sourceFileName, sourceParserName, targetParserName,
+                      targetFileName=None, sourceMetaData=None, oracle=None):
+        warnings.warn('"TransformFile()" has been deprecated in favor of "transform()"', DeprecationWarning)
+        self.logging.warn('"TransformFile()" has been deprecated in favor of "transform()"')
+        return self.transform(sourceFileName, sourceParserName, targetParserName, target_file=targetFileName,
+                              source_meta_data=sourceMetaData, oracle=oracle)
 if __name__ == '__main__':
     raise Exception("Unsupported", "FlexTransform.py should not be called directly, use helper script FlexT.py")
 
