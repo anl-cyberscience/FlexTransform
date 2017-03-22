@@ -349,6 +349,43 @@ CFM13ALERT2 = """
     </IDMEF-Message>
     """
 
+CFM20ALERT = """
+<CFMAlert xmlns="http://www.anl.gov/cfm/2.0/current/CFMAlert">
+    <Version>2.0</Version>
+    <Alert>
+        <AlertID>1cdf6f8f-20da-488e-9132-bbf850621418</AlertID>
+        <AlertTimestamp>1468350602</AlertTimestamp>
+        <IndicatorSet>
+            <Indicator>
+                <Type>ipv6sourceaddress</Type>
+                <Constraint>IPv6ColonHexEquality</Constraint>
+                <Value>8675:a289:5:102c::bd8:baac</Value>
+            </Indicator>
+        </IndicatorSet>
+        <ReasonList>
+            <Reason>
+                <ReasonCategory>Exploit</ReasonCategory>
+                <ReasonDescription>The WAF detected a scan for vulnerable web applications</ReasonDescription>
+            </Reason>
+        </ReasonList>
+        <ActionList>
+            <Action>
+                <ActionCategory>Block</ActionCategory>
+                <ActionTimestamp>1468350602</ActionTimestamp>
+            </Action>
+        </ActionList>
+        <AlertExtendedAttribute>
+            <Field>confidence</Field>
+            <Value>80</Value>
+        </AlertExtendedAttribute>
+        <AlertExtendedAttribute>
+            <Field>severity</Field>
+            <Value>high</Value>
+        </AlertExtendedAttribute>
+    </Alert>
+</CFMAlert>
+"""
+
 STIXACS = """<stix:STIX_Package
     xmlns:cyboxCommon="http://cybox.mitre.org/common-2"
     xmlns:cybox="http://cybox.mitre.org/cybox-2"
