@@ -305,7 +305,7 @@ class STIXTLPtoLQMT(unittest.TestCase):
         self.assertEqual(decoded[0]['indicatorType'], 'IPv4Address')
         self.assertEqual(decoded[0]['reconAllowed'], '1')
         self.assertEqual(decoded[0]['sensitivity'], 'noSensitivity')
-        self.assertTrue(self.utc_before.timestamp <= int(utc_now) and int(utc_now) <= self.utc_after.timestamp,
+        self.assertTrue(self.utc_before.timestamp <= utc_now and utc_now <= self.utc_after.timestamp,
                         "Processed Time does not fall within time range of Entry 0.")
 
 
@@ -324,7 +324,7 @@ class STIXTLPtoLQMT(unittest.TestCase):
         self.assertEqual(decoded[1]['indicatorType'], 'IPv4Address')
         self.assertEqual(decoded[1]['reconAllowed'], '1')
         self.assertEqual(decoded[1]['sensitivity'], 'noSensitivity')
-        self.assertTrue(self.utc_before.timestamp <= int(utc_now) and int(utc_now) <= self.utc_after.timestamp,
+        self.assertTrue(self.utc_before.timestamp <= utc_now and utc_now <= self.utc_after.timestamp,
                         "Processed Time does not fall within time range of Entry 1.")
 
 
@@ -343,7 +343,7 @@ class STIXTLPtoLQMT(unittest.TestCase):
         self.assertEqual(decoded[2]['indicatorType'], 'IPv4Address')
         self.assertEqual(decoded[2]['reconAllowed'], '1')
         self.assertEqual(decoded[2]['sensitivity'], 'noSensitivity')
-        self.assertTrue(self.utc_before.timestamp <= int(utc_now) and int(utc_now) <= self.utc_after.timestamp,
+        self.assertTrue(self.utc_before.timestamp <= utc_now and utc_now <= self.utc_after.timestamp,
                         "Processed Time does not fall within time range of Entry 2.")
 
 
@@ -362,7 +362,7 @@ class STIXTLPtoLQMT(unittest.TestCase):
         self.assertEqual(decoded[3]['indicatorType'], 'IPv4Address')
         self.assertEqual(decoded[3]['reconAllowed'], '1')
         self.assertEqual(decoded[3]['sensitivity'], 'noSensitivity')
-        self.assertTrue(self.utc_before.timestamp <= int(utc_now) and int(utc_now) <= self.utc_after.timestamp,
+        self.assertTrue(self.utc_before.timestamp <= utc_now and utc_now <= self.utc_after.timestamp,
                         "Processed Time does not fall within time range of Entry 3.")
 
 
@@ -381,7 +381,7 @@ class STIXTLPtoLQMT(unittest.TestCase):
         self.assertEqual(decoded[4]['indicatorType'], 'IPv4Address')
         self.assertEqual(decoded[4]['reconAllowed'], '1')
         self.assertEqual(decoded[4]['sensitivity'], 'noSensitivity')
-        self.assertTrue(self.utc_before.timestamp <= int(utc_now) and int(utc_now) <= self.utc_after.timestamp,
+        self.assertTrue(self.utc_before.timestamp <= utc_now and utc_now <= self.utc_after.timestamp,
                         "Processed Time does not fall within time range of Entry 4.")
 
 
@@ -401,7 +401,7 @@ class STIXTLPtoLQMT(unittest.TestCase):
         self.assertEqual(decoded[5]['reconAllowed'], '1')
         self.assertEqual(decoded[5]['secondaryIndicatorType'], 'URL')
         self.assertEqual(decoded[5]['sensitivity'], 'noSensitivity')
-        self.assertTrue(self.utc_before.timestamp <= int(utc_now) and int(utc_now) <= self.utc_after.timestamp,
+        self.assertTrue(self.utc_before.timestamp <= utc_now and utc_now <= self.utc_after.timestamp,
                         "Processed Time does not fall within time range of Entry 5.")
 
 
@@ -421,7 +421,7 @@ class STIXTLPtoLQMT(unittest.TestCase):
         self.assertEqual(decoded[6]['reconAllowed'], '1')
         self.assertEqual(decoded[6]['secondaryIndicatorType'], 'URL')
         self.assertEqual(decoded[6]['sensitivity'], 'noSensitivity')
-        self.assertTrue(self.utc_before.timestamp <= int(utc_now) and int(utc_now) <= self.utc_after.timestamp,
+        self.assertTrue(self.utc_before.timestamp <= utc_now and utc_now <= self.utc_after.timestamp,
                         "Processed Time does not fall within time range of Entry 6.")
 
 
