@@ -8,7 +8,6 @@ from FlexTransform.test.SampleInputs import CFM20ALERT, CFM13ALERT, STIXTLP
 from FlexTransform import FlexTransform
 
 
-@unittest.skip
 class TestCFM13AlertToLQMT(unittest.TestCase):
     output1 = None
     output2 = None
