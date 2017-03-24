@@ -2,10 +2,13 @@ import io
 import os
 import unittest
 import json
+import arrow
 
-from FlexTransform.test.SampleInputs import CFM20ALERT, CFM13ALERT
+from FlexTransform.test.SampleInputs import CFM20ALERT, CFM13ALERT, STIXTLP
 from FlexTransform import FlexTransform
 
+
+@unittest.skip
 class TestCFM13AlertToLQMT(unittest.TestCase):
     output1 = None
     output2 = None
@@ -34,19 +37,18 @@ class TestCFM13AlertToLQMT(unittest.TestCase):
         current_dir = os.path.dirname(__file__)
         transform = FlexTransform.FlexTransform()
 
-        with open(os.path.join(current_dir, 'C:/Users/epdevine/Desktop/AL_FlexTransform/FlexTransform/FlexTransform/resources/sampleConfigurations/cfm13.cfg'), 'r') as input_file:
+        with open(os.path.join(current_dir, '../resources/sampleConfigurations/cfm13.cfg'), 'r') as input_file:
             #transform.AddParser('cfm13alert', input_file) Used for master branch since it still uses AddParser (3/22/2017)
             transform.add_parser('cfm13alert', input_file)
-        with open(os.path.join(current_dir, 'C:/Users/epdevine/Desktop/AL_FlexTransform/FlexTransform/FlexTransform/resources/sampleConfigurations/lqmtools.cfg'), 'r') as input_file:
+        with open(os.path.join(current_dir, '../resources/sampleConfigurations/lqmtools.cfg'), 'r') as input_file:
             #transform.AddParser('lqmtools', input_file) Used for master branch since it still uses AddParser (3/22/2017)
             transform.add_parser('lqmtools', input_file)
-        with open(os.path.join(current_dir, 'C:/Users/epdevine/Desktop/AL_FlexTransform/FlexTransform/FlexTransform/resources/sampleConfigurations/cfm20alert.cfg'), 'r') as input_file:
+        with open(os.path.join(current_dir, '../resources/sampleConfigurations/cfm20alert.cfg'), 'r') as input_file:
             #transform.AddParser('cfm20alert', input_file) Used for master branch since it still uses AddParser (3/22/2017)
             transform.add_parser('cfm20alert', input_file)
         output1_object = io.StringIO()
         output2_object = io.StringIO()
 
-        # with open("C:/Users/epdevine/Desktop/AL_FlexTransform/FlexTransform/ExampleFiles/SampleInput-CFM13.xml", "r") as in_file:
         #transform.TransformFile(io.StringIO(CFM13ALERT), 'cfm13alert', 'lqmtools', targetFileName=output1_object) Used for master branch since it still uses TransformFile & targetFileName= (3/22/2017)
         transform.transform(io.StringIO(CFM13ALERT), 'cfm13alert', 'lqmtools', target_file=output1_object)
         #transform.TransformFile(io.StringIO(CFM20ALERT), 'cfm20alert', 'lqmtools', targetFileName=output2_object) Used for master branch since it still uses TransformFile & targetFileName= (3/22/2017)
@@ -237,6 +239,191 @@ class TestCFM13AlertToLQMT(unittest.TestCase):
     def test_cfm20_majorTags(self):
         decoded = json.loads(self.json_file2)
         self.assertEqual(decoded[0]['majorTags'], 'Exploit')
+
+
+
+class STIXTLPtoLQMT(unittest.TestCase):
+    output1 = None
+    json_file = None
+    utc_before = None
+    utc_after = None
+    namespace = {
+        'cybox': "http://cybox.mitre.org/cybox-2",
+        'indicator': "http://stix.mitre.org/Indicator-2",
+        'marking': "http://data-marking.mitre.org/Marking-1",
+        'PortObj': "http://cybox.mitre.org/objects#PortObject-2",
+        'stix': "http://stix.mitre.org/stix-1",
+        'stixCommon': "http://stix.mitre.org/common-1",
+        'stixVocabs': "http://stix.mitre.org/default_vocabularies-1",
+        'xsi': "http://www.w3.org/2001/XMLSchema-instance",
+        'cyboxVocabs': "http://cybox.mitre.org/default_vocabularies-2",
+        'AddressObj': "http://cybox.mitre.org/objects#AddressObject-2",
+        'ArtifactObj': "http://cybox.mitre.org/objects#ArtifactObject-2",
+        'FileObj': "http://cybox.mitre.org/objects#FileObject-2",
+        'URIObj': "http://cybox.mitre.org/objects#URIObject-2",
+        'tlpMarking': "http://data-marking.mitre.org/extensions/MarkingStructure#TLP-1",
+        'CFM': "http://www.anl.gov/cfm/stix",
+        'xmlns': "http://www.anl.gov/cfm/1.3/IDMEF-Message"
+    }
+
+    @classmethod
+    def setUpClass(cls):
+        current_dir = os.path.dirname(__file__)
+        transform = FlexTransform.FlexTransform()
+
+        with open(os.path.join(current_dir, '../resources/sampleConfigurations/stix_tlp.cfg'), 'r') as input_file:
+            # transform.AddParser('cfm13alert', input_file) Used for master branch since it still uses AddParser (3/22/2017)
+            transform.add_parser('stixtlp', input_file)
+        with open(os.path.join(current_dir, '../resources/sampleConfigurations/lqmtools.cfg'), 'r') as input_file:
+            # transform.AddParser('lqmtools', input_file) Used for master branch since it still uses AddParser (3/22/2017)
+            transform.add_parser('lqmtools', input_file)
+        output1_object = io.StringIO()
+
+        cls.utc_before = arrow.utcnow().to('US/Pacific')
+
+        transform.transform(io.StringIO(STIXTLP), 'stixtlp', 'lqmtools', target_file=output1_object)
+
+        cls.utc_after = arrow.utcnow().to('US/Pacific')
+
+        output1_object.seek(0)
+        output1_object.readline()
+        cls.json_file = output1_object.getvalue()
+
+
+    def test_stixtlp_entry0(self):
+        decoded = json.loads(self.json_file)
+        utc_now = int(decoded[0]['processedTime'])
+        self.assertEqual(decoded[0]['action1'], 'Block')
+        self.assertEqual(decoded[0]['comment'], 'CRISP Report Indicator')
+        self.assertEqual(decoded[0]['dataItemID'], 'CFM:Indicator-3e732203-d463-50ba-b6c2-26c11032a204')
+        self.assertEqual(decoded[0]['detectedTime'], 1458737105)
+        self.assertEqual(decoded[0]['directSource'], 'Fake')
+        self.assertEqual(decoded[0]['duration1'], '86400')
+        self.assertEqual(decoded[0]['fileHasMore'], '0')
+        self.assertEqual(decoded[0]['fileID'], 'CFM:STIXPackage-21856f56-eb97-50ca-bfb0-bd425e3d01c0')
+        self.assertEqual(decoded[0]['indicator'], '10.10.10.10')
+        self.assertEqual(decoded[0]['indicatorType'], 'IPv4Address')
+        self.assertEqual(decoded[0]['reconAllowed'], '1')
+        self.assertEqual(decoded[0]['sensitivity'], 'noSensitivity')
+        self.assertTrue(self.utc_before.timestamp <= int(utc_now) and int(utc_now) <= self.utc_after.timestamp,
+                        "Processed Time does not fall within time range of Entry 0.")
+
+
+    def test_stixtlp_entry1(self):
+        decoded = json.loads(self.json_file)
+        utc_now = int(decoded[1]['processedTime'])
+        self.assertEqual(decoded[1]['action1'], 'Block')
+        self.assertEqual(decoded[1]['comment'], 'CRISP Report Indicator')
+        self.assertEqual(decoded[1]['dataItemID'], 'CFM:Indicator-82b0c3f9-95d4-5ec7-9e09-30b0bf87cfcd')
+        self.assertEqual(decoded[1]['detectedTime'], 1458737105)
+        self.assertEqual(decoded[1]['directSource'], 'Fake')
+        self.assertEqual(decoded[1]['duration1'], '86400')
+        self.assertEqual(decoded[1]['fileHasMore'], '0')
+        self.assertEqual(decoded[1]['fileID'], 'CFM:STIXPackage-21856f56-eb97-50ca-bfb0-bd425e3d01c0')
+        self.assertEqual(decoded[1]['indicator'], '13.13.13.13')
+        self.assertEqual(decoded[1]['indicatorType'], 'IPv4Address')
+        self.assertEqual(decoded[1]['reconAllowed'], '1')
+        self.assertEqual(decoded[1]['sensitivity'], 'noSensitivity')
+        self.assertTrue(self.utc_before.timestamp <= int(utc_now) and int(utc_now) <= self.utc_after.timestamp,
+                        "Processed Time does not fall within time range of Entry 1.")
+
+
+    def test_stixtlp_entry2(self):
+        decoded = json.loads(self.json_file)
+        utc_now = int(decoded[2]['processedTime'])
+        self.assertEqual(decoded[2]['action1'], 'Block')
+        self.assertEqual(decoded[2]['comment'], 'CRISP Report Indicator')
+        self.assertEqual(decoded[2]['dataItemID'], 'CFM:Indicator-52c46f7c-cca9-5d2e-9d3b-a3b1744dcf52')
+        self.assertEqual(decoded[2]['detectedTime'], 1458737105)
+        self.assertEqual(decoded[2]['directSource'], 'Fake')
+        self.assertEqual(decoded[2]['duration1'], '86400')
+        self.assertEqual(decoded[2]['fileHasMore'], '0')
+        self.assertEqual(decoded[2]['fileID'], 'CFM:STIXPackage-21856f56-eb97-50ca-bfb0-bd425e3d01c0')
+        self.assertEqual(decoded[2]['indicator'], '12.12.12.12')
+        self.assertEqual(decoded[2]['indicatorType'], 'IPv4Address')
+        self.assertEqual(decoded[2]['reconAllowed'], '1')
+        self.assertEqual(decoded[2]['sensitivity'], 'noSensitivity')
+        self.assertTrue(self.utc_before.timestamp <= int(utc_now) and int(utc_now) <= self.utc_after.timestamp,
+                        "Processed Time does not fall within time range of Entry 2.")
+
+
+    def test_stixtlp_entry3(self):
+        decoded = json.loads(self.json_file)
+        utc_now = int(decoded[3]['processedTime'])
+        self.assertEqual(decoded[3]['action1'], 'Block')
+        self.assertEqual(decoded[3]['comment'], 'CRISP Report Indicator')
+        self.assertEqual(decoded[3]['dataItemID'], 'CFM:Indicator-052c65e0-c667-5e4c-9970-ac9ddd3511b3')
+        self.assertEqual(decoded[3]['detectedTime'], 1458737105)
+        self.assertEqual(decoded[3]['directSource'], 'Fake')
+        self.assertEqual(decoded[3]['duration1'], '86400')
+        self.assertEqual(decoded[3]['fileHasMore'], '0')
+        self.assertEqual(decoded[3]['fileID'], 'CFM:STIXPackage-21856f56-eb97-50ca-bfb0-bd425e3d01c0')
+        self.assertEqual(decoded[3]['indicator'], '11.11.11.11')
+        self.assertEqual(decoded[3]['indicatorType'], 'IPv4Address')
+        self.assertEqual(decoded[3]['reconAllowed'], '1')
+        self.assertEqual(decoded[3]['sensitivity'], 'noSensitivity')
+        self.assertTrue(self.utc_before.timestamp <= int(utc_now) and int(utc_now) <= self.utc_after.timestamp,
+                        "Processed Time does not fall within time range of Entry 3.")
+
+
+    def test_stixtlp_entry4(self):
+        decoded = json.loads(self.json_file)
+        utc_now = int(decoded[4]['processedTime'])
+        self.assertEqual(decoded[4]['action1'], 'Block')
+        self.assertEqual(decoded[4]['comment'], 'CRISP Report Indicator')
+        self.assertEqual(decoded[4]['dataItemID'], 'CFM:Indicator-1cf2d34d-007a-5a50-b7c1-cce9faf6f968')
+        self.assertEqual(decoded[4]['detectedTime'], 1458737105)
+        self.assertEqual(decoded[4]['directSource'], 'Fake')
+        self.assertEqual(decoded[4]['duration1'], '86400')
+        self.assertEqual(decoded[4]['fileHasMore'], '0')
+        self.assertEqual(decoded[4]['fileID'], 'CFM:STIXPackage-21856f56-eb97-50ca-bfb0-bd425e3d01c0')
+        self.assertEqual(decoded[4]['indicator'], '14.14.14.14')
+        self.assertEqual(decoded[4]['indicatorType'], 'IPv4Address')
+        self.assertEqual(decoded[4]['reconAllowed'], '1')
+        self.assertEqual(decoded[4]['sensitivity'], 'noSensitivity')
+        self.assertTrue(self.utc_before.timestamp <= int(utc_now) and int(utc_now) <= self.utc_after.timestamp,
+                        "Processed Time does not fall within time range of Entry 4.")
+
+
+    def test_stixtlp_entry5(self):
+        decoded = json.loads(self.json_file)
+        utc_now = int(decoded[5]['processedTime'])
+        self.assertEqual(decoded[5]['action1'], 'Block')
+        self.assertEqual(decoded[5]['comment'], 'CRISP Report Indicator')
+        self.assertEqual(decoded[5]['dataItemID'], 'CFM:Indicator-2e95d2ac-1b08-5f38-8522-2f4b2ef3686c')
+        self.assertEqual(decoded[5]['detectedTime'], 1458737105)
+        self.assertEqual(decoded[5]['directSource'], 'Fake')
+        self.assertEqual(decoded[5]['duration1'], '86400')
+        self.assertEqual(decoded[5]['fileHasMore'], '0')
+        self.assertEqual(decoded[5]['fileID'], 'CFM:STIXPackage-21856f56-eb97-50ca-bfb0-bd425e3d01c0')
+        self.assertEqual(decoded[5]['indicator'], 'bad.domain.be/poor/path')
+        self.assertEqual(decoded[5]['indicatorType'], 'URL')
+        self.assertEqual(decoded[5]['reconAllowed'], '1')
+        self.assertEqual(decoded[5]['secondaryIndicatorType'], 'URL')
+        self.assertEqual(decoded[5]['sensitivity'], 'noSensitivity')
+        self.assertTrue(self.utc_before.timestamp <= int(utc_now) and int(utc_now) <= self.utc_after.timestamp,
+                        "Processed Time does not fall within time range of Entry 5.")
+
+
+    def test_stixtlp_entry6(self):
+        decoded = json.loads(self.json_file)
+        utc_now = int(decoded[6]['processedTime'])
+        self.assertEqual(decoded[6]['action1'], 'Block')
+        self.assertEqual(decoded[6]['comment'], 'CRISP Report Indicator')
+        self.assertEqual(decoded[6]['dataItemID'], 'CFM:Indicator-5fd6c616-d923-5e70-916d-dca3a2d1ee02')
+        self.assertEqual(decoded[6]['detectedTime'], 1458737105)
+        self.assertEqual(decoded[6]['directSource'], 'Fake')
+        self.assertEqual(decoded[6]['duration1'], '86400')
+        self.assertEqual(decoded[6]['fileHasMore'], '0')
+        self.assertEqual(decoded[6]['fileID'], 'CFM:STIXPackage-21856f56-eb97-50ca-bfb0-bd425e3d01c0')
+        self.assertEqual(decoded[6]['indicator'], 'fake.site.com/malicious.js')
+        self.assertEqual(decoded[6]['indicatorType'], 'URL')
+        self.assertEqual(decoded[6]['reconAllowed'], '1')
+        self.assertEqual(decoded[6]['secondaryIndicatorType'], 'URL')
+        self.assertEqual(decoded[6]['sensitivity'], 'noSensitivity')
+        self.assertTrue(self.utc_before.timestamp <= int(utc_now) and int(utc_now) <= self.utc_after.timestamp,
+                        "Processed Time does not fall within time range of Entry 6.")
+
 
 if __name__ == '__main__':
     unittest.main()
