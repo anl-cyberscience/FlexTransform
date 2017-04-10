@@ -1,11 +1,13 @@
 import io
 import os
 import unittest
+import tempfile
+import arrow
 
 from lxml import etree
 
 from FlexTransform import FlexTransform
-from FlexTransform.test.SampleInputs import CFM13ALERT, STIXACS, KEYVALUE
+from FlexTransform.test.SampleInputs import CFM13ALERT, STIXACS, KEYVALUE, CFM13ALERTUUID
 
 
 class TestCFM13AlertToSTIXTLP(unittest.TestCase):
@@ -18,8 +20,10 @@ class TestCFM13AlertToSTIXTLP(unittest.TestCase):
         'PortObj': "http://cybox.mitre.org/objects#PortObject-2",
         'stix': "http://stix.mitre.org/stix-1",
         'stixCommon': "http://stix.mitre.org/common-1",
+        'cyboxCommon': "http://cybox.mitre.org/common-2",
         'stixVocabs': "http://stix.mitre.org/default_vocabularies-1",
         'xsi': "http://www.w3.org/2001/XMLSchema-instance",
+        'coa': "http://stix.mitre.org/CourseOfAction-1",
         'ArtifactObj': "http://cybox.mitre.org/objects#ArtifactObject-2"
     }
 
@@ -66,6 +70,22 @@ class TestCFM13AlertToSTIXTLP(unittest.TestCase):
         self.assertEqual(self.output1.xpath("/stix:STIX_Package/stix:STIX_Header/stix:Information_Source/stixCommon:Identity/stixCommon:Name/text()",
                                             namespaces=self.namespace)[0], "Fake")
 
+    def test_information_source_produced_time(self):
+        self.assertEqual(self.output1.xpath("/stix:STIX_Package/stix:STIX_Header/stix:Information_Source/stixCommon:Time/cyboxCommon:Produced_Time/text()",
+                                            namespaces=self.namespace)[0], "2016-02-21T22:50:02+06:00")
+
+    def test_indicator_time_stamp(self):
+        self.assertEqual(self.output1.xpath("/stix:STIX_Package/stix:Indicators/stix:Indicator/@timestamp",
+                                            namespaces=self.namespace)[0], arrow.utcnow().format('YYYY-MM-DDTHH:mm:ssZZ'))
+
+    def test_indicator_xsi_type(self):
+        self.assertEqual(self.output1.xpath("/stix:STIX_Package/stix:Indicators/stix:Indicator/@xsi:type",
+                                            namespaces=self.namespace)[0], "indicator:IndicatorType")
+
+    def test_indicator_version(self):
+        self.assertEqual(self.output1.xpath("/stix:STIX_Package/stix:Indicators/stix:Indicator/@version",
+                                            namespaces=self.namespace)[0], "2.1.1")
+
     def test_indicator_type(self):
         self.assertEqual(self.output1.xpath("/stix:STIX_Package/stix:Indicators/stix:Indicator/indicator:Type/text()",
                                             namespaces=self.namespace)[0], "IP Watchlist")
@@ -107,10 +127,43 @@ class TestCFM13AlertToSTIXTLP(unittest.TestCase):
                                                 namespaces=self.namespace)), 1)
 
     def test_indicator_properties_related_objects_properties_port_protocol_text(self):
-        self.assertEqual(self.output1.xpath("/stix:STIX_Package/stix:Indicators/stix:Indicator/indicator:Observable/cybox:Object/cybox:Related_Objects/cybox:Related_Object/cybox:Properties/PortObj:Layer4_Protocol/text()", namespaces=self.namespace)[0], "TCP")
+        self.assertEqual(self.output1.xpath("/stix:STIX_Package/stix:Indicators/stix:Indicator/indicator:Observable/cybox:Object/cybox:Related_Objects/cybox:Related_Object/cybox:Properties/PortObj:Layer4_Protocol/text()",
+                                            namespaces=self.namespace)[0], "TCP")
+
+    def test_indicator_relationship_type(self):
+        self.assertEqual(self.output1.xpath("/stix:STIX_Package/stix:Indicators/stix:Indicator/indicator:Observable/cybox:Object/cybox:Related_Objects/cybox:Related_Object/cybox:Relationship/@xsi:type",
+                                            namespaces=self.namespace)[0], "cyboxVocabs:ObjectRelationshipVocab-1.1")
+
+    def test_indicator_relationship(self):
+        self.assertEqual(self.output1.xpath("/stix:STIX_Package/stix:Indicators/stix:Indicator/indicator:Observable/cybox:Object/cybox:Related_Objects/cybox:Related_Object/cybox:Relationship/text()",
+                                            namespaces=self.namespace)[0], "Connected_To")
+
+    def test_indicator_course_of_action_xsi(self):
+        self.assertEqual(self.output1.xpath("/stix:STIX_Package/stix:Indicators/stix:Indicator/indicator:Suggested_COAs/indicator:Suggested_COA/stixCommon:Course_Of_Action/@xsi:type",
+                                            namespaces=self.namespace)[0], "coa:CourseOfActionType")
+
+    def test_indicator_course_of_action_stage(self):
+        self.assertEqual(self.output1.xpath("/stix:STIX_Package/stix:Indicators/stix:Indicator/indicator:Suggested_COAs/indicator:Suggested_COA/stixCommon:Course_Of_Action/coa:Stage/text()",
+                                            namespaces=self.namespace)[0], "Remedy")
+
+    def test_indicator_course_of_action_type(self):
+        self.assertEqual(self.output1.xpath("/stix:STIX_Package/stix:Indicators/stix:Indicator/indicator:Suggested_COAs/indicator:Suggested_COA/stixCommon:Course_Of_Action/coa:Type/text()",
+                                            namespaces=self.namespace)[0], "Perimeter Blocking")
+
+    def test_indicator_sightings(self):
+        self.assertEqual(self.output1.xpath("/stix:STIX_Package/stix:Indicators/stix:Indicator/indicator:Sightings/@sightings_count",
+                                            namespaces=self.namespace)[0], "12")
+
+    def test_indicator_sightings_timestamp(self):
+        self.assertEqual(self.output1.xpath("/stix:STIX_Package/stix:Indicators/stix:Indicator/indicator:Sightings/indicator:Sighting/@timestamp",
+                                            namespaces=self.namespace)[0], "2016-02-21T22:45:53-04:00")
+
+    def test_indicator_sightings_timestamp_precision(self):
+        self.assertEqual(self.output1.xpath("/stix:STIX_Package/stix:Indicators/stix:Indicator/indicator:Sightings/indicator:Sighting/@timestamp_precision",
+                                            namespaces=self.namespace)[0], "second")
 
 
-class STIXACSToSTIXTLP(unittest.TestCase):
+class TestSTIXACSToSTIXTLP(unittest.TestCase):
     output1 = None
 
     namespace = {
@@ -201,7 +254,94 @@ class STIXACSToSTIXTLP(unittest.TestCase):
         self.assertEqual(set(self.output1.xpath("//DomainNameObj:Value[@condition='Equals']/text()", namespaces=self.namespace)), set(["goo.gl/peter", "fake.com", "blog.website.net"]))
 
 
-class KeyValueToSTIXTLP(unittest.TestCase):
+class TestSTIXACS30ToSTIXTLP(unittest.TestCase):
+    output1 = None
+
+    namespace = {
+        'AddressObj': "http://cybox.mitre.org/objects#AddressObject-2",
+        'cybox': "http://cybox.mitre.org/cybox-2",
+        'indicator': "http://stix.mitre.org/Indicator-2",
+        'marking': "http://data-marking.mitre.org/Marking-1",
+        'PortObj': "http://cybox.mitre.org/objects#PortObject-2",
+        'stix': "http://stix.mitre.org/stix-1",
+        'stixCommon': "http://stix.mitre.org/common-1",
+        'stixVocabs': "http://stix.mitre.org/default_vocabularies-1",
+        'cyboxCommon': "http://cybox.mitre.org/common-2",
+        'xsi': "http://www.w3.org/2001/XMLSchema-instance",
+        'ArtifactObj': "http://cybox.mitre.org/objects#ArtifactObject-2",
+        'DomainNameObj': "http://cybox.mitre.org/objects#DomainNameObject-1"
+    }
+
+    @classmethod
+    def setUpClass(cls):
+        current_dir = os.path.dirname(__file__)
+        transform = FlexTransform.FlexTransform()
+
+        with open(os.path.join(current_dir, '../resources/sampleConfigurations/stix_acs30.cfg'), 'r') as input_file:
+            transform.add_parser('stixacs30', input_file)
+        with open(os.path.join(current_dir, '../resources/sampleConfigurations/stix_tlp.cfg'), 'r') as input_file:
+            transform.add_parser('stix_tlp', input_file)
+        output1_object = io.StringIO()
+
+        transform.transform(io.StringIO(STIXACS), 'stixacs30', 'stix_tlp', target_file=output1_object)
+        cls.output1 = etree.XML(output1_object.getvalue())
+
+    def test_package_title(self):
+        self.assertEqual(self.output1.xpath("/stix:STIX_Package/stix:STIX_Header/stix:Title/text()", namespaces=self.namespace)[0], "ACS-example.pdf")
+
+    def test_package_description(self):
+        self.assertEqual(self.output1.xpath("/stix:STIX_Package/stix:STIX_Header/stix:Description/text()", namespaces=self.namespace)[0], "Redirects to Malicious Websites")
+
+    def test_package_intent_type(self):
+        self.assertEqual(self.output1.xpath("/stix:STIX_Package/stix:STIX_Header/stix:Package_Intent/@xsi:type", namespaces=self.namespace)[0], "stixVocabs:PackageIntentVocab-1.0")
+
+    def test_package_intent_text(self):
+        self.assertEqual(self.output1.xpath("/stix:STIX_Package/stix:STIX_Header/stix:Package_Intent/text()", namespaces=self.namespace)[0], "Indicators")
+
+    def test_controlled_structure_text(self):
+        self.assertEqual(self.output1.xpath("//marking:Controlled_Structure/text()", namespaces=self.namespace), ["//node() | //@*"])
+
+    def test_tlp_type(self):
+        self.assertEqual(set(self.output1.xpath("//marking:Marking_Structure/@xsi:type", namespaces=self.namespace)), set(["tlpMarking:TLPMarkingStructureType"]))
+
+    def test_tlp_color(self):
+        self.assertEqual(set(self.output1.xpath("//marking:Marking_Structure/@color", namespaces=self.namespace)), set(["AMBER"]))
+
+    def test_indicator_timestamps(self):
+        self.assertEqual(set(self.output1.xpath("//stix:Indicator/@timestamp", namespaces=self.namespace)), set(["2015-11-26T00:35:06+00:00"]))
+
+    def test_indicator_types(self):
+        self.assertEqual(set(self.output1.xpath("//stix:Indicator/@xsi:type", namespaces=self.namespace)), set(["indicator:IndicatorType"]))
+
+    def test_indicator_version(self):
+        self.assertEqual(set(self.output1.xpath("//stix:Indicator/@version", namespaces=self.namespace)), set(["2.1.1"]))
+
+    def test_indicator_title(self):
+        self.assertEqual(set(self.output1.xpath("//indicator:Title/text()", namespaces=self.namespace)), set(["Original AAA Report Document"]))
+
+    def test_indicator_type(self):
+        self.assertEqual(set(self.output1.xpath("//indicator:Type[@xsi:type='stixVocabs:IndicatorTypeVocab-1.1']/text()", namespaces=self.namespace)), set(["Domain Watchlist"]))
+
+    def test_indicator_description(self):
+        self.assertEqual(set(self.output1.xpath("//indicator:Description/text()", namespaces=self.namespace)), set(["Sample.pdf", "AAA Report Indicator", "Domain Indicator", "Just Another Indicator"]))
+
+    def test_indicator_properties_xsitype(self):
+        self.assertEqual(set(self.output1.xpath("//indicator:Observable/cybox:Object/cybox:Properties/@xsi:type", namespaces=self.namespace)), set(["DomainNameObj:DomainNameObjectType", "ArtifactObj:ArtifactObjectType"]))
+
+    def test_indicator_properties_type(self):
+        if "Domain Name" in self.output1.xpath("//indicator:Observable/cybox:Object/cybox:Properties/@type", namespaces=self.namespace) or "fqdn" in self.output1.xpath("//indicator:Observable/cybox:Object/cybox:Properties/@type", namespaces=self.namespace):
+            self.assertIn("File", set(self.output1.xpath("//indicator:Observable/cybox:Object/cybox:Properties/@type", namespaces=self.namespace)))
+
+    def test_indicator_properties_packaging_encoding(self):
+        self.assertEqual(set(self.output1.xpath("//ArtifactObj:Packaging/ArtifactObj:Encoding/@algorithm", namespaces=self.namespace)), set(["Base64"]))
+
+    def test_indicator_properties_rawartifact(self):
+        self.assertEqual(set(self.output1.xpath("//ArtifactObj:Raw_Artifact/text()", namespaces=self.namespace)), set(["FILLINRAWDATAHERE"]))
+
+    def test_indicator_properties_domainnames(self):
+        self.assertEqual(set(self.output1.xpath("//DomainNameObj:Value[@condition='Equals']/text()", namespaces=self.namespace)), set(["goo.gl/peter", "fake.com", "blog.website.net"]))
+
+class TestKeyValueToSTIXTLP(unittest.TestCase):
     output1 = None
 
     namespace = {
@@ -254,6 +394,9 @@ class KeyValueToSTIXTLP(unittest.TestCase):
     def test_indicator_version(self):
         self.assertEqual(set(self.output1.xpath("//stix:Indicator/@version", namespaces=self.namespace)), set(["2.1.1"]))
 
+    def test_indicator_timestamp(self):
+        self.assertEqual(set(self.output1.xpath("//stix:Indicator/@timestamp", namespaces=self.namespace)), set([arrow.utcnow().format('YYYY-MM-DDTHH:mm:ssZZ')]))
+
     def test_indicator_type(self):
         self.assertEqual(set(self.output1.xpath("//indicator:Type[@xsi:type='stixVocabs:IndicatorTypeVocab-1.1']/text()", namespaces=self.namespace)), set(["Domain Watchlist", "IP Watchlist"]))
 
@@ -289,6 +432,9 @@ class KeyValueToSTIXTLP(unittest.TestCase):
         self.assertEqual(set(self.output1.xpath("//PortObj:Layer4_Protocol/text()", namespaces=self.namespace)), set(["TCP"]))
 
     def test_indicator_relatedobject_relationship(self):
+        self.assertEqual(set(self.output1.xpath("//cybox:Relationship/@xsi:type", namespaces=self.namespace)), set(["cyboxVocabs:ObjectRelationshipVocab-1.1"]))
+
+    def test_indicator_relatedobject_relationship(self):
         self.assertEqual(set(self.output1.xpath("//cybox:Relationship/text()", namespaces=self.namespace)), set(["Connected_To"]))
 
     def test_indicator_sightings(self):
@@ -296,6 +442,46 @@ class KeyValueToSTIXTLP(unittest.TestCase):
 
     def test_indicator_sighting_precision(self):
         self.assertEqual(set(self.output1.xpath("//indicator:Sighting/@timestamp_precision", namespaces=self.namespace)), set(["second"]))
+
+
+class TestCFM13DerivedDataTest(unittest.TestCase):
+    output1 = None
+    namespace = {
+        'AddressObj': "http://cybox.mitre.org/objects#AddressObject-2",
+        'cybox': "http://cybox.mitre.org/cybox-2",
+        'indicator': "http://stix.mitre.org/Indicator-2",
+        'marking': "http://data-marking.mitre.org/Marking-1",
+        'PortObj': "http://cybox.mitre.org/objects#PortObject-2",
+        'stix': "http://stix.mitre.org/stix-1",
+        'stixCommon': "http://stix.mitre.org/common-1",
+        'stixVocabs': "http://stix.mitre.org/default_vocabularies-1",
+        'xsi': "http://www.w3.org/2001/XMLSchema-instance",
+        'ArtifactObj': "http://cybox.mitre.org/objects#ArtifactObject-2"
+    }
+
+    @classmethod
+    def setUpClass(cls):
+        current_dir = os.path.dirname(__file__)
+        transform = FlexTransform.FlexTransform()
+
+        with open(os.path.join(current_dir, '../resources/sampleConfigurations/cfm13.cfg'), 'r') as input_file:
+            transform.add_parser('cfm13alert', input_file)
+        with open(os.path.join(current_dir, '../resources/sampleConfigurations/stix_tlp.cfg'), 'r') as input_file:
+            transform.add_parser('stix_tlp', input_file)
+
+        output1_object = io.StringIO()
+
+        with tempfile.NamedTemporaryFile(mode="w+", prefix=CFM13ALERTUUID) as input_file:
+            input_file.write(CFM13ALERT)
+            input_file.seek(0)
+            transform.transform(input_file, 'cfm13alert', 'stix_tlp', target_file=output1_object)
+
+        cls.output1 = etree.XML(output1_object.getvalue())
+
+    def test_cfm13ToStixTLP_uuid(self):
+        self.assertEqual(self.output1.xpath("/stix:STIX_Package/@id", namespaces=self.namespace)[0], "CFM:STIXPackage-37880b79-bb9e-4025-9813-94d07981d9ff")
+
+
 
 if __name__ == '__main__':
     unittest.main()

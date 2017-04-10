@@ -4,7 +4,7 @@ import unittest
 import json
 import arrow
 
-from FlexTransform.test.SampleInputs import CFM20ALERT, CFM13ALERT, STIXTLP
+from FlexTransform.test.SampleInputs import CFM20ALERT, CFM13ALERT, STIXTLP, STIXACS, KEYVALUE
 from FlexTransform import FlexTransform
 
 
@@ -241,7 +241,7 @@ class TestCFM13AlertToLQMT(unittest.TestCase):
 
 
 
-class STIXTLPtoLQMT(unittest.TestCase):
+class TestSTIXTLPToLQMT(unittest.TestCase):
     output1 = None
     json_file = None
     utc_before = None
@@ -272,7 +272,7 @@ class STIXTLPtoLQMT(unittest.TestCase):
 
         with open(os.path.join(current_dir, '../resources/sampleConfigurations/stix_tlp.cfg'), 'r') as input_file:
             # transform.AddParser('cfm13alert', input_file) Used for master branch since it still uses AddParser (3/22/2017)
-            transform.add_parser('stixtlp', input_file)
+            transform.add_parser('stix_tlp', input_file)
         with open(os.path.join(current_dir, '../resources/sampleConfigurations/lqmtools.cfg'), 'r') as input_file:
             # transform.AddParser('lqmtools', input_file) Used for master branch since it still uses AddParser (3/22/2017)
             transform.add_parser('lqmtools', input_file)
@@ -280,7 +280,7 @@ class STIXTLPtoLQMT(unittest.TestCase):
 
         cls.utc_before = arrow.utcnow().to('US/Pacific')
 
-        transform.transform(io.StringIO(STIXTLP), 'stixtlp', 'lqmtools', target_file=output1_object)
+        transform.transform(io.StringIO(STIXTLP), 'stix_tlp', 'lqmtools', target_file=output1_object)
 
         cls.utc_after = arrow.utcnow().to('US/Pacific')
 
@@ -422,6 +422,310 @@ class STIXTLPtoLQMT(unittest.TestCase):
         self.assertEqual(decoded[6]['sensitivity'], 'noSensitivity')
         self.assertTrue(self.utc_before.timestamp <= utc_now and utc_now <= self.utc_after.timestamp,
                         "Processed Time does not fall within time range of Entry 6.")
+
+class TestSTIXACSToLQMT(unittest.TestCase):
+    output1 = None
+    json_file = None
+    utc_before = None
+    utc_after = None
+    namespace = {
+        'cybox': "http://cybox.mitre.org/cybox-2",
+        'indicator': "http://stix.mitre.org/Indicator-2",
+        'marking': "http://data-marking.mitre.org/Marking-1",
+        'PortObj': "http://cybox.mitre.org/objects#PortObject-2",
+        'stix': "http://stix.mitre.org/stix-1",
+        'stixCommon': "http://stix.mitre.org/common-1",
+        'stixVocabs': "http://stix.mitre.org/default_vocabularies-1",
+        'xsi': "http://www.w3.org/2001/XMLSchema-instance",
+        'cyboxVocabs': "http://cybox.mitre.org/default_vocabularies-2",
+        'AddressObj': "http://cybox.mitre.org/objects#AddressObject-2",
+        'ArtifactObj': "http://cybox.mitre.org/objects#ArtifactObject-2",
+        'FileObj': "http://cybox.mitre.org/objects#FileObject-2",
+        'URIObj': "http://cybox.mitre.org/objects#URIObject-2",
+        'tlpMarking': "http://data-marking.mitre.org/extensions/MarkingStructure#TLP-1",
+        'CFM': "http://www.anl.gov/cfm/stix",
+        'xmlns': "http://www.anl.gov/cfm/1.3/IDMEF-Message"
+    }
+
+    @classmethod
+    def setUpClass(cls):
+        current_dir = os.path.dirname(__file__)
+        transform = FlexTransform.FlexTransform()
+
+        with open(os.path.join(current_dir, '../resources/sampleConfigurations/stix_essa.cfg'), 'r') as input_file:
+            transform.add_parser('stix_acs', input_file)
+        with open(os.path.join(current_dir, '../resources/sampleConfigurations/lqmtools.cfg'), 'r') as input_file:
+            transform.add_parser('lqmtools', input_file)
+        output1_object = io.StringIO()
+
+        cls.utc_before = arrow.utcnow().to('US/Pacific')
+
+        transform.transform(io.StringIO(STIXACS), 'stix_acs', 'lqmtools', target_file=output1_object)
+
+        cls.utc_after = arrow.utcnow().to('US/Pacific')
+
+        output1_object.seek(0)
+        output1_object.readline()
+        cls.json_file = output1_object.getvalue()
+
+    def test_stixacs_entry0(self):
+        decoded = json.loads(self.json_file)
+        utc_now = int(decoded[0]['processedTime'])
+        self.assertEqual(decoded[0]['action1'], 'Block')
+        self.assertEqual(decoded[0]['comment'], 'AAA Report Indicator')
+        self.assertEqual(decoded[0]['dataItemID'], 'isa:guide.999191.Indicator-3312fec8-9504-51ad-bd9f-e43017af4a10')
+        self.assertEqual(decoded[0]['duration1'], '86400')
+        self.assertEqual(decoded[0]['fileHasMore'], '0')
+        self.assertEqual(decoded[0]['fileID'], 'isa:guide.999191.STIXPackage-96f564e1-e1b1-5625-b41c-506e231fbd53')
+        self.assertEqual(decoded[0]['indicator'], 'blog.website.net')
+        self.assertEqual(decoded[0]['indicatorType'], 'DNSDomainName')
+        self.assertEqual(decoded[0]['reconAllowed'], '1')
+        self.assertEqual(decoded[0]['sensitivity'], 'noSensitivity')
+        self.assertTrue(self.utc_before.timestamp <= utc_now and utc_now <= self.utc_after.timestamp,
+                        "Processed Time does not fall within time range of Entry 0.")
+
+    def test_stixacs_entry1(self):
+        decoded = json.loads(self.json_file)
+        utc_now = int(decoded[1]['processedTime'])
+        self.assertEqual(decoded[1]['action1'], 'Block')
+        self.assertEqual(decoded[1]['comment'], 'Domain Indicator')
+        self.assertEqual(decoded[1]['dataItemID'], 'isa:guide.999191.Indicator-60742920-231d-508d-8f75-d361f24a5fb0')
+        self.assertEqual(decoded[1]['duration1'], '86400')
+        self.assertEqual(decoded[1]['fileHasMore'], '0')
+        self.assertEqual(decoded[1]['fileID'], 'isa:guide.999191.STIXPackage-96f564e1-e1b1-5625-b41c-506e231fbd53')
+        self.assertEqual(decoded[1]['indicator'], 'fake.com')
+        self.assertEqual(decoded[1]['indicatorType'], 'DNSDomainName')
+        self.assertEqual(decoded[1]['reconAllowed'], '1')
+        self.assertEqual(decoded[1]['sensitivity'], 'noSensitivity')
+        self.assertTrue(self.utc_before.timestamp <= utc_now and utc_now <= self.utc_after.timestamp,
+                        "Processed Time does not fall within time range of Entry 1.")
+
+    def test_stixacs_entry2(self):
+        decoded = json.loads(self.json_file)
+        utc_now = int(decoded[2]['processedTime'])
+        self.assertEqual(decoded[2]['action1'], 'Block')
+        self.assertEqual(decoded[2]['comment'], 'Just Another Indicator')
+        self.assertEqual(decoded[2]['dataItemID'], 'isa:guide.999191.Indicator-f2911c1d-a14d-50de-a211-33a8beb7c7e6')
+        self.assertEqual(decoded[2]['duration1'], '86400')
+        self.assertEqual(decoded[2]['fileHasMore'], '0')
+        self.assertEqual(decoded[2]['fileID'], 'isa:guide.999191.STIXPackage-96f564e1-e1b1-5625-b41c-506e231fbd53')
+        self.assertEqual(decoded[2]['indicator'], 'goo.gl/peter')
+        self.assertEqual(decoded[2]['indicatorType'], 'DNSDomainName')
+        self.assertEqual(decoded[2]['reconAllowed'], '1')
+        self.assertEqual(decoded[2]['sensitivity'], 'noSensitivity')
+        self.assertTrue(self.utc_before.timestamp <= utc_now and utc_now <= self.utc_after.timestamp,
+                        "Processed Time does not fall within time range of Entry 2.")
+
+
+class TestSTIXACS30ToLQMT(unittest.TestCase):
+    output1 = None
+    json_file = None
+    utc_before = None
+    utc_after = None
+    namespace = {
+        'cybox': "http://cybox.mitre.org/cybox-2",
+        'indicator': "http://stix.mitre.org/Indicator-2",
+        'marking': "http://data-marking.mitre.org/Marking-1",
+        'PortObj': "http://cybox.mitre.org/objects#PortObject-2",
+        'stix': "http://stix.mitre.org/stix-1",
+        'stixCommon': "http://stix.mitre.org/common-1",
+        'stixVocabs': "http://stix.mitre.org/default_vocabularies-1",
+        'xsi': "http://www.w3.org/2001/XMLSchema-instance",
+        'cyboxVocabs': "http://cybox.mitre.org/default_vocabularies-2",
+        'AddressObj': "http://cybox.mitre.org/objects#AddressObject-2",
+        'ArtifactObj': "http://cybox.mitre.org/objects#ArtifactObject-2",
+        'FileObj': "http://cybox.mitre.org/objects#FileObject-2",
+        'URIObj': "http://cybox.mitre.org/objects#URIObject-2",
+        'tlpMarking': "http://data-marking.mitre.org/extensions/MarkingStructure#TLP-1",
+        'CFM': "http://www.anl.gov/cfm/stix",
+        'xmlns': "http://www.anl.gov/cfm/1.3/IDMEF-Message"
+    }
+
+    @classmethod
+    def setUpClass(cls):
+        current_dir = os.path.dirname(__file__)
+        transform = FlexTransform.FlexTransform()
+
+        with open(os.path.join(current_dir, '../resources/sampleConfigurations/stix_acs30.cfg'), 'r') as input_file:
+            transform.add_parser('stix_acs30', input_file)
+        with open(os.path.join(current_dir, '../resources/sampleConfigurations/lqmtools.cfg'), 'r') as input_file:
+            transform.add_parser('lqmtools', input_file)
+        output1_object = io.StringIO()
+
+        cls.utc_before = arrow.utcnow().to('US/Pacific')
+
+        transform.transform(io.StringIO(STIXACS), 'stix_acs30', 'lqmtools', target_file=output1_object)
+
+        cls.utc_after = arrow.utcnow().to('US/Pacific')
+
+        output1_object.seek(0)
+        output1_object.readline()
+        cls.json_file = output1_object.getvalue()
+
+
+    def test_stixacs30_entry0(self):
+        decoded = json.loads(self.json_file)
+        utc_now = int(decoded[0]['processedTime'])
+        self.assertEqual(decoded[0]['action1'], 'Block')
+        self.assertEqual(decoded[0]['comment'], 'AAA Report Indicator')
+        self.assertEqual(decoded[0]['dataItemID'], 'isa:guide.999191.Indicator-3312fec8-9504-51ad-bd9f-e43017af4a10')
+        self.assertEqual(decoded[0]['duration1'], '86400')
+        self.assertEqual(decoded[0]['fileHasMore'], '0')
+        self.assertEqual(decoded[0]['fileID'], 'isa:guide.999191.STIXPackage-96f564e1-e1b1-5625-b41c-506e231fbd53')
+        self.assertEqual(decoded[0]['indicator'], 'blog.website.net')
+        self.assertEqual(decoded[0]['indicatorType'], 'DNSDomainName')
+        self.assertEqual(decoded[0]['reconAllowed'], '1')
+        self.assertEqual(decoded[0]['sensitivity'], 'noSensitivity')
+        self.assertTrue(self.utc_before.timestamp <= utc_now and utc_now <= self.utc_after.timestamp,
+                        "Processed Time does not fall within time range of Entry 0.")
+
+
+    def test_stixacs30_entry1(self):
+        decoded = json.loads(self.json_file)
+        utc_now = int(decoded[1]['processedTime'])
+        self.assertEqual(decoded[1]['action1'], 'Block')
+        self.assertEqual(decoded[1]['comment'], 'Domain Indicator')
+        self.assertEqual(decoded[1]['dataItemID'], 'isa:guide.999191.Indicator-60742920-231d-508d-8f75-d361f24a5fb0')
+        self.assertEqual(decoded[1]['duration1'], '86400')
+        self.assertEqual(decoded[1]['fileHasMore'], '0')
+        self.assertEqual(decoded[1]['fileID'], 'isa:guide.999191.STIXPackage-96f564e1-e1b1-5625-b41c-506e231fbd53')
+        self.assertEqual(decoded[1]['indicator'], 'fake.com')
+        self.assertEqual(decoded[1]['indicatorType'], 'DNSDomainName')
+        self.assertEqual(decoded[1]['reconAllowed'], '1')
+        self.assertEqual(decoded[1]['sensitivity'], 'noSensitivity')
+        self.assertTrue(self.utc_before.timestamp <= utc_now and utc_now <= self.utc_after.timestamp,
+                        "Processed Time does not fall within time range of Entry 1.")
+
+
+    def test_stixacs30_entry2(self):
+        decoded = json.loads(self.json_file)
+        utc_now = int(decoded[2]['processedTime'])
+        self.assertEqual(decoded[2]['action1'], 'Block')
+        self.assertEqual(decoded[2]['comment'], 'Just Another Indicator')
+        self.assertEqual(decoded[2]['dataItemID'], 'isa:guide.999191.Indicator-f2911c1d-a14d-50de-a211-33a8beb7c7e6')
+        self.assertEqual(decoded[2]['duration1'], '86400')
+        self.assertEqual(decoded[2]['fileHasMore'], '0')
+        self.assertEqual(decoded[2]['fileID'], 'isa:guide.999191.STIXPackage-96f564e1-e1b1-5625-b41c-506e231fbd53')
+        self.assertEqual(decoded[2]['indicator'], 'goo.gl/peter')
+        self.assertEqual(decoded[2]['indicatorType'], 'DNSDomainName')
+        self.assertEqual(decoded[2]['reconAllowed'], '1')
+        self.assertEqual(decoded[2]['sensitivity'], 'noSensitivity')
+        self.assertTrue(self.utc_before.timestamp <= utc_now and utc_now <= self.utc_after.timestamp,
+                        "Processed Time does not fall within time range of Entry 2.")
+
+
+class TestKeyValueToLQMT(unittest.TestCase):
+    output1 = None
+    json_file = None
+    utc_before = None
+    utc_after = None
+    namespace = {
+        'cybox': "http://cybox.mitre.org/cybox-2",
+        'indicator': "http://stix.mitre.org/Indicator-2",
+        'marking': "http://data-marking.mitre.org/Marking-1",
+        'PortObj': "http://cybox.mitre.org/objects#PortObject-2",
+        'stix': "http://stix.mitre.org/stix-1",
+        'stixCommon': "http://stix.mitre.org/common-1",
+        'stixVocabs': "http://stix.mitre.org/default_vocabularies-1",
+        'xsi': "http://www.w3.org/2001/XMLSchema-instance",
+        'cyboxVocabs': "http://cybox.mitre.org/default_vocabularies-2",
+        'AddressObj': "http://cybox.mitre.org/objects#AddressObject-2",
+        'ArtifactObj': "http://cybox.mitre.org/objects#ArtifactObject-2",
+        'FileObj': "http://cybox.mitre.org/objects#FileObject-2",
+        'URIObj': "http://cybox.mitre.org/objects#URIObject-2",
+        'tlpMarking': "http://data-marking.mitre.org/extensions/MarkingStructure#TLP-1",
+        'CFM': "http://www.anl.gov/cfm/stix",
+        'xmlns': "http://www.anl.gov/cfm/1.3/IDMEF-Message"
+    }
+
+    @classmethod
+    def setUpClass(cls):
+        current_dir = os.path.dirname(__file__)
+        transform = FlexTransform.FlexTransform()
+
+        with open(os.path.join(current_dir, '../resources/sampleConfigurations/keyvalue.cfg'), 'r') as input_file:
+            transform.add_parser('keyvalue', input_file)
+        with open(os.path.join(current_dir, '../resources/sampleConfigurations/lqmtools.cfg'), 'r') as input_file:
+            transform.add_parser('lqmtools', input_file)
+        output1_object = io.StringIO()
+
+        cls.utc_before = arrow.utcnow().to('US/Pacific')
+
+        transform.transform(io.StringIO(KEYVALUE), 'keyvalue', 'lqmtools', target_file=output1_object)
+
+        cls.utc_after = arrow.utcnow().to('US/Pacific')
+
+        output1_object.seek(0)
+        output1_object.readline()
+        cls.json_file = output1_object.getvalue()
+
+    def test_keyvalue_entry0(self):
+        decoded = json.loads(self.json_file)
+        utc_now = int(decoded[0]['processedTime'])
+        self.assertEqual(decoded[0]['action1'], 'Block')
+        self.assertEqual(decoded[0]['comment'], 'Attacker scanning for RDP, direction:ingress, confidence:0, severity:high')
+        self.assertEqual(decoded[0]['detectedTime'], 1325401200)
+        self.assertEqual(decoded[0]['duration1'], '86400')
+        self.assertEqual(decoded[0]['fileHasMore'], '0')
+        self.assertEqual(decoded[0]['majorTags'], 'Scanning')
+        self.assertEqual(decoded[0]['reason1'], 'Scanning')
+        self.assertEqual(decoded[0]['indicator'], '10.11.12.13')
+        self.assertEqual(decoded[0]['indicatorType'], 'IPv4Address')
+        self.assertEqual(decoded[0]['reconAllowed'], '1')
+        self.assertEqual(decoded[0]['sensitivity'], 'noSensitivity')
+        self.assertTrue(self.utc_before.timestamp <= utc_now and utc_now <= self.utc_after.timestamp,
+                        "Processed Time does not fall within time range of Entry 0.")
+
+    def test_keyvalue_entry1(self):
+        decoded = json.loads(self.json_file)
+        utc_now = int(decoded[1]['processedTime'])
+        self.assertEqual(decoded[1]['action1'], 'Block')
+        self.assertEqual(decoded[1]['comment'], 'Attacker scanning for SSH, direction:ingress, confidence:0, severity:high')
+        self.assertEqual(decoded[1]['detectedTime'], 1325401200)
+        self.assertEqual(decoded[1]['duration1'], '86400')
+        self.assertEqual(decoded[1]['fileHasMore'], '0')
+        self.assertEqual(decoded[1]['majorTags'], 'Scanning')
+        self.assertEqual(decoded[1]['reason1'], 'Scanning')
+        self.assertEqual(decoded[1]['indicator'], '10.11.12.14')
+        self.assertEqual(decoded[1]['indicatorType'], 'IPv4Address')
+        self.assertEqual(decoded[1]['reconAllowed'], '1')
+        self.assertEqual(decoded[1]['sensitivity'], 'noSensitivity')
+        self.assertTrue(self.utc_before.timestamp <= utc_now and utc_now <= self.utc_after.timestamp,
+                        "Processed Time does not fall within time range of Entry 1.")
+
+    def test_keyvalue_entry2(self):
+        decoded = json.loads(self.json_file)
+        utc_now = int(decoded[2]['processedTime'])
+        self.assertEqual(decoded[2]['action1'], 'Block')
+        self.assertEqual(decoded[2]['comment'], 'HTTP Response code 4xx, suspicious, direction:ingress, confidence:0, severity:low')
+        self.assertEqual(decoded[2]['detectedTime'], 1325401200)
+        self.assertEqual(decoded[2]['duration1'], '86400')
+        self.assertEqual(decoded[2]['fileHasMore'], '0')
+        self.assertEqual(decoded[2]['majorTags'], 'Reconnaissance')
+        self.assertEqual(decoded[2]['reason1'], 'Reconnaissance')
+        self.assertEqual(decoded[2]['indicator'], '2001:db8:16::1')
+        self.assertEqual(decoded[2]['indicatorType'], 'IPv6Address')
+        self.assertEqual(decoded[2]['reconAllowed'], '1')
+        self.assertEqual(decoded[2]['sensitivity'], 'noSensitivity')
+        self.assertTrue(self.utc_before.timestamp <= utc_now and utc_now <= self.utc_after.timestamp,
+                        "Processed Time does not fall within time range of Entry 2.")
+
+    def test_keyvalue_entry3(self):
+        decoded = json.loads(self.json_file)
+        utc_now = int(decoded[3]['processedTime'])
+        self.assertEqual(decoded[3]['action1'], 'Block')
+        self.assertEqual(decoded[3]['comment'], 'Malicious domain, direction:egress, confidence:0, severity:high')
+        self.assertEqual(decoded[3]['detectedTime'], 1325401200)
+        self.assertEqual(decoded[3]['duration1'], '86400')
+        self.assertEqual(decoded[3]['fileHasMore'], '0')
+        self.assertEqual(decoded[3]['majorTags'], 'Malware Traffic')
+        self.assertEqual(decoded[3]['reason1'], 'Malware Traffic')
+        self.assertEqual(decoded[3]['indicator'], 'bad.domain')
+        self.assertEqual(decoded[3]['indicatorType'], 'DNSDomainName')
+        self.assertEqual(decoded[3]['reconAllowed'], '1')
+        self.assertEqual(decoded[3]['sensitivity'], 'noSensitivity')
+        self.assertTrue(self.utc_before.timestamp <= utc_now and utc_now <= self.utc_after.timestamp,
+                        "Processed Time does not fall within time range of Entry 3.")
 
 
 if __name__ == '__main__':

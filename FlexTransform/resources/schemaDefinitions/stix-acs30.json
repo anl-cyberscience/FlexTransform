@@ -106,7 +106,7 @@
 				"description": "The creation date and time of the associated resource.",
 				"valuemap": "handling;marking_structures;createdatetime", 
 				"datatype": "datetime",
-				"dateTimeFormat": "%Y-%m-%dT%H:%M:%S%z",
+				"dateTimeFormat": "YYYY-MM-DDTHH:mm:ssZZ",
 				"defaultValue": "&now()",
 				"required": "false",
 				"memberof": "handling_markingstructures",
@@ -115,7 +115,7 @@
 			},
 			"handling_markingstructures_responsibleentity": {
 				"description": "Contains a single mandatory CUST: token with an optional single ORIG: token",
-				"valuemap": "handling;marking_structures;responsibleentity", 
+				"valuemap": "handling;marking_structures;responsibleentity",
 				"datatype": "string",
 				"defaultValue": "",
 				"required": "false",
@@ -125,7 +125,7 @@
 			},
 			"handling_markingstructures_isamversion": {
 				"description": "ISA Marking Version",
-				"valuemap": "handling;marking_structures;isam_version", 
+				"valuemap": "handling;marking_structures;isam_version",
 				"datatype": "enum",
 				"defaultValue": "1.0",
 				"required": "false",
@@ -139,7 +139,7 @@
 			},
 			"handling_markingstructures_isamversion2": {
 				"description": "ISA Marking Version",
-				"valuemap": "handling;marking_structures;isam_version", 
+				"valuemap": "handling;marking_structures;isam_version",
 				"datatype": "enum",
 				"defaultValue": "1.0",
 				"required": "false",
@@ -183,7 +183,7 @@
 			},
 			"handling_markingstructures_policyref": {
 				"description": "If multiple policy refs apply, they are provided as space delimited URNs.",
-				"valuemap": "handling;marking_structures;policyref", 
+				"valuemap": "handling;marking_structures;policyref",
 				"datatype": "string",
 				"required": "false",
 				"memberof": "handling_markingstructures",
@@ -222,7 +222,7 @@
 			},
 			"handling_markingstructures_controlset": {
 				"description": "Group of data tags that are used to inform automated access control decisions.",
-				"valuemap": "handling;marking_structures;controlset", 
+				"valuemap": "handling;marking_structures;controlset",
 				"datatype": "string",
 				"required": "false",
 				"memberof": "handling_markingstructures",
@@ -233,7 +233,7 @@
 			},
 			"handling_markingstructures_mostrestrictive": {
 				"description": "Indicates whether or not this marking structure denotes the most restrictive applied to this structure.  Only used in STIX header. Can only be used if the Controlled_Structure is set to //node()",
-				"valuemap": "handling;marking_structures;most_restrictive", 
+				"valuemap": "handling;marking_structures;most_restrictive",
 				"datatype": "string",
 				"defaultValue": "true",
 				"required": "false",
@@ -254,9 +254,9 @@
 			},
 			"produced_time": {
 				"description": "The produced date and time of the associated resource.",
-				"valuemap": "information_source;time;produced_time", 
+				"valuemap": "information_source;time;produced_time",
 				"datatype": "datetime",
-				"dateTimeFormat": "%Y-%m-%dT%H:%M:%S%z",
+				"dateTimeFormat": "YYYY-MM-DDTHH:mm:ssZZ",
 				"defaultValue": "&now()",
 				"required": "true",
 				"ontologyMappingType": "simple",
