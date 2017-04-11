@@ -13,6 +13,15 @@ class TestCFM13Alert1ToSTIXACS(unittest.TestCase):
     output1 = None
     utc_before = None
     utc_after = None
+    header = "/stix:STIX_Package/stix:STIX_Header/"
+    information_source = "/stix:STIX_Package/stix:STIX_Header/stix:Information_Source/"
+    marking = "/stix:STIX_Package/stix:STIX_Header/stix:Handling/marking:Marking/"
+    indicator = "/stix:STIX_Package/stix:Indicators/stix:Indicator/"
+    observable = "/stix:STIX_Package/stix:Indicators/stix:Indicator/indicator:Observable/"
+    object = "%s cybox:Object/" % observable
+    related_object_properties = "%s cybox:Related_Objects/cybox:Related_Object/cybox:Properties/" % object
+    sightings = "%s indicator:Sightings/" % indicator
+
     namespace = {
         'AddressObj': "http://cybox.mitre.org/objects#AddressObject-2",
         'cybox': "http://cybox.mitre.org/cybox-2",
@@ -44,118 +53,131 @@ class TestCFM13Alert1ToSTIXACS(unittest.TestCase):
         cls.output1 = etree.XML(output1_object.getvalue())
 
     def test_package_intent_type(self):
-        self.assertEqual(self.output1.xpath("/stix:STIX_Package/stix:STIX_Header/stix:Package_Intent/@xsi:type",
+        self.assertEqual(self.output1.xpath("%s stix:Package_Intent/@xsi:type" % self.header,
                                             namespaces=self.namespace)[0], "stixVocabs:PackageIntentVocab-1.0")
 
     def test_package_intent_text(self):
-        self.assertEqual(self.output1.xpath("/stix:STIX_Package/stix:STIX_Header/stix:Package_Intent/text()",
+        self.assertEqual(self.output1.xpath("%s stix:Package_Intent/text()" % self.header,
                                             namespaces=self.namespace)[0], "Indicators")
 
     def test_package_profile(self):
-        self.assertEqual(self.output1.xpath("/stix:STIX_Package/stix:STIX_Header/stix:Profiles/stixCommon:Profile/text()",
+        self.assertEqual(self.output1.xpath("%s stix:Profiles/stixCommon:Profile/text()" % self.header,
                                             namespaces=self.namespace)[0], "ISA Profile v1.0")
 
     def test_controlled_structure_text(self):
-        self.assertEqual(self.output1.xpath("/stix:STIX_Package/stix:STIX_Header/stix:Handling/marking:Marking/marking:Controlled_Structure/text()",
+        self.assertEqual(self.output1.xpath("%s marking:Controlled_Structure/text()" % self.marking,
                                             namespaces=self.namespace)[0], "//node() | //@*")
 
     def test_indicator_information_source_description(self):
-        self.assertEqual(self.output1.xpath("/stix:STIX_Package/stix:STIX_Header/stix:Information_Source/stixCommon:Description/text()",
+        self.assertEqual(self.output1.xpath("%s stixCommon:Description/text()" % self.information_source,
                                             namespaces=self.namespace)[0], "U.S. Department of Energy")
 
     def test_indicator_information_source_name(self):
-        self.assertEqual(self.output1.xpath("/stix:STIX_Package/stix:STIX_Header/stix:Information_Source/stixCommon:Identity/stixCommon:Name/text()",
+        self.assertEqual(self.output1.xpath("%s stixCommon:Identity/stixCommon:Name/text()" % self.information_source,
                                             namespaces=self.namespace)[0], "DOE")
 
     def test_marking_type(self):
-        self.assertEqual(self.output1.xpath("/stix:STIX_Package/stix:STIX_Header/stix:Handling/marking:Marking/marking:Marking_Structure/@xsi:type",
-                                            namespaces=self.namespace)[0], "edh2cyberMarking:ISAMarkingsType") # "edh2cyberMarkingAssert:ISAMarkingsAssertionType"]))
+        self.assertEqual(self.output1.xpath("%s marking:Marking_Structure/@xsi:type" % self.marking,
+                                            namespaces=self.namespace)[0], "edh2cyberMarking:ISAMarkingsType")
+        # "edh2cyberMarkingAssert:ISAMarkingsAssertionType"]))
 
     def test_marking_isam_version(self):
-        self.assertEqual(self.output1.xpath("/stix:STIX_Package/stix:STIX_Header/stix:Handling/marking:Marking/marking:Marking_Structure/@isam_version",
-                                           namespaces=self.namespace)[0], "1.0")
+        self.assertEqual(self.output1.xpath("%s marking:Marking_Structure/@isam_version" % self.marking,
+                                            namespaces=self.namespace)[0], "1.0")
 
     def test_marking_most_restricitive(self):
-        self.assertEqual(self.output1.xpath("/stix:STIX_Package/stix:STIX_Header/stix:Handling/marking:Marking/marking:Marking_Structure/@most_restrictive",
-                                           namespaces=self.namespace)[0], "true")
+        self.assertEqual(self.output1.xpath("%s marking:Marking_Structure/@most_restrictive" % self.marking,
+                                            namespaces=self.namespace)[0], "true")
 
     def test_marking_create_date_time(self):
-        test = self.output1.xpath("//marking:Marking/marking:Marking_Structure/edh2:CreateDateTime/text()", namespaces=self.namespace)[0]
+        test = self.output1.xpath("%s marking:Marking_Structure/edh2:CreateDateTime/text()" % self.marking,
+                                  namespaces=self.namespace)[0]
         if test == self.utc_before:
             self.assertEqual(test, self.utc_before)
         else:
             self.assertEqual(test, self.utc_after)
 
     def test_marking_responsible_entity(self):
-        self.assertEqual(self.output1.xpath("/stix:STIX_Package/stix:STIX_Header/stix:Handling/marking:Marking/marking:Marking_Structure/edh2:ResponsibleEntity/text()",
+        self.assertEqual(self.output1.xpath("%s marking:Marking_Structure/edh2:ResponsibleEntity/text()" % self.marking,
                                             namespaces=self.namespace)[0], "CUST:USA.DOE")
 
     def test_marking_policy_ref(self):
-        self.assertEqual(self.output1.xpath("/stix:STIX_Package/stix:STIX_Header/stix:Handling/marking:Marking/marking:Marking_Structure/edh2:PolicyRef/text()",
-                                            namespaces=self.namespace)[0], "urn:isa:policy:acs:ns:v2.0?privdefault=permit")
+        self.assertEqual(self.output1.xpath("%s marking:Marking_Structure/edh2:PolicyRef/text()" % self.marking,
+                                            namespaces=self.namespace)[0],
+                         "urn:isa:policy:acs:ns:v2.0?privdefault=permit")
 
     def test_marking_control_set(self):
-        self.assertEqual(self.output1.xpath("/stix:STIX_Package/stix:STIX_Header/stix:Handling/marking:Marking/marking:Marking_Structure/edh2:ControlSet/text()",
+        self.assertEqual(self.output1.xpath("%s marking:Marking_Structure/edh2:ControlSet/text()" % self.marking,
                                             namespaces=self.namespace)[0], "CLS:U CUI:FOUO")
 
     def test_indicator_type(self):
-        self.assertEqual(self.output1.xpath("/stix:STIX_Package/stix:Indicators/stix:Indicator/indicator:Type/text()",
+        self.assertEqual(self.output1.xpath("%s indicator:Type/text()" % self.indicator,
                                             namespaces=self.namespace)[0], "IP Watchlist")
 
     def test_indicator_description(self):
-        self.assertEqual(self.output1.xpath("/stix:STIX_Package/stix:Indicators/stix:Indicator/indicator:Description/text()",
-                                            namespaces=self.namespace)[0], "SSH scans against multiple hosts, direction:ingress, confidence:87, severity:high")
+        self.assertEqual(self.output1.xpath("%s indicator:Description/text()" % self.indicator,
+                                            namespaces=self.namespace)[0],
+                         "SSH scans against multiple hosts, direction:ingress, confidence:87, severity:high")
 
     def test_indicator_keyword(self):
-        self.assertEqual(self.output1.xpath("/stix:STIX_Package/stix:Indicators/stix:Indicator/indicator:Observable/cybox:Keywords/cybox:Keyword/text()",
+        self.assertEqual(self.output1.xpath("%s cybox:Keywords/cybox:Keyword/text()" % self.observable,
                                             namespaces=self.namespace)[0], "Scanning")
 
     def test_indicator_properties_type(self):
-        self.assertEqual(self.output1.xpath("/stix:STIX_Package/stix:Indicators/stix:Indicator/indicator:Observable/cybox:Object/cybox:Properties/@xsi:type",
+        self.assertEqual(self.output1.xpath("%s cybox:Properties/@xsi:type" % self.object,
                                             namespaces=self.namespace)[0], "AddressObj:AddressObjectType")
 
     def test_indicator_properties_category(self):
-        self.assertEqual(self.output1.xpath("/stix:STIX_Package/stix:Indicators/stix:Indicator/indicator:Observable/cybox:Object/cybox:Properties/@category",
+        self.assertEqual(self.output1.xpath("%s cybox:Properties/@category" % self.object,
                                             namespaces=self.namespace)[0], "ipv4-addr")
 
     def test_indicator_properties_indicator(self):
-        self.assertEqual(self.output1.xpath("/stix:STIX_Package/stix:Indicators/stix:Indicator/indicator:Observable/cybox:Object/cybox:Properties/AddressObj:Address_Value/text()",
+        self.assertEqual(self.output1.xpath("%s cybox:Properties/AddressObj:Address_Value/text()" % self.object,
                                             namespaces=self.namespace)[0], "10.10.10.10")
 
     def test_indicator_properties_related_objects_properties(self):
-        self.assertEqual(self.output1.xpath("/stix:STIX_Package/stix:Indicators/stix:Indicator/indicator:Observable/cybox:Object/cybox:Related_Objects/cybox:Related_Object/cybox:Properties/@xsi:type",
+        self.assertEqual(self.output1.xpath("%s @xsi:type" % self.related_object_properties,
                                             namespaces=self.namespace)[0], "PortObj:PortObjectType")
 
     def test_indicator_properties_related_objects_properties_port_value(self):
-        self.assertEqual(len(self.output1.xpath("/stix:STIX_Package/stix:Indicators/stix:Indicator/indicator:Observable/cybox:Object/cybox:Related_Objects/cybox:Related_Object/cybox:Properties/PortObj:Port_Value",
+        self.assertEqual(len(self.output1.xpath("%s PortObj:Port_Value" % self.related_object_properties,
                                                 namespaces=self.namespace)), 1)
 
     def test_indicator_properties_related_objects_properties_port_value_text(self):
-        self.assertEqual(self.output1.xpath("/stix:STIX_Package/stix:Indicators/stix:Indicator/indicator:Observable/cybox:Object/cybox:Related_Objects/cybox:Related_Object/cybox:Properties/PortObj:Port_Value/text()",
+        self.assertEqual(self.output1.xpath("%s PortObj:Port_Value/text()" % self.related_object_properties,
                                             namespaces=self.namespace)[0], "22")
 
     def test_indicator_properties_related_objects_properties_port_protocol(self):
-        self.assertEqual(len(self.output1.xpath("/stix:STIX_Package/stix:Indicators/stix:Indicator/indicator:Observable/cybox:Object/cybox:Related_Objects/cybox:Related_Object/cybox:Properties/PortObj:Layer4_Protocol",
+        self.assertEqual(len(self.output1.xpath("%s PortObj:Layer4_Protocol" % self.related_object_properties,
                                                 namespaces=self.namespace)), 1)
 
     def test_indicator_properties_related_objects_properties_port_protocol_text(self):
-        self.assertEqual(self.output1.xpath("/stix:STIX_Package/stix:Indicators/stix:Indicator/indicator:Observable/cybox:Object/cybox:Related_Objects/cybox:Related_Object/cybox:Properties/PortObj:Layer4_Protocol/text()",
+        self.assertEqual(self.output1.xpath("%s PortObj:Layer4_Protocol/text()" % self.related_object_properties,
                                             namespaces=self.namespace)[0], "TCP")
 
     def test_indicator_sightings_count(self):
-        self.assertEqual(self.output1.xpath("//indicator:Sightings/@sightings_count", namespaces=self.namespace)[0], "12")
+        self.assertEqual(self.output1.xpath("%s indicator:Sightings/@sightings_count" % self.indicator,
+                                            namespaces=self.namespace)[0], "12")
 
     def test_indicator_sightings_sighting_timestamp(self):
-        self.assertEqual(self.output1.xpath("//indicator:Sighting/@timestamp", namespaces=self.namespace)[0], "2016-02-21T22:45:53-04:00")
+        self.assertEqual(self.output1.xpath("%s indicator:Sighting/@timestamp" % self.sightings,
+                                            namespaces=self.namespace)[0], "2016-02-21T22:45:53-04:00")
 
     def test_indicator_sightings_sighting_timestamp_seconds(self):
-        self.assertEqual(self.output1.xpath("//indicator:Sighting/@timestamp_precision", namespaces=self.namespace)[0], "second")
+        self.assertEqual(self.output1.xpath("%s indicator:Sighting/@timestamp_precision" % self.sightings,
+                                            namespaces=self.namespace)[0], "second")
 
 
 class TestSTIXTLPToSTIXACS(unittest.TestCase):
     output1 = None
     utc_before = None
-    utc_after= None
+    utc_after = None
+    header = "/stix:STIX_Package/stix:STIX_Header/"
+    marking = "/stix:STIX_Package/stix:STIX_Header/stix:Handling/marking:Marking/"
+    information_source = "/stix:STIX_Package/stix:STIX_Header/stix:Information_Source/"
+    indicator = "/stix:STIX_Package/stix:Indicators/stix:Indicator/"
+    properties = "%s indicator:Observable/cybox:Object/cybox:Properties/" % indicator
+    hash = "%s FileObj:Hashes/cyboxCommon:Hash/" % properties
 
     namespace = {
         'AddressObj': "http://cybox.mitre.org/objects#AddressObject-2",
@@ -172,11 +194,9 @@ class TestSTIXTLPToSTIXACS(unittest.TestCase):
         'DomainNameObj': "http://cybox.mitre.org/objects#DomainNameObject-1",
         'URIObj': "http://cybox.mitre.org/objects#URIObject-2",
         'FileObj': "http://cybox.mitre.org/objects#FileObject-2",
-        'edh2':"urn:edm:edh:v2",
-        'edh2cyberMarking' : "http://www.us-cert.gov/essa/Markings/ISAMarkings",
-        'edh2cyberMarkingAssert' : "xmlns:edh2cyberMarkingAssert",
-        'AddressObj':"http://cybox.mitre.org/objects#AddressObject-2",
-        'ArtifactObj': "http://cybox.mitre.org/objects#ArtifactObject-2"
+        'edh2': "urn:edm:edh:v2",
+        'edh2cyberMarking': "http://www.us-cert.gov/essa/Markings/ISAMarkings",
+        'edh2cyberMarkingAssert': "xmlns:edh2cyberMarkingAssert",
 
     }
 
@@ -196,31 +216,40 @@ class TestSTIXTLPToSTIXACS(unittest.TestCase):
         cls.output1 = etree.XML(output1_object.getvalue())
 
     def test_title(self):
-        self.assertEqual(self.output1.xpath("/stix:STIX_Package/stix:STIX_Header/stix:Title/text()", namespaces=self.namespace)[0], "Test PDF")
+        self.assertEqual(self.output1.xpath("%s stix:Title/text()" % self.header,
+                                            namespaces=self.namespace)[0], "Test PDF")
 
     def test_description(self):
-        self.assertEqual(self.output1.xpath("/stix:STIX_Package/stix:STIX_Header/stix:Description/text()", namespaces=self.namespace)[0], "Ransomware Update")
+        self.assertEqual(self.output1.xpath("%s stix:Description/text()" % self.header,
+                                            namespaces=self.namespace)[0], "Ransomware Update")
 
     def test_package_intent_type(self):
-        self.assertEqual(self.output1.xpath("/stix:STIX_Package/stix:STIX_Header/stix:Package_Intent/@xsi:type", namespaces=self.namespace)[0], "stixVocabs:PackageIntentVocab-1.0")
+        self.assertEqual(self.output1.xpath("%s stix:Package_Intent/@xsi:type" % self.header,
+                                            namespaces=self.namespace)[0], "stixVocabs:PackageIntentVocab-1.0")
 
     def test_package_intent_text(self):
-        self.assertEqual(self.output1.xpath("/stix:STIX_Package/stix:STIX_Header/stix:Package_Intent/text()", namespaces=self.namespace)[0], "Indicators")
+        self.assertEqual(self.output1.xpath("%s stix:Package_Intent/text()" % self.header,
+                                            namespaces=self.namespace)[0], "Indicators")
 
     def test_profile(self):
-        self.assertEqual(self.output1.xpath("/stix:STIX_Package/stix:STIX_Header/stix:Profiles/stixCommon:Profile/text()", namespaces=self.namespace)[0], "ISA Profile v1.0")
+        self.assertEqual(self.output1.xpath("%s stix:Profiles/stixCommon:Profile/text()" % self.header,
+                                            namespaces=self.namespace)[0], "ISA Profile v1.0")
 
     def test_controlled_structure_text(self):
-        self.assertEqual(self.output1.xpath("//marking:Controlled_Structure/text()", namespaces=self.namespace), ["//node() | //@*"])
+        self.assertEqual(self.output1.xpath("%s marking:Controlled_Structure/text()" % self.marking,
+                                            namespaces=self.namespace), ["//node() | //@*"])
 
     def test_marking_type(self):
-        self.assertEqual(set(self.output1.xpath("//marking:Marking_Structure/@xsi:type", namespaces=self.namespace)), set(['edh2cyberMarking:ISAMarkingsType', 'edh2cyberMarkingAssert:ISAMarkingsAssertionType']))
+        self.assertEqual(set(self.output1.xpath("%s marking:Marking_Structure/@xsi:type" % self.marking,
+                                                namespaces=self.namespace)),
+                         set(['edh2cyberMarking:ISAMarkingsType', 'edh2cyberMarkingAssert:ISAMarkingsAssertionType']))
 
     def test_marking_isam_version(self):
-        self.assertEqual(set(self.output1.xpath("//marking:Marking_Structure/@isam_version", namespaces=self.namespace)), set(['1.0']))
+        self.assertEqual(set(self.output1.xpath("%s marking:Marking_Structure/@isam_version" % self.marking,
+                                                namespaces=self.namespace)), set(['1.0']))
 
     def test_marking_create_date_time(self):
-        test = self.output1.xpath("//marking:Marking/marking:Marking_Structure/edh2:CreateDateTime/text()",
+        test = self.output1.xpath("%s marking:Marking_Structure/edh2:CreateDateTime/text()" % self.marking,
                                   namespaces=self.namespace)[0]
         if test == self.utc_before:
             self.assertEqual(test, self.utc_before)
@@ -228,96 +257,121 @@ class TestSTIXTLPToSTIXACS(unittest.TestCase):
             self.assertEqual(test, self.utc_after)
 
     def test_marking_responsible_entity(self):
-        self.assertEqual(set(self.output1.xpath("//marking:Marking_Structure/edh2:ResponsibleEntity/text()",
+        self.assertEqual(set(self.output1.xpath("%s marking:Marking_Structure/edh2:ResponsibleEntity/text()" % self.marking,
                                                 namespaces=self.namespace)), set(["CUST:USA.DOE"]))
 
     def test_marking_policy_ref(self):
-        self.assertEqual(set(self.output1.xpath("//marking:Marking_Structure/edh2:PolicyRef/text()",
-                                                namespaces=self.namespace)), set(["urn:isa:policy:acs:ns:v2.0?privdefault=permit"]))
+        self.assertEqual(set(self.output1.xpath("%s marking:Marking_Structure/edh2:PolicyRef/text()" % self.marking,
+                                                namespaces=self.namespace)),
+                         set(["urn:isa:policy:acs:ns:v2.0?privdefault=permit"]))
 
     def test_marking_control_set(self):
-        self.assertEqual(set(self.output1.xpath("//marking:Marking_Structure/edh2:ControlSet/text()",
+        self.assertEqual(set(self.output1.xpath("%s marking:Marking_Structure/edh2:ControlSet/text()" % self.marking,
                                                 namespaces=self.namespace)), set(["CLS:U CUI:FOUO"]))
 
     def test_marking_most_restrictive(self):
-        self.assertEqual(set(self.output1.xpath("//marking:Marking_Structure/@most_restrictive",
+        self.assertEqual(set(self.output1.xpath("%s marking:Marking_Structure/@most_restrictive" % self.marking,
                                                 namespaces=self.namespace)), set(['true']))
 
     def test_information_source_description(self):
-        self.assertEqual(self.output1.xpath("//stix:Information_Source/stixCommon:Description/text()",
+        self.assertEqual(self.output1.xpath("%s stixCommon:Description/text()" % self.information_source,
                                             namespaces=self.namespace)[0], "U.S. Department of Energy")
 
     def test_information_source_name(self):
-        self.assertEqual(self.output1.xpath("//stix:Information_Source/stixCommon:Identity/stixCommon:Name/text()",
+        self.assertEqual(self.output1.xpath("%s stixCommon:Identity/stixCommon:Name/text()" % self.information_source,
                                             namespaces=self.namespace)[0], "DOE")
 
     def test_information_time_produced_time(self):
-        self.assertEqual(self.output1.xpath(
-            "/stix:STIX_Package/stix:STIX_Header/stix:Information_Source/stixCommon:Time/cyboxCommon:Produced_Time/text()",
-            namespaces=self.namespace)[0], '2016-03-23T16:45:05+04:00')
+        self.assertEqual(self.output1.xpath("%s stixCommon:Time/cyboxCommon:Produced_Time/text()" % self.information_source,
+                                            namespaces=self.namespace)[0], '2016-03-23T16:45:05+04:00')
 
     def test_indicator_timestamps(self):
-        self.assertEqual(set(self.output1.xpath("//stix:Indicator/@timestamp", namespaces=self.namespace)),
-                         set(['2016-03-29T19:33:13+00:00', '2016-03-29T19:33:13+06:00', '2016-03-29T19:33:13+05:00', '2016-03-29T19:33:13+01:00', '2016-03-29T19:33:13+07:00', '2016-03-29T19:33:13+08:00', '2016-03-29T19:33:13+02:00']))
+        self.assertEqual(set(self.output1.xpath("%s @timestamp" % self.indicator, namespaces=self.namespace)),
+                         set(['2016-03-29T19:33:13+00:00', '2016-03-29T19:33:13+06:00',
+                              '2016-03-29T19:33:13+05:00', '2016-03-29T19:33:13+01:00',
+                              '2016-03-29T19:33:13+07:00', '2016-03-29T19:33:13+08:00', '2016-03-29T19:33:13+02:00']))
 
     def test_indicator_types(self):
-        self.assertEqual(set(self.output1.xpath("//stix:Indicator/@xsi:type", namespaces=self.namespace)),
+        self.assertEqual(set(self.output1.xpath("%s @xsi:type" % self.indicator, namespaces=self.namespace)),
                          set(["indicator:IndicatorType"]))
 
     def test_indicator_version(self):
-        self.assertEqual(set(self.output1.xpath("//stix:Indicator/@version", namespaces=self.namespace)),
+        self.assertEqual(set(self.output1.xpath("%s @version" % self.indicator, namespaces=self.namespace)),
                          set(["2.1.1"]))
 
     def test_indicator_title(self):
-        self.assertEqual(set(self.output1.xpath("//indicator:Title/text()", namespaces=self.namespace)),
+        self.assertEqual(set(self.output1.xpath("%s indicator:Title/text()" % self.indicator, namespaces=self.namespace)),
                          set(["Original CRISP Report Document"]))
 
     def test_indicator_type(self):
-        self.assertEqual(set(self.output1.xpath("//indicator:Type[@xsi:type='stixVocabs:IndicatorTypeVocab-1.1']/text()",
-                                                namespaces=self.namespace)), set(['IP Watchlist', 'URL Watchlist', 'File Hash Watchlist']))
+        self.assertEqual(set(self.output1.xpath(
+            "%s indicator:Type[@xsi:type='stixVocabs:IndicatorTypeVocab-1.1']/text()" % self.indicator,
+            namespaces=self.namespace)),
+                         set(['IP Watchlist', 'URL Watchlist', 'File Hash Watchlist']))
 
     def test_indicator_description(self):
-        self.assertEqual(set(self.output1.xpath("//indicator:Description/text()", namespaces=self.namespace)),
+        self.assertEqual(set(self.output1.xpath("%s indicator:Description/text()" % self.indicator,
+                                                namespaces=self.namespace)),
                          set(['CRISP-16-307.pdf', 'CRISP Report Indicator']))
 
     def test_indicator_properties_xsitype(self):
-        self.assertEqual(set(self.output1.xpath("//indicator:Observable/cybox:Object/cybox:Properties/@xsi:type",
-                                                namespaces=self.namespace)), set(["AddressObj:AddressObjectType", "URIObj:URIObjectType", "FileObj:FileObjectType", "ArtifactObj:ArtifactObjectType"]))
+        self.assertEqual(set(self.output1.xpath("%s @xsi:type" % self.properties,
+                                                namespaces=self.namespace)),
+                         set(["AddressObj:AddressObjectType", "URIObj:URIObjectType",
+                              "FileObj:FileObjectType", "ArtifactObj:ArtifactObjectType"]))
 
     def test_indicator_properties_type(self):
-        self.assertEqual(set(self.output1.xpath("//indicator:Observable/cybox:Object/cybox:Properties/@type",
+        self.assertEqual(set(self.output1.xpath("%s @type" % self.properties,
                                                 namespaces=self.namespace)), set(["File", "URL"]))
 
     def test_indicator_properties_category(self):
-        self.assertEqual(set(self.output1.xpath("//indicator:Observable/cybox:Object/cybox:Properties/@category", namespaces=self.namespace)), set(["ipv4-addr"]))
+        self.assertEqual(set(self.output1.xpath("%s @category" % self.properties, namespaces=self.namespace)),
+                         set(["ipv4-addr"]))
 
     def test_indicator_properties_packaging_encoding(self):
-        self.assertEqual(set(self.output1.xpath("//ArtifactObj:Packaging/ArtifactObj:Encoding/@algorithm", namespaces=self.namespace)), set(["Base64"]))
+        self.assertEqual(set(self.output1.xpath("%s ArtifactObj:Packaging/ArtifactObj:Encoding/@algorithm" % self.properties,
+                                                namespaces=self.namespace)), set(["Base64"]))
 
     def test_indicator_properties_rawartifact(self):
-        self.assertEqual(set(self.output1.xpath("//ArtifactObj:Raw_Artifact/text()", namespaces=self.namespace)), set(["JVBERi0xLjMKJcTl8uXrp/Og0MTGCjQgMCBvYmoKPDwgL0xlbmd0aCA1IDAgUiAvRmlsdGVyIC9GbGF0ZURlY29kZSA+PgpzdHJlYW0KeAErVAhUKFQwNAIhUwsLVPRgo="]))
+        self.assertEqual(set(self.output1.xpath("%s ArtifactObj:Raw_Artifact/text()" % self.properties,
+                                                namespaces=self.namespace)),
+                         set(["JVBERi0xLjMKJcTl8uXrp/Og0MTGCjQgMCBvYmoKPDwgL0xlbmd0aCA1IDAgUiAvRmlsdGVyIC9GbGF0ZURlY29kZSA+PgpzdHJlYW0KeAErVAhUKFQwNAIhUwsLVPRgo="]))
 
     def test_indicator_address_values(self):
-        self.assertEqual(set(self.output1.xpath("//stix:Indicator/indicator:Observable/cybox:Object/cybox:Properties/AddressObj:Address_Value[@condition='Equals']/text()", namespaces=self.namespace)), set(["10.10.10.10", "13.13.13.13", "12.12.12.12", "11.11.11.11", "14.14.14.14"]))
+        self.assertEqual(set(self.output1.xpath("%s AddressObj:Address_Value[@condition='Equals']/text()" % self.properties,
+                                                namespaces=self.namespace)),
+                         set(["10.10.10.10", "13.13.13.13", "12.12.12.12", "11.11.11.11", "14.14.14.14"]))
 
     def test_indicator_file_values(self):
-        self.assertEqual(set(self.output1.xpath("//stix:Indicator/indicator:Observable/cybox:Object/cybox:Properties/FileObj:File_Path[@condition='Equals']/text()", namespaces=self.namespace)), set(["C://window32/tst.dat", "webmail.p55.be", "/user/strange/object.sh", "D://replacement.exe"]))
+        self.assertEqual(set(self.output1.xpath("%s FileObj:File_Path[@condition='Equals']/text()" % self.properties,
+                                                namespaces=self.namespace)),
+                         set(["C://window32/tst.dat", "webmail.p55.be", "/user/strange/object.sh", "D://replacement.exe"]))
 
     def test_indicator_URI_values(self):
-        self.assertEqual(set(self.output1.xpath("//stix:Indicator/indicator:Observable/cybox:Object/cybox:Properties/URIObj:Value[@condition='Equals']/text()", namespaces=self.namespace)), set(["bad.domain.be/poor/path", "fake.site.com/malicious.js"]))
+        self.assertEqual(set(self.output1.xpath("%s URIObj:Value[@condition='Equals']/text()" % self.properties,
+                                                namespaces=self.namespace)),
+                         set(["bad.domain.be/poor/path", "fake.site.com/malicious.js"]))
 
     def test_indicator_hash_xsitype(self):
-        self.assertEqual(set(self.output1.xpath("//stix:Indicator/indicator:Observable/cybox:Object/cybox:Properties/FileObj:Hashes/cyboxCommon:Hash/cyboxCommon:Type[@condition='Equals']/@xsi:type", namespaces=self.namespace)), set(["cyboxVocabs:HashNameVocab-1.0"]))
+        self.assertEqual(set(self.output1.xpath("%s cyboxCommon:Type[@condition='Equals']/@xsi:type" % self.hash,
+                                                namespaces=self.namespace)), set(["cyboxVocabs:HashNameVocab-1.0"]))
 
     def test_indicator_hash_type(self):
-        self.assertEqual(set(self.output1.xpath("//stix:Indicator/indicator:Observable/cybox:Object/cybox:Properties/FileObj:Hashes/cyboxCommon:Hash/cyboxCommon:Type[@condition='Equals']/text()", namespaces=self.namespace)), set(["MD5"]))
-
+        self.assertEqual(set(self.output1.xpath("%s cyboxCommon:Type[@condition='Equals']/text()" % self.hash,
+                                                namespaces=self.namespace)), set(["MD5"]))
 
 
 class TestSTIXACS30ToSTIXACS(unittest.TestCase):
     output1 = None
     utc_before = None
     utc_after = None
+    header = "/stix:STIX_Package/stix:STIX_Header/"
+    marking = "/stix:STIX_Package/stix:STIX_Header/stix:Handling/marking:Marking/"
+    information_source = "/stix:STIX_Package/stix:STIX_Header/stix:Information_Source/"
+    indicator = "/stix:STIX_Package/stix:Indicators/stix:Indicator/"
+    properties = "%s indicator:Observable/cybox:Object/cybox:Properties/" % indicator
+    hash = "%s FileObj:Hashes/cyboxCommon:Hash/" % properties
+
     namespace = {
         'AddressObj': "http://cybox.mitre.org/objects#AddressObject-2",
         'cybox': "http://cybox.mitre.org/cybox-2",
@@ -333,12 +387,9 @@ class TestSTIXACS30ToSTIXACS(unittest.TestCase):
         'DomainNameObj': "http://cybox.mitre.org/objects#DomainNameObject-1",
         'URIObj': "http://cybox.mitre.org/objects#URIObject-2",
         'FileObj': "http://cybox.mitre.org/objects#FileObject-2",
-        'edh2':"urn:edm:edh:v2",
-        'edh2cyberMarking' : "http://www.us-cert.gov/essa/Markings/ISAMarkings",
-        'edh2cyberMarkingAssert' : "xmlns:edh2cyberMarkingAssert",
-        'AddressObj':"http://cybox.mitre.org/objects#AddressObject-2",
-        'ArtifactObj': "http://cybox.mitre.org/objects#ArtifactObject-2"
-
+        'edh2': "urn:edm:edh:v2",
+        'edh2cyberMarking': "http://www.us-cert.gov/essa/Markings/ISAMarkings",
+        'edh2cyberMarkingAssert': "xmlns:edh2cyberMarkingAssert",
     }
 
     @classmethod
@@ -358,34 +409,44 @@ class TestSTIXACS30ToSTIXACS(unittest.TestCase):
         cls.output1 = etree.XML(output1_object.getvalue())
 
     def test_title(self):
-        self.assertEqual(self.output1.xpath("/stix:STIX_Package/stix:STIX_Header/stix:Title/text()", namespaces=self.namespace)[0], "ACS-example.pdf")
+        self.assertEqual(self.output1.xpath("%s stix:Title/text()" % self.header,
+                                            namespaces=self.namespace)[0], "ACS-example.pdf")
 
     def test_description(self):
-        self.assertEqual(self.output1.xpath("/stix:STIX_Package/stix:STIX_Header/stix:Description/text()", namespaces=self.namespace)[0], "Redirects to Malicious Websites")
+        self.assertEqual(self.output1.xpath("%s stix:Description/text()" % self.header,
+                                            namespaces=self.namespace)[0], "Redirects to Malicious Websites")
 
     def test_package_intent_type(self):
-        self.assertEqual(self.output1.xpath("/stix:STIX_Package/stix:STIX_Header/stix:Package_Intent/@xsi:type", namespaces=self.namespace)[0], "stixVocabs:PackageIntentVocab-1.0")
+        self.assertEqual(self.output1.xpath("%s stix:Package_Intent/@xsi:type" % self.header,
+                                            namespaces=self.namespace)[0], "stixVocabs:PackageIntentVocab-1.0")
 
     def test_package_intent_text(self):
-        self.assertEqual(self.output1.xpath("/stix:STIX_Package/stix:STIX_Header/stix:Package_Intent/text()", namespaces=self.namespace)[0], "Indicators")
+        self.assertEqual(self.output1.xpath("%s stix:Package_Intent/text()" % self.header,
+                                            namespaces=self.namespace)[0], "Indicators")
 
     def test_profile(self):
-        self.assertEqual(self.output1.xpath("/stix:STIX_Package/stix:STIX_Header/stix:Profiles/stixCommon:Profile/text()", namespaces=self.namespace)[0], "ISA Profile v1.0")
+        self.assertEqual(self.output1.xpath("%s stix:Profiles/stixCommon:Profile/text()" % self.header,
+                                            namespaces=self.namespace)[0], "ISA Profile v1.0")
 
     def test_controlled_structure_text(self):
-        self.assertEqual(self.output1.xpath("//marking:Controlled_Structure/text()", namespaces=self.namespace), ["//node() | //@*"])
+        self.assertEqual(self.output1.xpath("%s marking:Controlled_Structure/text()" % self.marking,
+                                            namespaces=self.namespace), ["//node() | //@*"])
 
     def test_marking_type(self):
-        self.assertEqual(set(self.output1.xpath("//marking:Marking_Structure/@xsi:type", namespaces=self.namespace)), set(['edh2cyberMarking:ISAMarkingsType', 'edh2cyberMarkingAssert:ISAMarkingsAssertionType']))
+        self.assertEqual(set(self.output1.xpath("%s marking:Marking_Structure/@xsi:type" % self.marking,
+                                                namespaces=self.namespace)),
+                         set(['edh2cyberMarking:ISAMarkingsType', 'edh2cyberMarkingAssert:ISAMarkingsAssertionType']))
 
     def test_marking_isam_version(self):
-        self.assertEqual(set(self.output1.xpath("//marking:Marking_Structure/@isam_version", namespaces=self.namespace)), set(['1.0']))
+        self.assertEqual(set(self.output1.xpath("%s marking:Marking_Structure/@isam_version" % self.marking,
+                                                namespaces=self.namespace)), set(['1.0']))
 
     def test_marking_most_restrictive(self):
-        self.assertEqual(set(self.output1.xpath("//marking:Marking_Structure/@most_restrictive", namespaces=self.namespace)), set(['true']))
+        self.assertEqual(set(self.output1.xpath("%s marking:Marking_Structure/@most_restrictive" % self.marking,
+                                                namespaces=self.namespace)), set(['true']))
 
     def test_marking_create_date_time(self):
-        test = self.output1.xpath("//marking:Marking/marking:Marking_Structure/edh2:CreateDateTime/text()",
+        test = self.output1.xpath("%s marking:Marking_Structure/edh2:CreateDateTime/text()" % self.marking,
                                   namespaces=self.namespace)[0]
         if test == self.utc_before:
             self.assertEqual(test, self.utc_before)
@@ -393,67 +454,99 @@ class TestSTIXACS30ToSTIXACS(unittest.TestCase):
             self.assertEqual(test, self.utc_after)
 
     def test_marking_responsible_entity(self):
-        self.assertEqual(set(self.output1.xpath("//marking:Marking/marking:Marking_Structure/edh2:ResponsibleEntity/text()", namespaces=self.namespace)), set(["CUST:USA.DOE"]))
+        self.assertEqual(set(self.output1.xpath("%s marking:Marking_Structure/edh2:ResponsibleEntity/text()" % self.marking,
+                                                namespaces=self.namespace)), set(["CUST:USA.DOE"]))
 
     def test_marking_policy_ref(self):
-        self.assertEqual(set(self.output1.xpath("//marking:Marking/marking:Marking_Structure/edh2:PolicyRef/text()", namespaces=self.namespace)), set(["urn:isa:policy:acs:ns:v2.0?privdefault=permit"]))
+        self.assertEqual(set(self.output1.xpath("%s marking:Marking_Structure/edh2:PolicyRef/text()" % self.marking,
+                                                namespaces=self.namespace)),
+                         set(["urn:isa:policy:acs:ns:v2.0?privdefault=permit"]))
 
     def test_marking_control_set(self):
-        self.assertEqual(set(self.output1.xpath("//marking:Marking/marking:Marking_Structure/edh2:ControlSet/text()", namespaces=self.namespace)), set(["CLS:U CUI:FOUO"]))
+        self.assertEqual(set(self.output1.xpath("%s marking:Marking_Structure/edh2:ControlSet/text()" % self.marking,
+                                                namespaces=self.namespace)), set(["CLS:U CUI:FOUO"]))
 
     def test_information_source_description(self):
-        self.assertEqual(set(self.output1.xpath("//stix:Information_Source/stixCommon:Description/text()", namespaces=self.namespace)), set(["U.S. Department of Energy"]))
+        self.assertEqual(set(self.output1.xpath("%s stixCommon:Description/text()" % self.information_source,
+                                                namespaces=self.namespace)), set(["U.S. Department of Energy"]))
 
     def test_information_source_name(self):
-        self.assertEqual(set(self.output1.xpath("//stix:Information_Source/stixCommon:Identity/stixCommon:Name/text()", namespaces=self.namespace)), set(["DOE"]))
+        self.assertEqual(set(self.output1.xpath("%s stixCommon:Identity/stixCommon:Name/text()" % self.information_source,
+                                                namespaces=self.namespace)), set(["DOE"]))
 
     def test_information_time_produced_time(self):
-        test = self.output1.xpath("/stix:STIX_Package/stix:STIX_Header/stix:Information_Source/stixCommon:Time/cyboxCommon:Produced_Time/text()", namespaces=self.namespace)[0]
+        test = self.output1.xpath("%s stixCommon:Time/cyboxCommon:Produced_Time/text()" % self.information_source,
+                                  namespaces=self.namespace)[0]
         if test == self.utc_before:
             self.assertEqual(test, self.utc_before)
         else:
             self.assertEqual(test, self.utc_after)
 
     def test_indicator_timestamps(self):
-        self.assertEqual(set(self.output1.xpath("//stix:Indicator/@timestamp", namespaces=self.namespace)), set(['2015-11-26T00:35:06+00:00']))
+        self.assertEqual(set(self.output1.xpath("%s @timestamp" % self.indicator,
+                                                namespaces=self.namespace)), set(['2015-11-26T00:35:06+00:00']))
 
     def test_indicator_types(self):
-        self.assertEqual(set(self.output1.xpath("//stix:Indicator/@xsi:type", namespaces=self.namespace)), set(["indicator:IndicatorType"]))
+        self.assertEqual(set(self.output1.xpath("%s @xsi:type" % self.indicator,
+                                                namespaces=self.namespace)), set(["indicator:IndicatorType"]))
 
     def test_indicator_version(self):
-        self.assertEqual(set(self.output1.xpath("//stix:Indicator/@version", namespaces=self.namespace)), set(["2.1.1"]))
+        self.assertEqual(set(self.output1.xpath("%s @version" % self.indicator,
+                                                namespaces=self.namespace)), set(["2.1.1"]))
 
     def test_indicator_title(self):
-        self.assertEqual(set(self.output1.xpath("//indicator:Title/text()", namespaces=self.namespace)), set(["Original AAA Report Document"]))
+        self.assertEqual(set(self.output1.xpath("%s indicator:Title/text()" % self.indicator,
+                                                namespaces=self.namespace)), set(["Original AAA Report Document"]))
 
     def test_indicator_type(self):
-        self.assertEqual(set(self.output1.xpath("//indicator:Type[@xsi:type='stixVocabs:IndicatorTypeVocab-1.1']/text()", namespaces=self.namespace)), set(['Domain Watchlist']))
+        self.assertEqual(set(self.output1.xpath(
+            "%s indicator:Type[@xsi:type='stixVocabs:IndicatorTypeVocab-1.1']/text()" % self.indicator,
+            namespaces=self.namespace)), set(['Domain Watchlist']))
 
     def test_indicator_description(self):
-        self.assertEqual(set(self.output1.xpath("//indicator:Description/text()", namespaces=self.namespace)), set(['Domain Indicator', 'AAA Report Indicator', 'Sample.pdf', 'Just Another Indicator']))
+        self.assertEqual(set(self.output1.xpath("%s indicator:Description/text()" % self.indicator,
+                                                namespaces=self.namespace)),
+                         set(['Domain Indicator', 'AAA Report Indicator', 'Sample.pdf', 'Just Another Indicator']))
 
     def test_indicator_properties_xsitype(self):
-        self.assertEqual(set(self.output1.xpath("//indicator:Observable/cybox:Object/cybox:Properties/@xsi:type", namespaces=self.namespace)), set(["DomainNameObj:DomainNameObjectType", "ArtifactObj:ArtifactObjectType"]))
+        self.assertEqual(set(self.output1.xpath("%s @xsi:type" % self.properties, namespaces=self.namespace)),
+                         set(["DomainNameObj:DomainNameObjectType", "ArtifactObj:ArtifactObjectType"]))
 
     def test_indicator_properties_type(self):
-        self.assertEqual(set(self.output1.xpath("//indicator:Observable/cybox:Object/cybox:Properties/@type", namespaces=self.namespace)), set(["File", "FQDN"]))
+        self.assertEqual(set(self.output1.xpath("%s @type" % self.properties, namespaces=self.namespace)),
+                         set(["File", "FQDN"]))
 
     def test_indicator_properties_packaging_encoding(self):
-        self.assertEqual(set(self.output1.xpath("//ArtifactObj:Packaging/ArtifactObj:Encoding/@algorithm", namespaces=self.namespace)), set(["Base64"]))
+        self.assertEqual(set(self.output1.xpath("%s ArtifactObj:Packaging/ArtifactObj:Encoding/@algorithm" % self.properties,
+                                                namespaces=self.namespace)), set(["Base64"]))
 
     def test_indicator_properties_rawartifact(self):
-        self.assertEqual(set(self.output1.xpath("//ArtifactObj:Raw_Artifact/text()", namespaces=self.namespace)), set(["FILLINRAWDATAHERE"]))
+        self.assertEqual(set(self.output1.xpath("%s ArtifactObj:Raw_Artifact/text()" % self.properties,
+                                                namespaces=self.namespace)), set(["FILLINRAWDATAHERE"]))
 
     def test_indicator_domain_values(self):
-        self.assertEqual(set(self.output1.xpath("//stix:Indicator/indicator:Observable/cybox:Object/cybox:Properties/DomainNameObj:Value/text()", namespaces=self.namespace)), set(["goo.gl/peter", "fake.com", "blog.website.net"]))
+        self.assertEqual(set(self.output1.xpath("%s DomainNameObj:Value/text()" % self.properties,
+                                                namespaces=self.namespace)),
+                         set(["goo.gl/peter", "fake.com", "blog.website.net"]))
 
     def test_indicator_sightings_count(self):
-        self.assertEqual(set(self.output1.xpath("//indicator:Sightings/@sightings_count", namespaces=self.namespace)), set(["2", "4"]))
+        self.assertEqual(set(self.output1.xpath("%s indicator:Sightings/@sightings_count" % self.indicator,
+                                                namespaces=self.namespace)), set(["2", "4"]))
+
 
 class TestKeyValueToSTIXACS(unittest.TestCase):
     output1 = None
     utc_before = None
     utc_after = None
+    header = "/stix:STIX_Package/stix:STIX_Header/"
+    marking = "/stix:STIX_Package/stix:STIX_Header/stix:Handling/marking:Marking/"
+    information_source = "/stix:STIX_Package/stix:STIX_Header/stix:Information_Source/"
+    indicator = "/stix:STIX_Package/stix:Indicators/stix:Indicator/"
+    properties = "%s indicator:Observable/cybox:Object/cybox:Properties/" % indicator
+    sightings = "%s indicator:Sightings/" % indicator
+    observable = "/stix:STIX_Package/stix:Indicators/stix:Indicator/indicator:Observable/"
+    object = "%s cybox:Object/" % observable
+    related_obj = "%s cybox:Related_Objects/cybox:Related_Object/" % object
 
     namespace = {
         'AddressObj': "http://cybox.mitre.org/objects#AddressObject-2",
@@ -470,12 +563,9 @@ class TestKeyValueToSTIXACS(unittest.TestCase):
         'DomainNameObj': "http://cybox.mitre.org/objects#DomainNameObject-1",
         'URIObj': "http://cybox.mitre.org/objects#URIObject-2",
         'FileObj': "http://cybox.mitre.org/objects#FileObject-2",
-        'edh2':"urn:edm:edh:v2",
-        'edh2cyberMarking' : "http://www.us-cert.gov/essa/Markings/ISAMarkings",
-        'edh2cyberMarkingAssert' : "xmlns:edh2cyberMarkingAssert",
-        'AddressObj':"http://cybox.mitre.org/objects#AddressObject-2",
-        'ArtifactObj': "http://cybox.mitre.org/objects#ArtifactObject-2"
-
+        'edh2': "urn:edm:edh:v2",
+        'edh2cyberMarking': "http://www.us-cert.gov/essa/Markings/ISAMarkings",
+        'edh2cyberMarkingAssert': "xmlns:edh2cyberMarkingAssert",
     }
 
     @classmethod
@@ -495,28 +585,36 @@ class TestKeyValueToSTIXACS(unittest.TestCase):
         cls.output1 = etree.XML(output1_object.getvalue())
 
     def test_package_intent_type(self):
-        self.assertEqual(self.output1.xpath("/stix:STIX_Package/stix:STIX_Header/stix:Package_Intent/@xsi:type", namespaces=self.namespace)[0], "stixVocabs:PackageIntentVocab-1.0")
+        self.assertEqual(self.output1.xpath("%s stix:Package_Intent/@xsi:type" % self.header,
+                                            namespaces=self.namespace)[0], "stixVocabs:PackageIntentVocab-1.0")
 
     def test_package_intent_text(self):
-        self.assertEqual(self.output1.xpath("/stix:STIX_Package/stix:STIX_Header/stix:Package_Intent/text()", namespaces=self.namespace)[0], "Indicators")
+        self.assertEqual(self.output1.xpath("%s stix:Package_Intent/text()" % self.header,
+                                            namespaces=self.namespace)[0], "Indicators")
 
     def test_profile(self):
-        self.assertEqual(self.output1.xpath("/stix:STIX_Package/stix:STIX_Header/stix:Profiles/stixCommon:Profile/text()", namespaces=self.namespace)[0], "ISA Profile v1.0")
+        self.assertEqual(self.output1.xpath("%s stix:Profiles/stixCommon:Profile/text()" % self.header,
+                                            namespaces=self.namespace)[0], "ISA Profile v1.0")
 
     def test_controlled_structure_text(self):
-        self.assertEqual(set(self.output1.xpath("//marking:Controlled_Structure/text()", namespaces=self.namespace)), set(["//node() | //@*"]))
+        self.assertEqual(set(self.output1.xpath("%s marking:Controlled_Structure/text()" % self.marking,
+                                                namespaces=self.namespace)), set(["//node() | //@*"]))
 
     def test_marking_type(self):
-        self.assertEqual(set(self.output1.xpath("//marking:Marking_Structure/@xsi:type", namespaces=self.namespace)), set(['edh2cyberMarking:ISAMarkingsType', 'edh2cyberMarkingAssert:ISAMarkingsAssertionType']))
+        self.assertEqual(set(self.output1.xpath("%s marking:Marking_Structure/@xsi:type" % self.marking,
+                                                namespaces=self.namespace)),
+                         set(['edh2cyberMarking:ISAMarkingsType', 'edh2cyberMarkingAssert:ISAMarkingsAssertionType']))
 
     def test_marking_isam_version(self):
-        self.assertEqual(set(self.output1.xpath("//marking:Marking_Structure/@isam_version", namespaces=self.namespace)), set(['1.0']))
+        self.assertEqual(set(self.output1.xpath("%s marking:Marking_Structure/@isam_version" % self.marking,
+                                                namespaces=self.namespace)), set(['1.0']))
 
     def test_marking_most_restrictive(self):
-        self.assertEqual(set(self.output1.xpath("//marking:Marking_Structure/@most_restrictive", namespaces=self.namespace)), set(['true']))
+        self.assertEqual(set(self.output1.xpath("%s marking:Marking_Structure/@most_restrictive" % self.marking,
+                                                namespaces=self.namespace)), set(['true']))
 
     def test_marking_create_date_time(self):
-        test = self.output1.xpath("//marking:Marking/marking:Marking_Structure/edh2:CreateDateTime/text()",
+        test = self.output1.xpath("%s marking:Marking_Structure/edh2:CreateDateTime/text()" % self.marking,
                                   namespaces=self.namespace)[0]
         if test == self.utc_before:
             self.assertEqual(test, self.utc_before)
@@ -524,78 +622,110 @@ class TestKeyValueToSTIXACS(unittest.TestCase):
             self.assertEqual(test, self.utc_after)
 
     def test_marking_responsible_entity(self):
-        self.assertEqual(set(self.output1.xpath("//marking:Marking/marking:Marking_Structure/edh2:ResponsibleEntity/text()", namespaces=self.namespace)), set(["CUST:USA.DOE"]))
+        self.assertEqual(set(self.output1.xpath("%s marking:Marking_Structure/edh2:ResponsibleEntity/text()" % self.marking,
+                                                namespaces=self.namespace)), set(["CUST:USA.DOE"]))
 
     def test_marking_policy_ref(self):
-        self.assertEqual(set(self.output1.xpath("//marking:Marking/marking:Marking_Structure/edh2:PolicyRef/text()", namespaces=self.namespace)), set(["urn:isa:policy:acs:ns:v2.0?privdefault=permit"]))
+        self.assertEqual(set(self.output1.xpath("%s marking:Marking_Structure/edh2:PolicyRef/text()" % self.marking,
+                                                namespaces=self.namespace)),
+                         set(["urn:isa:policy:acs:ns:v2.0?privdefault=permit"]))
 
     def test_marking_control_set(self):
-        self.assertEqual(set(self.output1.xpath("//marking:Marking/marking:Marking_Structure/edh2:ControlSet/text()", namespaces=self.namespace)), set(["CLS:U CUI:FOUO"]))
+        self.assertEqual(set(self.output1.xpath("%s marking:Marking_Structure/edh2:ControlSet/text()" % self.marking,
+                                                namespaces=self.namespace)), set(["CLS:U CUI:FOUO"]))
 
     def test_information_source_description(self):
-        self.assertEqual(set(self.output1.xpath("//stix:Information_Source/stixCommon:Description/text()", namespaces=self.namespace)), set(["U.S. Department of Energy"]))
+        self.assertEqual(set(self.output1.xpath("%s stixCommon:Description/text()" % self.information_source,
+                                                namespaces=self.namespace)), set(["U.S. Department of Energy"]))
 
     def test_information_source_name(self):
-        self.assertEqual(set(self.output1.xpath("//stix:Information_Source/stixCommon:Identity/stixCommon:Name/text()", namespaces=self.namespace)), set(["DOE"]))
+        self.assertEqual(set(self.output1.xpath("%s stixCommon:Identity/stixCommon:Name/text()" % self.information_source,
+                                                namespaces=self.namespace)), set(["DOE"]))
 
     def test_information_time_produced_time(self):
-        test = self.output1.xpath("/stix:STIX_Package/stix:STIX_Header/stix:Information_Source/stixCommon:Time/cyboxCommon:Produced_Time/text()", namespaces=self.namespace)[0]
+        test = self.output1.xpath("%s stixCommon:Time/cyboxCommon:Produced_Time/text()" % self.information_source,
+                                  namespaces=self.namespace)[0]
         if test == self.utc_before:
             self.assertEqual(test, self.utc_before)
         else:
             self.assertEqual(test, self.utc_after)
 
     def test_indicator_types(self):
-        self.assertEqual(set(self.output1.xpath("//stix:Indicator/@xsi:type", namespaces=self.namespace)), set(["indicator:IndicatorType"]))
+        self.assertEqual(set(self.output1.xpath("%s @xsi:type" % self.indicator, namespaces=self.namespace)),
+                         set(["indicator:IndicatorType"]))
 
     def test_indicator_version(self):
-        self.assertEqual(set(self.output1.xpath("//stix:Indicator/@version", namespaces=self.namespace)), set(["2.1.1"]))
+        self.assertEqual(set(self.output1.xpath("%s @version" % self.indicator, namespaces=self.namespace)),
+                         set(["2.1.1"]))
 
     def test_indicator_type(self):
-        self.assertEqual(set(self.output1.xpath("//indicator:Type[@xsi:type='stixVocabs:IndicatorTypeVocab-1.1']/text()", namespaces=self.namespace)), set(['IP Watchlist', 'Domain Watchlist']))
+        self.assertEqual(set(self.output1.xpath(
+            "%s indicator:Type[@xsi:type='stixVocabs:IndicatorTypeVocab-1.1']/text()" % self.indicator,
+            namespaces=self.namespace)), set(['IP Watchlist', 'Domain Watchlist']))
 
     def test_indicator_description(self):
-        self.assertEqual(set(self.output1.xpath("//indicator:Description/text()", namespaces=self.namespace)), set(['Malicious domain, direction:egress, confidence:0, severity:high', 'HTTP Response code 4xx, suspicious, direction:ingress, confidence:0, severity:low','Attacker scanning for SSH, direction:ingress, confidence:0, severity:high','Attacker scanning for RDP, direction:ingress, confidence:0, severity:high']))
+        self.assertEqual(set(self.output1.xpath("%s indicator:Description/text()" % self.indicator,
+                                                namespaces=self.namespace)),
+                         set(['Malicious domain, direction:egress, confidence:0, severity:high',
+                              'HTTP Response code 4xx, suspicious, direction:ingress, confidence:0, severity:low',
+                              'Attacker scanning for SSH, direction:ingress, confidence:0, severity:high',
+                              'Attacker scanning for RDP, direction:ingress, confidence:0, severity:high']))
 
     def test_indicator_observable_keywords(self):
-        self.assertEqual(set(self.output1.xpath("//cybox:Keyword/text()", namespaces=self.namespace)), set(['Reconnaissance', 'Scanning', 'Malware Traffic']))
+        self.assertEqual(set(self.output1.xpath("%s cybox:Keywords/cybox:Keyword/text()" % self.observable,
+                                                namespaces=self.namespace)),
+                         set(['Reconnaissance', 'Scanning', 'Malware Traffic']))
 
     def test_indicator_properties_xsitype(self):
-        self.assertEqual(set(self.output1.xpath("//indicator:Observable/cybox:Object/cybox:Properties/@xsi:type", namespaces=self.namespace)), set(["AddressObj:AddressObjectType", "DomainNameObj:DomainNameObjectType"]))
+        self.assertEqual(set(self.output1.xpath("%s @xsi:type" % self.properties, namespaces=self.namespace)),
+                         set(["AddressObj:AddressObjectType", "DomainNameObj:DomainNameObjectType"]))
 
     def test_indicator_properties_type(self):
-        self.assertEqual(set(self.output1.xpath("//indicator:Observable/cybox:Object/cybox:Properties/@type", namespaces=self.namespace)), set(["FQDN"]))
+        self.assertEqual(set(self.output1.xpath("%s @type" % self.properties, namespaces=self.namespace)),
+                         set(["FQDN"]))
 
     def test_indicator_properties_category(self):
-        self.assertEqual(set(self.output1.xpath("//indicator:Observable/cybox:Object/cybox:Properties/@category", namespaces=self.namespace)), set(["ipv4-addr", "ipv6-addr"]))
+        self.assertEqual(set(self.output1.xpath("%s @category" % self.properties, namespaces=self.namespace)),
+                         set(["ipv4-addr", "ipv6-addr"]))
 
     def test_indicator_properties_domainname(self):
-        if "bad.scanning.dom"in self.output1.xpath("//DomainNameObj:Value/text()", namespaces=self.namespace):
-            self.assertEqual(set(self.output1.xpath("//DomainNameObj:Value/text()", namespaces=self.namespace)), set(["bad.scanning.dom","bad.domain"]))
+        if "bad.scanning.dom"in self.output1.xpath("%s DomainNameObj:Value/text()" % self.properties,
+                                                   namespaces=self.namespace):
+            self.assertEqual(set(self.output1.xpath("%s DomainNameObj:Value/text()" % self.properties,
+                                                    namespaces=self.namespace)), set(["bad.scanning.dom", "bad.domain"]))
         else:
-            self.assertEqual(set(self.output1.xpath("//DomainNameObj:Value/text()", namespaces=self.namespace)), set(["bad.domain"]))
+            self.assertEqual(set(self.output1.xpath("%s DomainNameObj:Value/text()" % self.properties,
+                                                    namespaces=self.namespace)), set(["bad.domain"]))
 
     def test_indicator_properties_address(self):
-        if "10.11.12.14" in self.output1.xpath("//AddressObj:Address_Value/text()", namespaces=self.namespace):
-            self.assertEqual(set(self.output1.xpath("//AddressObj:Address_Value/text()", namespaces=self.namespace)), set(["10.11.12.13", "10.11.12.14", "2001:db8:16::1"]))
+        if "10.11.12.14" in self.output1.xpath("%s AddressObj:Address_Value/text()" % self.properties,
+                                               namespaces=self.namespace):
+            self.assertEqual(set(self.output1.xpath("%s AddressObj:Address_Value/text()" % self.properties,
+                                                    namespaces=self.namespace)),
+                             set(["10.11.12.13", "10.11.12.14", "2001:db8:16::1"]))
         else:
-            self.assertEqual(set(self.output1.xpath("//AddressObj:Address_Value/text()", namespaces=self.namespace)), set(["10.11.12.13", "2001:db8:16::1"]))
+            self.assertEqual(set(self.output1.xpath("%s AddressObj:Address_Value/text()" % self.properties,
+                                                    namespaces=self.namespace)), set(["10.11.12.13", "2001:db8:16::1"]))
 
     def test_indicator_properties_port_value(self):
-        self.assertEqual(set(self.output1.xpath("//PortObj:Port_Value/text()", namespaces=self.namespace)), set(["3389", "22"]))
+        self.assertEqual(set(self.output1.xpath("%s cybox:Properties/PortObj:Port_Value/text()" % self.related_obj,
+                                                namespaces=self.namespace)), set(["3389", "22"]))
 
     def test_indicator_properties_port_protocol(self):
-        self.assertEqual(set(self.output1.xpath("//PortObj:Layer4_Protocol/text()", namespaces=self.namespace)), set(["TCP"]))
+        self.assertEqual(set(self.output1.xpath("%s cybox:Properties/PortObj:Layer4_Protocol/text()" % self.related_obj,
+                                                namespaces=self.namespace)), set(["TCP"]))
 
     def test_indicator_relatedobject_relationship(self):
-        self.assertEqual(set(self.output1.xpath("//cybox:Relationship/text()", namespaces=self.namespace)), set(["Connected_To"]))
+        self.assertEqual(set(self.output1.xpath("%s cybox:Relationship/text()" % self.related_obj,
+                                                namespaces=self.namespace)), set(["Connected_To"]))
 
     def test_indicator_sightings(self):
-        self.assertEqual(set(self.output1.xpath("//indicator:Sighting/@timestamp", namespaces=self.namespace)), set(["2012-01-01T07:00:00+00:00"]))
+        self.assertEqual(set(self.output1.xpath("%s indicator:Sighting/@timestamp" % self.sightings,
+                                                namespaces=self.namespace)), set(["2012-01-01T07:00:00+00:00"]))
 
     def test_indicator_sighting_precision(self):
-        self.assertEqual(set(self.output1.xpath("//indicator:Sighting/@timestamp_precision", namespaces=self.namespace)), set(["second"]))
-
+        self.assertEqual(set(self.output1.xpath("%s indicator:Sighting/@timestamp_precision" % self.sightings,
+                                                namespaces=self.namespace)), set(["second"]))
 
 
 if __name__ == '__main__':
