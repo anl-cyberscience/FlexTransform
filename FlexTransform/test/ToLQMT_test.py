@@ -548,69 +548,87 @@ class TestKeyValueToLQMT(unittest.TestCase):
         cls.decoded_keyvalue = json.loads(cls.json_file)
 
     def test_keyvalue_entry0(self):
-        utc_now = int(self.decoded_keyvalue[0]['processedTime'])
-        self.assertEqual(self.decoded_keyvalue[0]['action1'], 'Block')
-        self.assertEqual(self.decoded_keyvalue[0]['comment'], 'Attacker scanning for RDP, direction:ingress, confidence:0, severity:high')
-        self.assertEqual(self.decoded_keyvalue[0]['detectedTime'], 1325401200)
-        self.assertEqual(self.decoded_keyvalue[0]['duration1'], '86400')
-        self.assertEqual(self.decoded_keyvalue[0]['fileHasMore'], '0')
-        self.assertEqual(self.decoded_keyvalue[0]['majorTags'], 'Scanning')
-        self.assertEqual(self.decoded_keyvalue[0]['reason1'], 'Scanning')
-        self.assertEqual(self.decoded_keyvalue[0]['indicator'], '10.11.12.13')
-        self.assertEqual(self.decoded_keyvalue[0]['indicatorType'], 'IPv4Address')
-        self.assertEqual(self.decoded_keyvalue[0]['reconAllowed'], '1')
-        self.assertEqual(self.decoded_keyvalue[0]['sensitivity'], 'noSensitivity')
-        self.assertTrue(self.utc_before.timestamp <= utc_now and utc_now <= self.utc_after.timestamp,
-                        "Processed Time does not fall within time range of Entry 0.")
+        try:
+            utc_now = int(self.decoded_keyvalue[0]['processedTime'])
+            self.assertEqual(self.decoded_keyvalue[0]['action1'], 'Block')
+            self.assertEqual(self.decoded_keyvalue[0]['comment'], 'Attacker scanning for RDP, direction:ingress, confidence:0, severity:high')
+            self.assertEqual(self.decoded_keyvalue[0]['detectedTime'], 1325401200)
+            self.assertEqual(self.decoded_keyvalue[0]['duration1'], '86400')
+            self.assertEqual(self.decoded_keyvalue[0]['fileHasMore'], '0')
+            self.assertEqual(self.decoded_keyvalue[0]['majorTags'], 'Scanning')
+            self.assertEqual(self.decoded_keyvalue[0]['reason1'], 'Scanning')
+            self.assertEqual(self.decoded_keyvalue[0]['indicator'], '10.11.12.13')
+            self.assertEqual(self.decoded_keyvalue[0]['indicatorType'], 'IPv4Address')
+            self.assertEqual(self.decoded_keyvalue[0]['reconAllowed'], '1')
+            self.assertEqual(self.decoded_keyvalue[0]['sensitivity'], 'noSensitivity')
+            self.assertTrue(self.utc_before.timestamp <= utc_now and utc_now <= self.utc_after.timestamp,
+                            "Processed Time does not fall within time range of Entry 0.")
+
+        except:
+            print(json.dumps(self.decoded_keyvalue[0], indent=4, sort_keys=True))
+            self.assertEqual(0, 1)
 
     def test_keyvalue_entry1(self):
-        utc_now = int(self.decoded_keyvalue[1]['processedTime'])
-        self.assertEqual(self.decoded_keyvalue[1]['action1'], 'Block')
-        self.assertEqual(self.decoded_keyvalue[1]['comment'], 'Attacker scanning for SSH, direction:ingress, confidence:0, severity:high')
-        self.assertEqual(self.decoded_keyvalue[1]['detectedTime'], 1325401200)
-        self.assertEqual(self.decoded_keyvalue[1]['duration1'], '86400')
-        self.assertEqual(self.decoded_keyvalue[1]['fileHasMore'], '0')
-        self.assertEqual(self.decoded_keyvalue[1]['majorTags'], 'Scanning')
-        self.assertEqual(self.decoded_keyvalue[1]['reason1'], 'Scanning')
-        self.assertEqual(self.decoded_keyvalue[1]['indicator'], '10.11.12.14')
-        self.assertEqual(self.decoded_keyvalue[1]['indicatorType'], 'IPv4Address', self.decoded_keyvalue[1]['indicatorType'])
-        self.assertEqual(self.decoded_keyvalue[1]['reconAllowed'], '1')
-        self.assertEqual(self.decoded_keyvalue[1]['sensitivity'], 'noSensitivity')
-        self.assertTrue(self.utc_before.timestamp <= utc_now and utc_now <= self.utc_after.timestamp,
-                        "Processed Time does not fall within time range of Entry 1.")
+        try:
+            utc_now = int(self.decoded_keyvalue[1]['processedTime'])
+            self.assertEqual(self.decoded_keyvalue[1]['action1'], 'Block')
+            self.assertEqual(self.decoded_keyvalue[1]['comment'], 'Attacker scanning for SSH, direction:ingress, confidence:0, severity:high')
+            self.assertEqual(self.decoded_keyvalue[1]['detectedTime'], 1325401200)
+            self.assertEqual(self.decoded_keyvalue[1]['duration1'], '86400')
+            self.assertEqual(self.decoded_keyvalue[1]['fileHasMore'], '0')
+            self.assertEqual(self.decoded_keyvalue[1]['majorTags'], 'Scanning')
+            self.assertEqual(self.decoded_keyvalue[1]['reason1'], 'Scanning')
+            self.assertEqual(self.decoded_keyvalue[1]['indicator'], '10.11.12.14')
+            self.assertNotEqual(self.decoded_keyvalue[1]['indicatorType'], 'IPv4Address', self.decoded_keyvalue[1]['indicatorType'])
+            self.assertEqual(self.decoded_keyvalue[1]['reconAllowed'], '1')
+            self.assertEqual(self.decoded_keyvalue[1]['sensitivity'], 'noSensitivity')
+            self.assertTrue(self.utc_before.timestamp <= utc_now and utc_now <= self.utc_after.timestamp,
+                            "Processed Time does not fall within time range of Entry 1.")
+        except:
+            print(json.dumps(self.decoded_keyvalue[1], indent=4, sort_keys=True))
+            self.assertEqual(0,1)
 
     def test_keyvalue_entry2(self):
-        utc_now = int(self.decoded_keyvalue[2]['processedTime'])
-        self.assertEqual(self.decoded_keyvalue[2]['action1'], 'Block')
-        self.assertEqual(self.decoded_keyvalue[2]['comment'], 'HTTP Response code 4xx, suspicious, direction:ingress, confidence:0, severity:low')
-        self.assertEqual(self.decoded_keyvalue[2]['detectedTime'], 1325401200)
-        self.assertEqual(self.decoded_keyvalue[2]['duration1'], '86400')
-        self.assertEqual(self.decoded_keyvalue[2]['fileHasMore'], '0')
-        self.assertEqual(self.decoded_keyvalue[2]['majorTags'], 'Reconnaissance')
-        self.assertEqual(self.decoded_keyvalue[2]['reason1'], 'Reconnaissance')
-        self.assertEqual(self.decoded_keyvalue[2]['indicator'], '2001:db8:16::1')
-        self.assertEqual(self.decoded_keyvalue[2]['indicatorType'], 'IPv6Address')
-        self.assertEqual(self.decoded_keyvalue[2]['reconAllowed'], '1')
-        self.assertEqual(self.decoded_keyvalue[2]['sensitivity'], 'noSensitivity')
-        self.assertTrue(self.utc_before.timestamp <= utc_now and utc_now <= self.utc_after.timestamp,
-                        "Processed Time does not fall within time range of Entry 2.")
+        try:
+            utc_now = int(self.decoded_keyvalue[2]['processedTime'])
+            self.assertEqual(self.decoded_keyvalue[2]['action1'], 'Block')
+            self.assertEqual(self.decoded_keyvalue[2]['comment'], 'HTTP Response code 4xx, suspicious, direction:ingress, confidence:0, severity:low')
+            self.assertEqual(self.decoded_keyvalue[2]['detectedTime'], 1325401200)
+            self.assertEqual(self.decoded_keyvalue[2]['duration1'], '86400')
+            self.assertEqual(self.decoded_keyvalue[2]['fileHasMore'], '0')
+            self.assertEqual(self.decoded_keyvalue[2]['majorTags'], 'Reconnaissance')
+            self.assertEqual(self.decoded_keyvalue[2]['reason1'], 'Reconnaissance')
+            self.assertEqual(self.decoded_keyvalue[2]['indicator'], '2001:db8:16::1')
+            self.assertEqual(self.decoded_keyvalue[2]['indicatorType'], 'IPv6Address')
+            self.assertEqual(self.decoded_keyvalue[2]['reconAllowed'], '1')
+            self.assertEqual(self.decoded_keyvalue[2]['sensitivity'], 'noSensitivity')
+            self.assertTrue(self.utc_before.timestamp <= utc_now and utc_now <= self.utc_after.timestamp,
+                            "Processed Time does not fall within time range of Entry 2.")
+
+        except:
+            print(json.dumps(self.decoded_keyvalue[2], indent=4, sort_keys=True))
+            self.assertEqual(0, 1)
 
     def test_keyvalue_entry3(self):
-        utc_now = int(self.decoded_keyvalue[3]['processedTime'])
-        self.assertEqual(self.decoded_keyvalue[3]['action1'], 'Block')
-        self.assertEqual(self.decoded_keyvalue[3]['comment'], 'Malicious domain, direction:egress, confidence:0, severity:high')
-        self.assertEqual(self.decoded_keyvalue[3]['detectedTime'], 1325401200)
-        self.assertEqual(self.decoded_keyvalue[3]['duration1'], '86400')
-        self.assertEqual(self.decoded_keyvalue[3]['fileHasMore'], '0')
-        self.assertEqual(self.decoded_keyvalue[3]['majorTags'], 'Malware Traffic')
-        self.assertEqual(self.decoded_keyvalue[3]['reason1'], 'Malware Traffic')
-        self.assertEqual(self.decoded_keyvalue[3]['indicator'], 'bad.domain')
-        self.assertEqual(self.decoded_keyvalue[3]['indicatorType'], 'DNSDomainName', self.decoded_keyvalue[3]['indicatorType'])
-        self.assertEqual(self.decoded_keyvalue[3]['reconAllowed'], '1')
-        self.assertEqual(self.decoded_keyvalue[3]['sensitivity'], 'noSensitivity')
-        self.assertTrue(self.utc_before.timestamp <= utc_now and utc_now <= self.utc_after.timestamp,
-                        "Processed Time does not fall within time range of Entry 3.")
+        try:
+            utc_now = int(self.decoded_keyvalue[3]['processedTime'])
+            self.assertEqual(self.decoded_keyvalue[3]['action1'], 'Block')
+            self.assertEqual(self.decoded_keyvalue[3]['comment'], 'Malicious domain, direction:egress, confidence:0, severity:high')
+            self.assertEqual(self.decoded_keyvalue[3]['detectedTime'], 1325401200)
+            self.assertEqual(self.decoded_keyvalue[3]['duration1'], '86400')
+            self.assertEqual(self.decoded_keyvalue[3]['fileHasMore'], '0')
+            self.assertEqual(self.decoded_keyvalue[3]['majorTags'], 'Malware Traffic')
+            self.assertEqual(self.decoded_keyvalue[3]['reason1'], 'Malware Traffic')
+            self.assertEqual(self.decoded_keyvalue[3]['indicator'], 'bad.domain')
+            self.assertEqual(self.decoded_keyvalue[3]['indicatorType'], 'DNSDomainName', self.decoded_keyvalue[3]['indicatorType'])
+            self.assertEqual(self.decoded_keyvalue[3]['reconAllowed'], '1')
+            self.assertEqual(self.decoded_keyvalue[3]['sensitivity'], 'noSensitivity')
+            self.assertTrue(self.utc_before.timestamp <= utc_now and utc_now <= self.utc_after.timestamp,
+                            "Processed Time does not fall within time range of Entry 3.")
 
+        except:
+            print(json.dumps(self.decoded_keyvalue[3], indent=4, sort_keys=True))
+            self.assertEqual(0, 1)
 
 if __name__ == '__main__':
     unittest.main()
