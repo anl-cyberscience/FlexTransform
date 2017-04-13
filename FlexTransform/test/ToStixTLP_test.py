@@ -12,6 +12,9 @@ from FlexTransform.test.SampleInputs import CFM13ALERT, STIXACS, KEYVALUE, CFM13
 
 class TestCFM13AlertToSTIXTLP(unittest.TestCase):
     output1 = None
+    utc_before = None
+    utc_after = None
+
     header = "/stix:STIX_Package/stix:STIX_Header/"
     marking = "/stix:STIX_Package/stix:STIX_Header/stix:Handling/marking:Marking/"
     information_source = "/stix:STIX_Package/stix:STIX_Header/stix:Information_Source/"
@@ -49,8 +52,9 @@ class TestCFM13AlertToSTIXTLP(unittest.TestCase):
             transform.add_parser('stix', input_file)
         output1_object = io.StringIO()
 
+        cls.utc_before = arrow.utcnow().format("YYYY-MM-DDTHH:mm:ssZZ")
         transform.transform(io.StringIO(CFM13ALERT), 'cfm13alert', 'stix', target_file=output1_object)
-
+        cls.utc_after = arrow.utcnow().format("YYYY-MM-DDTHH:mm:ssZZ")
         cls.output1 = etree.XML(output1_object.getvalue())
 
     def test_package_intent_type(self):
@@ -86,8 +90,11 @@ class TestCFM13AlertToSTIXTLP(unittest.TestCase):
                                             namespaces=self.namespace)[0], "2016-02-21T22:50:02+06:00")
 
     def test_indicator_time_stamp(self):
-        self.assertEqual(self.output1.xpath("%s @timestamp" % self.indicator,
-                                            namespaces=self.namespace)[0], arrow.utcnow().format('YYYY-MM-DDTHH:mm:ssZZ'))
+        test = self.output1.xpath("%s @timestamp" % self.indicator, namespaces=self.namespace)[0]
+        if test == self.utc_before:
+            self.assertEqual(test, self.utc_before)
+        else:
+            self.assertEqual(test, self.utc_after)
 
     def test_indicator_xsi_type(self):
         self.assertEqual(self.output1.xpath("%s @xsi:type" % self.indicator,
@@ -423,6 +430,9 @@ class TestSTIXACS30ToSTIXTLP(unittest.TestCase):
 
 class TestKeyValueToSTIXTLP(unittest.TestCase):
     output1 = None
+    utc_before = None
+    utc_after = None
+
     header = "/stix:STIX_Package/stix:STIX_Header/"
     marking = "/stix:STIX_Package/stix:STIX_Header/stix:Handling/marking:Marking/"
     information_source = "/stix:STIX_Package/stix:STIX_Header/stix:Information_Source/"
@@ -460,7 +470,9 @@ class TestKeyValueToSTIXTLP(unittest.TestCase):
             transform.add_parser('keyvalue', input_file)
         output1_object = io.StringIO()
 
+        cls.utc_before = arrow.utcnow().format("YYYY-MM-DDTHH:mm:ssZZ")
         transform.transform(io.StringIO(KEYVALUE), 'keyvalue', 'stix', target_file=output1_object)
+        cls.utc_after = arrow.utcnow().format("YYYY-MM-DDTHH:mm:ssZZ")
         cls.output1 = etree.XML(output1_object.getvalue())
 
     def test_package_intent_type(self):
@@ -492,8 +504,11 @@ class TestKeyValueToSTIXTLP(unittest.TestCase):
                          set(["2.1.1"]))
 
     def test_indicator_timestamp(self):
-        self.assertEqual(set(self.output1.xpath("%s @timestamp" % self.indicator, namespaces=self.namespace)),
-                         set([arrow.utcnow().format('YYYY-MM-DDTHH:mm:ssZZ')]))
+        test = self.output1.xpath("%s @timestamp" % self.indicator, namespaces=self.namespace)[0]
+        if test == self.utc_before:
+            self.assertEqual(test, self.utc_before)
+        else:
+            self.assertEqual(test, self.utc_after)
 
     def test_indicator_type(self):
         self.assertEqual(set(self.output1.xpath(
