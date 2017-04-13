@@ -579,13 +579,16 @@ class TestKeyValueToLQMT(unittest.TestCase):
             self.assertEqual(self.decoded_keyvalue[1]['majorTags'], 'Scanning')
             self.assertEqual(self.decoded_keyvalue[1]['reason1'], 'Scanning')
             self.assertEqual(self.decoded_keyvalue[1]['indicator'], '10.11.12.14')
-            self.assertNotEqual(self.decoded_keyvalue[1]['indicatorType'], 'IPv4Address', self.decoded_keyvalue[1]['indicatorType'])
+            self.assertEqual(self.decoded_keyvalue[1]['indicatorType'], 'IPv4Address')
             self.assertEqual(self.decoded_keyvalue[1]['reconAllowed'], '1')
             self.assertEqual(self.decoded_keyvalue[1]['sensitivity'], 'noSensitivity')
             self.assertTrue(self.utc_before.timestamp <= utc_now and utc_now <= self.utc_after.timestamp,
                             "Processed Time does not fall within time range of Entry 1.")
         except:
+            print(json.dumps(self.decoded_keyvalue[0], indent=4, sort_keys=True))
             print(json.dumps(self.decoded_keyvalue[1], indent=4, sort_keys=True))
+            print(json.dumps(self.decoded_keyvalue[2], indent=4, sort_keys=True))
+            print(json.dumps(self.decoded_keyvalue[3], indent=4, sort_keys=True))
             self.assertEqual(0,1)
 
     def test_keyvalue_entry2(self):
@@ -620,7 +623,7 @@ class TestKeyValueToLQMT(unittest.TestCase):
             self.assertEqual(self.decoded_keyvalue[3]['majorTags'], 'Malware Traffic')
             self.assertEqual(self.decoded_keyvalue[3]['reason1'], 'Malware Traffic')
             self.assertEqual(self.decoded_keyvalue[3]['indicator'], 'bad.domain')
-            self.assertEqual(self.decoded_keyvalue[3]['indicatorType'], 'DNSDomainName', self.decoded_keyvalue[3]['indicatorType'])
+            self.assertEqual(self.decoded_keyvalue[3]['indicatorType'], 'DNSDomainName')
             self.assertEqual(self.decoded_keyvalue[3]['reconAllowed'], '1')
             self.assertEqual(self.decoded_keyvalue[3]['sensitivity'], 'noSensitivity')
             self.assertTrue(self.utc_before.timestamp <= utc_now and utc_now <= self.utc_after.timestamp,
