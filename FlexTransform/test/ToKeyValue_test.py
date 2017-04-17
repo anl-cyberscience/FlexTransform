@@ -9,8 +9,6 @@ from FlexTransform.test.SampleInputs import STIXTLP, STIXACS, CFM13ALERT
 
 class TestCFM13AlertToKeyValue(unittest.TestCase):
     output1 = None
-    utc_before = None
-    utc_after = None
 
     @classmethod
     def setUpClass(cls):
@@ -23,11 +21,7 @@ class TestCFM13AlertToKeyValue(unittest.TestCase):
             transform.add_parser('keyvalue', input_file)
         output1_object = io.StringIO()
 
-        cls.utc_before = arrow.utcnow().to('US/Pacific')
-
         transform.transform(io.StringIO(CFM13ALERT), 'cfm13alert', 'keyvalue', target_file=output1_object)
-
-        cls.utc_after = arrow.utcnow().to('US/Pacific')
 
         cls.output1 = []
         output1_object.seek(0)
@@ -71,16 +65,13 @@ class TestCFM13AlertToKeyValue(unittest.TestCase):
         self.assertIn('ipv4=10.10.10.10', self.output1[0])
 
     def test_combined_comment(self):
-        self.assertIn("combined_comment='SSH scans against multiple hosts, direction:ingress, confidence:87, severity:high'", self.output1[0])
+        self.assertIn(
+            "combined_comment='SSH scans against multiple hosts, direction:ingress, confidence:87, severity:high'",
+            self.output1[0])
 
-    # def test_time_stamp(self):
-    #     utc_now = int(self.output1[0])
-    #     self.assertTrue(self.utc_before.timestamp <= utc_now and utc_now <= self.utc_after.timestamp)
 
 class TestSTIXTLPToKeyValue(unittest.TestCase):
     output1 = None
-    utc_before = None
-    utc_after = None
 
     @classmethod
     def setUpClass(cls):
@@ -93,11 +84,7 @@ class TestSTIXTLPToKeyValue(unittest.TestCase):
             transform.add_parser('keyvalue', input_file)
         output1_object = io.StringIO()
 
-        cls.utc_before = arrow.utcnow().to('US/Pacific')
-
         transform.transform(io.StringIO(STIXTLP), 'stix_tlp', 'keyvalue', target_file=output1_object)
-
-        cls.utc_after = arrow.utcnow().to('US/Pacific')
 
         cls.output1 = []
         output1_object.seek(0)
@@ -135,8 +122,6 @@ class TestSTIXTLPToKeyValue(unittest.TestCase):
 
 class TestSTIXACSToKeyValue(unittest.TestCase):
     output1 = None
-    utc_before = None
-    utc_after = None
 
     @classmethod
     def setUpClass(cls):
@@ -149,11 +134,7 @@ class TestSTIXACSToKeyValue(unittest.TestCase):
             transform.add_parser('keyvalue', input_file)
         output1_object = io.StringIO()
 
-        cls.utc_before = arrow.utcnow().to('US/Pacific')
-
         transform.transform(io.StringIO(STIXACS), 'stix_acs2', 'keyvalue', target_file=output1_object)
-
-        cls.utc_after = arrow.utcnow().to('US/Pacific')
 
         cls.output1 = []
         output1_object.seek(0)
@@ -189,11 +170,8 @@ class TestSTIXACSToKeyValue(unittest.TestCase):
         self.assertIn("combined_comment='Just Another Indicator'", self.output1)
 
 
-
 class TestSTIXACS30ToKeyValue(unittest.TestCase):
     output1 = None
-    utc_before = None
-    utc_after = None
 
     @classmethod
     def setUpClass(cls):
@@ -206,11 +184,7 @@ class TestSTIXACS30ToKeyValue(unittest.TestCase):
             transform.add_parser('keyvalue', input_file)
         output1_object = io.StringIO()
 
-        cls.utc_before = arrow.utcnow().to('US/Pacific')
-
         transform.transform(io.StringIO(STIXACS), 'stix_acs30', 'keyvalue', target_file=output1_object)
-
-        cls.utc_after = arrow.utcnow().to('US/Pacific')
 
         cls.output1 = []
         output1_object.seek(0)
@@ -245,9 +219,6 @@ class TestSTIXACS30ToKeyValue(unittest.TestCase):
         self.assertIn("combined_comment='Domain Indicator'", self.output1)
         self.assertIn("combined_comment='Just Another Indicator'", self.output1)
 
-    # def test_time_stamp(self):
-    #     utc_now = self.output1("timestamp")
-    #     self.asserTrue(self.utc_before <= utc_now and utc_now <= self.utc_after)
 
 if __name__ == '__main__':
     unittest.main()
