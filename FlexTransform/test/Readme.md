@@ -3,6 +3,7 @@
         - [X] TLP
         - [X] ACS
     - [X] from Key/Value Pairs *IP
+    
 - [X] STIX  
     - [X] to TLP
         - [X] from CFM13Alert
@@ -19,6 +20,7 @@
         - [X] from TLP
         - [X] from ACS
         - [X] from Key/Value Pairs *IP
+        
 - [X] to Key/Value Pairs  
     - [X] from STIX  
         - [X] from TLP  
@@ -26,6 +28,7 @@
         - [X] from ACS30
     - [X] from CFM13Alert  
     - [X] from CFM20Alert  
+    
 - [X] to LQMT
     - [X] from CFM13Alert
     - [X] from STIX
