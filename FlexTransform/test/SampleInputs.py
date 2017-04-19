@@ -586,3 +586,27 @@ LQMTOOLS = """{
 KEYVALUE = """timestamp=1325401200&ipv4=10.11.12.13&direction=ingress&comment='Attacker scanning for RDP'&service=3389/TCP&category='Scanning'&severity=high\r\ntimestamp=1325401200&ipv4=10.11.12.14&direction=ingress&comment='Attacker scanning for SSH'&service=22/TCP&category='Scanning'&severity=high\r\ntimestamp=1325401200&ipv6=2001:db8:16::1&direction=ingress&comment='HTTP Response code 4xx, suspicious'&category='Reconnaissance'&severity=low\r\ntimestamp=1325401200&fqdn=bad.domain&direction=egress&comment='Malicious domain'&category='Malware Traffic'&severity=high\r\n"""
 
 CFM13ALERTUUID = """37880b79-bb9e-4025-9813-94d07981d9ff_"""
+
+
+CRISP = """{
+  "title": "CRISP-17-1111",
+  "description": "Fake report Description",
+  "package_intent": "Indicators",
+  "produced_time": "2017-04-10T20:31:02Z",
+  "tlp": "AMBER",
+  "information_source": "PNNL",
+  "indicators": [
+    {
+      "ipv4address": "10.10.10.11"
+    },
+    {
+      "ipv4address": "10.11.12.13"
+    },
+    {
+      "md5hash": "9e107d9d372bb6826bd81d3542a419d6"
+    },
+    {
+      "sha1hash": "ae147d9d372bb6826bd81d3542a419d65c29f2"
+    }
+  ]
+}"""

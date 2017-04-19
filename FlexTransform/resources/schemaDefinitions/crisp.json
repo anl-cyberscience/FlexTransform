@@ -86,7 +86,8 @@
 		"types": {
 			"IPv4-Address-Block": [ { "ipv4address": "*" } ],
 			"DNS-Hostname-Block": [ { "fqdn": "*" } ],
-			"Malicious-File-Hash":[	{ "md5hash": "*" } ],
+			"Malicious-File-Hash":[	{ "md5hash": "*" }, { "sha1hash": "*" }, { "sha224hash": "*" },
+              { "sha256hash": "*" }, {"sha384hash": "*" }, { "sha512": "*" }],
 			"URL-Block": [ { "uri": "*"} ],
 			"Artifact": [ { "source_file_base64_encoded": "*" } ],
 			"FilePath": [ { "filepath": "*" } ],
@@ -131,6 +132,41 @@
 				"required": false,
 				"ontologyMappingType": "simple",
 				"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#MD5FilehashIndicatorValueSemanticComponent"
+			},
+            "sha1hash": {
+				"description": "The type of the hash of the file",
+				"datatype": "string",
+				"required": false,
+				"ontologyMappingType": "simple",
+				"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#SHA1FilehashIndicatorValueSemanticComponent"
+			},
+            "sha244hash": {
+				"description": "The type of the hash of the file",
+				"datatype": "string",
+				"required": false,
+				"ontologyMappingType": "simple",
+				"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#SHA224FilehashIndicatorValueSemanticComponent"
+			},
+            "sha256hash": {
+				"description": "The type of the hash of the file",
+				"datatype": "string",
+				"required": false,
+				"ontologyMappingType": "simple",
+				"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#SHA256FilehashIndicatorValueSemanticComponent"
+			},
+            "sha384hash": {
+				"description": "The type of the hash of the file",
+				"datatype": "string",
+				"required": false,
+				"ontologyMappingType": "simple",
+				"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#SHA384FilehashIndicatorValueSemanticComponent"
+			},
+            "sha512hash": {
+				"description": "The type of the hash of the file",
+				"datatype": "string",
+				"required": false,
+				"ontologyMappingType": "simple",
+				"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#SHA512FilehashIndicatorValueSemanticComponent"
 			},
 			"source_file_name": {
 				"description": "Source file name for the report",
