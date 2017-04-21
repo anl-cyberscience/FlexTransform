@@ -1008,7 +1008,7 @@ class TestCRSIPToSTIXACS30(unittest.TestCase):
     def test_indicator_type(self):
         self.assertEqual(set(self.output1.xpath(
             "%s indicator:Type[@xsi:type='stixVocabs:IndicatorTypeVocab-1.1']/text()" % self.indicator,
-            namespaces=self.namespace)), set(["IP Watchlist", "File Hash Watchlist"]))
+            namespaces=self.namespace)), set(["IP Watchlist", "File Hash Watchlist", "Malicious E-mail"]))
 
     def test_indicator_description(self):
         self.assertEqual(set(self.output1.xpath("%s indicator:Description/text()" % self.indicator,
@@ -1018,7 +1018,7 @@ class TestCRSIPToSTIXACS30(unittest.TestCase):
     def test_indicator_address_values(self):
         self.assertEqual(set(self.output1.xpath("%s AddressObj:Address_Value/text()" % self.properties,
                                                 namespaces=self.namespace)),
-                         set(["10.10.10.11", "10.11.12.13"]))
+                         set(["10.10.10.11", "10.11.12.13", "fakeEmail@fake.com"]))
 
     def test_indicator_properties_xsitype(self):
         self.assertEqual(set(self.output1.xpath("%s @xsi:type" % self.properties, namespaces=self.namespace)),
@@ -1026,7 +1026,7 @@ class TestCRSIPToSTIXACS30(unittest.TestCase):
 
     def test_indicator_properties_category(self):
         self.assertEqual(set(self.output1.xpath("%s @category" % self.properties, namespaces=self.namespace)),
-                         set(["ipv4-addr"]))
+                         set(["ipv4-addr", "e-mail"]))
 
     def test_indicator_properties_type(self):
         if "Domain Name" in self.output1.xpath("%s @type" % self.properties, namespaces=self.namespace) or\
@@ -1036,12 +1036,16 @@ class TestCRSIPToSTIXACS30(unittest.TestCase):
     def test_indicator_hash_values(self):
         self.assertEqual(set(self.output1.xpath("%s FileObj:Hashes/cyboxCommon:Hash/cyboxCommon:Simple_Hash_Value/text()" % self.properties,
                                                 namespaces=self.namespace)),
-                         set(["9e107d9d372bb6826bd81d3542a419d6", "ae147d9d372bb6826bd81d3542a419d65c29f2"]))
+                         set(["9e107d9d372bb6826bd81d3542a419d6", "ae147d9d372bb6826bd81d3542a419d65c29f2",
+                              "e7ff9d32ab4c018dd32fff98376826bd81ae147d352bb68207d9da7a",
+                              "32fff98ff9d32a6bd81da419d65ce147d352bb682018dd9d372bb6826bde107f",
+                              "fff98fdd32ff147d9d372bb682d372bb6819d65c299d372bb6826b976826b47d352bb681da419dd32fff98376826bd8b",
+                              "a879bac79a89e9f890a8c0a87c7b778da99ad879c79b8787aa0279b98abd89c78e09e880ff97a0870ae87b7089c07d070ab89378ad79ab79c78d9a0987c890d7"]))
 
     def test_indicator_hash_type(self):
         self.assertEqual(set(self.output1.xpath("%s FileObj:Hashes/cyboxCommon:Hash/cyboxCommon:Type/text()" % self.properties,
                                                 namespaces=self.namespace)),
-                         set(["SHA1", "MD5"]))
+                         set(["SHA1", "MD5", "SHA224", "SHA256", "SHA384", "SHA512"]))
 
     def test_indicator_hash_xsi_type(self):
         self.assertEqual(self.output1.xpath("%s FileObj:Hashes/cyboxCommon:Hash/cyboxCommon:Type/@xsi:type" % self.properties,

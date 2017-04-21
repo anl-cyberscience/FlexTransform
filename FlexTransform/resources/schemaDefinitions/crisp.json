@@ -87,7 +87,7 @@
 			"IPv4-Address-Block": [ { "ipv4address": "*" } ],
 			"DNS-Hostname-Block": [ { "fqdn": "*" } ],
 			"Malicious-File-Hash":[	{ "md5hash": "*" }, { "sha1hash": "*" }, { "sha224hash": "*" },
-              { "sha256hash": "*" }, {"sha384hash": "*" }, { "sha512": "*" }],
+              { "sha256hash": "*" }, {"sha384hash": "*" }, { "sha512hash": "*" }],
 			"URL-Block": [ { "uri": "*"} ],
 			"Artifact": [ { "source_file_base64_encoded": "*" } ],
 			"FilePath": [ { "filepath": "*" } ],
@@ -140,7 +140,7 @@
 				"ontologyMappingType": "simple",
 				"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#SHA1FilehashIndicatorValueSemanticComponent"
 			},
-            "sha244hash": {
+            "sha224hash": {
 				"description": "The type of the hash of the file",
 				"datatype": "string",
 				"required": false,
@@ -222,7 +222,7 @@
 				"description": "Filename of an artifact",
 				"datatype": "string",
 				"ontologyMappingType": "simple",
-				"ontologyMapping": "https://cfm.anl.gov/transform.owl#FileNameIndicatorValueSemanticComponent"
+				"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#FileNameIndicatorTypeSemanticComponent"
 			},
 			"uri": {
 				"description": "URI of malicious file",
@@ -236,7 +236,7 @@
 				"datatype": "string",
 				"required": "false",
 				"ontologyMappingType": "simple",
-				"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#FilePathSemanticComponent"
+				"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#FilepathIndicatorValueSemanticConcept"
 			}
 		}
 	}

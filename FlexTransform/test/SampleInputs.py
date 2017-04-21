@@ -607,6 +607,27 @@ CRISP = """{
     },
     {
       "sha1hash": "ae147d9d372bb6826bd81d3542a419d65c29f2"
+    },
+    {
+      "sha224hash": "e7ff9d32ab4c018dd32fff98376826bd81ae147d352bb68207d9da7a"
+    },
+    {
+      "sha256hash": "32fff98ff9d32a6bd81da419d65ce147d352bb682018dd9d372bb6826bde107f"
+    },
+    {
+      "sha384hash": "fff98fdd32ff147d9d372bb682d372bb6819d65c299d372bb6826b976826b47d352bb681da419dd32fff98376826bd8b"
+    },
+    {
+      "sha512hash": "a879bac79a89e9f890a8c0a87c7b778da99ad879c79b8787aa0279b98abd89c78e09e880ff97a0870ae87b7089c07d070ab89378ad79ab79c78d9a0987c890d7"
+    },
+    {
+      "filename": "Test_File_Name"
+    },
+    {
+      "emailaddress": "fakeEmail@fake.com"
+    },
+    {
+      "filepath": "test"
     }
   ]
 }"""

@@ -366,19 +366,6 @@
 				"ontologyMappingType": "simple",
 				"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#UUIDv4IndicatorIdentifierSemanticConcept"
 			},
-            "emailaddress": {
-				"description": "Malicious Email Address",
-				"datatype": "string",
-				"required": false,
-				"ontologyMappingType": "simple",
-				"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#EmailAddressIndicatorValueSemanticComponent"
-			},
-            "filename": {
-				"description": "Filename of an artifact",
-				"datatype": "string",
-				"ontologyMappingType": "simple",
-				"ontologyMapping": "https://cfm.anl.gov/transform.owl#FileNameIndicatorValueSemanticComponent"
-			},
 			"indicator_types": {
 				"description": "Collection of one or more indicator types for the indicator set",
 				"valuemap": "indicator_types",
@@ -586,6 +573,9 @@
 							"http://www.anl.gov/cfm/transform.owl#MD5FilehashIndicatorValueSemanticComponent",
 							"http://www.anl.gov/cfm/transform.owl#SHA1FilehashIndicatorValueSemanticComponent",
 							"http://www.anl.gov/cfm/transform.owl#SHA256FilehashIndicatorValueSemanticComponent",
+                            "http://www.anl.gov/cfm/transform.owl#SHA224FilehashIndicatorValueSemanticComponent",
+                            "http://www.anl.gov/cfm/transform.owl#SHA384FilehashIndicatorValueSemanticComponent",
+                            "http://www.anl.gov/cfm/transform.owl#SHA512FilehashIndicatorValueSemanticComponent",
 							"http://www.anl.gov/cfm/transform.owl#FilepathIndicatorValueSemanticConcept",
 							"http://www.anl.gov/cfm/transform.owl#FileNameIndicatorTypeSemanticComponent"
 						]
@@ -1059,7 +1049,16 @@
 					},
 					"SHA256": {
 						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#SHA256FilehashIndicatorValueSemanticComponent"
-					}
+					},
+					 "SHA224": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#SHA224FilehashIndicatorValueSemanticComponent"
+					},
+					"SHA384": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#SHA384FilehashIndicatorValueSemanticComponent"
+					},
+                    "SHA512": {
+                        "ontologyMapping": "http://www.anl.gov/cfm/transform.owl#SHA512FilehashIndicatorValueSemanticComponent"
+                    }
 				}
 			},
 			"observable_object_hashes_simplehash_condition": {
