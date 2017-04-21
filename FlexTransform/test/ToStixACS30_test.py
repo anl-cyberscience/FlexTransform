@@ -1047,6 +1047,14 @@ class TestCRSIPToSTIXACS30(unittest.TestCase):
                                                 namespaces=self.namespace)),
                          set(["SHA1", "MD5", "SHA224", "SHA256", "SHA384", "SHA512"]))
 
+    def test_indicator_file_path(self):
+        self.assertEqual(set(self.output1.xpath("%s FileObj:File_Path/text()" % self.properties,
+                                                namespaces=self.namespace)), set(["test"]))
+
+    def test_indicator_file_name(self):
+        self.assertEqual(set(self.output1.xpath("%s FileObj:File_Name/text()" % self.properties,
+                                                namespaces=self.namespace)), set(["Test_File_Name"]))
+
     def test_indicator_hash_xsi_type(self):
         self.assertEqual(self.output1.xpath("%s FileObj:Hashes/cyboxCommon:Hash/cyboxCommon:Type/@xsi:type" % self.properties,
                                             namespaces=self.namespace)[0], "cyboxVocabs:HashNameVocab-1.0")
