@@ -12,6 +12,7 @@ Created on Apr 12, 2017
 import argparse
 import sys
 import logging
+import json
 from FlexTransform import FlexTransform
 #
 # process a single command
@@ -40,6 +41,8 @@ def processCommand(flexT,inputData):
         except Exception as e:
             logging.error("An exception has occurred while adding configuration: "+str(e))
 
+    elif(cmd=='list_configs'):
+        print(json.JSONEncoder().encode({ 'configs': list(flexT.Parsers.keys()) }))
     elif(cmd=='transform'):
         # src_format={format} src_file={source_filename} src_metadata={source_metdata_filename} dest=format={dest_format} dest_file={dest_filename}
         try:
