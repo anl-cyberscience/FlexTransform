@@ -349,6 +349,43 @@ CFM13ALERT2 = """
     </IDMEF-Message>
     """
 
+CFM20ALERT = """
+<CFMAlert xmlns="http://www.anl.gov/cfm/2.0/current/CFMAlert">
+    <Version>2.0</Version>
+    <Alert>
+        <AlertID>1cdf6f8f-20da-488e-9132-bbf850621418</AlertID>
+        <AlertTimestamp>1468350602</AlertTimestamp>
+        <IndicatorSet>
+            <Indicator>
+                <Type>ipv6sourceaddress</Type>
+                <Constraint>IPv6ColonHexEquality</Constraint>
+                <Value>8675:a289:5:102c::bd8:baac</Value>
+            </Indicator>
+        </IndicatorSet>
+        <ReasonList>
+            <Reason>
+                <ReasonCategory>Exploit</ReasonCategory>
+                <ReasonDescription>The WAF detected a scan for vulnerable web applications</ReasonDescription>
+            </Reason>
+        </ReasonList>
+        <ActionList>
+            <Action>
+                <ActionCategory>Block</ActionCategory>
+                <ActionTimestamp>1468350602</ActionTimestamp>
+            </Action>
+        </ActionList>
+        <AlertExtendedAttribute>
+            <Field>confidence</Field>
+            <Value>80</Value>
+        </AlertExtendedAttribute>
+        <AlertExtendedAttribute>
+            <Field>severity</Field>
+            <Value>high</Value>
+        </AlertExtendedAttribute>
+    </Alert>
+</CFMAlert>
+"""
+
 STIXACS = """<stix:STIX_Package
     xmlns:cyboxCommon="http://cybox.mitre.org/common-2"
     xmlns:cybox="http://cybox.mitre.org/cybox-2"
@@ -546,6 +583,51 @@ LQMTOOLS = """{
     }
 }"""
 
-KEYVALUE = """timestamp=1325401200&ipv4=10.11.12.13&direction=ingress&comment='Attacker scanning for RDP'&service=3389/TCP&category='Scanning'&severity=high\r\ntimestamp=1325401200&ipv4=10.11.12.14&fqdn=bad.scanning.dom&direction=ingress&comment='Attacker scanning for SSH'&service=22/TCP&category='Scanning'&severity=high\r\ntimestamp=1325401200&ipv6=2001:db8:16::1&direction=ingress&comment='HTTP Response code 4xx, suspicious'&category='Reconnaissance'&severity=low\r\ntimestamp=1325401200&fqdn=bad.domain&direction=egress&comment='Malicious domain'&category='Malware Traffic'&severity=high\r\n"""
+KEYVALUE = """timestamp=1325401200&ipv4=10.11.12.13&direction=ingress&comment='Attacker scanning for RDP'&service=3389/TCP&category='Scanning'&severity=high\r\ntimestamp=1325401200&ipv4=10.11.12.14&direction=ingress&comment='Attacker scanning for SSH'&service=22/TCP&category='Scanning'&severity=high\r\ntimestamp=1325401200&ipv6=2001:db8:16::1&direction=ingress&comment='HTTP Response code 4xx, suspicious'&category='Reconnaissance'&severity=low\r\ntimestamp=1325401200&fqdn=bad.domain&direction=egress&comment='Malicious domain'&category='Malware Traffic'&severity=high\r\n"""
 
 CFM13ALERTUUID = """37880b79-bb9e-4025-9813-94d07981d9ff_"""
+
+
+CRISP = """{
+  "title": "CRISP-17-1111",
+  "description": "Fake report Description",
+  "package_intent": "Indicators",
+  "produced_time": "2017-04-10T20:31:02Z",
+  "tlp": "AMBER",
+  "information_source": "PNNL",
+  "indicators": [
+    {
+      "ipv4address": "10.10.10.11"
+    },
+    {
+      "ipv4address": "10.11.12.13"
+    },
+    {
+      "md5hash": "9e107d9d372bb6826bd81d3542a419d6"
+    },
+    {
+      "sha1hash": "ae147d9d372bb6826bd81d3542a419d65c29f2"
+    },
+    {
+      "sha224hash": "e7ff9d32ab4c018dd32fff98376826bd81ae147d352bb68207d9da7a"
+    },
+    {
+      "sha256hash": "32fff98ff9d32a6bd81da419d65ce147d352bb682018dd9d372bb6826bde107f"
+    },
+    {
+      "sha384hash": "fff98fdd32ff147d9d372bb682d372bb6819d65c299d372bb6826b976826b47d352bb681da419dd32fff98376826bd8b"
+    },
+    {
+      "sha512hash": "a879bac79a89e9f890a8c0a87c7b778da99ad879c79b8787aa0279b98abd89c78e09e880ff97a0870ae87b7089c07d070ab89378ad79ab79c78d9a0987c890d7"
+    },
+    {
+      "filename": "Test_File_Name"
+    },
+    {
+      "emailaddress": "fakeEmail@fake.com"
+    },
+    {
+      "filepath": "test"
+    }
+  ]
+}"""

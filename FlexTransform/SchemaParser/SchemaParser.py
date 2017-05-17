@@ -1432,7 +1432,7 @@ class SchemaParser(object):
                                                                                    TransformedData=self.transformed_data)
                             if self.trace and field in self.traceindex:
                                 self.logging.debug("[TRACE {}] - Default value was a function reference, computed new value {}".format(
-                                                                field, new_dict[field]['Value']))
+                                                                field, newDict[field]['Value']))
 
                         self._ValidateField(newDict[field], field, rowType)
 
