@@ -1,0 +1,88 @@
+{
+	"IndicatorData": {
+		"types": {
+			"DNS-Hostname-Block": [ {"domain": "*"}],
+            "IPv4-Address-Block": [ {"ipv4": "*"} ],
+            "URL-Block": [ {"uri": "*"} ]
+		},
+		"fields": {
+			"domain": {
+				"description": "The domain to be acted upon",
+				"datatype": "string",
+				"required": true,
+				"ontologyMappingType": "simple",
+				"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#DNSIndicatorValueSemanticComponent"
+			},
+			"ipv4": {
+				"description": "The IPv4 to be acted upon",
+				"datatype": "string",
+				"required": false,
+				"ontologyMappingType": "simple",
+				"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#IPv4AddressIndicatorValueSemanticComponent"
+			},
+			"uri": {
+				"description": "The URL to be acted upon",
+				"datatype": "string",
+				"required": false,
+				"ontologyMappingType": "simple",
+				"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#URLIndicatorValueSemanticComponent"
+			},
+			"time": {
+				"description": "Time value associated with indicator",
+				"datatype": "datetime",
+				"dateTimeFormat": "YYYYMMDDTHHmmss",
+				"dateTimeFormatAlternate": [" YYYYMMDDTHHmmss","YYYYMMDDTHHmmss ", "YYYYMMDDTHHmmssZ"],
+				"required": false,
+				"ontologyMappingType": "simple",
+				"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#TimeOfDetectionSemanticConcept"
+			},
+			"description1": {
+				"description": "Description associated with indicator",
+				"datatype": "string",
+				"required": true,
+				"defaultValue": "noValue",
+				"ontologyMappingType": "simple",
+				"ontologyMapping": ""
+			},
+			"description2": {
+				"description": "Description associated with indicator",
+				"datatype": "string",
+				"required": true,
+				"defaultValue": "noValue",
+				"ontologyMappingType": "simple",
+				"ontologyMapping": ""
+			},
+			"combined_description_comment": {
+				"description": "Combined [description1] & [description2] fields",
+				"datatype": "string",
+				"required": true,
+				"outputFormat": "[description1], [description2]",
+				"ontologyMappingType": "simple",
+				"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#IndicatorDescriptionSemanticConcept"
+			},
+			"sid": {
+				"description": "ID field from IID",
+				"datatype": "string",
+				"required": false,
+				"ontologyMappingType": "simple",
+				"ontologyMapping": ""
+			},
+			"target": {
+				"description": "Target field from IID",
+				"datatype": "string",
+				"required": false,
+				"defaultValue": "noValue",
+				"ontologyMappingType": "simple",
+				"ontologyMapping": ""
+			},
+			"baddom": {
+				"description": "Bad Dom, usually empty",
+				"datatype": "string",
+				"required": false,
+				"defaultValue": "noValue",
+				"ontologyMappingType": "simple",
+				"ontologyMapping": ""
+			}
+		}
+	}
+}

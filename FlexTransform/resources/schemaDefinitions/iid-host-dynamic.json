@@ -1,0 +1,19 @@
+{
+	"IndicatorData": {
+		"fields": {
+			"time": {
+				"ontologyMapping": ""
+			},
+            "durationCalculated": {
+                "description": "how long the action is supposed to be left in place",
+                "datatype": "int",
+                "defaultValue": "&calculate_duration(time)",
+                "required": false,
+                "requiredIfReferenceField": "time",
+                "requiredIfReferenceValuesMatch": ["*"],
+                "ontologyMappingType": "simple",
+                "ontologyMapping": "http://www.anl.gov/cfm/transform.owl#ActionDurationSemanticConcept"
+            }
+		}
+	}
+}

@@ -1,0 +1,18 @@
+{
+	"IndicatorData": {
+		"fields": {
+			"domain": {
+				"required": false
+			},
+			"uri": {
+				"required": true
+			},
+            "combined_description_comment": {
+                "outputFormat": "[description1], [target]"
+            },
+            "target": {
+                "required": true
+            }
+		}
+	}
+}
