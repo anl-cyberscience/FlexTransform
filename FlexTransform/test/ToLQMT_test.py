@@ -75,7 +75,7 @@ class TestCFM13AlertToLQMT(unittest.TestCase):
     #     self.assertEqual(self.cfm13_parsed_data[0]._action1, "Block")
 
     def test_cfm13_detectedTime(self):
-        self.assertEqual(self.decoded_cfm13_1[0]['detectedTime'], 1456109153)  # 14561163.0
+        self.assertEqual(self.decoded_cfm13_1[0]['detectedTime'], '1456109153')  # 14561163.0
 
     # def test_cfm13_detectedTime(self):
     #     pass
@@ -156,7 +156,7 @@ class TestCFM13AlertToLQMT(unittest.TestCase):
     #     self.assertEquals(self.cfm13_parsed_data[0]._action1, "Block")
 
     def test_cfm20_detectedTime(self):
-        self.assertEqual(self.decoded_cfm13_2[0]['detectedTime'], 1468350602)
+        self.assertEqual(self.decoded_cfm13_2[0]['detectedTime'], '1468350602')
 
     # def test_cfm20_detectedTime(self):
     #     pass
@@ -240,7 +240,7 @@ class TestSTIXTLPToLQMT(unittest.TestCase):
         self.assertEqual(self.decoded_tlp[0]['action1'], 'Block')
         self.assertEqual(self.decoded_tlp[0]['comment'], 'CRISP Report Indicator')
         self.assertEqual(self.decoded_tlp[0]['dataItemID'], 'CFM:Indicator-3e732203-d463-50ba-b6c2-26c11032a204')
-        self.assertEqual(self.decoded_tlp[0]['detectedTime'], 1458737105)
+        self.assertEqual(self.decoded_tlp[0]['detectedTime'], '1458737105')
         self.assertEqual(self.decoded_tlp[0]['directSource'], 'Fake')
         self.assertEqual(self.decoded_tlp[0]['duration1'], '86400')
         self.assertEqual(self.decoded_tlp[0]['fileHasMore'], '0')
@@ -257,7 +257,7 @@ class TestSTIXTLPToLQMT(unittest.TestCase):
         self.assertEqual(self.decoded_tlp[1]['action1'], 'Block')
         self.assertEqual(self.decoded_tlp[1]['comment'], 'CRISP Report Indicator')
         self.assertEqual(self.decoded_tlp[1]['dataItemID'], 'CFM:Indicator-82b0c3f9-95d4-5ec7-9e09-30b0bf87cfcd')
-        self.assertEqual(self.decoded_tlp[1]['detectedTime'], 1458737105)
+        self.assertEqual(self.decoded_tlp[1]['detectedTime'], '1458737105')
         self.assertEqual(self.decoded_tlp[1]['directSource'], 'Fake')
         self.assertEqual(self.decoded_tlp[1]['duration1'], '86400')
         self.assertEqual(self.decoded_tlp[1]['fileHasMore'], '0')
@@ -274,7 +274,7 @@ class TestSTIXTLPToLQMT(unittest.TestCase):
         self.assertEqual(self.decoded_tlp[2]['action1'], 'Block')
         self.assertEqual(self.decoded_tlp[2]['comment'], 'CRISP Report Indicator')
         self.assertEqual(self.decoded_tlp[2]['dataItemID'], 'CFM:Indicator-52c46f7c-cca9-5d2e-9d3b-a3b1744dcf52')
-        self.assertEqual(self.decoded_tlp[2]['detectedTime'], 1458737105)
+        self.assertEqual(self.decoded_tlp[2]['detectedTime'], '1458737105')
         self.assertEqual(self.decoded_tlp[2]['directSource'], 'Fake')
         self.assertEqual(self.decoded_tlp[2]['duration1'], '86400')
         self.assertEqual(self.decoded_tlp[2]['fileHasMore'], '0')
@@ -291,7 +291,7 @@ class TestSTIXTLPToLQMT(unittest.TestCase):
         self.assertEqual(self.decoded_tlp[3]['action1'], 'Block')
         self.assertEqual(self.decoded_tlp[3]['comment'], 'CRISP Report Indicator')
         self.assertEqual(self.decoded_tlp[3]['dataItemID'], 'CFM:Indicator-052c65e0-c667-5e4c-9970-ac9ddd3511b3')
-        self.assertEqual(self.decoded_tlp[3]['detectedTime'], 1458737105)
+        self.assertEqual(self.decoded_tlp[3]['detectedTime'], '1458737105')
         self.assertEqual(self.decoded_tlp[3]['directSource'], 'Fake')
         self.assertEqual(self.decoded_tlp[3]['duration1'], '86400')
         self.assertEqual(self.decoded_tlp[3]['fileHasMore'], '0')
@@ -308,7 +308,7 @@ class TestSTIXTLPToLQMT(unittest.TestCase):
         self.assertEqual(self.decoded_tlp[4]['action1'], 'Block')
         self.assertEqual(self.decoded_tlp[4]['comment'], 'CRISP Report Indicator')
         self.assertEqual(self.decoded_tlp[4]['dataItemID'], 'CFM:Indicator-1cf2d34d-007a-5a50-b7c1-cce9faf6f968')
-        self.assertEqual(self.decoded_tlp[4]['detectedTime'], 1458737105)
+        self.assertEqual(self.decoded_tlp[4]['detectedTime'], '1458737105')
         self.assertEqual(self.decoded_tlp[4]['directSource'], 'Fake')
         self.assertEqual(self.decoded_tlp[4]['duration1'], '86400')
         self.assertEqual(self.decoded_tlp[4]['fileHasMore'], '0')
@@ -325,7 +325,7 @@ class TestSTIXTLPToLQMT(unittest.TestCase):
         self.assertEqual(self.decoded_tlp[5]['action1'], 'Block')
         self.assertEqual(self.decoded_tlp[5]['comment'], 'CRISP Report Indicator')
         self.assertEqual(self.decoded_tlp[5]['dataItemID'], 'CFM:Indicator-2e95d2ac-1b08-5f38-8522-2f4b2ef3686c')
-        self.assertEqual(self.decoded_tlp[5]['detectedTime'], 1458737105)
+        self.assertEqual(self.decoded_tlp[5]['detectedTime'], '1458737105')
         self.assertEqual(self.decoded_tlp[5]['directSource'], 'Fake')
         self.assertEqual(self.decoded_tlp[5]['duration1'], '86400')
         self.assertEqual(self.decoded_tlp[5]['fileHasMore'], '0')
@@ -343,7 +343,7 @@ class TestSTIXTLPToLQMT(unittest.TestCase):
         self.assertEqual(self.decoded_tlp[6]['action1'], 'Block')
         self.assertEqual(self.decoded_tlp[6]['comment'], 'CRISP Report Indicator')
         self.assertEqual(self.decoded_tlp[6]['dataItemID'], 'CFM:Indicator-5fd6c616-d923-5e70-916d-dca3a2d1ee02')
-        self.assertEqual(self.decoded_tlp[6]['detectedTime'], 1458737105)
+        self.assertEqual(self.decoded_tlp[6]['detectedTime'], '1458737105')
         self.assertEqual(self.decoded_tlp[6]['directSource'], 'Fake')
         self.assertEqual(self.decoded_tlp[6]['duration1'], '86400')
         self.assertEqual(self.decoded_tlp[6]['fileHasMore'], '0')
@@ -553,7 +553,7 @@ class TestKeyValueToLQMT(unittest.TestCase):
         self.assertEqual(self.decoded_keyvalue[0]['action1'], 'Block')
         self.assertEqual(self.decoded_keyvalue[0]['comment'],
                          'Attacker scanning for RDP, direction:ingress, confidence:0, severity:high')
-        self.assertEqual(self.decoded_keyvalue[0]['detectedTime'], 1325401200)
+        self.assertEqual(self.decoded_keyvalue[0]['detectedTime'], '1325401200')
         self.assertEqual(self.decoded_keyvalue[0]['duration1'], '86400')
         self.assertEqual(self.decoded_keyvalue[0]['fileHasMore'], '0')
         self.assertEqual(self.decoded_keyvalue[0]['majorTags'], 'Scanning')
@@ -570,7 +570,7 @@ class TestKeyValueToLQMT(unittest.TestCase):
         self.assertEqual(self.decoded_keyvalue[1]['action1'], 'Block')
         self.assertEqual(self.decoded_keyvalue[1]['comment'],
                          'Attacker scanning for SSH, direction:ingress, confidence:0, severity:high')
-        self.assertEqual(self.decoded_keyvalue[1]['detectedTime'], 1325401200)
+        self.assertEqual(self.decoded_keyvalue[1]['detectedTime'], '1325401200')
         self.assertEqual(self.decoded_keyvalue[1]['duration1'], '86400')
         self.assertEqual(self.decoded_keyvalue[1]['fileHasMore'], '0')
         self.assertEqual(self.decoded_keyvalue[1]['majorTags'], 'Scanning')
@@ -587,7 +587,7 @@ class TestKeyValueToLQMT(unittest.TestCase):
         self.assertEqual(self.decoded_keyvalue[2]['action1'], 'Block')
         self.assertEqual(self.decoded_keyvalue[2]['comment'],
                          'HTTP Response code 4xx, suspicious, direction:ingress, confidence:0, severity:low')
-        self.assertEqual(self.decoded_keyvalue[2]['detectedTime'], 1325401200)
+        self.assertEqual(self.decoded_keyvalue[2]['detectedTime'], '1325401200')
         self.assertEqual(self.decoded_keyvalue[2]['duration1'], '86400')
         self.assertEqual(self.decoded_keyvalue[2]['fileHasMore'], '0')
         self.assertEqual(self.decoded_keyvalue[2]['majorTags'], 'Reconnaissance')
@@ -604,7 +604,7 @@ class TestKeyValueToLQMT(unittest.TestCase):
         self.assertEqual(self.decoded_keyvalue[3]['action1'], 'Block')
         self.assertEqual(self.decoded_keyvalue[3]['comment'],
                          'Malicious domain, direction:egress, confidence:0, severity:high')
-        self.assertEqual(self.decoded_keyvalue[3]['detectedTime'], 1325401200)
+        self.assertEqual(self.decoded_keyvalue[3]['detectedTime'], '1325401200')
         self.assertEqual(self.decoded_keyvalue[3]['duration1'], '86400')
         self.assertEqual(self.decoded_keyvalue[3]['fileHasMore'], '0')
         self.assertEqual(self.decoded_keyvalue[3]['majorTags'], 'Malware Traffic')
