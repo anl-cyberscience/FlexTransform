@@ -2,7 +2,8 @@
 	"IndicatorData": {
 		"fields": {
 			"domain": {
-				"required": false
+				"required": false,
+                "ontologyMapping": ""
 			},
 			"uri": {
 				"required": true
