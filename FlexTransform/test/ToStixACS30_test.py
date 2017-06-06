@@ -7,7 +7,7 @@ import arrow
 from lxml import etree
 
 from FlexTransform import FlexTransform
-from FlexTransform.test.SampleInputs import CFM13ALERT, CFM13ALERTUUID, STIXTLP, KEYVALUE, STIXACS, CRISP
+from FlexTransform.test.SampleInputs import CFM13ALERT, CFM13ALERTUUID, STIXTLP, KEYVALUE, STIXACS, CRISP, IIDBADIPV4, IIDDYNAMICBADHOST, IIDACTIVEBADHOST, IIDCOMBINEDRECENT
 
 class TestCFM13AlertToSTIXACS30(unittest.TestCase):
     output1 = None
@@ -1058,6 +1058,475 @@ class TestCRSIPToSTIXACS30(unittest.TestCase):
     def test_indicator_hash_xsi_type(self):
         self.assertEqual(self.output1.xpath("%s FileObj:Hashes/cyboxCommon:Hash/cyboxCommon:Type/@xsi:type" % self.properties,
                                             namespaces=self.namespace)[0], "cyboxVocabs:HashNameVocab-1.0")
+
+
+class TestIIDCombinedRecenttoSTIXACS30(unittest.TestCase):
+    output1 = None
+    utc_before = None
+    utc_after = None
+    header = "/stix:STIX_Package/stix:STIX_Header/"
+    marking = "/stix:STIX_Package/stix:STIX_Header/stix:Handling/marking:Marking/"
+    information_source = "/stix:STIX_Package/stix:STIX_Header/stix:Information_Source/"
+    indicator = "/stix:STIX_Package/stix:Indicators/stix:Indicator/"
+    sightings = "{} indicator:Sightings/".format(indicator)
+    observable = "{} indicator:Observable/".format(indicator)
+    object = "{} cybox:Object/".format(observable)
+    properties = "{} cybox:Properties/".format(object)
+
+    namespace = {
+        'cyboxCommon': "http://cybox.mitre.org/common-2",
+        'cybox': "http://cybox.mitre.org/cybox-2",
+        'cyboxVocabs': "http://cybox.mitre.org/default_vocabularies-2",
+        'URIObj': "http://cybox.mitre.org/objects#URIObject-2",
+        'marking': "http://data-marking.mitre.org/Marking-1",
+        'indicator': "http://stix.mitre.org/Indicator-2",
+        'stixCommon': "http://stix.mitre.org/common-1",
+        'stixVocabs': "http://stix.mitre.org/default_vocabularies-1",
+        'stix': "http://stix.mitre.org/stix-1",
+        'isa': "http://www.us-cert.gov/essa",
+        'edh2cyberMarkingAssert': "http://www.us-cert.gov/essa/Markings/ISAMarkingAssertions",
+        'edh2cyberMarking': "http://www.us-cert.gov/essa/Markings/ISAMarkings",
+        'xsi': "http://www.w3.org/2001/XMLSchema-instance",
+        'edh2': "urn:edm:edh:v2"
+    }
+
+    @classmethod
+    def setUpClass(cls):
+        current_dir = os.path.dirname(__file__)
+        transform = FlexTransform.FlexTransform()
+
+        with open(os.path.join(current_dir, '../resources/sampleConfigurations/iid_combined_recent.cfg'), 'r') as input_file:
+            transform.add_parser('iid_combined_recent', input_file)
+        with open(os.path.join(current_dir, '../resources/sampleConfigurations/stix_acs30.cfg'), 'r') as input_file:
+            transform.add_parser('stix_acs3', input_file)
+        output1_object = io.StringIO()
+
+        cls.utc_before = arrow.utcnow().format("YYYY-MM-DDTHH:mm:ssZZ")
+        transform.transform(io.StringIO(IIDCOMBINEDRECENT), 'iid_combined_recent', 'stix_acs3', target_file=output1_object)
+        cls.utc_after = arrow.utcnow().format("YYYY-MM-DDTHH:mm:ssZZ")
+        cls.output1 = etree.XML(output1_object.getvalue())
+
+    def test_package_timestamp(self):
+        test = self.output1.xpath("/stix:STIX_Package/@timestamp", namespaces=self.namespace)[0]
+        if test == self.utc_before:
+            self.assertEqual(test, self.utc_before)
+        else:
+            self.assertEqual(test, self.utc_after)
+
+    def test_package_intent_type(self):
+        self.assertEqual(self.output1.xpath("{} stix:Package_Intent/@xsi:type".format(self.header),
+                                            namespaces=self.namespace)[0], "stixVocabs:PackageIntentVocab-1.0")
+
+    def test_package_intent_text(self):
+        self.assertEqual(self.output1.xpath("{} stix:Package_Intent/text()".format(self.header),
+                                            namespaces=self.namespace)[0], "Indicators")
+
+    def test_controlled_structure_text(self):
+        self.assertEqual(self.output1.xpath("{} marking:Controlled_Structure/text()".format(self.marking),
+                                            namespaces=self.namespace), ["//node() | //@*"])
+
+    def test_marking_type(self):
+        self.assertEqual(set(self.output1.xpath("{} marking:Marking_Structure/@xsi:type".format(self.marking), namespaces=self.namespace)),
+                         set(["edh2cyberMarking:ISAMarkingsType", "edh2cyberMarkingAssert:ISAMarkingsAssertionType"]))
+
+    def test_marking_isam_version(self):
+        self.assertEqual(set(self.output1.xpath("{} marking:Marking_Structure/@isam_version".format(self.marking),
+                                                namespaces=self.namespace)), set(["1.0"]))
+
+    def test_marking_create_date_time(self):
+        test = self.output1.xpath("{} marking:Marking_Structure/edh2:CreateDateTime/text()".format(self.marking), namespaces=self.namespace)[0]
+        if test == self.utc_before:
+            self.assertEqual(test, self.utc_before)
+        else:
+            self.assertEqual(test, self.utc_after)
+
+    def test_marking_responsible_entity(self):
+        self.assertEqual(
+            set(self.output1.xpath("{} marking:Marking_Structure/edh2:ResponsibleEntity/text()".format(self.marking),
+                                   namespaces=self.namespace)), set(["CUST:USA.DOE"]))
+
+    def test_marking_policy_ref(self):
+        self.assertEqual(set(self.output1.xpath("{} marking:Marking_Structure/edh2:PolicyRef/text()".format(self.marking),
+                                                namespaces=self.namespace)), set(["urn:isa:policy:acs:ns:v3.0?privdefault=permit?sharedefault=permit"]))
+
+    def test_marking_control_set(self):
+        self.assertEqual(set(self.output1.xpath("{} marking:Marking_Structure/edh2:ControlSet/text()".format(self.marking),
+                                                namespaces=self.namespace)), set(["CLS:U CUI:None"]))
+
+    def test_most_restrictive(self):
+        self.assertEqual(self.output1.xpath("{} marking:Marking_Structure/@most_restrictive".format(self.marking),
+                                            namespaces=self.namespace)[0], "true")
+
+    def test_marking_accessprivilege_scope(self):
+        self.assertEqual(self.output1.xpath("{} marking:Marking_Structure/edh2:AccessPrivilege/edh2:privilegeScope/text()".format(self.marking),
+            namespaces=self.namespace)[0], "ALL")
+
+    def test_marking_accessprivilege_rule_effect(self):
+        self.assertEqual(self.output1.xpath("{} marking:Marking_Structure/edh2:AccessPrivilege/edh2:ruleEffect/text()".format(self.marking),
+            namespaces=self.namespace)[0], "deny")
+
+    def test_marking_accessprivilege_action(self):
+        self.assertEqual(self.output1.xpath("{} marking:Marking_Structure/edh2:AccessPrivilege/edh2:privilegeAction/text()".format(self.marking),
+            namespaces=self.namespace)[0], "ANONYMOUSACCESS")
+
+    def test_information_description(self):
+        self.assertEqual(self.output1.xpath("{} stixCommon:Description/text()".format(self.information_source),
+                                            namespaces=self.namespace)[0], "U.S. Department of Energy")
+
+    def test_information_name(self):
+        self.assertEqual(self.output1.xpath("{} stixCommon:Identity/stixCommon:Name/text()".format(self.information_source),
+                                            namespaces=self.namespace)[0], "DOE")
+
+class TestIIDActiveBadHosttoSTIXACS30(unittest.TestCase):
+    output1 = None
+    utc_before = None
+    utc_after = None
+    header = "/stix:STIX_Package/stix:STIX_Header/"
+    marking = "/stix:STIX_Package/stix:STIX_Header/stix:Handling/marking:Marking/"
+    information_source = "/stix:STIX_Package/stix:STIX_Header/stix:Information_Source/"
+    indicator = "/stix:STIX_Package/stix:Indicators/stix:Indicator/"
+    sightings = "{} indicator:Sightings/".format(indicator)
+    observable = "{} indicator:Observable/".format(indicator)
+    object = "{} cybox:Object/".format(observable)
+    properties = "{} cybox:Properties/".format(object)
+
+    namespace = {
+        'cyboxCommon': "http://cybox.mitre.org/common-2",
+        'cybox': "http://cybox.mitre.org/cybox-2",
+        'cyboxVocabs': "http://cybox.mitre.org/default_vocabularies-2",
+        'DomainNameObj': "http://cybox.mitre.org/objects#DomainNameObject-1",
+        'marking': "http://data-marking.mitre.org/Marking-1",
+        'indicator': "http://stix.mitre.org/Indicator-2",
+        'stixCommon': "http://stix.mitre.org/common-1",
+        'stixVocabs': "http://stix.mitre.org/default_vocabularies-1",
+        'stix': "http://stix.mitre.org/stix-1",
+        'isa': "http://www.us-cert.gov/essa",
+        'edh2cyberMarkingAssert': "http://www.us-cert.gov/essa/Markings/ISAMarkingAssertions",
+        'edh2cyberMarking': "http://www.us-cert.gov/essa/Markings/ISAMarkings",
+        'xsi': "http://www.w3.org/2001/XMLSchema-instance",
+        'edh2': "urn:edm:edh:v2"
+    }
+
+    @classmethod
+    def setUpClass(cls):
+        current_dir = os.path.dirname(__file__)
+        transform = FlexTransform.FlexTransform()
+
+        with open(os.path.join(current_dir, '../resources/sampleConfigurations/iid_host_active.cfg'), 'r') as input_file:
+            transform.add_parser('iid_host_active', input_file)
+        with open(os.path.join(current_dir, '../resources/sampleConfigurations/stix_acs30.cfg'), 'r') as input_file:
+            transform.add_parser('stix_acs3', input_file)
+        output1_object = io.StringIO()
+
+        cls.utc_before = arrow.utcnow().format("YYYY-MM-DDTHH:mm:ssZZ")
+        transform.transform(io.StringIO(IIDACTIVEBADHOST), 'iid_host_active', 'stix_acs3', target_file=output1_object)
+        cls.utc_after = arrow.utcnow().format("YYYY-MM-DDTHH:mm:ssZZ")
+        cls.output1 = etree.XML(output1_object.getvalue())
+
+    def test_package_timestamp(self):
+        test = self.output1.xpath("/stix:STIX_Package/@timestamp", namespaces=self.namespace)[0]
+        if test == self.utc_before:
+            self.assertEqual(test, self.utc_before)
+        else:
+            self.assertEqual(test, self.utc_after)
+
+    def test_package_intent_type(self):
+        self.assertEqual(self.output1.xpath("{} stix:Package_Intent/@xsi:type".format(self.header),
+                                            namespaces=self.namespace)[0], "stixVocabs:PackageIntentVocab-1.0")
+
+    def test_package_intent_text(self):
+        self.assertEqual(self.output1.xpath("{} stix:Package_Intent/text()".format(self.header),
+                                            namespaces=self.namespace)[0], "Indicators")
+
+    def test_controlled_structure_text(self):
+        self.assertEqual(self.output1.xpath("{} marking:Controlled_Structure/text()".format(self.marking),
+                                            namespaces=self.namespace), ["//node() | //@*"])
+
+    def test_marking_type(self):
+        self.assertEqual(set(self.output1.xpath("{} marking:Marking_Structure/@xsi:type".format(self.marking), namespaces=self.namespace)),
+                         set(["edh2cyberMarking:ISAMarkingsType", "edh2cyberMarkingAssert:ISAMarkingsAssertionType"]))
+
+    def test_marking_isam_version(self):
+        self.assertEqual(set(self.output1.xpath("{} marking:Marking_Structure/@isam_version".format(self.marking),
+                                                namespaces=self.namespace)), set(["1.0"]))
+
+    def test_marking_create_date_time(self):
+        test = self.output1.xpath("{} marking:Marking_Structure/edh2:CreateDateTime/text()".format(self.marking), namespaces=self.namespace)[0]
+        if test == self.utc_before:
+            self.assertEqual(test, self.utc_before)
+        else:
+            self.assertEqual(test, self.utc_after)
+
+    def test_marking_responsible_entity(self):
+        self.assertEqual(
+            set(self.output1.xpath("{} marking:Marking_Structure/edh2:ResponsibleEntity/text()".format(self.marking),
+                                   namespaces=self.namespace)), set(["CUST:USA.DOE"]))
+
+    def test_marking_policy_ref(self):
+        self.assertEqual(set(self.output1.xpath("{} marking:Marking_Structure/edh2:PolicyRef/text()".format(self.marking), namespaces=self.namespace)),
+                         set(["urn:isa:policy:acs:ns:v3.0?privdefault=permit?sharedefault=permit"]))
+
+    def test_marking_control_set(self):
+        self.assertEqual(set(self.output1.xpath("{} marking:Marking_Structure/edh2:ControlSet/text()".format(self.marking),
+                                                namespaces=self.namespace)), set(["CLS:U CUI:None"]))
+
+    def test_most_restrictive(self):
+        self.assertEqual(self.output1.xpath("{} marking:Marking_Structure/@most_restrictive".format(self.marking),
+                                            namespaces=self.namespace)[0], "true")
+
+    def test_marking_accessprivilege_scope(self):
+        self.assertEqual(self.output1.xpath("{} marking:Marking_Structure/edh2:AccessPrivilege/edh2:privilegeScope/text()".format(self.marking),
+                                            namespaces=self.namespace)[0], "ALL")
+
+    def test_marking_accessprivilege_rule_effect(self):
+        self.assertEqual(self.output1.xpath("{} marking:Marking_Structure/edh2:AccessPrivilege/edh2:ruleEffect/text()".format(self.marking),
+                                            namespaces=self.namespace)[0], "deny")
+
+    def test_marking_accessprivilege_action(self):
+        self.assertEqual(self.output1.xpath("{} marking:Marking_Structure/edh2:AccessPrivilege/edh2:privilegeAction/text()".format(self.marking),
+                                            namespaces=self.namespace)[0], "ANONYMOUSACCESS")
+
+    def test_information_description(self):
+        self.assertEqual(self.output1.xpath("{} stixCommon:Description/text()".format(self.information_source),
+                                            namespaces=self.namespace)[0], "U.S. Department of Energy")
+
+    def test_information_name(self):
+        self.assertEqual(self.output1.xpath("{} stixCommon:Identity/stixCommon:Name/text()".format(self.information_source),
+                                            namespaces=self.namespace)[0], "DOE")
+
+class TestIIDDynamicBadHosttoSTIXACS30(unittest.TestCase):
+    output1 = None
+    utc_before = None
+    utc_after = None
+    header = "/stix:STIX_Package/stix:STIX_Header/"
+    marking = "/stix:STIX_Package/stix:STIX_Header/stix:Handling/marking:Marking/"
+    information_source = "/stix:STIX_Package/stix:STIX_Header/stix:Information_Source/"
+    indicator = "/stix:STIX_Package/stix:Indicators/stix:Indicator/"
+    sightings = "{} indicator:Sightings/".format(indicator)
+    observable = "{} indicator:Observable/".format(indicator)
+    object = "{} cybox:Object/".format(observable)
+    properties = "{} cybox:Properties/".format(object)
+
+    namespace = {
+        'cyboxCommon': "http://cybox.mitre.org/common-2",
+        'cybox': "http://cybox.mitre.org/cybox-2",
+        'cyboxVocabs': "http://cybox.mitre.org/default_vocabularies-2",
+        'DomainNameObj': "http://cybox.mitre.org/objects#DomainNameObject-1",
+        'marking': "http://data-marking.mitre.org/Marking-1",
+        'indicator': "http://stix.mitre.org/Indicator-2",
+        'stixCommon': "http://stix.mitre.org/common-1",
+        'stixVocabs': "http://stix.mitre.org/default_vocabularies-1",
+        'stix': "http://stix.mitre.org/stix-1",
+        'isa': "http://www.us-cert.gov/essa",
+        'edh2cyberMarkingAssert': "http://www.us-cert.gov/essa/Markings/ISAMarkingAssertions",
+        'edh2cyberMarking': "http://www.us-cert.gov/essa/Markings/ISAMarkings",
+        'xsi': "http://www.w3.org/2001/XMLSchema-instance",
+        'edh2': "urn:edm:edh:v2"
+    }
+
+    @classmethod
+    def setUpClass(cls):
+        current_dir = os.path.dirname(__file__)
+        transform = FlexTransform.FlexTransform()
+
+        with open(os.path.join(current_dir, '../resources/sampleConfigurations/iid_host_dynamic.cfg'), 'r') as input_file:
+            transform.add_parser('iid_host_dynamic', input_file)
+        with open(os.path.join(current_dir, '../resources/sampleConfigurations/stix_acs30.cfg'), 'r') as input_file:
+            transform.add_parser('stix_acs3', input_file)
+        output1_object = io.StringIO()
+
+        cls.utc_before = arrow.utcnow().format("YYYY-MM-DDTHH:mm:ssZZ")
+        transform.transform(io.StringIO(IIDDYNAMICBADHOST), 'iid_host_dynamic', 'stix_acs3', target_file=output1_object)
+        cls.utc_after = arrow.utcnow().format("YYYY-MM-DDTHH:mm:ssZZ")
+        cls.output1 = etree.XML(output1_object.getvalue())
+
+    def test_package_timestamp(self):
+        test = self.output1.xpath("/stix:STIX_Package/@timestamp", namespaces=self.namespace)[0]
+        if test == self.utc_before:
+            self.assertEqual(test, self.utc_before)
+        else:
+            self.assertEqual(test, self.utc_after)
+
+    def test_package_intent_type(self):
+        self.assertEqual(self.output1.xpath("{} stix:Package_Intent/@xsi:type".format(self.header),
+                                            namespaces=self.namespace)[0], "stixVocabs:PackageIntentVocab-1.0")
+
+    def test_package_intent_text(self):
+        self.assertEqual(self.output1.xpath("{} stix:Package_Intent/text()".format(self.header),
+                                            namespaces=self.namespace)[0], "Indicators")
+
+    def test_controlled_structure_text(self):
+        self.assertEqual(self.output1.xpath("{} marking:Controlled_Structure/text()".format(self.marking),
+                                            namespaces=self.namespace), ["//node() | //@*"])
+
+    def test_marking_type(self):
+        self.assertEqual(set(self.output1.xpath("{} marking:Marking_Structure/@xsi:type".format(self.marking), namespaces=self.namespace)),
+                         set(["edh2cyberMarking:ISAMarkingsType", "edh2cyberMarkingAssert:ISAMarkingsAssertionType"]))
+
+    def test_marking_isam_version(self):
+        self.assertEqual(set(self.output1.xpath("{} marking:Marking_Structure/@isam_version".format(self.marking),
+                                                namespaces=self.namespace)), set(["1.0"]))
+
+    def test_marking_create_date_time(self):
+        test = self.output1.xpath("{} marking:Marking_Structure/edh2:CreateDateTime/text()".format(self.marking), namespaces=self.namespace)[0]
+        if test == self.utc_before:
+            self.assertEqual(test, self.utc_before)
+        else:
+            self.assertEqual(test, self.utc_after)
+
+    def test_marking_responsible_entity(self):
+        self.assertEqual(
+            set(self.output1.xpath("{} marking:Marking_Structure/edh2:ResponsibleEntity/text()".format(self.marking),
+                                   namespaces=self.namespace)), set(["CUST:USA.DOE"]))
+
+    def test_marking_policy_ref(self):
+        self.assertEqual(set(self.output1.xpath("{} marking:Marking_Structure/edh2:PolicyRef/text()".format(self.marking), namespaces=self.namespace)),
+                         set(["urn:isa:policy:acs:ns:v3.0?privdefault=permit?sharedefault=permit"]))
+
+    def test_marking_control_set(self):
+        self.assertEqual(set(self.output1.xpath("{} marking:Marking_Structure/edh2:ControlSet/text()".format(self.marking),
+                                                namespaces=self.namespace)), set(["CLS:U CUI:None"]))
+
+    def test_most_restrictive(self):
+        self.assertEqual(self.output1.xpath("{} marking:Marking_Structure/@most_restrictive".format(self.marking),
+                                            namespaces=self.namespace)[0], "true")
+
+    def test_marking_accessprivilege_scope(self):
+        self.assertEqual(self.output1.xpath("{} marking:Marking_Structure/edh2:AccessPrivilege/edh2:privilegeScope/text()".format(self.marking),
+                                            namespaces=self.namespace)[0], "ALL")
+
+    def test_marking_accessprivilege_rule_effect(self):
+        self.assertEqual(self.output1.xpath("{} marking:Marking_Structure/edh2:AccessPrivilege/edh2:ruleEffect/text()".format(self.marking),
+                                            namespaces=self.namespace)[0], "deny")
+
+    def test_marking_accessprivilege_action(self):
+        self.assertEqual(self.output1.xpath("{} marking:Marking_Structure/edh2:AccessPrivilege/edh2:privilegeAction/text()".format(self.marking),
+                                            namespaces=self.namespace)[0], "ANONYMOUSACCESS")
+
+    def test_information_description(self):
+        self.assertEqual(self.output1.xpath("{} stixCommon:Description/text()".format(self.information_source),
+                                            namespaces=self.namespace)[0], "U.S. Department of Energy")
+
+    def test_information_name(self):
+        self.assertEqual(self.output1.xpath("{} stixCommon:Identity/stixCommon:Name/text()".format(self.information_source),
+                                            namespaces=self.namespace)[0], "DOE")
+
+class TestIIDIPV4RecenttoSTIXACS30(unittest.TestCase):
+    output1 = None
+    utc_before = None
+    utc_after = None
+    header = "/stix:STIX_Package/stix:STIX_Header/"
+    marking = "/stix:STIX_Package/stix:STIX_Header/stix:Handling/marking:Marking/"
+    information_source = "/stix:STIX_Package/stix:STIX_Header/stix:Information_Source/"
+    indicator = "/stix:STIX_Package/stix:Indicators/stix:Indicator/"
+    sightings = "{} indicator:Sightings/".format(indicator)
+    observable = "{} indicator:Observable/".format(indicator)
+    object = "{} cybox:Object/".format(observable)
+    properties = "{} cybox:Properties/".format(object)
+
+    namespace = {
+        'cyboxCommon': "http://cybox.mitre.org/common-2",
+        'cybox': "http://cybox.mitre.org/cybox-2",
+        'cyboxVocabs': "http://cybox.mitre.org/default_vocabularies-2",
+        'AddressObj': "http://cybox.mitre.org/objects#AddressObject-2",
+        'marking': "http://data-marking.mitre.org/Marking-1",
+        'indicator': "http://stix.mitre.org/Indicator-2",
+        'stixCommon': "http://stix.mitre.org/common-1",
+        'stixVocabs': "http://stix.mitre.org/default_vocabularies-1",
+        'stix': "http://stix.mitre.org/stix-1",
+        'isa': "http://www.us-cert.gov/essa",
+        'edh2cyberMarkingAssert': "http://www.us-cert.gov/essa/Markings/ISAMarkingAssertions",
+        'edh2cyberMarking': "http://www.us-cert.gov/essa/Markings/ISAMarkings",
+        'xsi': "http://www.w3.org/2001/XMLSchema-instance",
+        'edh2': "urn:edm:edh:v2"
+    }
+
+    @classmethod
+    def setUpClass(cls):
+        current_dir = os.path.dirname(__file__)
+        transform = FlexTransform.FlexTransform()
+
+        with open(os.path.join(current_dir, '../resources/sampleConfigurations/iid_host_dynamic.cfg'), 'r') as input_file:
+            transform.add_parser('iid_host_dynamic', input_file)
+        with open(os.path.join(current_dir, '../resources/sampleConfigurations/stix_acs30.cfg'), 'r') as input_file:
+            transform.add_parser('stix_acs3', input_file)
+        output1_object = io.StringIO()
+
+        cls.utc_before = arrow.utcnow().format("YYYY-MM-DDTHH:mm:ssZZ")
+        transform.transform(io.StringIO(IIDDYNAMICBADHOST), 'iid_host_dynamic', 'stix_acs3', target_file=output1_object)
+        cls.utc_after = arrow.utcnow().format("YYYY-MM-DDTHH:mm:ssZZ")
+        cls.output1 = etree.XML(output1_object.getvalue())
+
+    def test_package_timestamp(self):
+        test = self.output1.xpath("/stix:STIX_Package/@timestamp", namespaces=self.namespace)[0]
+        if test == self.utc_before:
+            self.assertEqual(test, self.utc_before)
+        else:
+            self.assertEqual(test, self.utc_after)
+
+    def test_package_intent_type(self):
+        self.assertEqual(self.output1.xpath("{} stix:Package_Intent/@xsi:type".format(self.header),
+                                            namespaces=self.namespace)[0], "stixVocabs:PackageIntentVocab-1.0")
+
+    def test_package_intent_text(self):
+        self.assertEqual(self.output1.xpath("{} stix:Package_Intent/text()".format(self.header),
+                                            namespaces=self.namespace)[0], "Indicators")
+
+    def test_controlled_structure_text(self):
+        self.assertEqual(self.output1.xpath("{} marking:Controlled_Structure/text()".format(self.marking),
+                                            namespaces=self.namespace), ["//node() | //@*"])
+
+    def test_marking_type(self):
+        self.assertEqual(set(self.output1.xpath("{} marking:Marking_Structure/@xsi:type".format(self.marking), namespaces=self.namespace)),
+                         set(["edh2cyberMarking:ISAMarkingsType", "edh2cyberMarkingAssert:ISAMarkingsAssertionType"]))
+
+    def test_marking_isam_version(self):
+        self.assertEqual(set(self.output1.xpath("{} marking:Marking_Structure/@isam_version".format(self.marking),
+                                                namespaces=self.namespace)), set(["1.0"]))
+
+    def test_marking_create_date_time(self):
+        test = self.output1.xpath("{} marking:Marking_Structure/edh2:CreateDateTime/text()".format(self.marking), namespaces=self.namespace)[0]
+        if test == self.utc_before:
+            self.assertEqual(test, self.utc_before)
+        else:
+            self.assertEqual(test, self.utc_after)
+
+    def test_marking_responsible_entity(self):
+        self.assertEqual(
+            set(self.output1.xpath("{} marking:Marking_Structure/edh2:ResponsibleEntity/text()".format(self.marking),
+                                   namespaces=self.namespace)), set(["CUST:USA.DOE"]))
+
+    def test_marking_policy_ref(self):
+        self.assertEqual(set(self.output1.xpath("{} marking:Marking_Structure/edh2:PolicyRef/text()".format(self.marking), namespaces=self.namespace)),
+                         set(["urn:isa:policy:acs:ns:v3.0?privdefault=permit?sharedefault=permit"]))
+
+    def test_marking_control_set(self):
+        self.assertEqual(set(self.output1.xpath("{} marking:Marking_Structure/edh2:ControlSet/text()".format(self.marking),
+                                                namespaces=self.namespace)), set(["CLS:U CUI:None"]))
+
+    def test_most_restrictive(self):
+        self.assertEqual(self.output1.xpath("{} marking:Marking_Structure/@most_restrictive".format(self.marking),
+                                            namespaces=self.namespace)[0], "true")
+
+    def test_marking_accessprivilege_scope(self):
+        self.assertEqual(self.output1.xpath("{} marking:Marking_Structure/edh2:AccessPrivilege/edh2:privilegeScope/text()".format(self.marking),
+                                            namespaces=self.namespace)[0], "ALL")
+
+    def test_marking_accessprivilege_rule_effect(self):
+        self.assertEqual(self.output1.xpath("{} marking:Marking_Structure/edh2:AccessPrivilege/edh2:ruleEffect/text()".format(self.marking),
+                                            namespaces=self.namespace)[0], "deny")
+
+    def test_marking_accessprivilege_action(self):
+        self.assertEqual(self.output1.xpath("{} marking:Marking_Structure/edh2:AccessPrivilege/edh2:privilegeAction/text()".format(self.marking),
+                                            namespaces=self.namespace)[0], "ANONYMOUSACCESS")
+
+    def test_information_description(self):
+        self.assertEqual(self.output1.xpath("{} stixCommon:Description/text()".format(self.information_source),
+                                            namespaces=self.namespace)[0], "U.S. Department of Energy")
+
+    def test_information_name(self):
+        self.assertEqual(self.output1.xpath("{} stixCommon:Identity/stixCommon:Name/text()".format(self.information_source),
+                                            namespaces=self.namespace)[0], "DOE")
 
 
 if __name__ == '__main__':
