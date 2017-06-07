@@ -66,7 +66,7 @@ class GlobalFunctions(object):
                     else:
                         value = arrow.get(rawctime).format(args['fieldDict']['dateTimeFormat'])
                 except OSError as e:
-                    self.logging.warn("Could not get file ctime for {}: {}".format(args['fileName'], e))
+                    self.logging.warning("Could not get file ctime for {}: {}".format(args['fileName'], e))
 
         elif function_name == 'getFileUUID':
             if 'fileName' in args and args['fileName']:
@@ -78,8 +78,8 @@ class GlobalFunctions(object):
                     value = result.group(1)
                 else:
                     value = None
-                    self.logging.warn("getFileUUID: could not extract UUID from filename {} using regex {}".format(baseName,args['functionArg']))
+                    self.logging.warning("getFileUUID: could not extract UUID from filename {} using regex {}".format(baseName,args['functionArg']))
             if value is None:
-                self.logging.warn("getFileUUID: no fileName provided in args(); could not extract UUID.")
+                self.logging.warning("getFileUUID: no fileName provided in args(); could not extract UUID.")
 
         return value

@@ -541,12 +541,13 @@ class TestIIDCombinedRecentToCFM13Alert(unittest.TestCase):
 
     def test_alert_classification(self):
         self.assertEqual(set(self.output1.xpath("{} /@text".format(self.classification), namespaces=self.namespace)),
-                         set(["URL Block: Phishing, ABSA BANK", "Domain Block: Phishing, CENTURYLINK", "Domain Block: Phishing, APPLE ID",
-                              "Domain Block: Phishing, YAHOO.COM", "Domain Block: Phishing, AMAZON", "Domain Block: Phishing, SUNTRUST"]))
+                         set(["URL Block: Phishing, ABSA BANK", "URL Block: Phishing, CENTURYLINK", "URL Block: Phishing, APPLE ID",
+                              "URL Block: Phishing, YAHOO.COM", "URL Block: Phishing, AMAZON", "URL Block: Phishing, SUNTRUST"]))
 
     def test_duration_time(self):
         self.assertEqual(set(self.output1.xpath("//xmlns:Alert//xmlns:AdditionalData[@meaning='duration']/text()", namespaces=self.namespace)),
                          set(["0"]))
+
 
 class TestIIDActiveBadHostToCFM13Alert(unittest.TestCase):
     output1 = None
@@ -654,6 +655,7 @@ class TestIIDActiveBadHostToCFM13Alert(unittest.TestCase):
     def test_duration_time(self):
         self.assertEqual(set(self.output1.xpath("//xmlns:Alert//xmlns:AdditionalData[@meaning='duration']/text()", namespaces=self.namespace)),
                          set(["0"]))
+
 
 class TestIIDDynamicBadHostToCFM13Alert(unittest.TestCase):
     output1 = None
@@ -770,6 +772,7 @@ class TestIIDDynamicBadHostToCFM13Alert(unittest.TestCase):
         self.assertEqual(set(self.output1.xpath("//xmlns:Alert//xmlns:AdditionalData[@meaning='duration']/text()", namespaces=self.namespace)),
                          set(["3600", "345600", "0"]))
 
+
 class TestIIDBadIPV4ToCFM13Alert(unittest.TestCase):
     output1 = None
     utc_before = None
@@ -873,5 +876,6 @@ class TestIIDBadIPV4ToCFM13Alert(unittest.TestCase):
     def test_duration_time(self):
         self.assertEqual(set(self.output1.xpath("//xmlns:Alert//xmlns:AdditionalData[@meaning='duration']/text()", namespaces=self.namespace)),
                          set(["0"]))
+
 if __name__ == '__main__':
     unittest.main()
