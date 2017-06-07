@@ -248,6 +248,8 @@ class Config(object):
                     self._MergeDictionaries(originalDict[k],SourceDataRow[k])
                 elif (isinstance(v,list)):
                     originalDict.append(v)
+                elif v is None:
+                    del originalDict[k]
                 else:
                     originalDict[k] = v
             else:
