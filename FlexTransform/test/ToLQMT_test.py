@@ -321,42 +321,110 @@ class TestSTIXTLPToLQMT(unittest.TestCase):
         self.assertEqual(self.decoded_tlp[4]['sensitivity'], 'noSensitivity')
         self.assertTrue(self.utc_before.timestamp <= utc_now <= self.utc_after.timestamp,
                         "Processed Time does not fall within time range of Entry 4.")
-
+    
     def test_stixtlp_entry5(self):
         utc_now = int(self.decoded_tlp[5]['processedTime'])
         self.assertEqual(self.decoded_tlp[5]['action1'], 'Block')
         self.assertEqual(self.decoded_tlp[5]['comment'], 'CRISP Report Indicator')
-        self.assertEqual(self.decoded_tlp[5]['dataItemID'], 'CFM:Indicator-2e95d2ac-1b08-5f38-8522-2f4b2ef3686c')
+        self.assertEqual(self.decoded_tlp[5]['dataItemID'], 'CFM:Indicator-92130d2c-c3e6-5ed9-bcdc-c826c5d2c5b4')
         self.assertEqual(self.decoded_tlp[5]['detectedTime'], '1458737105')
         self.assertEqual(self.decoded_tlp[5]['directSource'], 'Fake')
         self.assertEqual(self.decoded_tlp[5]['duration1'], '86400')
         self.assertEqual(self.decoded_tlp[5]['fileHasMore'], '0')
         self.assertEqual(self.decoded_tlp[5]['fileID'], 'CFM:STIXPackage-21856f56-eb97-50ca-bfb0-bd425e3d01c0')
-        self.assertEqual(self.decoded_tlp[5]['indicator'], 'bad.domain.be/poor/path')
-        self.assertEqual(self.decoded_tlp[5]['indicatorType'], 'URL')
+        self.assertEqual(self.decoded_tlp[5]['indicator'], 'D://replacement.exe')
+        self.assertEqual(self.decoded_tlp[5]['indicatorType'], 'FilePath')
         self.assertEqual(self.decoded_tlp[5]['reconAllowed'], '1')
-        self.assertEqual(self.decoded_tlp[5]['secondaryIndicatorType'], 'URL')
         self.assertEqual(self.decoded_tlp[5]['sensitivity'], 'noSensitivity')
         self.assertTrue(self.utc_before.timestamp <= utc_now <= self.utc_after.timestamp,
-                        "Processed Time does not fall within time range of Entry 5.")
-
+                        "Processed Time does not fall within time range of Entry 6.")
+    
     def test_stixtlp_entry6(self):
         utc_now = int(self.decoded_tlp[6]['processedTime'])
         self.assertEqual(self.decoded_tlp[6]['action1'], 'Block')
         self.assertEqual(self.decoded_tlp[6]['comment'], 'CRISP Report Indicator')
-        self.assertEqual(self.decoded_tlp[6]['dataItemID'], 'CFM:Indicator-5fd6c616-d923-5e70-916d-dca3a2d1ee02')
+        self.assertEqual(self.decoded_tlp[6]['dataItemID'], 'CFM:Indicator-1bed1aca-30e1-5ad3-8bee-6c1dfbff157d')
         self.assertEqual(self.decoded_tlp[6]['detectedTime'], '1458737105')
         self.assertEqual(self.decoded_tlp[6]['directSource'], 'Fake')
         self.assertEqual(self.decoded_tlp[6]['duration1'], '86400')
         self.assertEqual(self.decoded_tlp[6]['fileHasMore'], '0')
         self.assertEqual(self.decoded_tlp[6]['fileID'], 'CFM:STIXPackage-21856f56-eb97-50ca-bfb0-bd425e3d01c0')
-        self.assertEqual(self.decoded_tlp[6]['indicator'], 'fake.site.com/malicious.js')
-        self.assertEqual(self.decoded_tlp[6]['indicatorType'], 'URL')
+        self.assertEqual(self.decoded_tlp[6]['indicator'], '/user/strange/object.sh')
+        self.assertEqual(self.decoded_tlp[6]['indicatorType'], 'FilePath')
         self.assertEqual(self.decoded_tlp[6]['reconAllowed'], '1')
-        self.assertEqual(self.decoded_tlp[6]['secondaryIndicatorType'], 'URL')
         self.assertEqual(self.decoded_tlp[6]['sensitivity'], 'noSensitivity')
         self.assertTrue(self.utc_before.timestamp <= utc_now <= self.utc_after.timestamp,
                         "Processed Time does not fall within time range of Entry 6.")
+    
+    def test_stixtlp_entry7(self):
+        utc_now = int(self.decoded_tlp[7]['processedTime'])
+        self.assertEqual(self.decoded_tlp[7]['action1'], 'Block')
+        self.assertEqual(self.decoded_tlp[7]['comment'], 'CRISP Report Indicator')
+        self.assertEqual(self.decoded_tlp[7]['dataItemID'], 'CFM:Indicator-8b3ac40a-8595-50fe-bea1-fbd1d85cc428')
+        self.assertEqual(self.decoded_tlp[7]['detectedTime'], '1458737105')
+        self.assertEqual(self.decoded_tlp[7]['directSource'], 'Fake')
+        self.assertEqual(self.decoded_tlp[7]['duration1'], '86400')
+        self.assertEqual(self.decoded_tlp[7]['fileHasMore'], '0')
+        self.assertEqual(self.decoded_tlp[7]['fileID'], 'CFM:STIXPackage-21856f56-eb97-50ca-bfb0-bd425e3d01c0')
+        self.assertEqual(self.decoded_tlp[7]['indicator'], 'C://window32/tst.dat')
+        self.assertEqual(self.decoded_tlp[7]['indicatorType'], 'FilePath')
+        self.assertEqual(self.decoded_tlp[7]['reconAllowed'], '1')
+        self.assertEqual(self.decoded_tlp[7]['sensitivity'], 'noSensitivity')
+        self.assertTrue(self.utc_before.timestamp <= utc_now <= self.utc_after.timestamp,
+                        "Processed Time does not fall within time range of Entry 7.")
+    
+    def test_stixtlp_entry8(self):
+        utc_now = int(self.decoded_tlp[8]['processedTime'])
+        self.assertEqual(self.decoded_tlp[8]['action1'], 'Block')
+        self.assertEqual(self.decoded_tlp[8]['comment'], 'CRISP Report Indicator')
+        self.assertEqual(self.decoded_tlp[8]['dataItemID'], 'CFM:Indicator-a9b071be-fa18-5b49-9d15-e487836adb49')
+        self.assertEqual(self.decoded_tlp[8]['detectedTime'], '1458737105')
+        self.assertEqual(self.decoded_tlp[8]['directSource'], 'Fake')
+        self.assertEqual(self.decoded_tlp[8]['duration1'], '86400')
+        self.assertEqual(self.decoded_tlp[8]['fileHasMore'], '0')
+        self.assertEqual(self.decoded_tlp[8]['fileID'], 'CFM:STIXPackage-21856f56-eb97-50ca-bfb0-bd425e3d01c0')
+        self.assertEqual(self.decoded_tlp[8]['indicator'], 'webmail.p55.be')
+        self.assertEqual(self.decoded_tlp[8]['indicatorType'], 'FilePath')
+        self.assertEqual(self.decoded_tlp[8]['reconAllowed'], '1')
+        self.assertEqual(self.decoded_tlp[8]['sensitivity'], 'noSensitivity')
+        self.assertTrue(self.utc_before.timestamp <= utc_now <= self.utc_after.timestamp,
+                        "Processed Time does not fall within time range of Entry 8.")
+        
+    def test_stixtlp_entry9(self):
+        utc_now = int(self.decoded_tlp[9]['processedTime'])
+        self.assertEqual(self.decoded_tlp[9]['action1'], 'Block')
+        self.assertEqual(self.decoded_tlp[9]['comment'], 'CRISP Report Indicator')
+        self.assertEqual(self.decoded_tlp[9]['dataItemID'], 'CFM:Indicator-2e95d2ac-1b08-5f38-8522-2f4b2ef3686c')
+        self.assertEqual(self.decoded_tlp[9]['detectedTime'], '1458737105')
+        self.assertEqual(self.decoded_tlp[9]['directSource'], 'Fake')
+        self.assertEqual(self.decoded_tlp[9]['duration1'], '86400')
+        self.assertEqual(self.decoded_tlp[9]['fileHasMore'], '0')
+        self.assertEqual(self.decoded_tlp[9]['fileID'], 'CFM:STIXPackage-21856f56-eb97-50ca-bfb0-bd425e3d01c0')
+        self.assertEqual(self.decoded_tlp[9]['indicator'], 'bad.domain.be/poor/path')
+        self.assertEqual(self.decoded_tlp[9]['indicatorType'], 'URL')
+        self.assertEqual(self.decoded_tlp[9]['reconAllowed'], '1')
+        self.assertEqual(self.decoded_tlp[9]['secondaryIndicatorType'], 'URL')
+        self.assertEqual(self.decoded_tlp[9]['sensitivity'], 'noSensitivity')
+        self.assertTrue(self.utc_before.timestamp <= utc_now <= self.utc_after.timestamp,
+                        "Processed Time does not fall within time range of Entry 9.")
+
+    def test_stixtlp_entry10(self):
+        utc_now = int(self.decoded_tlp[10]['processedTime'])
+        self.assertEqual(self.decoded_tlp[10]['action1'], 'Block')
+        self.assertEqual(self.decoded_tlp[10]['comment'], 'CRISP Report Indicator')
+        self.assertEqual(self.decoded_tlp[10]['dataItemID'], 'CFM:Indicator-5fd6c616-d923-5e70-916d-dca3a2d1ee02')
+        self.assertEqual(self.decoded_tlp[10]['detectedTime'], '1458737105')
+        self.assertEqual(self.decoded_tlp[10]['directSource'], 'Fake')
+        self.assertEqual(self.decoded_tlp[10]['duration1'], '86400')
+        self.assertEqual(self.decoded_tlp[10]['fileHasMore'], '0')
+        self.assertEqual(self.decoded_tlp[10]['fileID'], 'CFM:STIXPackage-21856f56-eb97-50ca-bfb0-bd425e3d01c0')
+        self.assertEqual(self.decoded_tlp[10]['indicator'], 'fake.site.com/malicious.js')
+        self.assertEqual(self.decoded_tlp[10]['indicatorType'], 'URL')
+        self.assertEqual(self.decoded_tlp[10]['reconAllowed'], '1')
+        self.assertEqual(self.decoded_tlp[10]['secondaryIndicatorType'], 'URL')
+        self.assertEqual(self.decoded_tlp[10]['sensitivity'], 'noSensitivity')
+        self.assertTrue(self.utc_before.timestamp <= utc_now <= self.utc_after.timestamp,
+                        "Processed Time does not fall within time range of Entry 10.")
 
 
 class TestSTIXACSToLQMT(unittest.TestCase):
