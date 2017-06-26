@@ -9,6 +9,8 @@ Test module utilities
 '''
 
 import json
+import arrow
+import csv
 
 def deep_sort(obj):
     """
@@ -40,4 +42,26 @@ def deep_sort(obj):
         _sorted = obj
 
     return _sorted
+
+#Used for test cases where the time is based on the current time
+#so that test cases dont fail everytime due to there being a constant change
+#in the value between the current time and the values stored in the data.
+def dynamic_time_change(data):
+    index = 0
+    newData = """"""
+    reader = csv.reader(data.split(), delimiter=',', quotechar='"')
+    for row in reader:
+        for x in range(len(row)):
+            row[x] = '\"' + row[x] + '\"'
+        if (index < 7):
+            newData += ','.join(row) + '\n'
+        elif (index == 7):
+            row[1] = arrow.utcnow().replace(hours=1).format('YYYYMMDDTHHmmss') + 'Z'
+            newData += ','.join(row) + '\n'
+        else:
+            row[1] = arrow.utcnow().replace(days=4).format('YYYYMMDDTHHmmss') + 'Z'
+            newData += ','.join(row) + '\n'
+        index += 1
+
+    return newData
         

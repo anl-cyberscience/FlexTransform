@@ -1,0 +1,12 @@
+{
+	"IndicatorData": {
+		"fields": {
+			"domain": {
+				"required": false
+			},
+            "ipv4": {
+				"required": true
+			}
+		}
+	}
+}

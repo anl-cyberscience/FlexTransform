@@ -39,15 +39,16 @@ class GlobalFunctions(object):
     '''
     
     __FunctionNames = {
-                       'DocumentHeaderData': {
-                                              'countOfIndicators': ['transformedData'],
-                                              'now': ['fieldDict'],
-                                             },
-                       'IndicatorData':      {
-                                              'now': ['fieldDict'],
-                                              'generate_uuid': None,
-                                             }
-                      }
+        'DocumentHeaderData': {
+            'countOfIndicators': ['transformedData'],
+            'now': ['fieldDict'],
+        },
+        'IndicatorData': {
+            'calculate_duration': ['currentRow'],
+            'now': ['fieldDict'],
+            'generate_uuid': None,
+        }
+    }
 
     def __init__(self):
         """
@@ -71,8 +72,17 @@ class GlobalFunctions(object):
         if function_name not in self.__FunctionNames[scope]:
             raise Exception('FunctionNotDefined',
                             'Function %s is not defined in GlobalFunctions for document scope %s' % (function_name, scope))
-        
-        if function_name == 'now':
+        if function_name == 'calculate_duration':
+            if 'functionArg' not in args or not args['functionArg']:
+                self.logging.error('FlexT function "calculate_duration" requires the field name to base value on')
+            elif args['functionArg'] not in args['currentRow']:
+                self.logging.error('FlexT function "calculate_duration": {} not in {}'.format(args['functionArg'], list(args['currentRow'].keys())))
+            elif args['currentRow'][args['functionArg']]['ParsedValue']:
+                duration_val = arrow.get(args['currentRow'][args['functionArg']]['ParsedValue']).timestamp - arrow.utcnow().timestamp
+                if duration_val < 0:
+                    return "0"
+                return str(duration_val)
+        elif function_name == 'now':
             if 'dateTimeFormat' in args['fieldDict']:
                 if args['fieldDict']['dateTimeFormat'] == 'unixtime':
                     value = str(arrow.utcnow().timestamp)

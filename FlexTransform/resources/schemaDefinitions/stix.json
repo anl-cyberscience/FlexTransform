@@ -99,7 +99,10 @@
 				"defaultValue": "Indicators",
 				"ontologyMappingType": "enum",
 				"memberof": "package_intents",
-				"enumValues": { 
+				"enumValues": {
+					"Courses of Action": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#CoursesOfActionCategorySemanticConcept"
+					},
 					"Indicators - Network Activity": {
 						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#IndicatorCategoryNetworkActivitySemanticConcept"
 					},
@@ -374,18 +377,18 @@
 				"multiple": true,
 				"ontologyMappingType": "none",
 				"subfields": {
-								"indicator_type": {"required": true, "primaryKey": true}, 
+								"indicator_type": {"required": true, "primaryKey": true},
 								"indicator_type_vocab": {"required": true}
 				}
 			},
 			"indicator_type": {
 				"description": "The type of indicator",
-				"valuemap": "indicator_types;value", 
+				"valuemap": "indicator_types;value",
 				"datatype": "enum",
 				"required": false,
 				"ontologyMappingType": "enum",
 				"memberof": "indicator_types",
-				"enumValues": { 
+				"enumValues": {
 					"IP Watchlist": {
 						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#IndicatorCategoryIPWatchlistSemanticConcept",
 						"reverseOntologyMappings": [
@@ -416,7 +419,10 @@
 						"reverseOntologyMappings": [
 							"http://www.anl.gov/cfm/transform.owl#MD5FilehashIndicatorValueSemanticComponent",
 							"http://www.anl.gov/cfm/transform.owl#SHA1FilehashIndicatorValueSemanticComponent",
-							"http://www.anl.gov/cfm/transform.owl#SHA256FilehashIndicatorValueSemanticComponent"
+							"http://www.anl.gov/cfm/transform.owl#SHA256FilehashIndicatorValueSemanticComponent",
+                            "http://www.anl.gov/cfm/transform.owl#SHA224FilehashIndicatorValueSemanticComponent",
+                            "http://www.anl.gov/cfm/transform.owl#SHA384FilehashIndicatorValueSemanticComponent",
+                            "http://www.anl.gov/cfm/transform.owl#SHA512FilehashIndicatorValueSemanticComponent"
 						]
 					},
 					"Malicious E-mail": {
@@ -438,13 +444,13 @@
 			},
 			"indicator_type_vocab": {
 				"description": "The vocabulary for the type of indicator data in the row",
-				"valuemap": "indicator_types;xsi:type", 
+				"valuemap": "indicator_types;xsi:type",
 				"datatype": "enum",
 				"required": false,
 				"memberof": "indicator_types",
 				"defaultValue": "stixVocabs:IndicatorTypeVocab-1.1",
 				"ontologyMappingType": "enum",
-				"enumValues": { 
+				"enumValues": {
 					"stixVocabs:IndicatorTypeVocab-1.1": {
 						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#IndicatorTypeVocabularly1-1SemanticConcept"
 					}
@@ -479,11 +485,11 @@
 			},
 			"observable_object_category": {
 				"description": "The category of the indicator object",
-				"valuemap": "observable;object;properties;category", 
+				"valuemap": "observable;object;properties;category",
 				"datatype": "enum",
 				"defaultValue": "ipv4-addr",
 				"requiredIfReferenceField": "observable_object_xsitype",
-				"requiredIfReferenceValuesMatch": [ "AddressObjectType" ], 
+				"requiredIfReferenceValuesMatch": [ "AddressObjectType" ],
 				"ontologyMappingType": "enum",
 				"enumValues": {
 					"ipv4-addr": {
@@ -570,6 +576,9 @@
 							"http://www.anl.gov/cfm/transform.owl#MD5FilehashIndicatorValueSemanticComponent",
 							"http://www.anl.gov/cfm/transform.owl#SHA1FilehashIndicatorValueSemanticComponent",
 							"http://www.anl.gov/cfm/transform.owl#SHA256FilehashIndicatorValueSemanticComponent",
+                            "http://www.anl.gov/cfm/transform.owl#SHA224FilehashIndicatorValueSemanticComponent",
+                            "http://www.anl.gov/cfm/transform.owl#SHA384FilehashIndicatorValueSemanticComponent",
+                            "http://www.anl.gov/cfm/transform.owl#SHA512FilehashIndicatorValueSemanticComponent",
 							"http://www.anl.gov/cfm/transform.owl#FilepathIndicatorValueSemanticConcept",
 							"http://www.anl.gov/cfm/transform.owl#FileNameIndicatorTypeSemanticComponent"
 						]
@@ -695,7 +704,7 @@
 			},
 			"observable_object_sizeinbytes_value": {
 				"description": "The file size in bytes to match",
-				"valuemap": "observable;object;properties;size_in_bytes;value", 
+				"valuemap": "observable;object;properties;size_in_bytes;value",
 				"datatype": "int",
 				"required": false,
 				"multiple": true,
@@ -704,11 +713,11 @@
 			},
 			"observable_object_sizeinbytes_condition": {
 				"description": "The match condition for the file size in bytes object",
-				"valuemap": "observable;object;properties;size_in_bytes;condition", 
+				"valuemap": "observable;object;properties;size_in_bytes;condition",
 				"datatype": "enum",
 				"defaultValue": "Equals",
 				"requiredIfReferenceField": "observable_object_sizeinbytes_value",
-				"requiredIfReferenceValuesMatch": [ "*" ], 
+				"requiredIfReferenceValuesMatch": [ "*" ],
 				"ontologyMappingType": "enum",
 				"enumValues": {
 					"Equals": {
@@ -718,7 +727,7 @@
 			},
 			"observable_object_sizeinbytes_applycondition": {
 				"description": "The match condition for the file size in bytes object if there are multiple values",
-				"valuemap": "observable;object;properties;size_in_bytes;apply_condition", 
+				"valuemap": "observable;object;properties;size_in_bytes;apply_condition",
 				"datatype": "enum",
 				"defaultValue": "Equals",
 				"required": false,
@@ -731,10 +740,10 @@
 			},
 			"observable_object_value_value": {
 				"description": "The value of the DNS object",
-				"valuemap": "observable;object;properties;value;value", 
+				"valuemap": "observable;object;properties;value;value",
 				"datatype": "string",
 				"requiredIfReferenceField": "observable_object_type",
-				"requiredIfReferenceValues": [ "URL", "Domain Name", "FQDN" ], 
+				"requiredIfReferenceValues": [ "URL", "Domain Name", "FQDN" ],
 				"ontologyMappingType": "referencedEnum",
 				"ontologyEnumField": "observable_object_type",
 				"ontologyMappingEnumValues": {
@@ -753,11 +762,11 @@
 			},
 			"observable_object_value_condition": {
 				"description": "The match condition for the DNS object",
-				"valuemap": "observable;object;properties;value;condition", 
+				"valuemap": "observable;object;properties;value;condition",
 				"datatype": "enum",
 				"defaultValue": "Equals",
 				"requiredIfReferenceField": "observable_object_type",
-				"requiredIfReferenceValues": [ "URL", "Domain Name", "FQDN" ], 
+				"requiredIfReferenceValues": [ "URL", "Domain Name", "FQDN" ],
 				"ontologyMappingType": "enum",
 				"enumValues": {
 					"Equals": {
@@ -771,7 +780,7 @@
 			"observable_object_header_sender_xsitype": {
 				"description": "The schema type of the sender object",
 				"valuemap": "observable;object;properties;header;sender;xsi:type",
-				"additionalValuemaps": [ "observable;object;properties;header;from;xsi:type" ], 
+				"additionalValuemaps": [ "observable;object;properties;header;from;xsi:type" ],
 				"datatype": "enum",
 				"required": false,
 				"ontologyMappingType": "enum",
@@ -800,7 +809,7 @@
 				"additionalValuemaps": [ "observable;object;properties;header;from;address_value;value" ],
 				"datatype": "string",
 				"requiredIfReferenceField": "observable_object_header_sender_category",
-				"requiredIfReferenceValues": [ "e-mail" ], 
+				"requiredIfReferenceValues": [ "e-mail" ],
 				"ontologyMappingType": "referencedEnum",
 				"ontologyEnumField": "observable_object_header_sender_xsitype",
 				"ontologyMappingEnumValues": {
@@ -816,7 +825,7 @@
 				"datatype": "enum",
 				"defaultValue": "Equals",
 				"requiredIfReferenceField": "observable_object_header_sender_addressvalue_value",
-				"requiredIfReferenceValuesMatch": [ "*" ], 
+				"requiredIfReferenceValuesMatch": [ "*" ],
 				"ontologyMappingType": "enum",
 				"enumValues": {
 					"Equals": {
@@ -833,7 +842,7 @@
 				"multiple": true,
 				"ontologyMappingType": "none",
 				"subfields": {
-								"observable_object_header_sender_customproperties_name": {"required": true}, 
+								"observable_object_header_sender_customproperties_name": {"required": true},
 								"observable_object_header_sender_customproperties_value": {"required": true, "primaryKey": true}
 				}
 			},
@@ -869,7 +878,7 @@
 			},
 			"observable_object_header_subject_value": {
 				"description": "The value of the header subject object",
-				"valuemap": "observable;object;properties;header;subject;value", 
+				"valuemap": "observable;object;properties;header;subject;value",
 				"datatype": "string",
 				"required": false,
 				"multiple": true,
@@ -878,11 +887,11 @@
 			},
 			"observable_object_header_subject_condition": {
 				"description": "The match condition for the header subject object",
-				"valuemap": "observable;object;properties;header;subject;condition", 
+				"valuemap": "observable;object;properties;header;subject;condition",
 				"datatype": "enum",
 				"defaultValue": "Equals",
 				"requiredIfReferenceField": "observable_object_header_subject_value",
-				"requiredIfReferenceValuesMatch": [ "*" ], 
+				"requiredIfReferenceValuesMatch": [ "*" ],
 				"ontologyMappingType": "enum",
 				"enumValues": {
 					"Equals": {
@@ -892,7 +901,7 @@
 			},
 			"observable_object_header_subject_applycondition": {
 				"description": "The match condition for the email subject object if there are multiple values",
-				"valuemap": "observable;object;properties;header;subject;apply_condition", 
+				"valuemap": "observable;object;properties;header;subject;apply_condition",
 				"datatype": "enum",
 				"defaultValue": "Equals",
 				"required": false,
@@ -905,7 +914,7 @@
 			},
 			"observable_object_header_xmailer_value": {
 				"description": "The value of the header x-mailer object",
-				"valuemap": "observable;object;properties;header;x_mailer;value", 
+				"valuemap": "observable;object;properties;header;x_mailer;value",
 				"datatype": "string",
 				"required": false,
 				"ontologyMappingType": "simple",
@@ -917,7 +926,7 @@
 				"datatype": "enum",
 				"defaultValue": "Equals",
 				"requiredIfReferenceField": "observable_object_header_xmailer_value",
-				"requiredIfReferenceValuesMatch": [ "*" ], 
+				"requiredIfReferenceValuesMatch": [ "*" ],
 				"ontologyMappingType": "enum",
 				"enumValues": {
 					"Equals": {
@@ -927,7 +936,7 @@
 			},
 			"observable_object_header_messageid_value": {
 				"description": "The value of the header message-id object",
-				"valuemap": "observable;object;properties;header;message_id;value", 
+				"valuemap": "observable;object;properties;header;message_id;value",
 				"datatype": "string",
 				"required": false,
 				"ontologyMappingType": "simple",
@@ -939,7 +948,7 @@
 				"datatype": "enum",
 				"defaultValue": "Equals",
 				"requiredIfReferenceField": "observable_object_header_messageid_value",
-				"requiredIfReferenceValuesMatch": [ "*" ], 
+				"requiredIfReferenceValuesMatch": [ "*" ],
 				"ontologyMappingType": "enum",
 				"enumValues": {
 					"Equals": {
@@ -954,18 +963,18 @@
 				"required": false,
 				"multiple": true,
 				"ontologyMappingType": "none",
-				"subfields": { 
-								"observable_object_hashes_type_value": {"required": true, "primaryKey": true}, 
-								"observable_object_hashes_type_condition": {"required": true}, 
-								"observable_object_hashes_simplehash_value": {"required": false}, 
-								"observable_object_hashes_simplehash_condition": {"required": false}, 
-								"observable_object_hashes_fuzzyhash_value": {"required": false}, 
+				"subfields": {
+								"observable_object_hashes_type_value": {"required": true, "primaryKey": true},
+								"observable_object_hashes_type_condition": {"required": true},
+								"observable_object_hashes_simplehash_value": {"required": false},
+								"observable_object_hashes_simplehash_condition": {"required": false},
+								"observable_object_hashes_fuzzyhash_value": {"required": false},
 								"observable_object_hashes_fuzzyhash_condition": {"required": false}
 				}
 			},
 			"observable_object_hashes_type_value": {
 				"description": "The type of the hash of the file",
-				"valuemap": "observable;object;properties;hashes;type;value", 
+				"valuemap": "observable;object;properties;hashes;type;value",
 				"datatype": "enum",
 				"required": false,
 				"ontologyMappingType": "enum",
@@ -989,6 +998,24 @@
 							"http://www.anl.gov/cfm/transform.owl#SHA256FilehashIndicatorValueSemanticComponent"
 						]
 					},
+                    "SHA224": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#SHA224FilehashIndicatorTypeSemanticComponent",
+						"reverseOntologyMappings": [
+							"http://www.anl.gov/cfm/transform.owl#SHA224FilehashIndicatorValueSemanticComponent"
+						]
+					},
+					"SHA384": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#SHA384FilehashIndicatorTypeSemanticComponent",
+						"reverseOntologyMappings": [
+							"http://www.anl.gov/cfm/transform.owl#SHA384FilehashIndicatorValueSemanticComponent"
+						]
+					},
+                    "SHA512": {
+                        "ontologyMapping": "http://www.anl.gov/cfm/transform.owl#SHA512FilehashIndicatorTypeSemanticComponent",
+                        "reverseOntologyMappings": [
+                            "http://www.anl.gov/cfm/transform.owl#SHA512FilehashIndicatorValueSemanticComponent"
+                        ]
+                    },
 					"SSDEEP": {
 						"ontologyMapping": ""
 					}
@@ -1025,7 +1052,16 @@
 					},
 					"SHA256": {
 						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#SHA256FilehashIndicatorValueSemanticComponent"
-					}
+					},
+					"SHA224": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#SHA224FilehashIndicatorValueSemanticComponent"
+					},
+					"SHA384": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#SHA384FilehashIndicatorValueSemanticComponent"
+					},
+                    "SHA512": {
+                        "ontologyMapping": "http://www.anl.gov/cfm/transform.owl#SHA512FilehashIndicatorValueSemanticComponent"
+                    }
 				}
 			},
 			"observable_object_hashes_simplehash_condition": {
@@ -1768,6 +1804,66 @@
 						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#OtherResponseActionTakenSemanticConcept"
 					}
 				}
+			},
+			"observable_cost": {
+				"description": "<Temporary> Estimated cost for applying this indicator (taken from COA)",
+                "valuemap": "observable;cost;value;value",
+                "datatype": "enum",
+                "required": false,
+                "defaultValue": "Unknown",
+                "ontologyMappingType": "enum",
+                "enumValues": {
+                    "Unknown": {
+                        "ontologyMapping": "http://www.anl.gov/cfm/transform.owl#UnknownCostSemanticConcept"
+                    },
+                    "No": {
+                        "ontologyMapping": "http://www.anl.gov/cfm/transform.owl#NoCostSemanticConcept"
+                    },
+                    "Low": {
+                        "ontologyMapping": "http://www.anl.gov/cfm/transform.owl#LowCostSemanticConcept"
+                    },
+                    "Medium": {
+                        "ontologyMapping": "http://www.anl.gov/cfm/transform.owl#MediumCostSemanticConcept"
+                    },
+                    "High": {
+                        "ontologyMapping": "http://www.anl.gov/cfm/transform.owl#HighCostSemanticConcept"
+                    }
+
+                }
+			},
+			"observable_efficacy": {
+                "description": "<Temporary> Effectiveness of this indicator in achieving Objective (taken from COA)",
+                "valuemap": "observable;efficacy;value;value",
+                "datatype": "enum",
+                "required": false,
+                "defaultValue": "Unknown",
+                "ontologyMappingType": "enum",
+                "enumValues": {
+                    "Unknown": {
+                        "ontologyMapping": "http://www.anl.gov/cfm/transform.owl#UnknownEfficacySemanticConcept"
+                    },
+                    "No": {
+                        "ontologyMapping": "http://www.anl.gov/cfm/transform.owl#NoEfficacySemanticConcept"
+                    },
+                    "Low": {
+                        "ontologyMapping": "http://www.anl.gov/cfm/transform.owl#LowEfficacySemanticConcept"
+                    },
+                    "Medium": {
+                        "ontologyMapping": "http://www.anl.gov/cfm/transform.owl#MediumEfficacySemanticConcept"
+                    },
+                    "High": {
+                        "ontologyMapping": "http://www.anl.gov/cfm/transform.owl#HighEfficacySemanticConcept"
+                    }
+
+                }
+			},
+			"observable_cost_timestamp": {
+				"description": "<Temporary> timestamp on cost",
+                "valuemap": "observable;cost;timestamp",
+                "datatype": "string",
+                "required": false,
+                "ontologyMappingType": "none",
+                "ontologyMapping": ""
 			}
 		}
 	}

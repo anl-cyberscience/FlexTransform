@@ -111,14 +111,48 @@ Each of these fields have some or all of the following attributes
 - **datatype**  The data type of the field
 
 	Currently the following are supported:
-	- datetime
+	- datetime*
 	- string
 	- ipv4
 	- ipv6
 	- emailAddress
 	- int 
 	- enum*
-	- group*
+	- group*	
+	
+	
+	The datetime datatype should be represeted by [Arrow Datetime Tokens](https://arrow.readthedocs.io/en/latest/#tokens).
+	
+	Time | Token | Output
+	 --- | --- | ---
+	 **Year** | YYYY | 2000, 2001... 2012, 2013
+	 ' ' | YY | 00, 01, 02... 12, 13
+	 **Month** | MMMMM | January, February, March... 
+	 ' ' | MM | 01, 02, 03... 11, 12
+	 ' ' | M | 1, 2, 3... 11, 12
+	 **Day of Year** | DDDD | 001, 002, 003... 364, 365
+	 ' ' | DDD | 1, 2, 3... 4, 5
+	 **Day of Month** | DD | 01, 02, 03... 30, 31
+	 ' ' | D | 1, 2, 3... 30, 31
+	 ' ' | Do | 1st, 2nd, 3rd... 30th, 31st
+	 **Day of Week** | dddd | Monday, Tuesday, Wednesday...
+	 ' ' | ddd | Mon, Tue, Wed...
+	 ' ' | d | 1, 2, 3... 6, 7
+	 **Hour** | HH | 00, 01, 02... 23, 24
+	 ' ' | H | 0, 1, 2... 23, 24
+	 ' ' | hh | 01, 02, 03.. 11, 12
+	 ' ' | h | 1, 2, 3... 11, 12
+	 **AM / PM** | A | AM, PM, am, pm
+	 ' ' | a | am, pm
+	 **Minute** | mm | 00, 01, 02... 58, 59
+	 ' ' | m | 0, 1, 2... 58, 59
+	 **Second** | ss | 00, 01, 02... 58, 59
+	 ' ' | s | 0, 1, 2... 58, 59
+	 **Sub-second** | S... | 0, 02, 003, 000006, 123123123123...
+	 **Timezone** | ZZZ | Asia/Baku, Europe/Warsaw, GMT...
+	 ' ' | ZZ | -07:00,-0:600... +06:00, +07:00
+	 ' ' | Z | -0700, -0600... +0600, +0700
+	 **Timestamp** | X | 1381685817
 	
 	The last two, enum and group, carry a special meaning. A data type of
 	enum indicates that the field to which the attribute belongs to, would take one

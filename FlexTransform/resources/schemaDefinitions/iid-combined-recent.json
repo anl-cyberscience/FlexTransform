@@ -1,0 +1,22 @@
+{
+	"IndicatorData": {
+		"types": {
+			"DNS-Hostname-Block": null
+		},
+		"fields": {
+			"domain": {
+				"required": false,
+                "ontologyMapping": ""
+			},
+			"uri": {
+				"required": true
+			},
+            "combined_description_comment": {
+                "outputFormat": "[description1], [target]"
+            },
+            "target": {
+                "required": true
+            }
+		}
+	}
+}

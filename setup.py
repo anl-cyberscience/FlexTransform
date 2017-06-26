@@ -48,7 +48,8 @@ setup(
     ],
     entry_points={
         'console_scripts': [
-            'flext = FlexTransform.FlexT:main'
+            'flext = FlexTransform.FlexT:main',
+            'flextbatch = FlexTransform.FlexTBatch:main'
         ]
     },
     test_suite='nose.collector',

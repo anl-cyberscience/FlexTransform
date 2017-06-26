@@ -227,7 +227,7 @@ class SchemaParser(object):
                 else:
                     raise Exception('NoParsableDataFound', "Data isn't in a parsable dictionary format")
             else:
-                print("Row type {} *not* in MappedData".format(rowType))
+                self.logging.info("Row type {} *not* in MappedData".format(rowType))
                 self.transformed_data[rowType] = self._TransformDataToNewSchema(rowType, None, None, document_meta_data,
                                                                                 oracle)
 
@@ -312,6 +312,8 @@ class SchemaParser(object):
                 elif 'dependsOn' in fieldDict:
                     if field not in field_order or field_order[field] < 6:
                         field_order[field] = 6
+                        if self.trace and field in self.traceindex:
+                            self.logging.debug(("[TRACE {}] - dependsOn {}; field_order set to {}".format(field, fieldDict['dependsOn'], field_order[field])))
                 else:
                     if field not in field_order or field_order[field] > 4:
                         field_order[field] = 4
@@ -353,7 +355,7 @@ class SchemaParser(object):
                                             m[1] not in field_order or field_order[m[1]] >= field_order[field])):
                                         field_order[m[1]] = field_order[field] - 1
                                         if self.trace and m[1] in self.traceindex:
-                                            self.logging.debug("[TRACE {}] - field_order set to {}".format(m[1], field_order[m[1]]))
+                                            self.logging.debug("[TRACE {}] - field_order set to {} ({} - 1)".format(m[1], field_order[m[1]], field))
                                         if self.trace and field in self.traceindex:
                                             self.logging.debug("[TRACE {}] - field_order of outputFormatField {} set to {}".format(field, m[1], field_order[m[1]]))
 
@@ -1432,7 +1434,7 @@ class SchemaParser(object):
                                                                                    TransformedData=self.transformed_data)
                             if self.trace and field in self.traceindex:
                                 self.logging.debug("[TRACE {}] - Default value was a function reference, computed new value {}".format(
-                                                                field, new_dict[field]['Value']))
+                                                                field, newDict[field]['Value']))
 
                         self._ValidateField(newDict[field], field, rowType)
 
@@ -2121,19 +2123,19 @@ class SchemaParser(object):
 
         Convert data formats between source and target schemas
         '''
-        NewValue = None
+        new_value = None
         if self.trace and field in self.traceindex:
             self.logging.debug("[TRACE {}] - Converting value {} to target schema".format(field, Value))
 
         if fieldDict['datatype'] == 'datetime':
             if 'ParsedValue' in sourceDict:
                 if fieldDict['dateTimeFormat'] == 'unixtime':
-                    # NewValue = time.mktime(sourceDict['ParsedValue'].timetuple())
-                    NewValue = sourceDict['ParsedValue'].timestamp
+                    # new_value = time.mktime(sourceDict['ParsedValue'].timetuple())
+                    new_value = str(sourceDict['ParsedValue'].timestamp)
                 else:
-                    NewValue = sourceDict['ParsedValue'].format(fieldDict['dateTimeFormat'])
+                    new_value = sourceDict['ParsedValue'].format(fieldDict['dateTimeFormat'])
                 if field in self.traceindex:
-                    self.logging.debug("[TRACE {}] - Datetime value converted to {}".format(field, NewValue))
+                    self.logging.debug("[TRACE {}] - Datetime value converted to {}".format(field, new_value))
             else:
                 # TODO: ParsedValue should always exist, but I got errors when testing some CISCP STIX documents, need to test further
                 self.logging.error('DateTime data type did not have a ParsedValue defined for field %s (%s)', field,
@@ -2143,23 +2145,23 @@ class SchemaParser(object):
             if self.trace and field in self.traceindex:
                 self.logging.debug("[TRACE {}] - source datatype {} != destination ({})".format(field, sourceDict['datatype'], fieldDict['datatype']))
             if fieldDict['datatype'] == 'string' or fieldDict['datatype'] == 'enum':
-                NewValue = Value
+                new_value = Value
             else:
                 if fieldDict['datatype'] == 'ipv4' and re.match(r'^([0-9]{1,3}\.){3}[0-9]{1,3}$', Value):
-                    NewValue = Value
+                    new_value = Value
                 else:
                     # FIXME: Process value to appropriate type for target schema
                     self.logging.warning("Cannot convert between data types for field %s (%s, %s)", field,
                                          fieldDict['datatype'], sourceDict['datatype'])
             if self.trace and field in self.traceindex:
-                self.logging.debug("[TRACE {}] - Converted to new datatype: {} -> {}".format(field, Value, NewValue))
+                self.logging.debug("[TRACE {}] - Converted to new datatype: {} -> {}".format(field, Value, new_value))
 
         else:
-            NewValue = Value
+            new_value = Value
             if self.trace and field in self.traceindex:
-                self.logging.debug("[TRACE {}] - No conversion necessary; using value {}".format(field, NewValue))
+                self.logging.debug("[TRACE {}] - No conversion necessary; using value {}".format(field, new_value))
 
-        return NewValue
+        return new_value
 
     def _MapDataToOntology(self, DataRow, DocumentHeaderData, DocumentMetaData, DerivedData):
         '''

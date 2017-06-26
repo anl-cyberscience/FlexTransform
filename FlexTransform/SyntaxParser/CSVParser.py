@@ -101,8 +101,9 @@ class CSVParser(Parser):
             records = line.split(self.Delimiter)
             to_add = {}
             for idx, record in enumerate(records): 
-                record = record.rstrip(self.LineTerminator)
-                to_add.update({position[idx]: record})
+                record = record.strip("\"'" + self.LineTerminator)
+                if record:
+                    to_add.update({position[idx]: record})
             self.ParsedData["IndicatorData"].append(to_add)
  
         return self.ParsedData

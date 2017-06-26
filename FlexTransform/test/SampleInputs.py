@@ -349,6 +349,43 @@ CFM13ALERT2 = """
     </IDMEF-Message>
     """
 
+CFM20ALERT = """
+<CFMAlert xmlns="http://www.anl.gov/cfm/2.0/current/CFMAlert">
+    <Version>2.0</Version>
+    <Alert>
+        <AlertID>1cdf6f8f-20da-488e-9132-bbf850621418</AlertID>
+        <AlertTimestamp>1468350602</AlertTimestamp>
+        <IndicatorSet>
+            <Indicator>
+                <Type>ipv6sourceaddress</Type>
+                <Constraint>IPv6ColonHexEquality</Constraint>
+                <Value>8675:a289:5:102c::bd8:baac</Value>
+            </Indicator>
+        </IndicatorSet>
+        <ReasonList>
+            <Reason>
+                <ReasonCategory>Exploit</ReasonCategory>
+                <ReasonDescription>The WAF detected a scan for vulnerable web applications</ReasonDescription>
+            </Reason>
+        </ReasonList>
+        <ActionList>
+            <Action>
+                <ActionCategory>Block</ActionCategory>
+                <ActionTimestamp>1468350602</ActionTimestamp>
+            </Action>
+        </ActionList>
+        <AlertExtendedAttribute>
+            <Field>confidence</Field>
+            <Value>80</Value>
+        </AlertExtendedAttribute>
+        <AlertExtendedAttribute>
+            <Field>severity</Field>
+            <Value>high</Value>
+        </AlertExtendedAttribute>
+    </Alert>
+</CFMAlert>
+"""
+
 STIXACS = """<stix:STIX_Package
     xmlns:cyboxCommon="http://cybox.mitre.org/common-2"
     xmlns:cybox="http://cybox.mitre.org/cybox-2"
@@ -546,6 +583,99 @@ LQMTOOLS = """{
     }
 }"""
 
-KEYVALUE = """timestamp=1325401200&ipv4=10.11.12.13&direction=ingress&comment='Attacker scanning for RDP'&service=3389/TCP&category='Scanning'&severity=high\r\ntimestamp=1325401200&ipv4=10.11.12.14&fqdn=bad.scanning.dom&direction=ingress&comment='Attacker scanning for SSH'&service=22/TCP&category='Scanning'&severity=high\r\ntimestamp=1325401200&ipv6=2001:db8:16::1&direction=ingress&comment='HTTP Response code 4xx, suspicious'&category='Reconnaissance'&severity=low\r\ntimestamp=1325401200&fqdn=bad.domain&direction=egress&comment='Malicious domain'&category='Malware Traffic'&severity=high\r\n"""
+KEYVALUE = """timestamp=1325401200&ipv4=10.11.12.13&direction=ingress&comment='Attacker scanning for RDP'&service=3389/TCP&category='Scanning'&severity=high\r\ntimestamp=1325401200&ipv4=10.11.12.14&direction=ingress&comment='Attacker scanning for SSH'&service=22/TCP&category='Scanning'&severity=high\r\ntimestamp=1325401200&ipv6=2001:db8:16::1&direction=ingress&comment='HTTP Response code 4xx, suspicious'&category='Reconnaissance'&severity=low\r\ntimestamp=1325401200&fqdn=bad.domain&direction=egress&comment='Malicious domain'&category='Malware Traffic'&severity=high\r\n"""
 
 CFM13ALERTUUID = """37880b79-bb9e-4025-9813-94d07981d9ff_"""
+
+
+CRISP = """{
+  "title": "CRISP-17-1111",
+  "description": "Fake report Description",
+  "package_intent": "Indicators",
+  "produced_time": "2017-04-10T20:31:02Z",
+  "tlp": "AMBER",
+  "information_source": "PNNL",
+  "indicators": [
+    {
+      "ipv4address": "10.10.10.11"
+    },
+    {
+      "ipv4address": "10.11.12.13"
+    },
+    {
+      "md5hash": "9e107d9d372bb6826bd81d3542a419d6"
+    },
+    {
+      "sha1hash": "ae147d9d372bb6826bd81d3542a419d65c29f2"
+    },
+    {
+      "sha224hash": "e7ff9d32ab4c018dd32fff98376826bd81ae147d352bb68207d9da7a"
+    },
+    {
+      "sha256hash": "32fff98ff9d32a6bd81da419d65ce147d352bb682018dd9d372bb6826bde107f"
+    },
+    {
+      "sha384hash": "fff98fdd32ff147d9d372bb682d372bb6819d65c299d372bb6826b976826b47d352bb681da419dd32fff98376826bd8b"
+    },
+    {
+      "sha512hash": "a879bac79a89e9f890a8c0a87c7b778da99ad879c79b8787aa0279b98abd89c78e09e880ff97a0870ae87b7089c07d070ab89378ad79ab79c78d9a0987c890d7"
+    },
+    {
+      "filename": "Test_File_Name"
+    },
+    {
+      "emailaddress": "fakeEmail@fake.com"
+    },
+    {
+      "filepath": "test"
+    }
+  ]
+}"""
+
+IIDCOMBINEDRECENT = """"96111422","http://79.96.154.154/Porigin/imgs/c/absaa/index.htm","ABSA BANK","20170511T200039Z","","","Phishing"
+"96112241","http://distri7.com/libraries/mill/centurylink/index.php","CENTURYLINK","20170511T200039Z","","distri7.com","Phishing"
+"96112203","http://distri7.com/libraries/mill/centurylink/login.html","CENTURYLINK","20170511T200039Z","","distri7.com","Phishing"
+"96113486","http://ihtjo.ga/3a///yh/en/index.php","YAHOO.COM","20170511T200039Z","","ihtjo.ga","Phishing"
+"96111980","http://indonesianwonderagate.com/zee/validate.htm?utm_campaign=tr.im/1e0rQ&utm_content=direct_input&utm_medium=no_referer&utm_source=tr.im","YAHOO.COM","20170511T200039Z","","indonesianwonderagate.com","Phishing"
+"96113152","http://indonesianwonderagate.com/zee/validate.htm?utm_source=tr.im&utm_medium=www.tr.im&utm_campaign=tr.im%252F1e0rQ&utm_content=link_click","YAHOO.COM","20170511T200539Z","","indonesianwonderagate.com","Phishing"
+"95830289","http://ivanasr.com/wp-admin/91042/28fde9335169c98810ca8dcfaaaf840b/","SUNTRUST","20170511T201539Z","","ivanasr.com","Phishing"
+"95997881","http://mail.applesupport.2fh.me/?ID=login&Key=1f104cbd258114b9790b1618d88560b2&login&path=/signin/?referrer","APPLE ID","20170511T202039Z","","2fh.me","Phishing"
+"96112201","http://omstraders.com/system/storage/logs/wp/","YAHOO.COM","20170511T201539Z","","omstraders.com","Phishing"
+"95859043","http://primavista-solusi.com/css/.https-www3/sellercentral.amazon.com/ap/signin/cafb30ac87e9c152b70349406227a9bc/auth.php?l=InboxLightaspxn._10&ProductID=DD9E53-&fid=KIBBLDI591KIBBLDI725&fav=1BF807E6036718-UserID&userid=&InboxLight.aspx?n=KIBBLDI591KIBBLDI725&Key=31c5c3553bd4565deab9f760f283b3d6","AMAZON","20170511T202039Z","","primavista-solusi.com","Phishing"
+"96113145","http://td6hb.net/gdocs/box/box/GoogleDrive-verfications/yahoo.html","YAHOO.COM","20170511T195539Z","","td6hb.net","Phishing"
+"95997883","http://www.applesupport.2fh.me/?ID=login&Key=920134ac4988da998ba1a66123463b58&login&path=/signin/?referrer","APPLE ID","20170511T202039Z","","2fh.me","Phishing"
+"96111303","http://www.indonesianwonderagate.com/zee/validate.htm","YAHOO.COM","","","indonesianwonderagate.com","Phishing"
+"sid","uri","target","date_iso","baddom","domain","class_name"
+"""
+
+IIDACTIVEBADHOST = """"007panel.no-ip.biz","20140519T211212Z","Malware_C2","Backdoor_RAT"
+"00aa8i2wmwym.upaskitv1.org","20140509T164346Z","Exploit_Kit","Exploit_Kit"
+"00black00.is-with-theband.com","20140519T211212Z","Malware_C2","Backdoor_RAT"
+"00c731dah9of.sentencemc.uni.me","20140611T110359Z","Exploit_Kit","Exploit_Kit"
+"00dcc4f3azhuei.judiciaryfair.uni.me","20140611T110359Z","Exploit_Kit","Exploit_Kit"
+"00.e04.d502008.aeaf6fb.f7b.f8.34c48.b90.xwnfgthbe.onesplacing.pw","20140122T144940Z","Exploit_Kit","Magnitude"
+"00hnumc.wsysinfonet.su","20140509T164346Z","Exploit_Kit","Exploit_Kit"
+"00j.no-ip.info","20140519T211212Z","Malware_C2","Backdoor_RAT"
+"""
+
+IIDDYNAMICBADHOST = """"1001k04xl19cylqw6nr194ei4b.net","20170513T140055Z","MalwareC2DGA","MalwareC2DGA_GameoverZeus"
+"1001nsa1dxw3sxwrfqee1t7xddm.biz","20170515T140055Z","MalwareC2DGA","MalwareC2DGA_GameoverZeus"
+"10024iajyfsh65e6axy12bsh7l.org","20170517T140054Z","MalwareC2DGA","MalwareC2DGA_GameoverZeus"
+"1002cxm19ukeqp1l29lxosdfsig.net","20170518T140105Z","MalwareC2DGA","MalwareC2DGA_GameoverZeus"
+"1003xa01nbjxku1tilmja1lob2ee.net","20170519T140054Z","MalwareC2DGA","MalwareC2DGA_GameoverZeus"
+"1004b2a155bhg3lieod8ea14rm.com","20170519T140058Z","MalwareC2DGA","MalwareC2DGA_GameoverZeus"
+"clsg.mu","20170519T080347Z","MalwareC2DGA","Conficker C"
+"clshftfs.org","20170519T100025Z","MalwareC2DGA","Conficker A"
+"clshoc.mn","20170520T110431Z","MalwareC2DGA","Conficker C"
+"clshpwgywbimuok.ru","20170605T080116Z","MalwareC2DGA","MalwareC2DGA_CryptoLocker"
+"clsisxplrhiqycklx.su","20170521T201033Z","MalwareC2DGA","MalwareC2DGA_Ranbyus"
+"clsitmhauaqfwmvk.org","20170520T220824Z","MalwareC2DGA","MalwareC2DGA_Qakbot"
+"""
+
+IIDBADIPV4 = """"101.203.174.209","20170511T200002Z","Spam_Bot","Bot Cutwail"
+"103.11.103.105","20170511T200044Z","Spam_Bot","Bot Cutwail"
+"103.12.196.177","20170511T200133Z","Spam_Bot","Bot Kelihos"
+"103.13.28.73","20170511T200529Z","Spam_Bot","Bot Cutwail"
+"103.16.115.18","20170511T200000Z","Spam_Bot","Bot Cutwail"
+"103.17.131.150","20170511T200110Z","Spam_Bot","Bot Cutwail"
+"""
