@@ -6,7 +6,10 @@
 			"DNS-Hostname-Block": [ ],
 			"URL-Block": [ ],
 			"DNS-Hostname-Revoke": [ ],
-			"IPv4-Address-Revoke": [ ]
+			"IPv4-Address-Revoke": [ ],
+			"Filename": [ ],
+			"FilePath": [ ],
+			"Malicious-File-Hash": [ ]
 		},
 		"fields": {
 			"dataItemID": {
@@ -67,7 +70,15 @@
 					"http://www.anl.gov/cfm/transform.owl#DNSIndicatorValueSemanticComponent",
 					"http://www.anl.gov/cfm/transform.owl#URLIndicatorMetadataSemanticComponent",
 					"http://www.anl.gov/cfm/transform.owl#URLIndicatorValueSemanticComponent",
-					"http://www.anl.gov/cfm/transform.owl#IPv6AddressIndicatorValueSemanticComponent"
+					"http://www.anl.gov/cfm/transform.owl#IPv6AddressIndicatorValueSemanticComponent",
+                    "http://www.anl.gov/cfm/transform.owl#MD5FilehashIndicatorValueSemanticComponent",
+                    "http://www.anl.gov/cfm/transform.owl#SHA1FilehashIndicatorValueSemanticComponent",
+                    "http://www.anl.gov/cfm/transform.owl#SHA256FilehashIndicatorValueSemanticComponent",
+                    "http://www.anl.gov/cfm/transform.owl#SHA224FilehashIndicatorValueSemanticComponent",
+                    "http://www.anl.gov/cfm/transform.owl#SHA384FilehashIndicatorValueSemanticComponent",
+                    "http://www.anl.gov/cfm/transform.owl#SHA512FilehashIndicatorValueSemanticComponent",
+                    "http://www.anl.gov/cfm/transform.owl#FilepathIndicatorValueSemanticConcept",
+                    "http://www.anl.gov/cfm/transform.owl#FileNameIndicatorTypeSemanticComponent"
 				]
 			},
 			"indicatorType": {
@@ -113,6 +124,9 @@
 					"FileName": {
 						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#FileNameIndicatorTypeSemanticComponent"
 					},
+					"FilePath": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#FilepathIndicatorValueSemanticConcept"
+					},
 					"UserName": {
 						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#UserNameIndicatorTypeSemanticComponent"
 					},
@@ -121,6 +135,12 @@
 					},
 					"FileSHA1Hash": {
 						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#FileSHA1HashIndicatorTypeSemanticComponent"
+					},
+					"FileSHA256Hash": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#SHA256FilehashIndicatorTypeSemanticComponent",
+                        "reverseOntologyMappings": [
+                            "http://www.anl.gov/cfm/transform.owl#SHA256FilehashIndicatorValueSemanticComponent"
+                        ]
 					},
 					"FileSizeBytes": {
 						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#FileSizeBytesIndicatorTypeSemanticComponent"
@@ -530,6 +550,56 @@
 						"ontologyMapping": ""
 					}
 				}
+			},
+			"cost": {
+				"description": "Estimated cost for applying this indicator",
+                "datatype": "enum",
+                "required": false,
+                "defaultValue": "Unknown",
+                "ontologyMappingType": "enum",
+                "enumValues": {
+                    "Unknown": {
+                        "ontologyMapping": "http://www.anl.gov/cfm/transform.owl#UnknownCostSemanticConcept"
+                    },
+                    "No": {
+                        "ontologyMapping": "http://www.anl.gov/cfm/transform.owl#NoCostSemanticConcept"
+                    },
+                    "Low": {
+                        "ontologyMapping": "http://www.anl.gov/cfm/transform.owl#LowCostSemanticConcept"
+                    },
+                    "Medium": {
+                        "ontologyMapping": "http://www.anl.gov/cfm/transform.owl#MediumCostSemanticConcept"
+                    },
+                    "High": {
+                        "ontologyMapping": "http://www.anl.gov/cfm/transform.owl#HighCostSemanticConcept"
+                    }
+
+                }
+			},
+			" efficacy": {
+                "description": "Effectiveness of this indicator in achieving Objective",
+                "datatype": "enum",
+                "required": false,
+                "defaultValue": "Unknown",
+                "ontologyMappingType": "enum",
+                "enumValues": {
+                    "Unknown": {
+                        "ontologyMapping": "http://www.anl.gov/cfm/transform.owl#UnknownEfficacySemanticConcept"
+                    },
+                    "No": {
+                        "ontologyMapping": "http://www.anl.gov/cfm/transform.owl#NoEfficacySemanticConcept"
+                    },
+                    "Low": {
+                        "ontologyMapping": "http://www.anl.gov/cfm/transform.owl#LowEfficacySemanticConcept"
+                    },
+                    "Medium": {
+                        "ontologyMapping": "http://www.anl.gov/cfm/transform.owl#MediumEfficacySemanticConcept"
+                    },
+                    "High": {
+                        "ontologyMapping": "http://www.anl.gov/cfm/transform.owl#HighEfficacySemanticConcept"
+                    }
+
+                }
 			}
 		}
 	}

@@ -1,8 +1,12 @@
 {
 	"IndicatorData": {
+		"types": {
+			"DNS-Hostname-Block": null
+		},
 		"fields": {
 			"domain": {
-				"required": false
+				"required": false,
+                "ontologyMapping": ""
 			},
 			"uri": {
 				"required": true

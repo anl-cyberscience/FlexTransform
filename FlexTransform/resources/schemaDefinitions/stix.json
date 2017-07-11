@@ -99,7 +99,10 @@
 				"defaultValue": "Indicators",
 				"ontologyMappingType": "enum",
 				"memberof": "package_intents",
-				"enumValues": { 
+				"enumValues": {
+					"Courses of Action": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#CoursesOfActionCategorySemanticConcept"
+					},
 					"Indicators - Network Activity": {
 						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#IndicatorCategoryNetworkActivitySemanticConcept"
 					},
@@ -1050,7 +1053,7 @@
 					"SHA256": {
 						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#SHA256FilehashIndicatorValueSemanticComponent"
 					},
-					 "SHA224": {
+					"SHA224": {
 						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#SHA224FilehashIndicatorValueSemanticComponent"
 					},
 					"SHA384": {
@@ -1801,6 +1804,66 @@
 						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#OtherResponseActionTakenSemanticConcept"
 					}
 				}
+			},
+			"observable_cost": {
+				"description": "<Temporary> Estimated cost for applying this indicator (taken from COA)",
+                "valuemap": "observable;cost;value;value",
+                "datatype": "enum",
+                "required": false,
+                "defaultValue": "Unknown",
+                "ontologyMappingType": "enum",
+                "enumValues": {
+                    "Unknown": {
+                        "ontologyMapping": "http://www.anl.gov/cfm/transform.owl#UnknownCostSemanticConcept"
+                    },
+                    "No": {
+                        "ontologyMapping": "http://www.anl.gov/cfm/transform.owl#NoCostSemanticConcept"
+                    },
+                    "Low": {
+                        "ontologyMapping": "http://www.anl.gov/cfm/transform.owl#LowCostSemanticConcept"
+                    },
+                    "Medium": {
+                        "ontologyMapping": "http://www.anl.gov/cfm/transform.owl#MediumCostSemanticConcept"
+                    },
+                    "High": {
+                        "ontologyMapping": "http://www.anl.gov/cfm/transform.owl#HighCostSemanticConcept"
+                    }
+
+                }
+			},
+			"observable_efficacy": {
+                "description": "<Temporary> Effectiveness of this indicator in achieving Objective (taken from COA)",
+                "valuemap": "observable;efficacy;value;value",
+                "datatype": "enum",
+                "required": false,
+                "defaultValue": "Unknown",
+                "ontologyMappingType": "enum",
+                "enumValues": {
+                    "Unknown": {
+                        "ontologyMapping": "http://www.anl.gov/cfm/transform.owl#UnknownEfficacySemanticConcept"
+                    },
+                    "No": {
+                        "ontologyMapping": "http://www.anl.gov/cfm/transform.owl#NoEfficacySemanticConcept"
+                    },
+                    "Low": {
+                        "ontologyMapping": "http://www.anl.gov/cfm/transform.owl#LowEfficacySemanticConcept"
+                    },
+                    "Medium": {
+                        "ontologyMapping": "http://www.anl.gov/cfm/transform.owl#MediumEfficacySemanticConcept"
+                    },
+                    "High": {
+                        "ontologyMapping": "http://www.anl.gov/cfm/transform.owl#HighEfficacySemanticConcept"
+                    }
+
+                }
+			},
+			"observable_cost_timestamp": {
+				"description": "<Temporary> timestamp on cost",
+                "valuemap": "observable;cost;timestamp",
+                "datatype": "string",
+                "required": false,
+                "ontologyMappingType": "none",
+                "ontologyMapping": ""
 			}
 		}
 	}

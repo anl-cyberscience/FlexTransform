@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='FlexTransform',
-    version='1.2.0',
+    version='1.2.1',
     description='Flexible Transform is a tool that enables dynamic translation between formats',
     long_description='Flexible Transform (FlexT) enables dynamic translation between formats, accomplishing this by digesting CTI data down to its semantic roots (meaning and context)',
     url='https://github.com/anl-cyberscience/FlexTransform/',

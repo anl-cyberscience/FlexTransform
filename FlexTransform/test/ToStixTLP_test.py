@@ -7,7 +7,7 @@ import arrow
 from lxml import etree
 
 from FlexTransform import FlexTransform
-from FlexTransform.test.SampleInputs import CFM13ALERT, STIXACS, KEYVALUE, CFM13ALERTUUID, CRISP
+from FlexTransform.test.SampleInputs import CFM13ALERT, STIXACS, KEYVALUE, CFM13ALERTUUID, CRISP, IIDCOMBINEDRECENT, IIDBADIPV4, IIDDYNAMICBADHOST, IIDACTIVEBADHOST
 
 
 class TestCFM13AlertToSTIXTLP(unittest.TestCase):
@@ -355,13 +355,13 @@ class TestSTIXACS30ToSTIXTLP(unittest.TestCase):
         self.assertEqual(self.output1.xpath("%s stix:Title/text()" % self.header,
                                             namespaces=self.namespace)[0], "ACS-example.pdf")
 
-    def test_package_description(self):
-        self.assertEqual(self.output1.xpath("%s stix:Description/text()" % self.header,
-                                            namespaces=self.namespace)[0], "Redirects to Malicious Websites")
-
     def test_package_intent_type(self):
         self.assertEqual(self.output1.xpath("%s stix:Package_Intent/@xsi:type" % self.header,
                                             namespaces=self.namespace)[0], "stixVocabs:PackageIntentVocab-1.0")
+
+    def test_package_description(self):
+        self.assertEqual(self.output1.xpath("%s stix:Description/text()" % self.header,
+                                            namespaces=self.namespace)[0], "Redirects to Malicious Websites")
 
     def test_package_intent_text(self):
         self.assertEqual(self.output1.xpath("%s stix:Package_Intent/text()" % self.header,
@@ -773,6 +773,393 @@ class TestCRSIPToSTIXTLP(unittest.TestCase):
     def test_indicator_hash_xsi_type(self):
         self.assertEqual(self.output1.xpath("%s FileObj:Hashes/cyboxCommon:Hash/cyboxCommon:Type/@xsi:type" % self.properties,
                                             namespaces=self.namespace)[0], "cyboxVocabs:HashNameVocab-1.0")
+
+class TestIIDCombinedRecentToSTIXTLP(unittest.TestCase):
+    output1 = None
+    utc_before = None
+    utc_after = None
+    header = "/stix:STIX_Package/stix:STIX_Header/"
+    marking = "/stix:STIX_Package/stix:STIX_Header/stix:Handling/marking:Marking/"
+    information_source = "/stix:STIX_Package/stix:STIX_Header/stix:Information_Source/"
+    indicator = "/stix:STIX_Package/stix:Indicators/stix:Indicator/"
+    sightings = "{} indicator:Sightings/".format(indicator)
+    observable = "{} indicator:Observable/".format(indicator)
+    object = "{} cybox:Object/".format(observable)
+    properties = "{} cybox:Properties/".format(object)
+
+    namespace = {
+        'cyboxCommon': "http://cybox.mitre.org/common-2",
+        'cybox': "http://cybox.mitre.org/cybox-2",
+        'cyboxVocabs': "http://cybox.mitre.org/default_vocabularies-2",
+        'URIObj': "http://cybox.mitre.org/objects#URIObject-2",
+        'marking': "http://data-marking.mitre.org/Marking-1",
+        'tlpMarking': "http://data-marking.mitre.org/extensions/MarkingStructure#TLP-1",
+        'indicator': "http://stix.mitre.org/Indicator-2",
+        'stixCommon': "http://stix.mitre.org/common-1",
+        'stixVocabs': "http://stix.mitre.org/default_vocabularies-1",
+        'stix': "http://stix.mitre.org/stix-1",
+        'CFM': "http://www.anl.gov/cfm/stix",
+        'xsi': "http://www.w3.org/2001/XMLSchema-instance"
+    }
+
+    @classmethod
+    def setUpClass(cls):
+        current_dir = os.path.dirname(__file__)
+        transform = FlexTransform.FlexTransform()
+
+        with open(os.path.join(current_dir, '../resources/sampleConfigurations/iid_combined_recent.cfg'), 'r') as input_file:
+            transform.add_parser('iid_combined_recent', input_file)
+        with open(os.path.join(current_dir, '../resources/sampleConfigurations/stix_tlp.cfg'), 'r') as input_file:
+            transform.add_parser('stix', input_file)
+        output1_object = io.StringIO()
+
+        cls.utc_before = arrow.utcnow().format("YYYY-MM-DDTHH:mm:ssZZ")
+        transform.transform(io.StringIO(IIDCOMBINEDRECENT), 'iid_combined_recent', 'stix', target_file=output1_object)
+        cls.utc_after = arrow.utcnow().format("YYYY-MM-DDTHH:mm:ssZZ")
+        cls.output1 = etree.XML(output1_object.getvalue())
+
+    def test_package_intent_text(self):
+        self.assertEqual(self.output1.xpath("{} stix:Package_Intent/text()".format(self.header),
+                                            namespaces=self.namespace)[0], "Indicators")
+
+    def test_controlled_structure_text(self):
+        self.assertEqual(self.output1.xpath("{} marking:Controlled_Structure/text()".format(self.marking),
+                                            namespaces=self.namespace), ["//node() | //@*"])
+
+    def test_tlp_type(self):
+        self.assertEqual(set(self.output1.xpath("{} marking:Marking_Structure/@xsi:type".format(self.marking),
+                                                namespaces=self.namespace)), set(["tlpMarking:TLPMarkingStructureType"]))
+
+    def test_tlp_color(self):
+        self.assertEqual(set(self.output1.xpath("{} marking:Marking_Structure/@color".format(self.marking),
+                                                namespaces=self.namespace)), set(["GREEN"]))
+
+    def test_indicator_timestamp(self):
+        test = self.output1.xpath("%s @timestamp" % self.indicator, namespaces=self.namespace)[0]
+        if test == self.utc_before:
+            self.assertEqual(test, self.utc_before)
+        else:
+            self.assertEqual(test, self.utc_after)
+
+    def test_indicator_sightings(self):
+        self.assertEqual(set(self.output1.xpath("{} indicator:Sighting/@timestamp".format(self.sightings), namespaces=self.namespace)),
+                         set(["2017-05-11T20:15:39+00:00", "2017-05-11T19:55:39+00:00", "2017-05-11T20:00:39+00:00", "2017-05-11T20:05:39+00:00", "2017-05-11T20:20:39+00:00"]))
+
+    def test_indicator_types(self):
+        self.assertEqual(set(self.output1.xpath("{} @xsi:type".format(self.indicator), namespaces=self.namespace)),
+                         set(["indicator:IndicatorType"]))
+
+    def test_indicator_version(self):
+        self.assertEqual(set(self.output1.xpath("{} @version".format(self.indicator), namespaces=self.namespace)),
+                         set(["2.1.1"]))
+
+    def test_indicator_type(self):
+        self.assertEqual(set(self.output1.xpath("{} indicator:Type[@xsi:type='stixVocabs:IndicatorTypeVocab-1.1']/text()".format(self.indicator),
+                                                namespaces=self.namespace)), set(["URL Watchlist"]))
+
+    def test_indicator_description(self):
+        self.assertEqual(set(self.output1.xpath("{} indicator:Description/text()".format(self.indicator), namespaces=self.namespace)),
+                         set(["Phishing, ABSA BANK", "Phishing, CENTURYLINK", "Phishing, YAHOO.COM", "Phishing, SUNTRUST",
+                              "Phishing, APPLE ID", "Phishing, AMAZON"]))
+
+    def test_indicator_properties_xsitype(self):
+        self.assertEqual(set(self.output1.xpath("{} @xsi:type".format(self.properties), namespaces=self.namespace)),
+                         set(["URIObj:URIObjectType"]))
+
+    def test_indicator_properties_urinames(self):
+        self.assertEqual(set(self.output1.xpath("{} URIObj:Value[@condition='Equals']/text()".format(self.properties),
+                                                namespaces=self.namespace)),
+                         set(["http://79.96.154.154/Porigin/imgs/c/absaa/index.htm", "http://distri7.com/libraries/mill/centurylink/index.php",
+                                "http://distri7.com/libraries/mill/centurylink/login.html", "http://ihtjo.ga/3a///yh/en/index.php",
+                                "http://indonesianwonderagate.com/zee/validate.htm?utm_campaign=tr.im/1e0rQ&utm_content=direct_input&utm_medium=no_referer&utm_source=tr.im", "http://indonesianwonderagate.com/zee/validate.htm?utm_source=tr.im&utm_medium=www.tr.im&utm_campaign=tr.im%252F1e0rQ&utm_content=link_click",
+                                "http://ivanasr.com/wp-admin/91042/28fde9335169c98810ca8dcfaaaf840b/", "http://mail.applesupport.2fh.me/?ID=login&Key=1f104cbd258114b9790b1618d88560b2&login&path=/signin/?referrer",
+                                "http://omstraders.com/system/storage/logs/wp/", "http://primavista-solusi.com/css/.https-www3/sellercentral.amazon.com/ap/signin/cafb30ac87e9c152b70349406227a9bc/auth.php?l=InboxLightaspxn._10&ProductID=DD9E53-&fid=KIBBLDI591KIBBLDI725&fav=1BF807E6036718-UserID&userid=&InboxLight.aspx?n=KIBBLDI591KIBBLDI725&Key=31c5c3553bd4565deab9f760f283b3d6",
+                                "http://td6hb.net/gdocs/box/box/GoogleDrive-verfications/yahoo.html", "http://www.applesupport.2fh.me/?ID=login&Key=920134ac4988da998ba1a66123463b58&login&path=/signin/?referrer",
+                                "http://www.indonesianwonderagate.com/zee/validate.htm"]))
+
+class TestIIDActiveBadHostToSTIXTLP(unittest.TestCase):
+    output1 = None
+    utc_before = None
+    utc_after = None
+    header = "/stix:STIX_Package/stix:STIX_Header/"
+    marking = "/stix:STIX_Package/stix:STIX_Header/stix:Handling/marking:Marking/"
+    information_source = "/stix:STIX_Package/stix:STIX_Header/stix:Information_Source/"
+    indicator = "/stix:STIX_Package/stix:Indicators/stix:Indicator/"
+    sightings = "{} indicator:Sightings/".format(indicator)
+    observable = "{} indicator:Observable/".format(indicator)
+    object = "{} cybox:Object/".format(observable)
+    properties = "{} cybox:Properties/".format(object)
+
+    namespace = {
+        'cyboxCommon': "http://cybox.mitre.org/common-2",
+        'cybox': "http://cybox.mitre.org/cybox-2",
+        'cyboxVocabs': "http://cybox.mitre.org/default_vocabularies-2",
+        'DomainNameObj': "http://cybox.mitre.org/objects#DomainNameObject-1",
+        'marking': "http://data-marking.mitre.org/Marking-1",
+        'tlpMarking': "http://data-marking.mitre.org/extensions/MarkingStructure#TLP-1",
+        'indicator': "http://stix.mitre.org/Indicator-2",
+        'stixCommon': "http://stix.mitre.org/common-1",
+        'stixVocabs': "http://stix.mitre.org/default_vocabularies-1",
+        'stix': "http://stix.mitre.org/stix-1",
+        'CFM': "http://www.anl.gov/cfm/stix",
+        'xsi': "http://www.w3.org/2001/XMLSchema-instance"
+    }
+
+    @classmethod
+    def setUpClass(cls):
+        current_dir = os.path.dirname(__file__)
+        transform = FlexTransform.FlexTransform()
+
+        with open(os.path.join(current_dir, '../resources/sampleConfigurations/iid_host_active.cfg'), 'r') as input_file:
+            transform.add_parser('iid_host_active', input_file)
+        with open(os.path.join(current_dir, '../resources/sampleConfigurations/stix_tlp.cfg'), 'r') as input_file:
+            transform.add_parser('stix', input_file)
+        output1_object = io.StringIO()
+
+        cls.utc_before = arrow.utcnow().format("YYYY-MM-DDTHH:mm:ssZZ")
+        transform.transform(io.StringIO(IIDACTIVEBADHOST), 'iid_host_active', 'stix', target_file=output1_object)
+        cls.utc_after = arrow.utcnow().format("YYYY-MM-DDTHH:mm:ssZZ")
+        cls.output1 = etree.XML(output1_object.getvalue())
+
+    def test_package_intent_text(self):
+        self.assertEqual(self.output1.xpath("{} stix:Package_Intent/text()".format(self.header),
+                                            namespaces=self.namespace)[0], "Indicators")
+
+    def test_controlled_structure_text(self):
+        self.assertEqual(self.output1.xpath("{} marking:Controlled_Structure/text()".format(self.marking),
+                                            namespaces=self.namespace), ["//node() | //@*"])
+
+    def test_tlp_type(self):
+        self.assertEqual(set(self.output1.xpath("{} marking:Marking_Structure/@xsi:type".format(self.marking),
+                                                namespaces=self.namespace)), set(["tlpMarking:TLPMarkingStructureType"]))
+
+    def test_tlp_color(self):
+        self.assertEqual(set(self.output1.xpath("{} marking:Marking_Structure/@color".format(self.marking),
+                                                namespaces=self.namespace)), set(["GREEN"]))
+
+    def test_indicator_sightings(self):
+        self.assertEqual(set(self.output1.xpath("{} indicator:Sighting/@timestamp".format(self.sightings), namespaces=self.namespace)),
+                         set(["2014-05-19T21:12:12+00:00", "2014-05-09T16:43:46+00:00", "2014-06-11T11:03:59+00:00", "2014-01-22T14:49:40+00:00"]))
+
+    def test_indicator_types(self):
+        self.assertEqual(set(self.output1.xpath("{} @xsi:type".format(self.indicator), namespaces=self.namespace)),
+                         set(["indicator:IndicatorType"]))
+
+    def test_indicator_version(self):
+        self.assertEqual(set(self.output1.xpath("{} @version".format(self.indicator), namespaces=self.namespace)),
+                         set(["2.1.1"]))
+
+    def test_indicator_type(self):
+        self.assertEqual(set(self.output1.xpath("{} indicator:Type[@xsi:type='stixVocabs:IndicatorTypeVocab-1.1']/text()".format(self.indicator),
+                                                namespaces=self.namespace)), set(["Domain Watchlist"]))
+
+    def test_indicator_description(self):
+        self.assertEqual(set(self.output1.xpath("{} indicator:Description/text()".format(self.indicator), namespaces=self.namespace)),
+                         set(["Malware_C2, Backdoor_RAT", "Exploit_Kit, Exploit_Kit", "Exploit_Kit, Magnitude"]))
+
+    def test_indicator_properties_xsitype(self):
+        self.assertEqual(set(self.output1.xpath("{} @xsi:type".format(self.properties), namespaces=self.namespace)),
+                             set(["DomainNameObj:DomainNameObjectType"]))
+
+    def test_indicator_properties_domainnames(self):
+        self.assertEqual(set(self.output1.xpath("{} DomainNameObj:Value[@condition='Equals']/text()".format(self.properties),
+                                                namespaces=self.namespace)),
+                         set(["007panel.no-ip.biz", "00aa8i2wmwym.upaskitv1.org", "00black00.is-with-theband.com",
+                              "00c731dah9of.sentencemc.uni.me", "00dcc4f3azhuei.judiciaryfair.uni.me", "00.e04.d502008.aeaf6fb.f7b.f8.34c48.b90.xwnfgthbe.onesplacing.pw",
+                              "00hnumc.wsysinfonet.su", "00j.no-ip.info"]))
+
+    def test_indicator_timestamp(self):
+        test = self.output1.xpath("%s @timestamp" % self.indicator, namespaces=self.namespace)[0]
+        if test == self.utc_before:
+            self.assertEqual(test, self.utc_before)
+        else:
+            self.assertEqual(test, self.utc_after)
+
+
+class TestIIDDynamicBadHostToSTIXTLP(unittest.TestCase):
+    output1 = None
+    utc_before = None
+    utc_after = None
+    header = "/stix:STIX_Package/stix:STIX_Header/"
+    marking = "/stix:STIX_Package/stix:STIX_Header/stix:Handling/marking:Marking/"
+    information_source = "/stix:STIX_Package/stix:STIX_Header/stix:Information_Source/"
+    indicator = "/stix:STIX_Package/stix:Indicators/stix:Indicator/"
+    sightings = "{} indicator:Sightings/".format(indicator)
+    observable = "{} indicator:Observable/".format(indicator)
+    object = "{} cybox:Object/".format(observable)
+    properties = "{} cybox:Properties/".format(object)
+
+    namespace = {
+        'cyboxCommon': "http://cybox.mitre.org/common-2",
+        'cybox': "http://cybox.mitre.org/cybox-2",
+        'cyboxVocabs': "http://cybox.mitre.org/default_vocabularies-2",
+        'DomainNameObj': "http://cybox.mitre.org/objects#DomainNameObject-1",
+        'marking': "http://data-marking.mitre.org/Marking-1",
+        'tlpMarking': "http://data-marking.mitre.org/extensions/MarkingStructure#TLP-1",
+        'indicator': "http://stix.mitre.org/Indicator-2",
+        'stixCommon': "http://stix.mitre.org/common-1",
+        'stixVocabs': "http://stix.mitre.org/default_vocabularies-1",
+        'stix': "http://stix.mitre.org/stix-1",
+        'CFM': "http://www.anl.gov/cfm/stix",
+        'xsi': "http://www.w3.org/2001/XMLSchema-instance"
+    }
+
+    @classmethod
+    def setUpClass(cls):
+        current_dir = os.path.dirname(__file__)
+        transform = FlexTransform.FlexTransform()
+
+        with open(os.path.join(current_dir, '../resources/sampleConfigurations/iid_host_dynamic.cfg'), 'r') as input_file:
+            transform.add_parser('iid_host_dynamic', input_file)
+        with open(os.path.join(current_dir, '../resources/sampleConfigurations/stix_tlp.cfg'), 'r') as input_file:
+            transform.add_parser('stix', input_file)
+        output1_object = io.StringIO()
+
+        cls.utc_before = arrow.utcnow().format("YYYY-MM-DDTHH:mm:ssZZ")
+        transform.transform(io.StringIO(IIDDYNAMICBADHOST), 'iid_host_dynamic', 'stix', target_file=output1_object)
+        cls.utc_after = arrow.utcnow().format("YYYY-MM-DDTHH:mm:ssZZ")
+        cls.output1 = etree.XML(output1_object.getvalue())
+
+    def test_package_intent_text(self):
+        self.assertEqual(self.output1.xpath("{} stix:Package_Intent/text()".format(self.header),
+                                            namespaces=self.namespace)[0], "Indicators")
+
+    def test_controlled_structure_text(self):
+        self.assertEqual(self.output1.xpath("{} marking:Controlled_Structure/text()".format(self.marking),
+                                            namespaces=self.namespace), ["//node() | //@*"])
+
+    def test_tlp_type(self):
+        self.assertEqual(set(self.output1.xpath("{} marking:Marking_Structure/@xsi:type".format(self.marking),
+                                                namespaces=self.namespace)), set(["tlpMarking:TLPMarkingStructureType"]))
+
+    def test_tlp_color(self):
+        self.assertEqual(set(self.output1.xpath("{} marking:Marking_Structure/@color".format(self.marking),
+                                                namespaces=self.namespace)), set(["GREEN"]))
+
+    def test_indicator_type(self):
+        self.assertEqual(set(self.output1.xpath("{} indicator:Type[@xsi:type='stixVocabs:IndicatorTypeVocab-1.1']/text()".format(self.indicator),
+                                                namespaces=self.namespace)), set(["Domain Watchlist"]))
+
+    def test_indicator_description(self):
+        self.assertEqual(set(self.output1.xpath("{} indicator:Description/text()".format(self.indicator), namespaces=self.namespace)),
+                         set(["MalwareC2DGA, MalwareC2DGA_GameoverZeus", "MalwareC2DGA, Conficker C", "MalwareC2DGA, MalwareC2DGA_CryptoLocker",
+                              "MalwareC2DGA, Conficker A", "MalwareC2DGA, MalwareC2DGA_Qakbot", "MalwareC2DGA, MalwareC2DGA_Ranbyus"]))
+
+    def test_indicator_properties_xsitype(self):
+        self.assertEqual(set(self.output1.xpath("{} @xsi:type".format(self.properties), namespaces=self.namespace)),
+                             set(["DomainNameObj:DomainNameObjectType"]))
+
+    def test_indicator_properties_domainnames(self):
+        self.assertEqual(set(self.output1.xpath("{} DomainNameObj:Value[@condition='Equals']/text()".format(self.properties),
+                                                namespaces=self.namespace)),
+                         set(["1001k04xl19cylqw6nr194ei4b.net", "1001nsa1dxw3sxwrfqee1t7xddm.biz", "10024iajyfsh65e6axy12bsh7l.org",
+                              "1002cxm19ukeqp1l29lxosdfsig.net", "1003xa01nbjxku1tilmja1lob2ee.net", "1004b2a155bhg3lieod8ea14rm.com",
+                              "clsg.mu", "clshftfs.org", "clshoc.mn", "clshpwgywbimuok.ru", "clsisxplrhiqycklx.su", "clsitmhauaqfwmvk.org"]))
+
+    def test_indicator_timestamp(self):
+        test = self.output1.xpath("%s @timestamp" % self.indicator, namespaces=self.namespace)[0]
+        if test == self.utc_before:
+            self.assertEqual(test, self.utc_before)
+        else:
+            self.assertEqual(test, self.utc_after)
+
+class TestIIDBadIPV4ToSTIXTLP(unittest.TestCase):
+    output1 = None
+    utc_before = None
+    utc_after = None
+    header = "/stix:STIX_Package/stix:STIX_Header/"
+    marking = "/stix:STIX_Package/stix:STIX_Header/stix:Handling/marking:Marking/"
+    information_source = "/stix:STIX_Package/stix:STIX_Header/stix:Information_Source/"
+    indicator = "/stix:STIX_Package/stix:Indicators/stix:Indicator/"
+    sightings = "{} indicator:Sightings/".format(indicator)
+    observable = "{} indicator:Observable/".format(indicator)
+    object = "{} cybox:Object/".format(observable)
+    properties = "{} cybox:Properties/".format(object)
+
+    namespace = {
+        'cyboxCommon': "http://cybox.mitre.org/common-2",
+        'cybox': "http://cybox.mitre.org/cybox-2",
+        'cyboxVocabs': "http://cybox.mitre.org/default_vocabularies-2",
+        'AddressObj': "http://cybox.mitre.org/objects#AddressObject-2",
+        'marking': "http://data-marking.mitre.org/Marking-1",
+        'tlpMarking': "http://data-marking.mitre.org/extensions/MarkingStructure#TLP-1",
+        'indicator': "http://stix.mitre.org/Indicator-2",
+        'stixCommon': "http://stix.mitre.org/common-1",
+        'stixVocabs': "http://stix.mitre.org/default_vocabularies-1",
+        'stix': "http://stix.mitre.org/stix-1",
+        'CFM': "http://www.anl.gov/cfm/stix",
+        'xsi': "http://www.w3.org/2001/XMLSchema-instance"
+    }
+
+    @classmethod
+    def setUpClass(cls):
+        current_dir = os.path.dirname(__file__)
+        transform = FlexTransform.FlexTransform()
+
+        with open(os.path.join(current_dir, '../resources/sampleConfigurations/iid_ipv4_recent.cfg'), 'r') as input_file:
+            transform.add_parser('iid_ipv4_recent', input_file)
+        with open(os.path.join(current_dir, '../resources/sampleConfigurations/stix_tlp.cfg'), 'r') as input_file:
+            transform.add_parser('stix', input_file)
+        output1_object = io.StringIO()
+
+        cls.utc_before = arrow.utcnow().format("YYYY-MM-DDTHH:mm:ssZZ")
+        transform.transform(io.StringIO(IIDBADIPV4), 'iid_ipv4_recent', 'stix', target_file=output1_object)
+        cls.utc_after = arrow.utcnow().format("YYYY-MM-DDTHH:mm:ssZZ")
+        cls.output1 = etree.XML(output1_object.getvalue())
+
+    def test_package_intent_text(self):
+        self.assertEqual(self.output1.xpath("{} stix:Package_Intent/text()".format(self.header),
+                                            namespaces=self.namespace)[0], "Indicators")
+
+    def test_controlled_structure_text(self):
+        self.assertEqual(self.output1.xpath("{} marking:Controlled_Structure/text()".format(self.marking),
+                                            namespaces=self.namespace), ["//node() | //@*"])
+
+    def test_tlp_type(self):
+        self.assertEqual(set(self.output1.xpath("{} marking:Marking_Structure/@xsi:type".format(self.marking),
+                                                namespaces=self.namespace)), set(["tlpMarking:TLPMarkingStructureType"]))
+
+    def test_tlp_color(self):
+        self.assertEqual(set(self.output1.xpath("{} marking:Marking_Structure/@color".format(self.marking),
+                                                namespaces=self.namespace)), set(["GREEN"]))
+
+    def test_indicator_sightings(self):
+        self.assertEqual(set(self.output1.xpath("{} indicator:Sighting/@timestamp".format(self.sightings), namespaces=self.namespace)),
+                         set(["2017-05-11T20:00:44+00:00", "2017-05-11T20:01:33+00:00", "2017-05-11T20:00:00+00:00",
+                              "2017-05-11T20:00:02+00:00", "2017-05-11T20:05:29+00:00", "2017-05-11T20:01:10+00:00"]))
+
+    def test_indicator_types(self):
+        self.assertEqual(set(self.output1.xpath("{} @xsi:type".format(self.indicator), namespaces=self.namespace)),
+                         set(["indicator:IndicatorType"]))
+
+    def test_indicator_version(self):
+        self.assertEqual(set(self.output1.xpath("{} @version".format(self.indicator), namespaces=self.namespace)),
+                         set(["2.1.1"]))
+
+    def test_indicator_type(self):
+        self.assertEqual(set(self.output1.xpath("{} indicator:Type[@xsi:type='stixVocabs:IndicatorTypeVocab-1.1']/text()".format(self.indicator),
+                                                namespaces=self.namespace)), set(["IP Watchlist"]))
+
+    def test_indicator_description(self):
+        self.assertEqual(set(self.output1.xpath("{} indicator:Description/text()".format(self.indicator), namespaces=self.namespace)),
+                         set(["Spam_Bot, Bot Cutwail", "Spam_Bot, Bot Kelihos"]))
+
+    def test_indicator_properties_xsitype(self):
+        self.assertEqual(set(self.output1.xpath("{} @xsi:type".format(self.properties), namespaces=self.namespace)),
+                             set(["AddressObj:AddressObjectType"]))
+
+    def test_indicator_properties_domainnames(self):
+        self.assertEqual(set(self.output1.xpath("{} AddressObj:Address_Value[@condition='Equals']/text()".format(self.properties),
+                                                namespaces=self.namespace)),
+                         set(["101.203.174.209", "103.11.103.105", "103.12.196.177",
+                              "103.13.28.73", "103.16.115.18", "103.17.131.150",]))
+
+    def test_indicator_timestamp(self):
+        test = self.output1.xpath("%s @timestamp" % self.indicator, namespaces=self.namespace)[0]
+        if test == self.utc_before:
+            self.assertEqual(test, self.utc_before)
+        else:
+            self.assertEqual(test, self.utc_after)
 
 if __name__ == '__main__':
     unittest.main()
