@@ -99,7 +99,7 @@
 			"indicator_description": {
 				"description": "Description of indicator",
 				"datatype": "string",
-				"defaultValue": "CRISP Report Indicator",
+				"defaultValue": "Energy Sector Indicator",
 				"requiredIfReferenceField": "source_file_base64_encoded",
 				"requiredIfReferenceValues": [ "" ],
 				"ontologyMappingType": "simple",
