@@ -99,7 +99,7 @@ class TestSTIXTLPToCFM13Alert(unittest.TestCase):
 
     def test_alert_classification(self):
         self.assertEqual(set(self.output1.xpath("%s /@text" % self.classification, namespaces=self.namespace)),
-                         set(["CRISP Report Indicator", "URL Block: CRISP Report Indicator"]))
+                         set(["Energy Sector Indicator", "URL Block: Energy Sector Indicator"]))
 
     def test_alert_reference_meaning(self):
         self.assertEqual(set(self.output1.xpath("%s /xmlns:Reference/@meaning" % self.classification,

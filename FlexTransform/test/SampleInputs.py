@@ -64,7 +64,7 @@ STIXTLP = """<stix:STIX_Package
             </stix:Indicator>
             <stix:Indicator id="CFM:Indicator-3e732203-d463-50ba-b6c2-26c11032a204" timestamp="2016-03-29T19:33:13+02:00" xsi:type='indicator:IndicatorType' version="2.1.1">
                 <indicator:Type xsi:type="stixVocabs:IndicatorTypeVocab-1.1">IP Watchlist</indicator:Type>
-                <indicator:Description>CRISP Report Indicator</indicator:Description>
+                <indicator:Description>Energy Sector Indicator</indicator:Description>
                 <indicator:Observable id="CFM:Observable-810a21f8-85aa-5425-ab07-69c94d72b60c">
                     <cybox:Object id="CFM:Object-2b703a03-81ab-5af9-bb53-e7641cbd8e76">
                         <cybox:Properties xsi:type="AddressObj:AddressObjectType" category="ipv4-addr">
@@ -75,7 +75,7 @@ STIXTLP = """<stix:STIX_Package
             </stix:Indicator>
             <stix:Indicator id="CFM:Indicator-82b0c3f9-95d4-5ec7-9e09-30b0bf87cfcd" timestamp="2016-03-29T19:33:13+05:00" xsi:type='indicator:IndicatorType' version="2.1.1">
                 <indicator:Type xsi:type="stixVocabs:IndicatorTypeVocab-1.1">IP Watchlist</indicator:Type>
-                <indicator:Description>CRISP Report Indicator</indicator:Description>
+                <indicator:Description>Energy Sector Indicator</indicator:Description>
                 <indicator:Observable id="CFM:Observable-03e0bab9-a13e-55cf-93d4-cf707aeb831d">
                     <cybox:Object id="CFM:Object-9eb91b53-603a-53e5-9228-958e81c24949">
                         <cybox:Properties xsi:type="AddressObj:AddressObjectType" category="ipv4-addr">
@@ -86,7 +86,7 @@ STIXTLP = """<stix:STIX_Package
             </stix:Indicator>
             <stix:Indicator id="CFM:Indicator-52c46f7c-cca9-5d2e-9d3b-a3b1744dcf52" timestamp="2016-03-29T19:33:13+06:00" xsi:type='indicator:IndicatorType' version="2.1.1">
                 <indicator:Type xsi:type="stixVocabs:IndicatorTypeVocab-1.1">IP Watchlist</indicator:Type>
-                <indicator:Description>CRISP Report Indicator</indicator:Description>
+                <indicator:Description>Energy Sector Indicator</indicator:Description>
                 <indicator:Observable id="CFM:Observable-691072b3-c6a4-5615-9c78-cb5977864bb5">
                     <cybox:Object id="CFM:Object-44b996e6-7769-54e0-b5c7-bab92fc8791e">
                         <cybox:Properties xsi:type="AddressObj:AddressObjectType" category="ipv4-addr">
@@ -97,7 +97,7 @@ STIXTLP = """<stix:STIX_Package
             </stix:Indicator>
             <stix:Indicator id="CFM:Indicator-052c65e0-c667-5e4c-9970-ac9ddd3511b3" timestamp="2016-03-29T19:33:13+07:00" xsi:type='indicator:IndicatorType' version="2.1.1">
                 <indicator:Type xsi:type="stixVocabs:IndicatorTypeVocab-1.1">IP Watchlist</indicator:Type>
-                <indicator:Description>CRISP Report Indicator</indicator:Description>
+                <indicator:Description>Energy Sector Indicator</indicator:Description>
                 <indicator:Observable id="CFM:Observable-1680f55e-8cd8-5d28-8d33-8488ee747581">
                     <cybox:Object id="CFM:Object-4fa49509-2f5c-5c66-a86f-0babf49a0e33">
                         <cybox:Properties xsi:type="AddressObj:AddressObjectType" category="ipv4-addr">
@@ -108,7 +108,7 @@ STIXTLP = """<stix:STIX_Package
             </stix:Indicator>
             <stix:Indicator id="CFM:Indicator-1cf2d34d-007a-5a50-b7c1-cce9faf6f968" timestamp="2016-03-29T19:33:13+08:00" xsi:type='indicator:IndicatorType' version="2.1.1">
                 <indicator:Type xsi:type="stixVocabs:IndicatorTypeVocab-1.1">IP Watchlist</indicator:Type>
-                <indicator:Description>CRISP Report Indicator</indicator:Description>
+                <indicator:Description>Energy Sector Indicator</indicator:Description>
                 <indicator:Observable id="CFM:Observable-686ec0d4-59a0-5909-bfbc-eb31c37becd5">
                     <cybox:Object id="CFM:Object-1f397c22-5d3d-50eb-98e9-6acd82fa329c">
                         <cybox:Properties xsi:type="AddressObj:AddressObjectType" category="ipv4-addr">
@@ -118,7 +118,7 @@ STIXTLP = """<stix:STIX_Package
                 </indicator:Observable>
             </stix:Indicator>
             <stix:Indicator id="CFM:Indicator-92130d2c-c3e6-5ed9-bcdc-c826c5d2c5b4" timestamp="2016-03-29T19:33:13+07:00" xsi:type='indicator:IndicatorType' version="2.1.1">
-                <indicator:Description>CRISP Report Indicator</indicator:Description>
+                <indicator:Description>Energy Sector Indicator</indicator:Description>
                 <indicator:Observable id="CFM:Observable-6f106c1e-2ff9-518b-9c36-6edbe59b36e6">
                     <cybox:Object id="CFM:Object-1b6d7388-4c63-5687-9b57-d9dad435bfc4">
                         <cybox:Properties xsi:type="FileObj:FileObjectType">
@@ -128,7 +128,7 @@ STIXTLP = """<stix:STIX_Package
                 </indicator:Observable>
             </stix:Indicator>
             <stix:Indicator id="CFM:Indicator-1bed1aca-30e1-5ad3-8bee-6c1dfbff157d" timestamp="2016-03-29T19:33:13+06:00" xsi:type='indicator:IndicatorType' version="2.1.1">
-                <indicator:Description>CRISP Report Indicator</indicator:Description>
+                <indicator:Description>Energy Sector Indicator</indicator:Description>
                 <indicator:Observable id="CFM:Observable-fa7faba7-7dc4-5bb9-a436-31c726039150">
                     <cybox:Object id="CFM:Object-3391be65-9462-5d30-b1e3-7ff813943bff">
                         <cybox:Properties xsi:type="FileObj:FileObjectType">
@@ -138,7 +138,7 @@ STIXTLP = """<stix:STIX_Package
                 </indicator:Observable>
             </stix:Indicator>
             <stix:Indicator id="CFM:Indicator-8b3ac40a-8595-50fe-bea1-fbd1d85cc428" timestamp="2016-03-29T19:33:13+00:00" xsi:type='indicator:IndicatorType' version="2.1.1">
-                <indicator:Description>CRISP Report Indicator</indicator:Description>
+                <indicator:Description>Energy Sector Indicator</indicator:Description>
                 <indicator:Observable id="CFM:Observable-6be0296d-d22c-5460-bb3f-7626173874bd">
                     <cybox:Object id="CFM:Object-533cd91f-5a13-548d-8bfb-5e0c3741e74e">
                         <cybox:Properties xsi:type="FileObj:FileObjectType">
@@ -148,7 +148,7 @@ STIXTLP = """<stix:STIX_Package
                 </indicator:Observable>
             </stix:Indicator>
             <stix:Indicator id="CFM:Indicator-a9b071be-fa18-5b49-9d15-e487836adb49" timestamp="2016-03-29T19:33:13+00:00" xsi:type='indicator:IndicatorType' version="2.1.1">
-                <indicator:Description>CRISP Report Indicator</indicator:Description>
+                <indicator:Description>Energy Sector Indicator</indicator:Description>
                 <indicator:Observable id="CFM:Observable-78fb6ef8-b249-5538-8ce7-07addd671a03">
                     <cybox:Object id="CFM:Object-3893bb9a-339d-52bd-84b7-aba7cb19b92b">
                         <cybox:Properties xsi:type="FileObj:FileObjectType">
@@ -159,7 +159,7 @@ STIXTLP = """<stix:STIX_Package
             </stix:Indicator>
             <stix:Indicator id="CFM:Indicator-2e95d2ac-1b08-5f38-8522-2f4b2ef3686c" timestamp="2016-03-29T19:33:13+00:00" xsi:type='indicator:IndicatorType' version="2.1.1">
                 <indicator:Type xsi:type="stixVocabs:IndicatorTypeVocab-1.1">URL Watchlist</indicator:Type>
-                <indicator:Description>CRISP Report Indicator</indicator:Description>
+                <indicator:Description>Energy Sector Indicator</indicator:Description>
                 <indicator:Observable id="CFM:Observable-5b7cf542-0c1d-5331-966a-9596b2530f10">
                     <cybox:Object id="CFM:Object-9711b917-fff8-5c3e-acee-dee057dbbda7">
                         <cybox:Properties xsi:type="URIObj:URIObjectType" type="URL">
@@ -170,7 +170,7 @@ STIXTLP = """<stix:STIX_Package
             </stix:Indicator>
             <stix:Indicator id="CFM:Indicator-5fd6c616-d923-5e70-916d-dca3a2d1ee02" timestamp="2016-03-29T19:33:13+00:00" xsi:type='indicator:IndicatorType' version="2.1.1">
                 <indicator:Type xsi:type="stixVocabs:IndicatorTypeVocab-1.1">URL Watchlist</indicator:Type>
-                <indicator:Description>CRISP Report Indicator</indicator:Description>
+                <indicator:Description>Energy Sector Indicator</indicator:Description>
                 <indicator:Observable id="CFM:Observable-b28b198f-98a4-5126-8724-18cf8adb0fea">
                     <cybox:Object id="CFM:Object-07e004ab-51d6-5546-b7c4-7f2f9f99436e">
                         <cybox:Properties xsi:type="URIObj:URIObjectType" type="URL">
@@ -181,7 +181,7 @@ STIXTLP = """<stix:STIX_Package
             </stix:Indicator>
             <stix:Indicator id="CFM:Indicator-32d6ca0d-5896-57ff-84c6-8f18a7a70643" timestamp="2016-03-29T19:33:13+00:00" xsi:type='indicator:IndicatorType' version="2.1.1">
                 <indicator:Type xsi:type="stixVocabs:IndicatorTypeVocab-1.1">File Hash Watchlist</indicator:Type>
-                <indicator:Description>CRISP Report Indicator</indicator:Description>
+                <indicator:Description>Energy Sector Indicator</indicator:Description>
                 <indicator:Observable id="CFM:Observable-cb615fd4-12c8-5232-949f-b38fd5ab6a3f">
                     <cybox:Object id="CFM:Object-5a68f003-c73b-590c-95a4-5db828f9eeb0">
                         <cybox:Properties xsi:type="FileObj:FileObjectType">
@@ -197,7 +197,7 @@ STIXTLP = """<stix:STIX_Package
             </stix:Indicator>
             <stix:Indicator id="CFM:Indicator-1f59ad38-bb9f-5804-8585-9ad6264120a8" timestamp="2016-03-29T19:33:13+00:00" xsi:type='indicator:IndicatorType' version="2.1.1">
                 <indicator:Type xsi:type="stixVocabs:IndicatorTypeVocab-1.1">File Hash Watchlist</indicator:Type>
-                <indicator:Description>CRISP Report Indicator</indicator:Description>
+                <indicator:Description>Energy Sector Indicator</indicator:Description>
                 <indicator:Observable id="CFM:Observable-eaf5c06f-c0a6-5aaf-8716-a2fda646205d">
                     <cybox:Object id="CFM:Object-b7237e30-b62e-52db-979f-adddff1688e7">
                         <cybox:Properties xsi:type="FileObj:FileObjectType">
