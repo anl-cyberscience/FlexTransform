@@ -1,0 +1,391 @@
+{
+    "DocumentHeaderData": {
+        "fields": {
+            "reportId": {
+                "description": "Inelligent report ID for this indicator",
+                "datatype": "string",
+                "defaultValue": "NoValue",
+                "required": false,
+                "ontologyMappingType": "simple",
+                "ontologyMapping": "http://www.anl.gov/cfm/transform.owl#UUIDv4DocumentIdentifierSemanticConcept"
+            },
+            "title": {
+                "description": "Intelligence report title",
+                "datatype": "string",
+                "defaultValue": "NoValue",
+                "required": false,
+                "ontologyMappingType": "simple",
+                "ontologyMapping": "http://www.anl.gov/cfm/transform.owl#ReportTitleSemanticComponent"
+            },
+            "ThreatScape": {
+                "description": "iSIGHT products associated with the report",
+                "datatype": "string",
+                "defaultValue": "NoValue",
+                "required": false,
+                "ontologyMappingType": "simple",
+                "ontologyMapping": ""
+            },
+            "audience": {
+                "description": "Role associated with the report",
+                "datatype": "string",
+                "defaultValue": "NoValue",
+                "required": false,
+                "ontologyMappingType": "simple",
+                "ontologyMapping": ""
+            },
+            "intelligenceType": {
+                "description": "Type of Report",
+                "datatype": "string",
+                "defaultValue": "NoValue",
+                "required": false,
+                "ontologyMappingType": "simple",
+                "ontologyMapping": "http://www.anl.gov/cfm/transform.owl#ReportTypeSemanticConcept"
+            },
+            "publishDate": {
+                "description": "Report publication datetime",
+                "datatype": "datetime",
+                "dateTimeFormat": "unixtime",
+                "defaultValue": "NoValue",
+                "required": false,
+                "ontologyMappingType": "simple",
+                "ontologyMapping": "http://www.anl.gov/cfm/transform.owl#ReportGeneratedTimeSemanticConcept"
+            },
+            "reportLink": {
+                "description": "API link for the full download of this report",
+                "datatype": "string",
+                "defaultValue": "NoValue",
+                "required": false,
+                "ontologyMappingType": "simple",
+                "ontologyMapping": ""
+            },
+            "webLink": {
+                "description": "MySIGHT link for viewing this report",
+                "datatype": "string",
+                "defaultValue": "NoValue",
+                "required": false,
+                "ontologyMappingType": "simple",
+                "ontologyMapping": ""
+            },
+            "actor": {
+                "description": "Actor",
+                "datatype": "string",
+                "defaultValue": "NoValue",
+                "required": false,
+                "ontologyMappingType": "simple",
+                "ontologyMapping": ""
+            },
+            "actorId": {
+                "description": "Identifier for actor",
+                "datatype": "string",
+                "defaultValue": "NoValue",
+                "required": false,
+                "ontologyMappingType": "simple",
+                "ontologyMapping": ""
+            },
+            "observationTime": {
+                "description": "The time of observation of the indicator",
+                "datatype": "datetime",
+                "dateTimeFormat": "unixtime",
+                "defaultValue": "NoValue",
+                "required": false,
+                "ontologyMappingType": "simple",
+                "ontologyMapping": "http://www.anl.gov/cfm/transform.owl#TimeOfDetectionSemanticConcept"
+            },
+            "version": {
+                "description": "Report version",
+                "datatype": "string",
+                "defaultValue": "NoValue",
+                "required": false,
+                "ontologyMappingType": "simple",
+                "ontologyMapping": "http://www.anl.gov/cfm/transform.owl#ReportDescriptionSemanticComponent"
+            }
+        }
+    },
+    "IndicatorData": {
+        "types": {
+            "IPv4-Address-Block": [ { "ip": "*" } ],
+			"DNS-Hostname-Block": [ { "domain": "*" } ],
+			"Malicious-File-Hash":[	{ "md5": "*" }, { "sha1": "*" }, { "sha256": "*" }],
+			"URL-Block": [ { "url": "*"} ],
+            "Filename": [ { "fileName": "*" } ],
+            "Malicious-Email-Block":[ {"senderAddress": "*"}, {"sourceIp": "*"}],
+            "Registry-Key-IOC": [{"registry": "*"}],
+            "FilePath": [ { "filePath": "*" } ]
+        },
+        "fields": {
+            "emailIdentifier": {
+                "description": "E-mail characterization",
+                "datatype": "string",
+                "defaultValue": "NoValue",
+                "required": false,
+                "ontologyMappingType": "simple",
+                "ontologyMapping": "http://www.anl.gov/cfm/transform.owl#EmailIndicatorTypeSemanticConcept"
+            },
+            "senderAddress": {
+                "description": "E-mail sender address",
+                "datatype": "string",
+                "defaultValue": "NoValue",
+                "required": false,
+                "ontologyMappingType": "simple",
+                "ontologyMapping": "http://www.anl.gov/cfm/transform.owl#EmailAddressIndicatorValueSemanticComponent"
+            },
+            "senderName": {
+                "description": "E-mail sender name",
+                "datatype": "string",
+                "defaultValue": "NoValue",
+                "required": false,
+                "ontologyMappingType": "simple",
+                "ontologyMapping": "http://www.anl.gov/cfm/transform.owl#EmailAddressIndicatorValueSemanticComponent"
+            },
+            "sourceDomain": {
+                "description": "E-mail source domain",
+                "datatype": "string",
+                "defaultValue": "NoValue",
+                "required": false,
+                "ontologyMappingType": "simple",
+                "ontologyMapping": ""
+            },
+            "sourceIp": {
+                "description": "E-mail source IP",
+                "datatype": "string",
+                "defaultValue": "NoValue",
+                "required": false,
+                "ontologyMappingType": "simple",
+                "ontologyMapping": ""
+            },
+            "subject": {
+                "description": "E-mail subject",
+                "datatype": "string",
+                "defaultValue": "NoValue",
+                "required": false,
+                "ontologyMappingType": "simple",
+                "ontologyMapping": "http://www.anl.gov/cfm/transform.owl#EmailSubjectValueSemanticComponent"
+            },
+            "recipient": {
+                "description": "List of Email recipients",
+                "datatype": "string",
+                "defaultValue": "NoValue",
+                "required": false,
+                "ontologyMappingType": "simple",
+                "ontologyMapping": ""
+            },
+            "emailLanguage": {
+                "description": "Email language",
+                "datatype": "string",
+                "defaultValue": "NoValue",
+                "required": false,
+                "ontologyMappingType": "simple",
+                "ontologyMapping": ""
+            },
+            "fileName": {
+                "description": "Name of the file",
+                "datatype": "string",
+                "required": false,
+                "ontologyMappingType": "simple",
+                "ontologyMapping": "http://www.anl.gov/cfm/transform.owl#FileNameIndicatorTypeSemanticComponent"
+            },
+            "fileSize": {
+                "description": "File size in bytes",
+                "datatype": "string",
+                "required": false,
+                "ontologyMappingType": "simple",
+                "ontologyMapping": ""
+            },
+            "fuzzyHash": {
+                "description": "File fuzzy (ssdeep) hash",
+                "datatype": "string",
+                "required": false,
+                "ontologyMappingType": "simple",
+                "ontologyMapping": "http://www.anl.gov/cfm/transform.owl#SSDeepFilehashIndicatorValueSemanticComponent"
+            },
+            "fileIdentifier": {
+                "description": "File characterization",
+                "datatype": "string",
+                "required": false,
+                "ontologyMappingType": "simple",
+                "ontologyMapping": "http://www.anl.gov/cfm/transform.owl#FileIndicatorTypeSemanticComponent"
+            },
+            "md5": {
+                "description": "File MD5 hash",
+                "datatype": "string",
+                "required": false,
+                "ontologyMappingType": "simple",
+                "ontologyMapping": "http://www.anl.gov/cfm/transform.owl#MD5FilehashIndicatorValueSemanticComponent"
+            },
+            "sha1": {
+                "description": "File SHA1 hash",
+                "datatype": "string",
+                "required": false,
+                "ontologyMappingType": "simple",
+                "ontologyMapping": "http://www.anl.gov/cfm/transform.owl#SHA1FilehashIndicatorValueSemanticComponent"
+            },
+            "sha256": {
+                "description": "File SHA256 hash",
+                "datatype": "string",
+                "required": false,
+                "ontologyMappingType": "simple",
+                "ontologyMapping": "http://www.anl.gov/cfm/transform.owl#SHA256FilehashIndicatorValueSemanticComponent"
+            },
+            "description": {
+                "description": "Description of file",
+                "datatype": "string",
+                "defaultValue": "NoValue",
+                "required": false,
+                "ontologyMappingType": "simple",
+                "ontologyMapping": ""
+            },
+            "fileType": {
+                "description": "File format",
+                "datatype": "string",
+                "defaultValue": "NoValue",
+                "required": false,
+                "ontologyMappingType": "simple",
+                "ontologyMapping": "http://www.anl.gov/cfm/transform.owl#FileIndicatorTypeSemanticComponent"
+            },
+            "packer": {
+                "description": "Packer used on file",
+                "datatype": "string",
+                "defaultValue": "NoValue",
+                "required": false,
+                "ontologyMappingType": "simple",
+                "ontologyMapping": ""
+            },
+            "userAgent": {
+                "description": "User Agent associated with the file",
+                "datatype": "string",
+                "defaultValue": "NoValue",
+                "required": false,
+                "ontologyMappingType": "simple",
+                "ontologyMapping": ""
+            },
+            "registry": {
+                "description": "List of registry entries impacted. An entry is usually a combination of the registry hive, key, and value",
+                "datatype": "string",
+                "required": false,
+                "ontologyMappingType": "simple",
+                "ontologyMapping": "http://www.anl.gov/cfm/transform.owl#WindowsRegistryKeyObjectSchemaTypeSpecification"
+            },
+            "fileCompilationDateTime": {
+                "description": "File compilation datetime in UTC",
+                "datatype": "datetime",
+                "dateTimeFormat": "unixtime",
+                "required": false,
+                "ontologyMappingType": "simple",
+                "ontologyMapping": ""
+            },
+            "filePath": {
+                "description": "Path of the file on the file system",
+                "datatype": "string",
+                "required": false,
+                "ontologyMappingType": "simple",
+                "ontologyMapping": "http://www.anl.gov/cfm/transform.owl#FilepathIndicatorValueSemanticConcept"
+            },
+            "asn": {
+                "description": "Autonomous system",
+                "datatype": "string",
+                "required": false,
+                "ontologyMappingType": "simple",
+                "ontologyMapping": ""
+            },
+            "cidr": {
+                "description": "Classless Inter-Domain Routing",
+                "datatype": "string",
+                "required": false,
+                "ontologyMappingType": "simple",
+                "ontologyMapping": ""
+            },
+            "domain": {
+                "description": "Domain name",
+                "datatype": "string",
+                "required": false,
+                "ontologyMappingType": "simple",
+                "ontologyMapping": "http://www.anl.gov/cfm/transform.owl#DNSIndicatorValueSemanticComponent"
+            },
+            "domainTimeOfLookup": {
+                "description": "Time of domain lookkup",
+                "datatype": "datetime",
+                "dateTimeFormat": "unixtime",
+                "defaultValue": "NoValue",
+                "required": false,
+                "ontologyMappingType": "simple",
+                "ontologyMapping": ""
+            },
+            "networkIdentifier": {
+                "description": "Network characterization",
+                "datatype": "string",
+                "defaultValue": "NoValue",
+                "required": false,
+                "ontologyMappingType": "simple",
+                "ontologyMapping": ""
+            },
+            "ip": {
+                "description": "IP address",
+                "datatype": "string",
+                "required": false,
+                "ontologyMappingType": "simple",
+                "ontologyMapping": "http://www.anl.gov/cfm/transform.owl#IPv4AddressIndicatorValueSemanticComponent"
+            },
+            "port": {
+                "description": "Port(s) observed",
+                "datatype": "string",
+                "defaultValue": "NoValue",
+                "required": false,
+                "ontologyMappingType": "simple",
+                "ontologyMapping": "http://www.anl.gov/cfm/transform.owl#DestinationPortListIndicatorValueSemanticComponent"
+            },
+            "protocol": {
+                "description": "Network protocol",
+                "datatype": "string",
+                "defaultValue": "NoValue",
+                "required": false,
+                "ontologyMappingType": "simple",
+                "ontologyMapping": "http://www.anl.gov/cfm/transform.owl#ProtocolIndicatorValueSemanticComponent"
+            },
+            "registrantEmail": {
+                "description": "Domain registrant e-mail address",
+                "datatype": "string",
+                "defaultValue": "NoValue",
+                "required": false,
+                "ontologyMappingType": "simple",
+                "ontologyMapping": "http://www.anl.gov/cfm/transform.owl#SiteContactEmailSemanticConcept"
+            },
+            "registrantName": {
+                "description": "Domain registrant name",
+                "datatype": "string",
+                "defaultValue": "NoValue",
+                "required": false,
+                "ontologyMappingType": "simple",
+                "ontologyMapping": "http://www.anl.gov/cfm/transform.owl#SiteContactNameSemanticConcept"
+            },
+            "networkType": {
+                "description": "Network type",
+                "datatype": "string",
+                "defaultValue": "NoValue",
+                "required": false,
+                "ontologyMappingType": "simple",
+                "ontologyMapping": ""
+            },
+            "url": {
+                "description": "Network URL",
+                "datatype": "string",
+                "required": false,
+                "ontologyMappingType": "simple",
+                "ontologyMapping": "http://www.anl.gov/cfm/transform.owl#URLIndicatorValueSemanticComponent"
+            },
+            "malwareFamily": {
+                "description": "Malware family",
+                "datatype": "string",
+                "required": false,
+                "ontologyMappingType": "simple",
+                "ontologyMapping": ""
+            },
+            "malwareFamilyId": {
+                "description": "Identifier for malware family",
+                "datatype": "string",
+                "required": false,
+                "ontologyMappingType": "simple",
+                "ontologyMapping": ""
+            }
+        }
+    }
+}

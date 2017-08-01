@@ -5,7 +5,7 @@ import json
 import arrow
 import csv
 
-from FlexTransform.test.SampleInputs import CFM20ALERT, CFM13ALERT, STIXTLP, STIXACS, KEYVALUE, IIDCOMBINEDRECENT, IIDACTIVEBADHOST, IIDDYNAMICBADHOST, IIDBADIPV4
+from FlexTransform.test.SampleInputs import CFM20ALERT, CFM13ALERT, STIXTLP, STIXACS, KEYVALUE, IIDCOMBINEDRECENT, IIDACTIVEBADHOST, IIDDYNAMICBADHOST, IIDBADIPV4,ISIGHT
 from FlexTransform import FlexTransform
 from FlexTransform.test.utils import dynamic_time_change
 
@@ -321,7 +321,7 @@ class TestSTIXTLPToLQMT(unittest.TestCase):
         self.assertEqual(self.decoded_tlp[4]['sensitivity'], 'noSensitivity')
         self.assertTrue(self.utc_before.timestamp <= utc_now <= self.utc_after.timestamp,
                         "Processed Time does not fall within time range of Entry 4.")
-    
+
     def test_stixtlp_entry5(self):
         utc_now = int(self.decoded_tlp[5]['processedTime'])
         self.assertEqual(self.decoded_tlp[5]['action1'], 'Block')
@@ -338,7 +338,7 @@ class TestSTIXTLPToLQMT(unittest.TestCase):
         self.assertEqual(self.decoded_tlp[5]['sensitivity'], 'noSensitivity')
         self.assertTrue(self.utc_before.timestamp <= utc_now <= self.utc_after.timestamp,
                         "Processed Time does not fall within time range of Entry 6.")
-    
+
     def test_stixtlp_entry6(self):
         utc_now = int(self.decoded_tlp[6]['processedTime'])
         self.assertEqual(self.decoded_tlp[6]['action1'], 'Block')
@@ -355,7 +355,7 @@ class TestSTIXTLPToLQMT(unittest.TestCase):
         self.assertEqual(self.decoded_tlp[6]['sensitivity'], 'noSensitivity')
         self.assertTrue(self.utc_before.timestamp <= utc_now <= self.utc_after.timestamp,
                         "Processed Time does not fall within time range of Entry 6.")
-    
+
     def test_stixtlp_entry7(self):
         utc_now = int(self.decoded_tlp[7]['processedTime'])
         self.assertEqual(self.decoded_tlp[7]['action1'], 'Block')
@@ -372,7 +372,7 @@ class TestSTIXTLPToLQMT(unittest.TestCase):
         self.assertEqual(self.decoded_tlp[7]['sensitivity'], 'noSensitivity')
         self.assertTrue(self.utc_before.timestamp <= utc_now <= self.utc_after.timestamp,
                         "Processed Time does not fall within time range of Entry 7.")
-    
+
     def test_stixtlp_entry8(self):
         utc_now = int(self.decoded_tlp[8]['processedTime'])
         self.assertEqual(self.decoded_tlp[8]['action1'], 'Block')
@@ -389,7 +389,7 @@ class TestSTIXTLPToLQMT(unittest.TestCase):
         self.assertEqual(self.decoded_tlp[8]['sensitivity'], 'noSensitivity')
         self.assertTrue(self.utc_before.timestamp <= utc_now <= self.utc_after.timestamp,
                         "Processed Time does not fall within time range of Entry 8.")
-        
+
     def test_stixtlp_entry9(self):
         utc_now = int(self.decoded_tlp[9]['processedTime'])
         self.assertEqual(self.decoded_tlp[9]['action1'], 'Block')
@@ -732,9 +732,9 @@ class TestIIDCombinedRecentToLQMT(unittest.TestCase):
         self.assertEqual(self.decoded_combinedRecent[1]['indicator'], 'http://distri7.com/libraries/mill/centurylink/index.php')
         self.assertEqual(self.decoded_combinedRecent[1]['indicatorType'], 'URL')
         self.assertEqual(self.decoded_combinedRecent[1]['detectedTime'], '1494532839')
-        #These two test to be uncommented if domain being mapped to secondaryIndicator becomes implemented
-        #self.assertEqual(self.decoded_combinedRecent[1]['secondaryIndicator'], 'distri7.com')
-        #self.assertEqual(self.decoded_combinedRecent[1]['secondaryIndicatorType'], 'DNSDomainName')
+        # These two test to be uncommented if domain being mapped to secondaryIndicator becomes implemented
+        # self.assertEqual(self.decoded_combinedRecent[1]['secondaryIndicator'], 'distri7.com')
+        # self.assertEqual(self.decoded_combinedRecent[1]['secondaryIndicatorType'], 'DNSDomainName')
         self.assertTrue(self.utc_before.timestamp <= utc_now <= self.utc_after.timestamp,
                         "Processed Time does not fall within time range of Entry 1.")
 
@@ -745,9 +745,9 @@ class TestIIDCombinedRecentToLQMT(unittest.TestCase):
         self.assertEqual(self.decoded_combinedRecent[2]['indicator'], 'http://distri7.com/libraries/mill/centurylink/login.html')
         self.assertEqual(self.decoded_combinedRecent[2]['indicatorType'], 'URL')
         self.assertEqual(self.decoded_combinedRecent[2]['detectedTime'], '1494532839')
-        #These two test to be uncommented if domain being mapped to secondaryIndicator becomes implemented
-        #self.assertEqual(self.decoded_combinedRecent[2]['secondaryIndicator'], 'distri7.com')
-        #self.assertEqual(self.decoded_combinedRecent[2]['secondaryIndicatorType'], 'DNSDomainName')
+        # These two test to be uncommented if domain being mapped to secondaryIndicator becomes implemented
+        # self.assertEqual(self.decoded_combinedRecent[2]['secondaryIndicator'], 'distri7.com')
+        # self.assertEqual(self.decoded_combinedRecent[2]['secondaryIndicatorType'], 'DNSDomainName')
         self.assertTrue(self.utc_before.timestamp <= utc_now <= self.utc_after.timestamp,
                         "Processed Time does not fall within time range of Entry 2.")
 
@@ -758,9 +758,9 @@ class TestIIDCombinedRecentToLQMT(unittest.TestCase):
         self.assertEqual(self.decoded_combinedRecent[3]['indicator'], 'http://ihtjo.ga/3a///yh/en/index.php')
         self.assertEqual(self.decoded_combinedRecent[3]['indicatorType'], 'URL')
         self.assertEqual(self.decoded_combinedRecent[3]['detectedTime'], '1494532839')
-        #These two test to be uncommented if domain being mapped to secondaryIndicator becomes implemented
-        #self.assertEqual(self.decoded_combinedRecent[3]['secondaryIndicator'], 'ihtjo.ga')
-        #self.assertEqual(self.decoded_combinedRecent[3]['secondaryIndicatorType'], 'DNSDomainName')
+        # These two test to be uncommented if domain being mapped to secondaryIndicator becomes implemented
+        # self.assertEqual(self.decoded_combinedRecent[3]['secondaryIndicator'], 'ihtjo.ga')
+        # self.assertEqual(self.decoded_combinedRecent[3]['secondaryIndicatorType'], 'DNSDomainName')
         self.assertTrue(self.utc_before.timestamp <= utc_now <= self.utc_after.timestamp,
                          "Processed Time does not fall within time range of Entry 3.")
 
@@ -772,9 +772,9 @@ class TestIIDCombinedRecentToLQMT(unittest.TestCase):
         self.assertEqual(self.decoded_combinedRecent[4]['indicator'], 'http://indonesianwonderagate.com/zee/validate.htm?utm_campaign=tr.im/1e0rQ&utm_content=direct_input&utm_medium=no_referer&utm_source=tr.im')
         self.assertEqual(self.decoded_combinedRecent[4]['indicatorType'], 'URL')
         self.assertEqual(self.decoded_combinedRecent[4]['detectedTime'], '1494532839')
-        #These two test to be uncommented if domain being mapped to secondaryIndicator becomes implemented
-        #self.assertEqual(self.decoded_combinedRecent[4]['secondaryIndicator'], 'indonesianwonderagate.com')
-        #self.assertEqual(self.decoded_combinedRecent[4]['secondaryIndicatorType'], 'DNSDomainName')
+        # These two test to be uncommented if domain being mapped to secondaryIndicator becomes implemented
+        # self.assertEqual(self.decoded_combinedRecent[4]['secondaryIndicator'], 'indonesianwonderagate.com')
+        # self.assertEqual(self.decoded_combinedRecent[4]['secondaryIndicatorType'], 'DNSDomainName')
         self.assertTrue(self.utc_before.timestamp <= utc_now <= self.utc_after.timestamp,
                         "Processed Time does not fall within time range of Entry 4.")
 
@@ -871,15 +871,15 @@ class TestIIDCombinedRecentToLQMT(unittest.TestCase):
                         "Processed Time does not fall within time range of Entry 11.")
 
 
-#This test has the 'detectedTime test commented out because the field has been left blank in the
-#input entry which causes the field to not be made in the output file.
+    # This test has the 'detectedTime test commented out because the field has been left blank in the
+    # input entry which causes the field to not be made in the output file.
     def test_iidcombinedrecent_entry12(self):
         utc_now = int(self.decoded_combinedRecent[12]['processedTime'])
         self.assertEqual(self.decoded_combinedRecent[12]['action1'], 'Block')
         self.assertEqual(self.decoded_combinedRecent[12]['comment'], 'Phishing, YAHOO.COM')
         self.assertEqual(self.decoded_combinedRecent[12]['indicator'], 'http://www.indonesianwonderagate.com/zee/validate.htm')
         self.assertEqual(self.decoded_combinedRecent[12]['indicatorType'], 'URL')
-        #self.assertEqual(self.decoded_combinedRecent[12]['detectedTime'], '')
+        # self.assertEqual(self.decoded_combinedRecent[12]['detectedTime'], '')
         # These two test to be uncommented if domain being mapped to secondaryIndicator becomes implemented
         # self.assertEqual(self.decoded_combinedRecent[12]['secondaryIndicator'], 'indonesianwonderagate.com')
         # self.assertEqual(self.decoded_combinedRecent[12]['secondaryIndicatorType'], 'DNSDomainName')
@@ -1027,7 +1027,7 @@ class TestIIDDynamicBadHostnamestoLQMT(unittest.TestCase):
         cls.json_file = output1_object.getvalue()
         cls.decoded_dynamicBadHost = json.loads(cls.json_file)
 
-    #Past block date
+    # Past block date
     def test_iiddynamicbadhost_entry0(self):
         utc_now = int(self.decoded_dynamicBadHost[0]['processedTime'])
         self.assertEqual(self.decoded_dynamicBadHost[0]['action1'], 'Block')
@@ -1038,7 +1038,7 @@ class TestIIDDynamicBadHostnamestoLQMT(unittest.TestCase):
         self.assertTrue(self.utc_before.timestamp <= utc_now <= self.utc_after.timestamp,
                         "Processed Time does not fall within time range of Entry 0.")
 
-    #Past block date
+    # Past block date
     def test_iiddynamicbadhost_entry1(self):
         utc_now = int(self.decoded_dynamicBadHost[1]['processedTime'])
         self.assertEqual(self.decoded_dynamicBadHost[1]['action1'], 'Block')
@@ -1049,7 +1049,7 @@ class TestIIDDynamicBadHostnamestoLQMT(unittest.TestCase):
         self.assertTrue(self.utc_before.timestamp <= utc_now <= self.utc_after.timestamp,
                         "Processed Time does not fall within time range of Entry 1.")
 
-    #Past block date
+    # Past block date
     def test_iiddynamicbadhost_entry2(self):
         utc_now = int(self.decoded_dynamicBadHost[2]['processedTime'])
         self.assertEqual(self.decoded_dynamicBadHost[2]['action1'], 'Block')
@@ -1060,7 +1060,7 @@ class TestIIDDynamicBadHostnamestoLQMT(unittest.TestCase):
         self.assertTrue(self.utc_before.timestamp <= utc_now <= self.utc_after.timestamp,
                         "Processed Time does not fall within time range of Entry 2.")
 
-    #Past block date
+    # Past block date
     def test_iiddynamicbadhost_entry3(self):
         utc_now = int(self.decoded_dynamicBadHost[3]['processedTime'])
         self.assertEqual(self.decoded_dynamicBadHost[3]['action1'], 'Block')
@@ -1071,7 +1071,7 @@ class TestIIDDynamicBadHostnamestoLQMT(unittest.TestCase):
         self.assertTrue(self.utc_before.timestamp <= utc_now <= self.utc_after.timestamp,
                         "Processed Time does not fall within time range of Entry 3.")
 
-    #On block date
+    # On block date
     def test_iiddynamicbadhost_entry4(self):
         utc_now = int(self.decoded_dynamicBadHost[4]['processedTime'])
         self.assertEqual(self.decoded_dynamicBadHost[4]['action1'], 'Block')
@@ -1082,7 +1082,7 @@ class TestIIDDynamicBadHostnamestoLQMT(unittest.TestCase):
         self.assertTrue(self.utc_before.timestamp <= utc_now <= self.utc_after.timestamp,
                         "Processed Time does not fall within time range of Entry 4.")
 
-    #On block date
+    # On block date
     def test_iiddynamicbadhost_entry5(self):
         utc_now = int(self.decoded_dynamicBadHost[5]['processedTime'])
         self.assertEqual(self.decoded_dynamicBadHost[5]['action1'], 'Block')
@@ -1093,7 +1093,7 @@ class TestIIDDynamicBadHostnamestoLQMT(unittest.TestCase):
         self.assertTrue(self.utc_before.timestamp <= utc_now <= self.utc_after.timestamp,
                         "Processed Time does not fall within time range of Entry 5.")
 
-    #On block date
+    # On block date
     def test_iiddynamicbadhost_entry6(self):
         utc_now = int(self.decoded_dynamicBadHost[6]['processedTime'])
         self.assertEqual(self.decoded_dynamicBadHost[6]['action1'], 'Block')
@@ -1104,7 +1104,7 @@ class TestIIDDynamicBadHostnamestoLQMT(unittest.TestCase):
         self.assertTrue(self.utc_before.timestamp <= utc_now <= self.utc_after.timestamp,
                         "Processed Time does not fall within time range of Entry 6.")
 
-    #On block date
+    # On block date
     def test_iiddynamicbadhost_entry7(self):
         utc_now = int(self.decoded_dynamicBadHost[7]['processedTime'])
         self.assertEqual(self.decoded_dynamicBadHost[7]['action1'], 'Block')
@@ -1115,7 +1115,7 @@ class TestIIDDynamicBadHostnamestoLQMT(unittest.TestCase):
         self.assertTrue(self.utc_before.timestamp <= utc_now <= self.utc_after.timestamp,
                         "Processed Time does not fall within time range of Entry 7.")
 
-    #Future block date
+    # Future block date
     def test_iiddynamicbadhost_entry8(self):
         utc_now = int(self.decoded_dynamicBadHost[8]['processedTime'])
         self.assertEqual(self.decoded_dynamicBadHost[8]['action1'], 'Block')
@@ -1126,7 +1126,7 @@ class TestIIDDynamicBadHostnamestoLQMT(unittest.TestCase):
         self.assertTrue(self.utc_before.timestamp <= utc_now <= self.utc_after.timestamp,
                         "Processed Time does not fall within time range of Entry 8.")
 
-    #Future block date
+    # Future block date
     def test_iiddynamicbadhost_entry9(self):
         utc_now = int(self.decoded_dynamicBadHost[9]['processedTime'])
         self.assertEqual(self.decoded_dynamicBadHost[9]['action1'], 'Block')
@@ -1137,7 +1137,7 @@ class TestIIDDynamicBadHostnamestoLQMT(unittest.TestCase):
         self.assertTrue(self.utc_before.timestamp <= utc_now <= self.utc_after.timestamp,
                         "Processed Time does not fall within time range of Entry 9.")
 
-    #Future block date
+    # Future block date
     def test_iiddynamicbadhost_entry10(self):
         utc_now = int(self.decoded_dynamicBadHost[10]['processedTime'])
         self.assertEqual(self.decoded_dynamicBadHost[10]['action1'], 'Block')
@@ -1148,7 +1148,7 @@ class TestIIDDynamicBadHostnamestoLQMT(unittest.TestCase):
         self.assertTrue(self.utc_before.timestamp <= utc_now <= self.utc_after.timestamp,
                        "Processed Time does not fall within time range of Entry 10.")
 
-    #Future block date
+    # Future block date
     def test_iiddynamicbadhost_entry11(self):
         utc_now = int(self.decoded_dynamicBadHost[11]['processedTime'])
         self.assertEqual(self.decoded_dynamicBadHost[11]['action1'], 'Block')
