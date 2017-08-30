@@ -4,7 +4,7 @@
 			"IPv4-Address-Block": [ { "ipv4": "*", "ipv6": "" } ],
 			"IPv6-Address-Block": [ { "ipv6": "*", "ipv4": "" } ],
 			"DNS-Hostname-Block": [ { "fqdn": "*", "ipv4": "", "ipv6": "" } ],
-            "Malicious-Email-Block": [ { "envelopeaddress": "*", "ipv4": "", "ipv6": "", "fqdn": "*" } ]
+            "Email-Address": [ { "envelopeaddress": "*", "ipv4": "", "ipv6": "", "fqdn": "*" } ]
 		},
 		"fields": {
 			"site": {
@@ -42,6 +42,27 @@
 				"required": false,
 				"ontologyMappingType": "simple",
 				"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#EmailAddressIndicatorValueSemanticComponent"
+			},
+			"md5hash": {
+				"description": "The type of the hash of the file",
+				"datatype": "string",
+				"required": false,
+				"ontologyMappingType": "simple",
+				"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#MD5FilehashIndicatorValueSemanticComponent"
+			},
+            "sha1hash": {
+				"description": "The type of the hash of the file",
+				"datatype": "string",
+				"required": false,
+				"ontologyMappingType": "simple",
+				"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#SHA1FilehashIndicatorValueSemanticComponent"
+			},
+            "sha256hash": {
+				"description": "The type of the hash of the file",
+				"datatype": "string",
+				"required": false,
+				"ontologyMappingType": "simple",
+				"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#SHA256FilehashIndicatorValueSemanticComponent"
 			},
 			"direction": {
 				"description": "Direction of traffic flow",
