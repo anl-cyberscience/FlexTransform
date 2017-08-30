@@ -217,7 +217,10 @@ class SchemaParser(object):
                                     self._TransformDataToNewSchema(rowType, row, document_header_data,
                                                                    document_meta_data, derived_data, oracle))
                             except Exception as inst:
-                                self.logging.error(inst)
+                                if "UnknownIndicatorType" in inst.args[0]:
+                                    self.logging.warning(inst)
+                                else:
+                                    self.logging.error(inst)
                         else:
                             raise Exception('NoParsableDataFound', "Data isn't in a parsable dictionary format")
 
