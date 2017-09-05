@@ -1076,6 +1076,11 @@ class SchemaParser(object):
             if self.trace and field in self.traceindex:
                 self.logging.debug("[TRACE {}] - Processing field mapping to target schema.".format(field))
 
+            if 'excludeFromOutput' in fieldDict and fieldDict['excludeFromOutput'] is True:
+                if self.trace and field in self.traceindex:
+                    self.logging.debug("[TRACE {}] - Excluding field from output".format(field))
+                continue
+
             OntologyReferences = collections.defaultdict(list)
             OntologyReference = None
 
