@@ -1,6 +1,12 @@
 {
 	"DocumentHeaderData": {
         "fields": {
+            "numberIndicators": {
+                "description": "field created by intermediate processing, number of indicators in file",
+                "datatype": "int",
+                "required": false,
+                "ontologyMappingType": "none"
+            }
         }
 	},
 	"IndicatorData": {
@@ -81,10 +87,21 @@
 					"egress": {
 						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#EgressDirectionSemanticConcept"
 					},
+                    "inbound": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#IngressDirectionSemanticConcept#",
+				        "excludeFromOutput": true
+					},
+					"outbound": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#EgressDirectionSemanticConcept",
+				        "excludeFromOutput": true
+					},
 					"bidirectional": {
 						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#BidirectionalDirectionSemanticConcept"
 					},
 					"unknown": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#UnknownDirectionSemanticConcept"
+					},
+					"*": {
 						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#UnknownDirectionSemanticConcept"
 					}
 				}
@@ -146,37 +163,20 @@
 				"description": "Severity of impact if detected indicator had been successful",
 				"datatype": "string",
 				"required": true,
-				"defaultValue": "block",
-				"discardBeforeTranslation": true,
-				"ontologyMappingType": "enum",
-				"enumValues": {
-                    "block": {
-                        "ontologyMapping": "",
-                        "reverseOntologyMappings": [
-							"http://www.anl.gov/cfm/transform.owl#DNSIndicatorValueSemanticComponent",
-                            "http://www.anl.gov/cfm/transform.owl#IPv4AddressIndicatorValueSemanticComponent",
-                            "http://www.anl.gov/cfm/transform.owl#IPv6AddressIndicatorValueSemanticComponent"
-						]
-                    },
-                    "spearphish": {
-                        "ontologyMapping": "http://www.anl.gov/cfm/transform.owl#IndicatorCategoryMaliciousEmailSemanticConcept",
-                        "reverseOntologyMappings": [
-                             "http://www.anl.gov/cfm/transform.owl#EmailAddressIndicatorValueSemanticComponent",
-                            "http://www.anl.gov/cfm/transform.owl#EmailSubjectValueSemanticComponent"
-                        ]
-                    },
-					"malware": {
-						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#IndicatorCategoryMalwareArtifactsSemanticConcept",
-						"reverseOntologyMappings": [
-							"http://www.anl.gov/cfm/transform.owl#MD5FilehashIndicatorValueSemanticComponent",
-                            "http://www.anl.gov/cfm/transform.owl#SHA1FilehashIndicatorValueSemanticComponent",
-                            "http://www.anl.gov/cfm/transform.owl#SHA256FilehashIndicatorValueSemanticComponent"
-						]
-					}
-                }
+				"defaultValue": "&mbl_sourcetype()",
+				"ontologyMappingType": "none",
+                "fields": [
+                    "ipv4",
+                    "ipv6",
+                    "fqdn",
+                    "envelopeaddress",
+                    "md5hash",
+                    "sha1hash",
+                    "sha256hash"
+                ]
 			},
 			"subject": {
-				"description": "Severity of impact if detected indicator had been successful",
+				"description": "Subject line of malicious email",
 				"datatype": "string",
 				"required": false,
 				"ontologyMappingType": "simple",
@@ -185,7 +185,7 @@
 			"category": {
 				"description": "The category for the alert",
 				"datatype": "enum",
-				"required": true,
+				"required": false,
 				"defaultValue": "Unspecified",
 				"ontologyMappingType": "enum",
 				"enumValues": {
@@ -201,7 +201,7 @@
 					"Botnet": {
 						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#BotnetAlertBehaviorCharacterizationSemanticComponent"
 					},
-					"Malware Traffic": {
+					"Malware": {
 						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#MalwareTrafficAlertBehaviorCharacterizationSemanticComponent"
 					},
 					"Exploit": {
@@ -224,6 +224,9 @@
 					},
 					"Unspecified": {
 						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#UnspecifiedAlertBehaviorCharacterizationSemanticComponent"
+					},
+					"*": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#UnspecifiedAlertBehaviorCharacterizationSemanticComponent"
 					}
 				}
 			},
@@ -233,8 +236,7 @@
 				"required": "false",
 				"dateTimeFormat": "YYYY-MM-DDTHH:mm:ssZZ",
 				"dateTimeFormatAlternate": ["YYYY-MM-DDTHH:mm:ssZ", "YYYY-MM-DDTHH:mm:ss"],
-				"ontologyMappingType": "simple",
-				"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#TimeOfDetectionSemanticConcept"
+				"ontologyMappingType": "none"
 			}
 		}
 	}
