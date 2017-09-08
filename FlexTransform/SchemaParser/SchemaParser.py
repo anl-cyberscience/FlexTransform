@@ -213,9 +213,10 @@ class SchemaParser(object):
                     for row in MappedData[rowType]:
                         if isinstance(row, dict):
                             try:
-                                self.transformed_data[rowType].append(
-                                    self._TransformDataToNewSchema(rowType, row, document_header_data,
-                                                                   document_meta_data, derived_data, oracle))
+                                new_row = self._TransformDataToNewSchema(rowType, row, document_header_data,
+                                                                         document_meta_data, derived_data, oracle)
+                                if new_row:
+                                    self.transformed_data[rowType].append(new_row)
                             except Exception as inst:
                                 if "UnknownIndicatorType" in inst.args[0]:
                                     self.logging.warning(inst)
@@ -225,8 +226,10 @@ class SchemaParser(object):
                             raise Exception('NoParsableDataFound', "Data isn't in a parsable dictionary format")
 
                 elif isinstance(MappedData[rowType], dict):
-                    self.transformed_data[rowType] = self._TransformDataToNewSchema(rowType, MappedData[rowType], None,
-                                                                                    document_meta_data, derived_data, oracle)
+                    new_header = self._TransformDataToNewSchema(rowType, MappedData[rowType], None,
+                                                                document_meta_data, derived_data, oracle)
+                    if new_header:
+                        self.transformed_data[rowType] = new_header
                 else:
                     raise Exception('NoParsableDataFound', "Data isn't in a parsable dictionary format")
             else:
@@ -1194,7 +1197,8 @@ class SchemaParser(object):
                     # of the field carries a semantic significance, not just the field itself.
                     if 'enumValues' in fieldDict:
                         for k, v in fieldDict['enumValues'].items():
-                            if v['ontologyMapping'] != '':
+                            if v['ontologyMapping'] != '' and \
+                                    not ('excludeFromOutput' in v and v['excludeFromOutput'] is True):
                                 OntologyReference = v['ontologyMapping']
                                 if self.trace and field in self.traceindex:
                                     self.logging.debug("[TRACE {}] - Evaluating enum value mapping to ontology: {} => {}.".format(
@@ -1305,7 +1309,9 @@ class SchemaParser(object):
                     if referencedValue:
                         if 'ontologyMappingEnumValues' in fieldDict:
                             if referencedValue in fieldDict['ontologyMappingEnumValues']:
-                                if fieldDict['ontologyMappingEnumValues'][referencedValue]['ontologyMapping'] != '':
+                                referenced_mapping = fieldDict['ontologyMappingEnumValues'][referencedValue]
+                                if referenced_mapping['ontologyMapping'] != '' and not \
+                                        ('excludeFromOutput' in referenced_mapping and referenced_mapping['excludeFromOutput'] is True):
                                     OntologyReference = fieldDict['ontologyMappingEnumValues'][referencedValue][
                                         'ontologyMapping']
                                     if self.trace and field in self.traceindex:
