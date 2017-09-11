@@ -47,7 +47,7 @@
 				"valuemap": "information_source;time;produced_time", 
 				"datatype": "datetime",
 				"dateTimeFormat": "YYYY-MM-DDTHH:mm:ssZZ",
-				"dateTimeFormatAlternate": ["YYYY-MM-DDTHH:mm:ssZ", "YYYY-MM-DDTHH:mm:ssZZ"],
+				"dateTimeFormatAlternate": ["YYYY-MM-DDTHH:mm:ssZ", "YYYY-MM-DDTHH:mm:ssZZ", "YYYY-MM-DDTHH:mm:ss"],
 				"required": false,
 				"ontologyMappingType": "multiple",
 				"ontologyMappings": [
@@ -603,6 +603,26 @@
 						"reverseOntologyMappings": [
 							"http://www.anl.gov/cfm/transform.owl#ArtifactRawObjectIndicatorValueSemanticComponent"
 						]
+					}
+				}
+			},
+
+			"observable_object_addressvalue": {
+				"description": "The value of the IP address object",
+				"valuemap": "observable;object;properties;address_value",
+				"datatype": "string",
+				"excludeFromOutput": true,
+				"ontologyMappingType": "referencedEnum",
+				"ontologyEnumField": "observable_object_category",
+				"ontologyMappingEnumValues": {
+					"ipv4-addr": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#IPv4AddressIndicatorValueSemanticComponent"
+					},
+					"ipv6-addr": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#IPv6AddressIndicatorValueSemanticComponent"
+					},
+					"e-mail": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#EmailAddressIndicatorValueSemanticComponent"
 					}
 				}
 			},
