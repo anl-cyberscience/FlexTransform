@@ -151,6 +151,9 @@
 					"very-high": {
 						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#CriticalSeveritySemanticConcept",
 						"excludeFromOutput": true
+					},
+					"*": {
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#UnknownSeveritySemanticConcept"
 					}
 				}
 			},
