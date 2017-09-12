@@ -47,6 +47,7 @@ class GlobalFunctions(object):
             'calculate_duration': ['currentRow'],
             'now': ['fieldDict'],
             'generate_uuid': None,
+            'mbl_sourcetype': ['indicatorType']
         }
     }
 
@@ -97,5 +98,20 @@ class GlobalFunctions(object):
             
         elif function_name == 'generate_uuid':
             value = str(uuid.uuid4())
-            
+
+        elif function_name == 'mbl_sourcetype':
+            if ('ipv4' in args['currentRow'] and args['currentRow']['ipv4']['Value']) or \
+                    ('ipv6' in args['currentRow'] and args['currentRow']['ipv6']['Value']) or \
+                    ('fqdn' in args['currentRow'] and args['currentRow']['fqdn']['Value']):
+                value = 'block'
+            elif ('envelopeaddress' in args['currentRow'] and args['currentRow']['envelopeaddress']['Value']) or \
+                    ('subject' in args['currentRow'] and args['currentRow']['subject']['Value']) or \
+                    ('xheader' in args['currentRow'] and args['currentRow']['xheader']['Value']):
+                value = 'spearphish'
+            elif ('sizeOnDisk' in args['currentRow'] and args['currentRow']['sizeOnDisk']['Value']) or \
+                    ('compileTime' in args['currentRow'] and args['currentRow']['compileTime']['Value']) or \
+                    ('md5hash' in args['currentRow'] and args['currentRow']['md5hash']['Value']) or \
+                    ('sha1hash' in args['currentRow'] and args['currentRow']['sha1hash']['Value']) or \
+                    ('sha256hash' in args['currentRow'] and args['currentRow']['sha256hash']['Value']):
+                value = 'malware'
         return value

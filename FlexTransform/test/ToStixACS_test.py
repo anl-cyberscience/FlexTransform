@@ -313,7 +313,7 @@ class TestSTIXTLPToSTIXACS(unittest.TestCase):
     def test_indicator_description(self):
         self.assertEqual(set(self.output1.xpath("%s indicator:Description/text()" % self.indicator,
                                                 namespaces=self.namespace)),
-                         set(['CRISP-16-307.pdf', 'CRISP Report Indicator']))
+                         set(['CRISP-16-307.pdf', 'Energy Sector Indicator']))
 
     def test_indicator_properties_xsitype(self):
         self.assertEqual(set(self.output1.xpath("%s @xsi:type" % self.properties,
@@ -867,7 +867,7 @@ class TestCRSIPToSTIXACS(unittest.TestCase):
     def test_indicator_description(self):
         self.assertEqual(set(self.output1.xpath("%s indicator:Description/text()" % self.indicator,
                                                 namespaces=self.namespace)),
-                         set(["CRISP Report Indicator"]))
+                         set(["Energy Sector Indicator"]))
 
     def test_indicator_address_values(self):
         self.assertEqual(set(self.output1.xpath("%s AddressObj:Address_Value/text()" % self.properties,
