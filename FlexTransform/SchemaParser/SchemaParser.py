@@ -979,8 +979,11 @@ class SchemaParser(object):
                             break
 
                     if not caseUpdated:
-                        raise Exception('DataTypeInvalid',
-                                        'Value for field ' + fieldName + ' is not listed in the enum values: ' + value)
+                        if "*" in fieldDict['enumValues']:
+                            self.logging.warning('Value="{}" for field {} not in the enum values, using wildcard "*"'.format(value, fieldName))
+                        else:
+                            raise Exception('DataTypeInvalid',
+                                            'Value for field ' + fieldName + ' is not listed in the enum values: ' + value)
                 if self.trace and fieldName in self.traceindex:
                     self.logging.debug("[TRACE {}] - enum data type; valid value {}.".format(fieldName, value))
             elif dataType == 'emailAddress':
