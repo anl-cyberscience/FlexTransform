@@ -117,7 +117,7 @@ class TestSTIXTLPToKeyValue(unittest.TestCase):
         self.assertIn('ipv4=14.14.14.14', self.output1)
 
     def test_combined_comment(self):
-        self.assertIs(5, self.output1.count("combined_comment='CRISP Report Indicator'"))
+        self.assertIs(5, self.output1.count("combined_comment='Energy Sector Indicator'"))
 
 
 class TestSTIXACSToKeyValue(unittest.TestCase):
