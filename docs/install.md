@@ -45,3 +45,8 @@ Used to pass in the ontology IRI file for the source file.
 --destination-schema-IRI
 ```
 Used to pass in the ontology IRI file for the destination file.
+
+```shell
+flext --src /Path/to/file --src-config /Path/to/file --dst /Path/to/file --dst-config /Path/to/file
+```
+This is the most basic format for transforming a file that is currently supported. 
