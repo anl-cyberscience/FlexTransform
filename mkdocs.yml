@@ -1,6 +1,5 @@
 site_name: FlexTransform
 pages:
-  - index.md
   - Home.md
   - install.md
   - usage.md
