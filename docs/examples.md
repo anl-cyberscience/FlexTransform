@@ -1,9 +1,9 @@
 ## CFM13 to STIX-TLP
-#### Input Files (present in the repo, not the package, download to known location if needed)
+##### Input Files (present in the repo, not the package, download to known location if needed)
   - [CFM13 File](./Example Files/SampleInput-CFM13.xml)
 
 
-#### Commands
+##### Commands
 
 ```bash
     flext
@@ -13,7 +13,7 @@
     --dst-config FlexTransform/FlexTransform/resources/sampleConfigurations/stix_tlp.cfg
 ```
 
-#### Output
+##### Output
 ```xml
       <stix:STIX_Package 
       	xmlns:cyboxCommon="http://cybox.mitre.org/common-2"
@@ -101,10 +101,10 @@
 ```
 
 ##  STIX-TLP to CFM13
-#### Input Files (present in the repo, not the package, download to known location if needed)
+##### Input Files (present in the repo, not the package, download to known location if needed)
    - [STIX-TLP File](./Example Files/SampleInput-STIX-TLP.xml)
 
-#### Commands
+##### Commands
 ```bash
     flext
     --src  FlexTransform/ExampleFiles/SampleInput-STIX-TLP.xml
@@ -113,7 +113,7 @@
     --dst-config  FlexTransform/FlexTransform/resources/sampleConfigurations/cfm13.cfg
 ```
 
-#### Output
+##### Output
 ```xml
     <?xml version='1.0' encoding='UTF-8'?>
     <!DOCTYPE IDMEF-Message PUBLIC "-//IETF//DTD RFC XXXX IDMEF v1.0//EN" "idmef-message.dtd">
@@ -181,10 +181,10 @@
 ```
     
 ##  STIX-TLP to LQMT
-#### Input Files (present in the repo, not the package, download to known location if needed)
+##### Input Files (present in the repo, not the package, download to known location if needed)
    - [STIX-TLP File](./Example Files/SampleInput-STIX-TLP.xml)
 
-#### Commands
+##### Commands
 ```bash
     flext
     --src  FlexTransform/ExampleFiles/SampleInput-STIX-TLP.xml
@@ -193,7 +193,7 @@
     --dst-config  FlexTransform/FlexTransform/resources/sampleConfigurations/lqmtools.cfg
 ```
 
-#### Output
+##### Output
 ```JSON
     {
     "indicators" : {
