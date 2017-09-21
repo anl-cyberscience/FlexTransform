@@ -17,7 +17,7 @@
 flext --src FlexTransform/ExampleFiles/SampleInput-STIX-TLP.xml --src-config FlexTransform/FlexTransform/resources/sampleConfigurations/stix_tlp.cfg --dst Output-CFM13.xml --dst-config FlexTransform/FlexTransform/resources/sampleConfigurations/cfm13.cfg
 ```
 
-- Output
+### Output
   - CFM13 to STIX-TLP
 ```xml
       <stix:STIX_Package 
@@ -107,7 +107,7 @@ flext --src FlexTransform/ExampleFiles/SampleInput-STIX-TLP.xml --src-config Fle
       
    - STIX-TLP to CFM13
 
-    
+```xml
     <?xml version='1.0' encoding='UTF-8'?>
     <!DOCTYPE IDMEF-Message PUBLIC "-//IETF//DTD RFC XXXX IDMEF v1.0//EN" "idmef-message.dtd">
     <IDMEF-Message xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.anl.gov/cfm/1.3/IDMEF-Message" xsi:schemaLocation="http://www.anl.gov/cfm/1.3/IDMEF-Message/../../../resources/schemas/CFMMessage13.xsd">
@@ -171,9 +171,9 @@ flext --src FlexTransform/ExampleFiles/SampleInput-STIX-TLP.xml --src-config Fle
         <AdditionalData type="string" meaning="restriction">public</AdditionalData>
       </Alert>
     </IDMEF-Message>
+```
     
-    
-   -STIX-TLP to LQMT
+   - STIX-TLP to LQMT
     
     {
     "indicators" : {
