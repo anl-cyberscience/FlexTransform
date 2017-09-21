@@ -2,7 +2,7 @@
 - Input Files (present in the repo, not the package, download to known location if needed)
   - [CFM13 File](./Example Files/SampleInput-CFM13.xml)
   - [STIX-TLP File](./Example Files/SampleInput-STIX-TLP.xml)
-  
+
 ### Commands
  - CFM13 to STIX-TLP
 
@@ -19,8 +19,7 @@ flext --src FlexTransform/ExampleFiles/SampleInput-STIX-TLP.xml --src-config Fle
 
 - Output
   - CFM13 to STIX-TLP
-
-      
+```xml
       <stix:STIX_Package 
       	xmlns:cyboxCommon="http://cybox.mitre.org/common-2"
       	xmlns:cybox="http://cybox.mitre.org/cybox-2"
@@ -104,6 +103,7 @@ flext --src FlexTransform/ExampleFiles/SampleInput-STIX-TLP.xml --src-config Fle
             </stix:Indicator>
         </stix:Indicators>
       </stix:STIX_Package>
+```
       
    - STIX-TLP to CFM13
 
