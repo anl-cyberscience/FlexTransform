@@ -5,7 +5,7 @@
 
 Flexible Transform (FlexT) enables dynamic translation between Cyber Threat Intelligence reports (CTI), accomplishing this by digesting CTI data down to its semantic roots (meaning and context).
 
-###Overview
+##Overview
 ###The Problem
 Most cyber defense systems incorporate some form of cyber threat intelligence (CTI) collection and analysis. However, different
 systems and CTI sharing communities have implemented a variety of representations to transmit these data (e.g., STIX, OpenIOC, custom CSV).
