@@ -5,18 +5,16 @@
 - Command
   - CFM13 to STIX-TLP
 
-    ```shell
+
     flext --src FlexTransform/ExampleFiles/SampleInput-CFM13.xml --src-config FlexTransform/FlexTransform/resources/sampleConfigurations/cfm13.cfg --dst Output-STIX-TLP.xml --dst-config FlexTransform/FlexTransform/resources/sampleConfigurations/stix_tlp.cfg
-    ```
   - STIX-TLP to CFM13
 
-    ```shell
+   
     flext --src FlexTransform/ExampleFiles/SampleInput-STIX-TLP.xml --src-config FlexTransform/FlexTransform/resources/sampleConfigurations/stix_tlp.cfg --dst Output-CFM13.xml --dst-config FlexTransform/FlexTransform/resources/sampleConfigurations/cfm13.cfg
-    ```
 - Output
   - CFM13 to STIX-TLP
 
-      ```
+      
       <stix:STIX_Package 
       	xmlns:cyboxCommon="http://cybox.mitre.org/common-2"
       	xmlns:cybox="http://cybox.mitre.org/cybox-2"
@@ -100,10 +98,10 @@
             </stix:Indicator>
         </stix:Indicators>
       </stix:STIX_Package>
-      ```
-    - STIX-TLP to CFM13
+      
+   - STIX-TLP to CFM13
 
-    ```xml
+    
     <?xml version='1.0' encoding='UTF-8'?>
     <!DOCTYPE IDMEF-Message PUBLIC "-//IETF//DTD RFC XXXX IDMEF v1.0//EN" "idmef-message.dtd">
     <IDMEF-Message xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.anl.gov/cfm/1.3/IDMEF-Message" xsi:schemaLocation="http://www.anl.gov/cfm/1.3/IDMEF-Message/../../../resources/schemas/CFMMessage13.xsd">
@@ -167,10 +165,10 @@
         <AdditionalData type="string" meaning="restriction">public</AdditionalData>
       </Alert>
     </IDMEF-Message>
-    ```
     
-    -STIX-TLP to LQMT
-    ```csv
+    
+   -STIX-TLP to LQMT
+    
     {
     "indicators" : {
         "DataSensitivity": "noSensitivity",
@@ -187,4 +185,3 @@
         "UploadID": "0387f9cc-a903-4822-8976-27e1ff47ca71"
     }
 }
-```
