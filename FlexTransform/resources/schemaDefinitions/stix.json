@@ -323,7 +323,7 @@
 				"description": "Description of indicator",
 				"valuemap": "description",
 				"datatype": "string",
-				"defaultValue": "CISCP STIX Indicator",
+				"defaultValue": "STIX Indicator",
 				"required": true,
 				"ontologyMappingType": "simple",
 				"__ontologyMapping": "http://www.anl.gov/cfm/transform.owl#IPv4IndicatorTypeSemanticConcept",
