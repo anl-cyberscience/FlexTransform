@@ -16,19 +16,19 @@ $ pip install FlexTransform
 ##Getting Started
 When using FlexT from the command lines there are certian arguments that are required to be passed in to perform the 
 conversiion.
-```shell
+```bash
 --src-config CONFIG
 ```  
 This argument is used to pass in the file that contains the parser configuration file for the source file.
-```shell
+```bash
 --src SRC
 ```  
 This argument is the source file that will be transformed.
-```shell
+```bash
 --dst-config CONFIG
 ```
 This argument is used to pass in the file that contains the parser configuration file for the destination file.
-```shell
+```bash
 --dst DST
 ```
 This argument is used to pass in the path to where the file will be stored.
@@ -36,17 +36,17 @@ This argument is used to pass in the path to where the file will be stored.
 These arguments will be all you need to get started with FlexT when using one of the supported schemas. If an unsupported 
 schema is going to be used, users can pass in arguments for either the source schema, destination schema, or both.
 
-```shell
+```bash
 --source-schema-IRI
 ```
 Used to pass in the ontology IRI file for the source file.
 
-```shell
+```bash
 --destination-schema-IRI
 ```
 Used to pass in the ontology IRI file for the destination file.
 
-```shell
+```bash
 flext --src /Path/to/file --src-config /Path/to/file --dst /Path/to/file --dst-config /Path/to/file
 ```
 This is the most basic format for transforming a file that is currently supported. 

@@ -2,15 +2,21 @@
 - Input Files (present in the repo, not the package, download to known location if needed)
   - [CFM13 File](./Example Files/SampleInput-CFM13.xml)
   - [STIX-TLP File](./Example Files/SampleInput-STIX-TLP.xml)
-- Command
-  - CFM13 to STIX-TLP
+  
+### Commands
+ - CFM13 to STIX-TLP
 
-
+```bash
     flext --src FlexTransform/ExampleFiles/SampleInput-CFM13.xml --src-config FlexTransform/FlexTransform/resources/sampleConfigurations/cfm13.cfg --dst Output-STIX-TLP.xml --dst-config FlexTransform/FlexTransform/resources/sampleConfigurations/stix_tlp.cfg
+```
+
   - STIX-TLP to CFM13
 
 
-`flext --src FlexTransform/ExampleFiles/SampleInput-STIX-TLP.xml --src-config FlexTransform/FlexTransform/resources/sampleConfigurations/stix_tlp.cfg --dst Output-CFM13.xml --dst-config FlexTransform/FlexTransform/resources/sampleConfigurations/cfm13.cfg`
+```bash
+flext --src FlexTransform/ExampleFiles/SampleInput-STIX-TLP.xml --src-config FlexTransform/FlexTransform/resources/sampleConfigurations/stix_tlp.cfg --dst Output-CFM13.xml --dst-config FlexTransform/FlexTransform/resources/sampleConfigurations/cfm13.cfg
+```
+
 - Output
   - CFM13 to STIX-TLP
 
