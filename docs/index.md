@@ -36,7 +36,7 @@ original meaning and context of CTI data are preserved.
 
 A “format” in FlexT is broken down into three components:
 
-`Syntax` – A specification of valid document characters and their composition (e.g., CSV, XML, JSON).  
+`Syntax` – A specification of valid document characters and their composition (e.g., CSV, XML, JSON).
 `Schema` – A specification of the valid terms, the data they can convey, and restrictions on their use (e.g., STIX, OpenIOC, IODEF ).
 `Semantics` – A definition of the meaning of terms (e.g., SourceIPAddress is the session originating IPv4 address).
 

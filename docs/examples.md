@@ -175,7 +175,7 @@ flext --src FlexTransform/ExampleFiles/SampleInput-STIX-TLP.xml --src-config Fle
     
    - STIX-TLP to LQMT
 
-```json
+```JSON
     {
     "indicators" : {
         "DataSensitivity": "noSensitivity",
