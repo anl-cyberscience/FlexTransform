@@ -1,5 +1,5 @@
 # Dependencies
-##Install
+## Install
 FlexTransform (FlexT) is run using Python3. This means that **Python3** is required to be installed to properly run FlexT.
 Once Python3 is installed FlexT can be installed via *pip3*, but it requires the python package *lxml* which itself has 
 UNIX dependencies. The required dependencies for *lxml* are **libxml** and **libxslt** as well as their associated 
@@ -13,7 +13,7 @@ $ sudo apt-get install libxml2-dev libxslt-dev python-dev
 $ pip install FlexTransform
 ```
 
-##Getting Started
+## Getting Started
 When using FlexT from the command lines there are certian arguments that are required to be passed in to perform the 
 conversiion.
 ```bash

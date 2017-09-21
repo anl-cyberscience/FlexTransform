@@ -1,24 +1,19 @@
-## Examples
-- Input Files (present in the repo, not the package, download to known location if needed)
+## CFM13 to STIX-TLP
+#### Input Files (present in the repo, not the package, download to known location if needed)
   - [CFM13 File](./Example Files/SampleInput-CFM13.xml)
-  - [STIX-TLP File](./Example Files/SampleInput-STIX-TLP.xml)
 
-### Commands
- - CFM13 to STIX-TLP
 
-```bash
-    flext --src FlexTransform/ExampleFiles/SampleInput-CFM13.xml --src-config FlexTransform/FlexTransform/resources/sampleConfigurations/cfm13.cfg --dst Output-STIX-TLP.xml --dst-config FlexTransform/FlexTransform/resources/sampleConfigurations/stix_tlp.cfg
-```
-
-  - STIX-TLP to CFM13
-
+#### Commands
 
 ```bash
-flext --src FlexTransform/ExampleFiles/SampleInput-STIX-TLP.xml --src-config FlexTransform/FlexTransform/resources/sampleConfigurations/stix_tlp.cfg --dst Output-CFM13.xml --dst-config FlexTransform/FlexTransform/resources/sampleConfigurations/cfm13.cfg
+    flext
+    --src FlexTransform/ExampleFiles/SampleInput-CFM13.xml
+    --src-config FlexTransform/FlexTransform/resources/sampleConfigurations/cfm13.cfg
+    --dst Output-STIX-TLP.xml
+    --dst-config FlexTransform/FlexTransform/resources/sampleConfigurations/stix_tlp.cfg
 ```
 
-### Output
-  - CFM13 to STIX-TLP
+#### Output
 ```xml
       <stix:STIX_Package 
       	xmlns:cyboxCommon="http://cybox.mitre.org/common-2"
@@ -104,9 +99,21 @@ flext --src FlexTransform/ExampleFiles/SampleInput-STIX-TLP.xml --src-config Fle
         </stix:Indicators>
       </stix:STIX_Package>
 ```
-      
-   - STIX-TLP to CFM13
 
+##  STIX-TLP to CFM13
+#### Input Files (present in the repo, not the package, download to known location if needed)
+   - [STIX-TLP File](./Example Files/SampleInput-STIX-TLP.xml)
+
+#### Commands
+```bash
+    flext
+    --src  FlexTransform/ExampleFiles/SampleInput-STIX-TLP.xml
+    --src-config  FlexTransform/FlexTransform/resources/sampleConfigurations/stix_tlp.cfg
+    --dst  Output-CFM13.xml
+    --dst-config  FlexTransform/FlexTransform/resources/sampleConfigurations/cfm13.cfg
+```
+
+#### Output
 ```xml
     <?xml version='1.0' encoding='UTF-8'?>
     <!DOCTYPE IDMEF-Message PUBLIC "-//IETF//DTD RFC XXXX IDMEF v1.0//EN" "idmef-message.dtd">
@@ -173,8 +180,20 @@ flext --src FlexTransform/ExampleFiles/SampleInput-STIX-TLP.xml --src-config Fle
     </IDMEF-Message>
 ```
     
-   - STIX-TLP to LQMT
+##  STIX-TLP to LQMT
+#### Input Files (present in the repo, not the package, download to known location if needed)
+   - [STIX-TLP File](./Example Files/SampleInput-STIX-TLP.xml)
 
+#### Commands
+```bash
+    flext
+    --src  FlexTransform/ExampleFiles/SampleInput-STIX-TLP.xml
+    --src-config  FlexTransform/FlexTransform/resources/sampleConfigurations/stix_tlp.cfg
+    --dst  Output-LQMT.json
+    --dst-config  FlexTransform/FlexTransform/resources/sampleConfigurations/lqmtools.cfg
+```
+
+#### Output
 ```JSON
     {
     "indicators" : {
