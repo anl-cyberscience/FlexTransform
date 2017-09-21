@@ -9,8 +9,8 @@
     flext --src FlexTransform/ExampleFiles/SampleInput-CFM13.xml --src-config FlexTransform/FlexTransform/resources/sampleConfigurations/cfm13.cfg --dst Output-STIX-TLP.xml --dst-config FlexTransform/FlexTransform/resources/sampleConfigurations/stix_tlp.cfg
   - STIX-TLP to CFM13
 
-   
-    flext --src FlexTransform/ExampleFiles/SampleInput-STIX-TLP.xml --src-config FlexTransform/FlexTransform/resources/sampleConfigurations/stix_tlp.cfg --dst Output-CFM13.xml --dst-config FlexTransform/FlexTransform/resources/sampleConfigurations/cfm13.cfg
+
+`flext --src FlexTransform/ExampleFiles/SampleInput-STIX-TLP.xml --src-config FlexTransform/FlexTransform/resources/sampleConfigurations/stix_tlp.cfg --dst Output-CFM13.xml --dst-config FlexTransform/FlexTransform/resources/sampleConfigurations/cfm13.cfg`
 - Output
   - CFM13 to STIX-TLP
 
@@ -184,4 +184,4 @@
         "SentTimestamp": "1410685202",
         "UploadID": "0387f9cc-a903-4822-8976-27e1ff47ca71"
     }
-}
+
