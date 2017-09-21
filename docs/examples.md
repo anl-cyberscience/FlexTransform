@@ -16,7 +16,7 @@
 - Output
   - CFM13 to STIX-TLP
 
-      ```xml
+      ```
       <stix:STIX_Package 
       	xmlns:cyboxCommon="http://cybox.mitre.org/common-2"
       	xmlns:cybox="http://cybox.mitre.org/cybox-2"
