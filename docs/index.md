@@ -49,5 +49,7 @@ share and process CTI, they can take automated action based on that intelligence
 :-----: | :-------:
 Multiple Interfaces | Content from cell 2
 Accurate translation | Content in the second column
-Easy extensibility | When supporting a new schema, simply define a mapping JSON file and immediately convert to/from any other supported format. 
+Easy extensibility | When supporting a new schema, simply define a mapping JSON file and immediately convert to/from any other supported format.
+
+
 <img src="https://cfm.gss.anl.gov/wp-content/uploads/2015/07/FlexT-Diagram2.png" alt="Drawing" height=""/>

@@ -174,7 +174,8 @@ flext --src FlexTransform/ExampleFiles/SampleInput-STIX-TLP.xml --src-config Fle
 ```
     
    - STIX-TLP to LQMT
-    
+
+```json
     {
     "indicators" : {
         "DataSensitivity": "noSensitivity",
@@ -190,4 +191,4 @@ flext --src FlexTransform/ExampleFiles/SampleInput-STIX-TLP.xml --src-config Fle
         "SentTimestamp": "1410685202",
         "UploadID": "0387f9cc-a903-4822-8976-27e1ff47ca71"
     }
-
+```
