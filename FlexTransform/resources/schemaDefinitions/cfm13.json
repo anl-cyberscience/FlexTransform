@@ -253,7 +253,7 @@
 				"description": "Origin of the alert",
 				"valuemap": "Classification;Reference;@origin",
 				"datatype": "enum",
-				"defaultValue": "unknown",
+				"defaultValue": "user-specific",
 				"required": true,
 				"ontologyMappingType": "enum",
 				"enumValues": {
