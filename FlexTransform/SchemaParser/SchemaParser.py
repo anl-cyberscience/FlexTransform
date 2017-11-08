@@ -219,7 +219,7 @@ class SchemaParser(object):
                                     self.transformed_data[rowType].append(new_row)
                             except Exception as inst:
                                 if "UnknownIndicatorType" in inst.args[0]:
-                                    self.logging.warning(inst)
+                                    self.logging.warning("{}: {}".format(inst.args[0], inst.args[1]))
                                 else:
                                     self.logging.error(inst)
                         else:
