@@ -29,7 +29,10 @@ class FlexTransform(object):
                  destination_iri=None):
         self.Parsers = {}
         self.logging = logging.getLogger('FlexTransform')
-        self.logging.setLevel(logging_level)
+
+        if logging_level:
+            self.logging.setLevel(logging_level)
+
         self.oracle = None
 
         if trace is None and (source_fields or source_iri or destination_fields or destination_iri):
