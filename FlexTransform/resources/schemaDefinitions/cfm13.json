@@ -383,6 +383,9 @@
 					"block-installed": {
 						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#BlockInstalledResponseActionTakenSemanticConcept"
 					},
+					"revocation": {
+                        "ontologyMapping": "http://www.anl.gov/cfm/transform.owl#RevocationResponseActionRecommendedSemanticConcept"
+                    },
 					"notification-sent": {
 						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#NotificationSentResponseActionTakenSemanticConcept"
 					},

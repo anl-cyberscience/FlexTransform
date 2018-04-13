@@ -299,7 +299,7 @@
 						"ontologyMapping": ""
 					},
 					"Revoke": {
-						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#RevocationAlertBehaviorCharacterizationSemanticComponent"
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#RevocationResponseActionRecommendedSemanticConcept"
 					}
 				}
 			},
