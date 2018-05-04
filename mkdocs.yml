@@ -1,3 +1,7 @@
 site_name: FlexTransform
 pages:
   - index.md
+  - install.md
+  - usage.md
+  - examples.md
+  - contribute.md

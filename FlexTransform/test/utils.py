@@ -64,4 +64,3 @@ def dynamic_time_change(data):
         index += 1
 
     return newData
-        

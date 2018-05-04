@@ -95,17 +95,16 @@ class CSVParser(Parser):
         
         for idx, field in enumerate(self.Fields):
             position[idx] = field
-        
-        content = file.readlines()
+
+        content = csv.reader(file, delimiter=self.Delimiter)
         for line in content:
-            records = line.split(self.Delimiter)
             to_add = {}
-            for idx, record in enumerate(records): 
+            for idx, record in enumerate(line):
                 record = record.strip("\"'" + self.LineTerminator)
                 if record:
                     to_add.update({position[idx]: record})
             self.ParsedData["IndicatorData"].append(to_add)
- 
+
         return self.ParsedData
                 
     def Finalize(self, MappedData):

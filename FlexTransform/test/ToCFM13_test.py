@@ -107,7 +107,7 @@ class TestSTIXTLPToCFM13Alert(unittest.TestCase):
 
     def test_alert_reference_origin(self):
         self.assertEqual(set(self.output1.xpath("%s xmlns:Classification/xmlns:Reference/@origin" % self.alert,
-                                                namespaces=self.namespace)), set(["unknown"]))
+                                                namespaces=self.namespace)), set(["user-specific"]))
 
     def test_source_node_address_url(self):
         self.assertEqual(set(self.output1.xpath("%s [not(@category='ipv4-addr')]/xmlns:address/text()" % self.address,
@@ -242,7 +242,7 @@ class TestSTIXACSToCFM13Alert(unittest.TestCase):
 
     def test_alert_reference_origin(self):
         self.assertEqual(set(self.output1.xpath("%s /xmlns:Reference/@origin" % self.classification,
-                                                namespaces=self.namespace)), set(["unknown"]))
+                                                namespaces=self.namespace)), set(["user-specific"]))
 
     def test_alert_AD_OUO(self):
         self.assertEqual(set(self.output1.xpath("%s [@meaning='OUO']/text()" % self.additional,
@@ -276,7 +276,7 @@ class TestSTIXACSToCFM13Alert(unittest.TestCase):
 
     def test_alert_classification_reference_origin(self):
         self.assertEqual(set(self.output1.xpath("%s /xmlns:Reference/@origin" % self.classification,
-                                                namespaces=self.namespace)), set(["unknown"]))
+                                                namespaces=self.namespace)), set(["user-specific"]))
 
     def test_alert_classification_reference_name(self):
         self.assertEqual(set(self.output1.xpath("%s /xmlns:Reference/xmlns:name/text()" % self.classification,
@@ -420,7 +420,7 @@ class TestKeyValueToCFM13Alert(unittest.TestCase):
 
     def test_alert_classification_reference_origin(self):
         self.assertEqual(set(self.output1.xpath("%s /xmlns:Reference/@origin" % self.classification,
-                                                namespaces=self.namespace)), set(["unknown"]))
+                                                namespaces=self.namespace)), set(["user-specific"]))
 
     def test_alert_classification_reference_name(self):
         if "Scanning" in self.output1.xpath("%s /xmlns:Reference/xmlns:name/text()" % self.classification,
