@@ -5,6 +5,7 @@ Created on Jul 27, 2014
 '''
 import ast
 import configparser
+import importlib.machinery
 import json
 import logging
 import os
@@ -48,6 +49,11 @@ class Config(object):
         self.MetadataSchemaConfig = None
         self.ConfigFunctionManager = ConfigFunctionManager(self.trace, trace_list=trace_list)
 
+        self.preprocesser_class = None
+        self.postprocessor_class = None
+        self.preprocessor = None
+        self.postprocessor = None
+
         self.config_file = config_file
         self._read_config()
 
@@ -88,7 +94,44 @@ class Config(object):
                 raise Exception('UndefinedParserType', file_parser)
         else:
             raise Exception('RequiredOptionNotFound', 'Syntax: FileParser')
-        
+
+        if self.config.has_section('PREPROCESSOR') and \
+                self.config.has_option('PREPROCESSOR', 'ProcessorLocation') and \
+                self.config.has_option('PREPROCESSOR', 'ProcessorClassName'):
+            if os.path.isfile(self.config['PREPROCESSOR']['ProcessorLocation']):
+                try:
+                    new_processor_module = importlib.machinery.SourceFileLoader(self.config['PREPROCESSOR']['ProcessorClassName'], self.config['PREPROCESSOR']['ProcessorLocation']).load_module()
+                    self.preprocesser_class = getattr(new_processor_module, self.config['PREPROCESSOR']['ProcessorClassName'])()
+                    self.preprocessor = True
+                except AttributeError as e:
+                    self.logging.error("Couldn't load preprocessor: {}".format(e))
+                except Exception as e:
+                    self.logging.error("Error with preprocessor: {}".format(e))
+            else:
+                self.logging.warning("Couldn't find preprocessor file: {}".format(self.config['PREPROCESSOR']['ProcessorLocation']))
+
+        if self.config.has_section('POSTPROCESSOR') and \
+                self.config.has_option('POSTPROCESSOR', 'ProcessorLocation') and \
+                self.config.has_option('POSTPROCESSOR', 'ProcessorClassName'):
+            if self.postprocesser_class and \
+                    self.config['POSTPROCESSOR']['ProcessorClassName'] == self.config['PREPROCESSOR']['ProcessorClassName'] and\
+                    self.config['POSTPROCESSOR']['ProcessorLocation'] == self.config['PREPROCESSOR']['ProcessorLocation']:
+                self.postprocessor_class = self.preprocesser_class
+                self.logging.warning("Postprocessor support is not yet available, will not run postprocessor")
+            elif os.path.isfile(self.config['POSTPROCESSOR']['ProcessorLocation']):
+                try:
+                    new_processor_module = importlib.machinery.SourceFileLoader(self.config['POSTPROCESSOR']['ProcessorClassName'], self.config['POSTPROCESSOR']['ProcessorLocation']).load_module()
+                    self.postprocesser_class = getattr(new_processor_module, self.config['POSTPROCESSOR']['ProcessorClassName'])()
+                    self.postprocessor = True
+                except AttributeError as e:
+                    self.logging.error("Couldn't load postprocessor: {}".format(e))
+                except Exception as e:
+                    self.logging.error("Error with postprocessor: {}".format(e))
+                else:
+                    self.logging.warning("Postprocessor support is not yet available, will not run postprocessor")
+            else:
+                self.logging.warning("Couldn't find postprocessor file: {}".format(self.config['POSTPROCESSOR']['ProcessorLocation']))
+                
         if self.config.has_option('SCHEMA', 'SchemaConfigurationType') \
                 and self.config['SCHEMA']['SchemaConfigurationType'] == 'Inline':
             # Build schema from configuration file
@@ -150,11 +193,39 @@ class Config(object):
                 if inner_value['datatype'] == 'datetime' and not ('dateTimeFormat' in inner_value and inner_value['dateTimeFormat']):
                     raise Exception('RequiredSchemaOptionNotFound', "{}:{}:{}: 'dateTimeFormat' element not present / malformed".format(self.name, outer_key, inner_key))
 
-    def calculate_derived_data(self, source_file=None, dest_file=None):
-        if hasattr(source_file, "name") and source_file is not None:
-            source_file_name = source_file.name
+    def preprocess(self, source_file):
+        try:
+            processed_file = self.preprocesser_class.preprocess(source_file)
+            source_file.seek(0)
+        except Exception as e:
+            self.logging.error("Error during preprocessing: {}".format(e))
         else:
-            source_file_name = ""
+            return processed_file
+
+    def postprocess(self, source_file):
+        try:
+            processed_file = self.postprocessor_class.postprocess(source_file)
+            source_file.seek(0)
+        except Exception as e:
+            self.logging.error(("Error during postprocessing: {}".format(e)))
+        else:
+            return processed_file
+
+    def calculate_derived_data(self, source_file=None, dest_file=None, original_file=None):
+        if original_file:
+            if hasattr(original_file, "name") and original_file is not None:
+                source_file_name = original_file.name
+            if hasattr(original_file, "name") and original_file is not None:
+                source_file_name = original_file.name
+            else:
+                source_file_name = ""
+        else:
+            if hasattr(source_file, "name") and source_file is not None:
+                source_file_name = source_file.name
+            if hasattr(source_file, "name") and source_file is not None:
+                source_file_name = source_file.name
+            else:
+                source_file_name = ""
         if hasattr(dest_file, "name") and dest_file is not None:
             dest_file_name = dest_file.name
         else:

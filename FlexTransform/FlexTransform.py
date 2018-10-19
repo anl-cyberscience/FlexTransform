@@ -112,8 +112,15 @@ class FlexTransform(object):
         source_config = self.Parsers[source_parser_name]
         destination_config = self.Parsers[target_parser_name]
 
+        # Preprocessor
+        if source_config.preprocessor:
+            original_file = source_file
+            source_file = source_config.preprocess(source_file)
+        else:
+            original_file = None
+
         # Calculate "DerivedData" functions
-        source_config.calculate_derived_data(source_file=source_file, dest_file=target_file)
+        source_config.calculate_derived_data(source_file=source_file, dest_file=target_file, original_file=original_file)
 
         # Parse source file into dictionary object
         source_data = source_config.Parser.Read(source_file, source_config)
