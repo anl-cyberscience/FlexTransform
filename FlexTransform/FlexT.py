@@ -33,7 +33,7 @@ def main():
     log.setLevel(logging.NOTSET)
 
     sh_out = logging.StreamHandler(stream=sys.stdout)
-    sh_out.setLevel(logging.DEBUG)
+    sh_out.setLevel(logging.WARNING)
     sh_out.setFormatter(logging.Formatter('%(name)s (%(pathname)s:%(lineno)d) %(levelname)s:%(message)s'))
     sh_out.addFilter(LessThenFilter(logging.WARNING))
     log.addHandler(sh_out)
