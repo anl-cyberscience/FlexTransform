@@ -25,6 +25,7 @@ class CFM13(object):
         self.AdditionalDataTypes = {
                                         'report start time': 'date-time',
                                         'report type': 'string',
+                                        'report ouo': 'integer',
                                         'report schedule': 'string',
                                         'number of alerts in this report': 'integer',
                                         'prior offenses': 'integer',
