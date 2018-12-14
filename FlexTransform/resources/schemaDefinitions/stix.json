@@ -584,7 +584,10 @@
 						]
 					},
 					"EmailMessageObjectType": {
-						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#EmailMessageObjectSchemaTypeSpecification"
+						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#EmailMessageObjectSchemaTypeSpecification",
+						"reverseOntologyMappings": [
+							"http://www.anl.gov/cfm/transform.owl#EmailSubjectValueSemanticComponent"
+						]
 					},
 					"LinkObjectType": {
 						"ontologyMapping": "http://www.anl.gov/cfm/transform.owl#LinkObjectSchemaTypeSpecification"
